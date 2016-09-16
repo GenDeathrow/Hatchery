@@ -1,0 +1,16 @@
+{
+    "parent": "hatchery:block/nest",
+	"display": {
+        "thirdperson_righthand": {
+            "rotation": [ 10, -45, 170 ],
+            "translation": [ 0, 4, -2.75 ],
+            "scale": [ 0.375, 0.375, 0.375 ]
+        },
+        "firstperson_righthand": {
+            "rotation": [ 30, -135, 25 ],
+            "translation": [ 0, 4, 2 ],
+            "scale": [0.375, 0.375, 0.375 ]
+        }
+    }
+
+}

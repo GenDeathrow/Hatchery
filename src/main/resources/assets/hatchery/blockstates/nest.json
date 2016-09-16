@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "hasegg=false": { "model": "hatchery:mach2"},
+		"hasegg=true": { "model": "hatchery:mach2"}
+    }
+}

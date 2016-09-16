@@ -1,0 +1,16 @@
+[
+{
+  "modid": "hatchery",
+  "name": "Hatchery",
+  "description": "Dont waste those eggs anymore!",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["GenDeathrow"],
+  "credits": "Darkosto",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
