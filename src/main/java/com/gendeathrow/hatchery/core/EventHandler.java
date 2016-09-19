@@ -4,20 +4,24 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMate;
 import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.item.ItemEgg;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.entity.ai.ChickenBreeding;
 
 public class EventHandler 
 {
 
 	@SubscribeEvent
-	public void onPlayerInteract(PlayerInteractEvent event) 
+	public void onPlayerInteract(RightClickItem event) 
 	{
 
+		if(!(Settings.canThrowEgg) && event.getItemStack().getItem() instanceof ItemEgg)
+		{
+			event.setCanceled(true);
+		}
 		
 	}
 

@@ -15,7 +15,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemStack;
@@ -29,7 +28,7 @@ import net.minecraft.world.World;
 
 import com.gendeathrow.hatchery.Hatchery;
 
-public class HatcheryBlock extends Block implements ITileEntityProvider
+public class NestBlock extends Block implements ITileEntityProvider
 {
     public static final PropertyBool hasEgg = PropertyBool.create("hasegg");
     
@@ -39,13 +38,13 @@ public class HatcheryBlock extends Block implements ITileEntityProvider
 
 	protected String name;
 	
-	public HatcheryBlock() 
+	public NestBlock() 
 	{
 		super(Material.LEAVES);
 		this.name = "nest";
 		this.setUnlocalizedName("nest");
 		this.setRegistryName(Hatchery.MODID,"nest");
-		this.setCreativeTab(CreativeTabs.MISC);	
+		this.setCreativeTab(Hatchery.hatcheryTabs);	
 		this.setHardness(5);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(hasEgg, false));
 	}
@@ -95,7 +94,7 @@ public class HatcheryBlock extends Block implements ITileEntityProvider
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List list) 
 	{
 	    list.add(new ItemStack(itemIn, 1, 0)); //Meta 0
-	    list.add(new ItemStack(itemIn, 1, 1)); //Meta 1
+	    //list.add(new ItemStack(itemIn, 1, 1)); //Meta 1
 	}
 	
 	
@@ -108,7 +107,7 @@ public class HatcheryBlock extends Block implements ITileEntityProvider
     	{
     			if(!worldIn.isRemote)
     			{
-    				HatcheryTileEntity te = ((HatcheryTileEntity)worldIn.getTileEntity(pos));
+    				NestTileEntity te = ((NestTileEntity)worldIn.getTileEntity(pos));
     				ItemStack egg = te.getStackInSlot(0).copy();
     				te.removeStackFromSlot(0);
     				worldIn.spawnEntityInWorld(new EntityItem(worldIn, pos.getX(), pos.getY() + .5d, pos.getZ(), egg));
@@ -128,7 +127,9 @@ public class HatcheryBlock extends Block implements ITileEntityProvider
 		            --heldItem.stackSize;
 		        }
     			
-				((HatcheryTileEntity)worldIn.getTileEntity(pos)).setInventorySlotContents(0, heldItem);
+		        ItemStack itemstack = heldItem.copy();
+		        itemstack.stackSize = 1;
+				((NestTileEntity)worldIn.getTileEntity(pos)).setInventorySlotContents(0,itemstack);
     		}
     		
     		return true;
@@ -170,13 +171,13 @@ public class HatcheryBlock extends Block implements ITileEntityProvider
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) 
 	{
-		return new HatcheryTileEntity();
+		return new NestTileEntity();
 	}
 	
 	
-	public static HatcheryBlock create() 
+	public static NestBlock create() 
 	{
-		HatcheryBlock res = new HatcheryBlock();
+		NestBlock res = new NestBlock();
 		res.init();
 		return res;
 	}

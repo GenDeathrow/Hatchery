@@ -2,12 +2,8 @@ package com.gendeathrow.hatchery.block.nestblock;
 
 import javax.annotation.Nullable;
 
-import com.gendeathrow.hatchery.core.ModItems;
-import com.setycz.chickens.ChickensRegistry;
-import com.setycz.chickens.ChickensRegistryItem;
-import com.setycz.chickens.chicken.EntityChickensChicken;
-
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,6 +24,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.Optional.Interface;
 
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.network.HatcheryPacket;
+import com.setycz.chickens.ChickensRegistry;
+import com.setycz.chickens.ChickensRegistryItem;
+import com.setycz.chickens.chicken.EntityChickensChicken;
+
 
 @Optional.InterfaceList(
 		value = 
@@ -38,7 +41,7 @@ import net.minecraftforge.fml.common.Optional.Interface;
 		}
 )
 
-public class HatcheryTileEntity extends TileEntity implements ITickable, IInventory
+public class NestTileEntity extends TileEntity implements ITickable, IInventory
 {
 
 	boolean hasEgg;
@@ -61,24 +64,14 @@ public class HatcheryTileEntity extends TileEntity implements ITickable, IInvent
 	{
 		if(this.worldObj.isRemote) 
 		{
+
+			updateClient();
 			return;
 		}
-		
-//		if(firstload) 
-//		{ 
-//			System.out.println("update");
-//			this.worldObj.notifyBlockUpdate(this.getPos(), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
-//			this.markDirty();
-//
-//			firstload = false;
-//		}
 		ticks++;
-		
-
-		
 		if (this.worldObj.getTotalWorldTime() % 80L == 0L)
 		{	
-			if(HatcheryBlock.doesHaveEgg(this.worldObj.getBlockState(this.getPos())))
+			if(NestBlock.doesHaveEgg(this.worldObj.getBlockState(this.getPos())))
 			{
 				int randint = 2;
 				
@@ -87,17 +80,6 @@ public class HatcheryTileEntity extends TileEntity implements ITickable, IInvent
 					randint += 5;
 				}
 				
-//				if(getPercentage % 5 == 0)
-//				{
-//					this.prevPercentage = percentage;
-//					//this.worldObj.markAndNotifyBlock(this.pos, this.worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
-//					this.worldObj.scheduleBlockUpdate(pos, worldObj.getBlockState(pos).getBlock(), 100, 1);
-//
-//					//this.markDirty();
-//
-//							System.out.println("mark");
-//				}
-				
 				hatchingTick += this.worldObj.rand.nextInt(randint)+ (checkForHeatLamp() ? 2 : 1);
       
 				ticks = 0;
@@ -105,17 +87,26 @@ public class HatcheryTileEntity extends TileEntity implements ITickable, IInvent
 				if(hatchingTick > timeToHatch)
 				{
 					
-					if(this.eggSlot[0].getItem() == ModItems.hatcheryEgg)
+					if(this.eggSlot[0].getItem() == ModItems.hatcheryEgg && this.eggSlot[0].getTagCompound() != null)
 					{
-		    	        Entity entitychicken = EntityList.createEntityFromNBT(this.eggSlot[0].getTagCompound(), this.worldObj);
-		    	        
+						Entity entitychicken = null;
+						
+						try
+						{
+							entitychicken = EntityList.createEntityFromNBT(this.eggSlot[0].getTagCompound(), this.worldObj);
+						}
+						catch (Throwable e)
+						{
+							Hatchery.logger.error("Error trying to spawn Hatchery Egg 'Null NBT' " + e);
+						}
+						
 		    	        if(entitychicken != null)
 		    	        {
 		    	        	entitychicken.setLocationAndAngles(getPos().getX(), getPos().getY() + 1, getPos().getZ(), 0.0F, 0.0F);
 		    	        	this.worldObj.spawnEntityInWorld(entitychicken);
 		    	        }
 					}
-					else if(this.eggSlot[0].getItem() == Items.EGG)
+					else if(this.eggSlot[0].getItem() == Items.EGG || this.eggSlot[0].getTagCompound() == null)
 					{
 						EntityChicken chicken = new EntityChicken(worldObj);
 						chicken.setPosition(getPos().getX(), getPos().getY() + 1, getPos().getZ());
@@ -127,21 +118,35 @@ public class HatcheryTileEntity extends TileEntity implements ITickable, IInvent
 						spawnChickensModChicken();
 					}
 					
-					HatcheryBlock.removeEgg(worldObj, worldObj.getBlockState(getPos()), getPos());
+					NestBlock.removeEgg(worldObj, worldObj.getBlockState(getPos()), getPos());
 					
 					markDirty();
 				}
 			}
 		}
 		else if(hatchingTick > timeToHatch) {hatchingTick = 0; ticks = 0;}
-		
-		
-		if (this.worldObj.getTotalWorldTime() % 80L == 0L)
-		{	
-			
-		}
 	}
 	
+	private boolean sentRequest = false;
+	public void updateClient()
+	{
+		if(this.eggSlot[0] != null) return;
+		
+		boolean hasEgg = NestBlock.doesHaveEgg(this.getWorld().getBlockState(this.getPos()));
+    
+		if(!sentRequest && hasEgg)
+		{
+			Hatchery.network.sendToServer(HatcheryPacket.requestItemstackTE(this.getPos()));
+    			
+			//System.out.println("Requesting Packet");
+			sentRequest = true;
+		}
+		else if ( Minecraft.getSystemTime() % 80 == 0 && sentRequest && hasEgg)
+		{
+			sentRequest = false;
+			//System.out.println("Resending Packet");
+		}
+	}
 	
 	public float getPercentage()
 	{
@@ -163,6 +168,7 @@ public class HatcheryTileEntity extends TileEntity implements ITickable, IInvent
 		}
 		return false;
 	}
+	
     public void readFromNBT(NBTTagCompound compound)
     {
     	this.hatchingTick = compound.getInteger("hatchTime");
@@ -317,7 +323,7 @@ public class HatcheryTileEntity extends TileEntity implements ITickable, IInvent
 	@Nullable
     public SPacketUpdateTileEntity getUpdatePacket()
     {
-    	System.out.println("[DEBUG]:Server sent tile sync packet");
+    	//System.out.println("[DEBUG]:Server sent tile sync packet");
     	 
 		NBTTagCompound sendnbt = new NBTTagCompound();  	
 
@@ -330,7 +336,7 @@ public class HatcheryTileEntity extends TileEntity implements ITickable, IInvent
 		
 		if(test != null)
 		{
-			System.out.println("Sending ItemStack "+ test.getDisplayName());
+			//System.out.println("Sending ItemStack "+ test.getDisplayName());
 		}
 		
        return new SPacketUpdateTileEntity(this.getPos(), this.getBlockMetadata(), sendnbt);
@@ -339,7 +345,7 @@ public class HatcheryTileEntity extends TileEntity implements ITickable, IInvent
 	
     public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SPacketUpdateTileEntity pkt)
     {
-    	System.out.println("[DEBUG]:Client recived tile sync packet");
+    	//System.out.println("[DEBUG]:Client recived tile sync packet");
 
 
 		NBTTagCompound egg = pkt.getNbtCompound().getCompoundTag("egg");

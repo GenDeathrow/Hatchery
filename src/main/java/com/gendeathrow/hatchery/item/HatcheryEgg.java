@@ -1,25 +1,19 @@
 package com.gendeathrow.hatchery.item;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityEgg;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.gendeathrow.hatchery.Hatchery;
 
 public class HatcheryEgg extends ItemEgg
 {
@@ -30,7 +24,7 @@ public class HatcheryEgg extends ItemEgg
 		
 		this.setUnlocalizedName("hatcheryegg");
 		this.setRegistryName("hatcheryegg");
-		this.setCreativeTab(CreativeTabs.MISC);
+		this.setCreativeTab(Hatchery.hatcheryTabs);
 	}
 	
 	

@@ -1,7 +1,7 @@
 package com.gendeathrow.hatchery.core.proxies;
 
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -11,7 +11,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.nestblock.HatcheryTileEntity;
+import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 import com.gendeathrow.hatchery.core.EventHandler;
 import com.gendeathrow.hatchery.core.ModItems;
 
@@ -55,15 +56,19 @@ public class CommonProxy
     	GameRegistry.register(ModItems.nest);
     		ItemBlock modItem = new ItemBlock(ModItems.nest);
     	GameRegistry.register(modItem.setRegistryName(ModItems.nest.getRegistryName()));
+    	GameRegistry.registerTileEntity(NestTileEntity.class, NestTileEntity.class.getName());
     	
     	GameRegistry.register(ModItems.pen);
     		ItemBlock penItem = new ItemBlock(ModItems.pen);
     	GameRegistry.register(penItem.setRegistryName(ModItems.pen.getRegistryName()));
+    	GameRegistry.registerTileEntity(NestPenTileEntity.class, NestPenTileEntity.class.getName());
     	
     	GameRegistry.register(ModItems.hatcheryEgg);
+    	GameRegistry.register(ModItems.animalNet);
     	
-    	GameRegistry.registerTileEntity(HatcheryTileEntity.class, Hatchery.MODID);
+
     	GameRegistry.addRecipe(new ItemStack(ModItems.nest), "xxx", "AxA", "AAA",'A', Blocks.HAY_BLOCK);
+    	GameRegistry.addRecipe(new ItemStack(ModItems.animalNet), "xSS", "SAA", "xxA",'S', Items.STICK, 'A', Items.STRING);
 
     	
 	}

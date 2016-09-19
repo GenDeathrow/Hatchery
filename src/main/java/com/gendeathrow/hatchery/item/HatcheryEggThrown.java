@@ -3,8 +3,8 @@ package com.gendeathrow.hatchery.item;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.projectile.EntityEgg;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -40,6 +40,8 @@ public class HatcheryEggThrown extends EntityEgg
             
 	        if (!this.worldObj.isRemote && this.rand.nextInt(8) == 0)
 	        {
+	        	Entity entitychicken = null; 
+	        	
 	            int i = 1;
 
 	            if (this.rand.nextInt(32) == 0)
@@ -51,8 +53,15 @@ public class HatcheryEggThrown extends EntityEgg
 	            {
 	            	
 	                //System.out.println(spawnEntity);
-	    	        
-	    	        Entity entitychicken = EntityList.createEntityFromNBT(spawnEntity, this.worldObj);
+	    	        if(spawnEntity == null) 
+	    	        {
+	    	        	entitychicken = new EntityChicken(this.worldObj);
+	    	        	if(entitychicken instanceof EntityAgeable) ((EntityAgeable)entitychicken).setGrowingAge(-24000);
+	    	        }
+	    	        else 
+	    	        {
+	    	        	entitychicken = EntityList.createEntityFromNBT(spawnEntity, this.worldObj);
+	    	        }
 	    	        
 	    	        if(entitychicken != null)
 	    	        {

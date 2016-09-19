@@ -2,6 +2,8 @@ package com.gendeathrow.hatchery;
 
 import java.io.IOException;
 
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -16,6 +18,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
+import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.core.config.ConfigHandler;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
 
@@ -42,6 +46,15 @@ public class Hatchery {
 		
 	    public static org.apache.logging.log4j.Logger logger;
 	    
+	    public static CreativeTabs hatcheryTabs = new CreativeTabs(MODID)
+	    {
+	        @Override public Item getTabIconItem() 
+	        {
+	            return ModItems.hatcheryEgg;
+	        }
+	 
+	    };
+	    
 	    
 	    @EventHandler
 	    public void preInit(FMLPreInitializationEvent event)
@@ -61,6 +74,7 @@ public class Hatchery {
 	    {
 	    	proxy.init(event);
 	    	
+	    	ConfigHandler.loadConfig();
 
 	    	
 	    	// waila integration

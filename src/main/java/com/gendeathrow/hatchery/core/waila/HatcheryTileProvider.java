@@ -2,7 +2,7 @@ package com.gendeathrow.hatchery.core.waila;
 
 import java.util.List;
 
-import com.gendeathrow.hatchery.block.nestblock.HatcheryTileEntity;
+import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -25,8 +25,8 @@ public class HatcheryTileProvider implements IWailaDataProvider
     public static void load(IWailaRegistrar registrar) 
     {
         //registrar.registerBodyProvider(INSTANCE, HatcheryTileEntity.class);
-        registrar.registerTailProvider(INSTANCE, HatcheryTileEntity.class);
-        registrar.registerNBTProvider(INSTANCE, HatcheryTileEntity.class);
+        registrar.registerTailProvider(INSTANCE, NestTileEntity.class);
+        registrar.registerNBTProvider(INSTANCE, NestTileEntity.class);
     }
     
 	@Override
@@ -55,13 +55,10 @@ public class HatcheryTileProvider implements IWailaDataProvider
 		
 
 
-		if(tileEntity instanceof HatcheryTileEntity)
+		if(tileEntity instanceof NestTileEntity)
 		{
-			HatcheryTileEntity hte = (HatcheryTileEntity) tileEntity;
+			NestTileEntity hte = (NestTileEntity) tileEntity;
 			
-			
-			
-		
 			if(accessor.getNBTData().getBoolean("hasEgg"))
 			{
 				float percentage = accessor.getNBTData().getFloat("hatchPercentage");
@@ -77,9 +74,9 @@ public class HatcheryTileProvider implements IWailaDataProvider
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) 
 	{
 		
-		if(te instanceof HatcheryTileEntity)
+		if(te instanceof NestTileEntity)
 		{
-			HatcheryTileEntity hte = (HatcheryTileEntity) te;
+			NestTileEntity hte = (NestTileEntity) te;
 			
 			tag.setFloat("hatchPercentage", hte.getPercentage());
 			tag.setString("eggName", hte.getStackInSlot(0).getDisplayName());

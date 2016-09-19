@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import org.apache.logging.log4j.Level;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.nestblock.HatcheryTileEntity;
+import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
 
 public class HatcheryPacket implements IMessage 
 {
@@ -91,14 +91,14 @@ public class HatcheryPacket implements IMessage
 						
 						if(message.requestID == 1) 
 						{
-				   			System.out.println("Server Recieved:"+ nbt.getDouble("bposX")+","+ nbt.getDouble("bposY")+","+ nbt.getDouble("bposZ"));
+				   			//System.out.println("Server Recieved:"+ nbt.getDouble("bposX")+","+ nbt.getDouble("bposY")+","+ nbt.getDouble("bposZ"));
 				   	     
 				   			
 							TileEntity te = sender.worldObj.getTileEntity(new BlockPos(nbt.getDouble("bposX"), nbt.getDouble("bposY"), nbt.getDouble("bposZ")));
 							
-							if(te instanceof HatcheryTileEntity)
+							if(te instanceof NestTileEntity)
 							{
-								HatcheryTileEntity hte = (HatcheryTileEntity) te;
+								NestTileEntity hte = (NestTileEntity) te;
 								
 								ItemStack itemstack = hte.getStackInSlot(0);
 								
@@ -114,7 +114,7 @@ public class HatcheryPacket implements IMessage
 									
 									Hatchery.network.sendTo(new HatcheryPacket(requestNBT), sender);
 									
-									System.out.println("Sent Message");
+									//System.out.println("Sent Message");
 								}
 							}
 						}				
@@ -155,14 +155,14 @@ public class HatcheryPacket implements IMessage
 
         			NBTTagCompound nbt = message.tags;
         			
-        			System.out.println("Client Recieved"+ nbt.getDouble("bposX")+","+ nbt.getDouble("bposY")+","+ nbt.getDouble("bposZ"));
+        			//System.out.println("Client Recieved"+ nbt.getDouble("bposX")+","+ nbt.getDouble("bposY")+","+ nbt.getDouble("bposZ"));
         			if(message.requestID == 0) 
         			{
         				TileEntity te = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(nbt.getDouble("bposX"), nbt.getDouble("bposY"), nbt.getDouble("bposZ")));
         				
-        				if(te instanceof HatcheryTileEntity)
+        				if(te instanceof NestTileEntity)
         				{
-        					HatcheryTileEntity hte = (HatcheryTileEntity) te;
+        					NestTileEntity hte = (NestTileEntity) te;
         					
         					ItemStack itemstack = hte.getStackInSlot(0);
         					
@@ -174,7 +174,7 @@ public class HatcheryPacket implements IMessage
         						hte.readFromNBT(nbt);
         						
         						
-        						System.out.println("Recieved Message");
+        						//System.out.println("Recieved Message");
         					}
         				}
         			}

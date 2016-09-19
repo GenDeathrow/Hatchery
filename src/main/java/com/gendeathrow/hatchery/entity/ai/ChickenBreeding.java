@@ -19,7 +19,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 import com.gendeathrow.hatchery.core.ModItems;
-import com.gendeathrow.hatchery.item.HatcheryEgg;
 
 public class ChickenBreeding extends EntityAIBase
 {
@@ -150,9 +149,12 @@ public class ChickenBreeding extends EntityAIBase
             System.out.println(eTag.toString());
             
             ItemStack egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
-            
-            egg.setStackDisplayName(entityageable.getDisplayName() +" Egg");
+
             egg.setTagCompound(eTag);
+            
+            
+            egg.setStackDisplayName(entityageable.getDisplayName().getFormattedText() +" Egg");
+            
             
             EntityItem entityItem = new EntityItem(this.theWorld, this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, egg);
             

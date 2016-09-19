@@ -2,10 +2,10 @@
 {
   "modid": "hatchery",
   "name": "Hatchery",
-  "description": "Dont waste those eggs anymore!",
+  "description": "Dont waste those eggs anymore! Become your own chicken farmer!",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://minecraft.curseforge.com/projects/hatchery",
   "updateUrl": "",
   "authorList": ["GenDeathrow"],
   "credits": "Darkosto",

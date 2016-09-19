@@ -1,1 +1,7 @@
+itemGroup.hatchery=Hatchery
+
 tile.nest.name=Hatchery Nest
+tile.pen.name=Nesting Pen
+
+item.hatcheryegg.name=Egg
+item.animalnet.name=Animal Net

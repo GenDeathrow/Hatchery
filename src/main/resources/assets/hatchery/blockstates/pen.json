@@ -1,7 +1,10 @@
 {
     "variants": {
-        "normal": [
-            { "model": "hatchery:pen" }
-			]
-		}
+        "facing=down":  { "model": "hatchery:pen_mach3", "x": 180 },
+        "facing=up":    { "model": "hatchery:pen_mach3" },
+        "facing=north": { "model": "hatchery:pen_mach3" },
+        "facing=south": { "model": "hatchery:pen_mach3", "y": 180 },
+        "facing=west":  { "model": "hatchery:pen_mach3", "y": 270 },
+        "facing=east":  { "model": "hatchery:pen_mach3", "y": 90 }
+	}
 }

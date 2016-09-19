@@ -13,8 +13,10 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.gendeathrow.hatchery.block.nestblock.HatcheryTileEntity;
-import com.gendeathrow.hatchery.block.nestblock.HatcheryTileEntityRender;
+import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
+import com.gendeathrow.hatchery.block.nestblock.NestTileEntityRender;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntityRenderer;
 import com.gendeathrow.hatchery.core.ModItems;
 
 public class ClientProxy extends CommonProxy
@@ -79,7 +81,10 @@ public class ClientProxy extends CommonProxy
 		registerBlockModel(ModItems.pen, 0, ModItems.pen.getRegistryName().toString());
 		
 		registerItemModel(ModItems.hatcheryEgg);
-		ClientRegistry.bindTileEntitySpecialRenderer(HatcheryTileEntity.class, new HatcheryTileEntityRender());
+		registerItemModel(ModItems.animalNet);
+
+		ClientRegistry.bindTileEntitySpecialRenderer(NestTileEntity.class, new NestTileEntityRender());
+		ClientRegistry.bindTileEntitySpecialRenderer(NestPenTileEntity.class, new NestPenTileEntityRenderer());
 		
 		//registerItemModel(ModItems.nestItem);
 	}
