@@ -1,5 +1,7 @@
 package com.gendeathrow.hatchery.item;
 
+import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityList;
@@ -23,7 +25,7 @@ public class HatcheryEggThrown extends EntityEgg
 	{
 		super(worldIn, throwerIn);
 		
-		spawnEntity = stack.getTagCompound();
+		spawnEntity = ItemStackEntityNBTHelper.getEntityTagFromStack(stack);
 	}
 
 	

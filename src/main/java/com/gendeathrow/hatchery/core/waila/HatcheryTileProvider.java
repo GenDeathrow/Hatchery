@@ -2,18 +2,20 @@ package com.gendeathrow.hatchery.core.waila;
 
 import java.util.List;
 
-import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
-
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.IWailaDataProvider;
+import mcp.mobius.waila.api.IWailaRegistrar;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
-import mcp.mobius.waila.api.IWailaRegistrar;
+
+import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 
 public class HatcheryTileProvider implements IWailaDataProvider
 {
@@ -27,6 +29,8 @@ public class HatcheryTileProvider implements IWailaDataProvider
         //registrar.registerBodyProvider(INSTANCE, HatcheryTileEntity.class);
         registrar.registerTailProvider(INSTANCE, NestTileEntity.class);
         registrar.registerNBTProvider(INSTANCE, NestTileEntity.class);
+        registrar.registerTailProvider(INSTANCE, NestPenTileEntity.class);
+        registrar.registerNBTProvider(INSTANCE, NestPenTileEntity.class);
     }
     
 	@Override
@@ -62,10 +66,22 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			if(accessor.getNBTData().getBoolean("hasEgg"))
 			{
 				float percentage = accessor.getNBTData().getFloat("hatchPercentage");
-				currenttip.add("Hatching: "+ percentage +"%");
+				currenttip.add(I18n.format("text.hatching", new Object[0]) +": "+ percentage +"%");
 				currenttip.add(accessor.getNBTData().getString("eggName"));
 			}
-			else currenttip.add("Not Hatching");
+			else currenttip.add(I18n.format("text.nothatching", new Object[0]));
+		}
+		else if(tileEntity instanceof NestPenTileEntity)
+		{
+			if(accessor.getNBTData().getBoolean("hasChicken"))
+			{
+				currenttip.add(I18n.format("text.chicken", new Object[0]) +": "+ accessor.getNBTData().getString("entityname"));
+				currenttip.add(I18n.format("text.nxdrop", new Object[0]) +": "+ accessor.getNBTData().getLong("nextDrop"));
+			}
+			else currenttip.add(I18n.format("text.nochicken", new Object[0]));
+			
+			
+			
 		}
 		return currenttip;
 	}
@@ -81,6 +97,14 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			tag.setFloat("hatchPercentage", hte.getPercentage());
 			tag.setString("eggName", hte.getStackInSlot(0).getDisplayName());
 			tag.setBoolean("hasEgg", hte.getStackInSlot(0) != null);
+		}
+		else if(te instanceof NestPenTileEntity)
+		{
+			NestPenTileEntity hte = (NestPenTileEntity) te;
+			
+			tag.setBoolean("hasChicken", ((NestPenTileEntity) te).storedEntity() != null);
+			if(((NestPenTileEntity) te).storedEntity() != null) tag.setString("entityname",  ((NestPenTileEntity) te).storedEntity().getDisplayName().getFormattedText());
+			tag.setLong("nextDrop",  ((NestPenTileEntity) te).getTimeToNextDrop());
 		}
 		return tag;
 	}

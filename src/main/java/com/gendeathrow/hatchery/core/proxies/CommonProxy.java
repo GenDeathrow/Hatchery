@@ -63,12 +63,18 @@ public class CommonProxy
     	GameRegistry.register(penItem.setRegistryName(ModItems.pen.getRegistryName()));
     	GameRegistry.registerTileEntity(NestPenTileEntity.class, NestPenTileEntity.class.getName());
     	
+    	GameRegistry.register(ModItems.pen_chicken);
+    		ItemBlock penItem2 = new ItemBlock(ModItems.pen_chicken);
+    	GameRegistry.register(penItem2.setRegistryName(ModItems.pen_chicken.getRegistryName()));
+    	
     	GameRegistry.register(ModItems.hatcheryEgg);
     	GameRegistry.register(ModItems.animalNet);
+    	GameRegistry.register(ModItems.manure);
     	
 
     	GameRegistry.addRecipe(new ItemStack(ModItems.nest), "xxx", "AxA", "AAA",'A', Blocks.HAY_BLOCK);
     	GameRegistry.addRecipe(new ItemStack(ModItems.animalNet), "xSS", "SAA", "xxA",'S', Items.STICK, 'A', Items.STRING);
+     	GameRegistry.addRecipe(new ItemStack(ModItems.pen), "WxW", "WNW", "WWW",'W', Blocks.PLANKS, 'N', ModItems.nest);
 
     	
 	}

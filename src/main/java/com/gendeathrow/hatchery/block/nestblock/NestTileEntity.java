@@ -11,6 +11,7 @@ import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
@@ -18,6 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -27,6 +29,7 @@ import net.minecraftforge.fml.common.Optional.Interface;
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.ModItems;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
+import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 import com.setycz.chickens.ChickensRegistry;
 import com.setycz.chickens.ChickensRegistryItem;
 import com.setycz.chickens.chicken.EntityChickensChicken;
@@ -91,9 +94,11 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 					{
 						Entity entitychicken = null;
 						
+						NBTTagCompound entityTag = ItemStackEntityNBTHelper.getEntityTagFromStack(this.eggSlot[0]);
+						
 						try
 						{
-							entitychicken = EntityList.createEntityFromNBT(this.eggSlot[0].getTagCompound(), this.worldObj);
+							entitychicken = EntityList.createEntityFromNBT(entityTag, this.worldObj);
 						}
 						catch (Throwable e)
 						{
@@ -104,6 +109,7 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 		    	        {
 		    	        	entitychicken.setLocationAndAngles(getPos().getX(), getPos().getY() + 1, getPos().getZ(), 0.0F, 0.0F);
 		    	        	this.worldObj.spawnEntityInWorld(entitychicken);
+		    	        	worldObj.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
 		    	        }
 					}
 					else if(this.eggSlot[0].getItem() == Items.EGG || this.eggSlot[0].getTagCompound() == null)
@@ -112,10 +118,12 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 						chicken.setPosition(getPos().getX(), getPos().getY() + 1, getPos().getZ());
 						chicken.setGrowingAge(-24000);
 						worldObj.spawnEntityInWorld(chicken);
+	    	        	worldObj.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
 					}
 					else
 					{
 						spawnChickensModChicken();
+	    	        	worldObj.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
 					}
 					
 					NestBlock.removeEgg(worldObj, worldObj.getBlockState(getPos()), getPos());

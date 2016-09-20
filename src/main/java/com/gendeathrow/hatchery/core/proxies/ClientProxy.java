@@ -79,9 +79,11 @@ public class ClientProxy extends CommonProxy
 		// registerBlockModel(ModItems.nest, 1, ModItems.nest.getRegistryName().toString());
 		
 		registerBlockModel(ModItems.pen, 0, ModItems.pen.getRegistryName().toString());
+		registerBlockModel(ModItems.pen_chicken, 0, ModItems.pen_chicken.getRegistryName().toString());
 		
 		registerItemModel(ModItems.hatcheryEgg);
 		registerItemModel(ModItems.animalNet);
+		registerItemModel(ModItems.manure);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(NestTileEntity.class, new NestTileEntityRender());
 		ClientRegistry.bindTileEntitySpecialRenderer(NestPenTileEntity.class, new NestPenTileEntityRenderer());

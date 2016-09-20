@@ -5,3 +5,10 @@ tile.pen.name=Nesting Pen
 
 item.hatcheryegg.name=Egg
 item.animalnet.name=Animal Net
+item.chickenmanure.name=Chicken Manure
+
+text.hatching=Hatching
+text.nothatching=Not Hatching
+text.chicken=Chicken
+text.nxdrop=Next Drop
+text.nochicken=Use 'Animal Net' to capture a chicken

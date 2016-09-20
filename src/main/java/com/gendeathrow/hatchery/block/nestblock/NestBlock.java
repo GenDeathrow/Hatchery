@@ -42,7 +42,7 @@ public class NestBlock extends Block implements ITileEntityProvider
 	{
 		super(Material.LEAVES);
 		this.name = "nest";
-		this.setUnlocalizedName("nest");
+		this.setUnlocalizedName("nest"); 
 		this.setRegistryName(Hatchery.MODID,"nest");
 		this.setCreativeTab(Hatchery.hatcheryTabs);	
 		this.setHardness(5);
