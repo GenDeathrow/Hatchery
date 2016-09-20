@@ -90,35 +90,39 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 				if(hatchingTick > timeToHatch)
 				{
 					
-					if(this.eggSlot[0].getItem() == ModItems.hatcheryEgg && this.eggSlot[0].getTagCompound() != null)
+					if(this.eggSlot[0].getItem() == ModItems.hatcheryEgg)
 					{
 						Entity entitychicken = null;
 						
-						NBTTagCompound entityTag = ItemStackEntityNBTHelper.getEntityTagFromStack(this.eggSlot[0]);
-						
-						try
+						if(this.eggSlot[0].getTagCompound() == null) 
 						{
-							entitychicken = EntityList.createEntityFromNBT(entityTag, this.worldObj);
+							spawnMCChicken();
 						}
-						catch (Throwable e)
+						else
 						{
-							Hatchery.logger.error("Error trying to spawn Hatchery Egg 'Null NBT' " + e);
-						}
+							NBTTagCompound entityTag = ItemStackEntityNBTHelper.getEntityTagFromStack(this.eggSlot[0]);
 						
-		    	        if(entitychicken != null)
-		    	        {
-		    	        	entitychicken.setLocationAndAngles(getPos().getX(), getPos().getY() + 1, getPos().getZ(), 0.0F, 0.0F);
-		    	        	this.worldObj.spawnEntityInWorld(entitychicken);
-		    	        	worldObj.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
-		    	        }
+							try
+							{
+								entitychicken = EntityList.createEntityFromNBT(entityTag, this.worldObj);
+							}
+							catch (Throwable e)
+							{
+								Hatchery.logger.error("Error trying to spawn Hatchery Egg 'Null NBT' " + e);
+							}
+						
+							if(entitychicken != null)
+							{
+								entitychicken.setLocationAndAngles(getPos().getX(), getPos().getY() + 1, getPos().getZ(), 0.0F, 0.0F);
+								this.worldObj.spawnEntityInWorld(entitychicken);
+								worldObj.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
+							}
+							else spawnMCChicken();
+						}
 					}
-					else if(this.eggSlot[0].getItem() == Items.EGG || this.eggSlot[0].getTagCompound() == null)
+					else if(this.eggSlot[0].getItem() == Items.EGG)
 					{
-						EntityChicken chicken = new EntityChicken(worldObj);
-						chicken.setPosition(getPos().getX(), getPos().getY() + 1, getPos().getZ());
-						chicken.setGrowingAge(-24000);
-						worldObj.spawnEntityInWorld(chicken);
-	    	        	worldObj.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
+						spawnMCChicken();
 					}
 					else
 					{
@@ -134,6 +138,11 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 		}
 		else if(hatchingTick > timeToHatch) {hatchingTick = 0; ticks = 0;}
 	}
+	
+	
+	
+	
+	
 	
 	private boolean sentRequest = false;
 	public void updateClient()
@@ -216,6 +225,14 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
         }
     }
 
+    private void spawnMCChicken()
+    {
+		EntityChicken chicken = new EntityChicken(worldObj);
+		chicken.setPosition(getPos().getX(), getPos().getY() + 1, getPos().getZ());
+		chicken.setGrowingAge(-24000);
+		worldObj.spawnEntityInWorld(chicken);
+    	worldObj.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
+    }
     
     @Optional.Method(modid = "chickens")
     public void spawnChickensModChicken()

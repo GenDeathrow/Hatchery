@@ -76,15 +76,15 @@ public class NestPenBlock extends Block implements ITileEntityProvider
 
 	
 	@Override
-    public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-    	System.out.println("clicked");
     	if(!worldIn.isRemote)
     	{
     		NestPenTileEntity te = (NestPenTileEntity)worldIn.getTileEntity(pos);
-    		
     		te.dropContents();
+    		return true;
     	}
+    	return false;
     }
     
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
@@ -262,13 +262,7 @@ public class NestPenBlock extends Block implements ITileEntityProvider
     {
         return BOUNDING_BOXES[0];
     }
-    
-	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
-		return false;
-    }
-	
+
     /**
      * Convert the given metadata into a BlockState for this Block
      */

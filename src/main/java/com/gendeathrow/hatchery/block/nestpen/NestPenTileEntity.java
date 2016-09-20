@@ -59,6 +59,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	{
 		return this.TimetoNextEgg;
 	}
+	
 	public Entity storedEntity()
 	{
 		return this.chickenStored;
@@ -139,16 +140,23 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			//chickenStored.onLivingUpdate();
 	        if (!this.worldObj.isRemote && !chickenStored.isChild() && !chickenStored.isChickenJockey() && --TimetoNextEgg <= 0)
 	        {
-	            if(rand.nextInt(100) > 65) putStackInInventoryAllSlots(this, new ItemStack(Items.EGG, 1, 0), EnumFacing.DOWN);
-//	            else if(rand.nextInt(100) > 10)
-//	            {
-//	            	ItemStack hatcheryegg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
-//	            	EntityAgeable entityCopy = (EntityAgeable)storedEntity();
-//	            	entityCopy.setGrowingAge(-24000);
-//	            	ItemStackEntityNBTHelper.addEntitytoItemStack(hatcheryegg, (EntityLiving)entityCopy);
-//	            	
-//	            	putStackInInventoryAllSlots(this, hatcheryegg, EnumFacing.DOWN);
-//	            }
+	            if(rand.nextInt(100) > 100) putStackInInventoryAllSlots(this, new ItemStack(Items.EGG, 1, 0), EnumFacing.DOWN);
+	            else if(rand.nextInt(100) > 90)
+	            {
+	            	ItemStack hatcheryegg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
+	            	
+	            	NBTTagCompound babyTag = storedEntity().writeToNBT(new NBTTagCompound());
+	            	babyTag.setString("id", EntityList.getEntityString(this.storedEntity()));
+	            	
+	            	EntityAgeable baby = (EntityAgeable) EntityList.createEntityFromNBT(babyTag, this.worldObj);
+	            	baby.setGrowingAge(-24000);
+	            	
+	            	hatcheryegg.setStackDisplayName(baby.getDisplayName().getFormattedText() +" Egg");
+	            	
+	            	ItemStackEntityNBTHelper.addEntitytoItemStack(hatcheryegg, (EntityLiving)baby);
+	            	
+	            	putStackInInventoryAllSlots(this, hatcheryegg, EnumFacing.DOWN);
+	            }
 	            putStackInInventoryAllSlots(this, new ItemStack(Items.FEATHER, rand.nextInt(1)+1), EnumFacing.DOWN);
 	            putStackInInventoryAllSlots(this, new ItemStack(ModItems.manure, rand.nextInt(1)+1), EnumFacing.DOWN);
 	            
@@ -270,7 +278,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		
         for (int i = 0; i < this.inventory.length; ++i)
         {
-        	ItemStack stack = this.getStackInSlot(i);
+        	ItemStack stack = ItemStackHelper.getAndRemove(this.inventory, i);
         	
         	if(stack != null)
         	{
@@ -515,6 +523,29 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
     	
     	this.rand.nextFloat();
     	
+    }
+    
+    /**
+     * Used for sending Waila Infomation
+     * @param te
+     * @return
+     */
+    public static NBTTagList getInventoryContents(NestPenTileEntity te)
+    {
+    	NBTTagList nbttaglist = new NBTTagList();
+    	
+        for (int i = 0; i < te.inventory.length; ++i)
+        {
+            if (te.inventory[i] != null)
+            {
+                NBTTagCompound nbttagcompound = new NBTTagCompound();
+                nbttagcompound.setByte("Slot", (byte)i);
+                nbttagcompound.setString("id", te.inventory[i].getDisplayName());
+                nbttagcompound.setInteger("cnt", te.inventory[i].stackSize);
+                nbttaglist.appendTag(nbttagcompound);
+            }
+        }
+    	return nbttaglist;
     }
 
 

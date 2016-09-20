@@ -10,6 +10,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -80,6 +81,19 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			}
 			else currenttip.add(I18n.format("text.nochicken", new Object[0]));
 			
+			if(accessor.getNBTData().hasKey("inventory"))
+			{
+				NBTTagList inv = (NBTTagList) accessor.getNBTData().getTag("inventory");
+				if(inv != null) 
+				{
+					for(int i=0; i < inv.tagCount(); i++)
+					{
+						NBTTagCompound item = inv.getCompoundTagAt(i);
+						currenttip.add("Slot "+ item.getByte("Slot") +": "+ item.getString("id") +" x"+ item.getInteger("cnt") );
+					}
+				}
+			}
+			
 			
 			
 		}
@@ -105,6 +119,8 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			tag.setBoolean("hasChicken", ((NestPenTileEntity) te).storedEntity() != null);
 			if(((NestPenTileEntity) te).storedEntity() != null) tag.setString("entityname",  ((NestPenTileEntity) te).storedEntity().getDisplayName().getFormattedText());
 			tag.setLong("nextDrop",  ((NestPenTileEntity) te).getTimeToNextDrop());
+			NBTTagList list = hte.getInventoryContents(hte);
+			if(list != null) tag.setTag("inventory", list);
 		}
 		return tag;
 	}
