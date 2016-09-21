@@ -5,11 +5,10 @@ tile.pen.name=Nistgehege
 
 item.hatcheryegg.name=Ei
 item.animalnet.name=Tierfangnetz
-item.chickenmanure.name=Chicken Manure
+item.chickenmanure.name=Hühnermist
 
-text.hatching=Hatching
-text.nothatching=Not Hatching
-text.chicken=Chicken
-text.nxdrop=Next Drop
-text.nochicken=Use 'Tierfangnetz' to capture a chicken
-
+text.hatching=Ausbrütend
+text.nothatching=Nicht ausbrütend
+text.chicken=Huhn
+text.nxdrop=Nächster Drop
+text.nochicken=Benutze das Tierfangnetz, um ein Huhn einzufangen
