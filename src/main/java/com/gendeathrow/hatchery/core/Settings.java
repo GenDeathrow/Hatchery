@@ -5,6 +5,7 @@ public class Settings
 
 	public static boolean eggBreeding = true;
 	public static boolean canThrowEgg = true;
+	public static int eggNestDropRate = 50;
 	
 	
 	

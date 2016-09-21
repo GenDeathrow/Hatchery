@@ -32,6 +32,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
@@ -135,13 +136,9 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
                 }
 	        }
 	        
-			//if(firstload) {  this.worldObj.notifyBlockUpdate(pos, this.worldObj.getBlockState(pos), this.worldObj.getBlockState(pos), 1); firstload = false;}
-
-			//chickenStored.onLivingUpdate();
 	        if (!this.worldObj.isRemote && !chickenStored.isChild() && !chickenStored.isChickenJockey() && --TimetoNextEgg <= 0)
 	        {
-	            if(rand.nextInt(100) > 100) putStackInInventoryAllSlots(this, new ItemStack(Items.EGG, 1, 0), EnumFacing.DOWN);
-	            else if(rand.nextInt(100) > 90)
+	            if(rand.nextInt(99)+1 < Settings.eggNestDropRate)
 	            {
 	            	ItemStack hatcheryegg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
 	            	
@@ -157,22 +154,9 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	            	
 	            	putStackInInventoryAllSlots(this, hatcheryegg, EnumFacing.DOWN);
 	            }
-	            putStackInInventoryAllSlots(this, new ItemStack(Items.FEATHER, rand.nextInt(1)+1), EnumFacing.DOWN);
-	            putStackInInventoryAllSlots(this, new ItemStack(ModItems.manure, rand.nextInt(1)+1), EnumFacing.DOWN);
 	            
-	            
-	            
-//	            for (int i = 0; i < this.inventory.length; ++i)
-//	            {
-//	            	IItemHandler handler = this.getItemHandler(this, EnumFacing.DOWN);
-//	            	
-//	                if (this.inventory[i] != null)
-//	                {
-//	                	//System.out.println("Slot "+ i + ": "+ this.inventory[i].getDisplayName() +" :"+ this.inventory[i].stackSize);
-//	                }
-//	                //else System.out.println("Slot "+ i + ": Empty");
-//	            }
-	            
+	            putStackInInventoryAllSlots(this, new ItemStack(Items.FEATHER, 1), EnumFacing.DOWN);
+	            putStackInInventoryAllSlots(this, new ItemStack(ModItems.manure, rand.nextInt(2)+1), EnumFacing.DOWN);
 	        	this.TimetoNextEgg = this.rand.nextInt(6000) + 6000;
 	        }
 		}

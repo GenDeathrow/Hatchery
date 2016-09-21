@@ -1,0 +1,8 @@
+{
+    "parent": "hatchery:block/fertilized_farmland",
+    "textures": {
+        "particle": "blocks/dirt",
+        "ftop": "hatchery:blocks/fertil_farmland_dry",
+		"side": "hatchery:blocks/fertil_dirt_bottom"
+    }
+}

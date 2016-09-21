@@ -2,6 +2,8 @@ itemGroup.hatchery=Hatchery
 
 tile.nest.name=Hatchery Nest
 tile.pen.name=Nesting Pen
+tile.fertilized_dirt.name=Fertilized Dirt
+tile.fertilized_farmland.name=Fertilized Farmland
 
 item.hatcheryegg.name=Egg
 item.animalnet.name=Animal Net

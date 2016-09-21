@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "normal": [
+            { "model": "hatchery:fertilized_dirt" },
+            { "model": "hatchery:fertilized_dirt", "y": 90 },
+            { "model": "hatchery:fertilized_dirt", "y": 180 },
+            { "model": "hatchery:fertilized_dirt", "y": 270 }
+        ]
+    }
+}
