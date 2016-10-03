@@ -4,6 +4,7 @@ tile.nest.name=Brutnest
 tile.pen.name=Nistgehege
 tile.fertilized_dirt.name=Gedüngte Erde
 tile.fertilized_farmland.name=Gedüngter Ackerboden
+tile.feeder.name=Hühnerfütterer
 
 item.hatcheryegg.name=Ei
 item.animalnet.name=Tierfangnetz
@@ -14,3 +15,4 @@ text.nothatching=Nicht ausbrütend
 text.chicken=Huhn
 text.nxdrop=Nächster Drop
 text.nochicken=Benutze das Tierfangnetz, um ein Huhn einzufangen
+text.storedseed=Gelagerte Samen
