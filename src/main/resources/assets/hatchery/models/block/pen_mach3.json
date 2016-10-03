@@ -1,8 +1,10 @@
 {
     "ambientocclusion": false,
     "textures": {
+		"particle": "blocks/planks_oak",
         "0": "blocks/planks_oak",
         "1": "hatchery:blocks/nest"
+		
     },
     "elements": [
         {

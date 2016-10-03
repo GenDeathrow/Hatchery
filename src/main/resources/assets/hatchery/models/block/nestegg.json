@@ -1,6 +1,7 @@
 {
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
     "textures": {
+		"particle": "hatchery:blocks/nest",
         "0": "hatchery:blocks/nest",
         "1": "hatchery:blocks/egg"
     },

@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.block.nestpen;
+package com.gendeathrow.hatchery.block.ironnestpen;
 
 import java.util.List;
 
@@ -9,18 +9,15 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
@@ -29,13 +26,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.ModItems;
 
-public class NestPenBlock extends Block implements ITileEntityProvider
+public class IronNestPenBlock extends Block implements ITileEntityProvider
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	
@@ -68,7 +62,7 @@ public class NestPenBlock extends Block implements ITileEntityProvider
 
 	protected String name;
 	
-	public NestPenBlock() 
+	public IronNestPenBlock() 
 	{
 		super(Material.WOOD);
 		this.name = "pen";
@@ -83,7 +77,7 @@ public class NestPenBlock extends Block implements ITileEntityProvider
     {
     	if(!worldIn.isRemote)
     	{
-    		NestPenTileEntity te = (NestPenTileEntity)worldIn.getTileEntity(pos);
+    		IronNestPenTileEntity te = (IronNestPenTileEntity)worldIn.getTileEntity(pos);
     		te.dropContents();
     		return true;
     	}
@@ -187,28 +181,16 @@ public class NestPenBlock extends Block implements ITileEntityProvider
     	return false;
     }
 	
-    @SideOnly(Side.CLIENT)
+    @Override
     public BlockRenderLayer getBlockLayer()
     {
-        return BlockRenderLayer.CUTOUT_MIPPED;
+		return BlockRenderLayer.TRANSLUCENT;
+    	
     }
-    
-    public EnumBlockRenderType getRenderType(IBlockState state)
-    {
-        return EnumBlockRenderType.MODEL;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-    {
-        return true;
-    }
-    
-    
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) 
 	{
-		return new NestPenTileEntity();
+		return new IronNestPenTileEntity();
 	}
 	
 	public static EnumFacing getFacing(IBlockState blockStateContainer)

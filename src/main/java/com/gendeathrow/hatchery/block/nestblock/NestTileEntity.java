@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -67,7 +68,7 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 	{
 		if(this.worldObj.isRemote) 
 		{
-
+			
 			updateClient();
 			return;
 		}

@@ -80,8 +80,12 @@ public class ClientProxy extends CommonProxy
 		registerBlockModel(ModItems.pen, 0, ModItems.pen.getRegistryName().toString());
 		registerBlockModel(ModItems.pen_chicken, 0, ModItems.pen_chicken.getRegistryName().toString());
 		
+		registerBlockModel(ModItems.feeder, 0, ModItems.feeder.getRegistryName().toString());
+		
 		registerBlockModel(ModItems.fertlizedDirt, 0, ModItems.fertlizedDirt.getRegistryName().toString());
 		registerBlockModel(ModItems.fertilzedFarmland, 0, ModItems.fertilzedFarmland.getRegistryName().toString());
+		
+		//registerBlockModel(ModItems.CornPlant, 0, ModItems.CornPlant.getRegistryName().toString());
 		
 		registerItemModel(ModItems.hatcheryEgg);
 		registerItemModel(ModItems.animalNet);

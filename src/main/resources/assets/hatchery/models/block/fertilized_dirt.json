@@ -1,6 +1,7 @@
 {
     "parent": "block/cube_bottom_top",
     "textures": {
+	    "particle": "blocks/dirt",
         "bottom": "hatchery:blocks/fertil_dirt_bottom",
         "top": "hatchery:blocks/fertil_dirt_top",
         "side": "hatchery:blocks/fertil_dirt_side"

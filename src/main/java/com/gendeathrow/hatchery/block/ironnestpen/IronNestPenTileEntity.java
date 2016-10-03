@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.block.nestpen;
+package com.gendeathrow.hatchery.block.ironnestpen;
 
 import java.util.Random;
 
@@ -37,7 +37,7 @@ import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
-public class NestPenTileEntity extends TileEntity  implements ITickable, IInventory
+public class IronNestPenTileEntity extends TileEntity  implements ITickable, IInventory
 {
 	
 	private EntityChicken chickenStored;
@@ -50,7 +50,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	ItemStack[] inventory = new ItemStack[5];
 	
 	
-	public NestPenTileEntity()
+	public IronNestPenTileEntity()
 	{
 		super();
 		entityNBT = new NBTTagCompound();
@@ -81,7 +81,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			entityin.setPosition(this.pos.getX(),this.pos.getY() , this.pos.getZ());
 			entityin.motionY = 0;
 			
-			NestPenBlock.setState(true, this.worldObj, this.pos);
+			IronNestPenBlock.setState(true, this.worldObj, this.pos);
 			return true;
 		}else return false;
 		
@@ -94,7 +94,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		Entity respondEntity = this.storedEntity();
 		entityNBT = new NBTTagCompound();	
 		this.chickenStored = null;
-		NestPenBlock.setState(false, this.worldObj, this.pos);
+		IronNestPenBlock.setState(false, this.worldObj, this.pos);
 		return respondEntity;
 	}
 	
@@ -233,7 +233,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	{
 		if(this.chickenStored != null) return;
 		
-		if(!NestPenBlock.hasChicken(this.worldObj.getBlockState(pos))) return;
+		if(!IronNestPenBlock.hasChicken(this.worldObj.getBlockState(pos))) return;
 	   
 		if(!sentRequest)
 		{
@@ -576,7 +576,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
      * @param te
      * @return
      */
-    public static NBTTagList getInventoryContents(NestPenTileEntity te)
+    public static NBTTagList getInventoryContents(IronNestPenTileEntity te)
     {
     	NBTTagList nbttaglist = new NBTTagList();
     	

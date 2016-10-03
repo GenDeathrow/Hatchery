@@ -59,6 +59,9 @@ public class NestTileEntityRender extends TileEntitySpecialRenderer<NestTileEnti
             GlStateManager.scale(.4f, .4f, .4f);
 
             Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.NONE);
+            
+            GlStateManager.rotate(90, 0, 1, 0);
+            Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.NONE);
 
             GlStateManager.popMatrix();
     }

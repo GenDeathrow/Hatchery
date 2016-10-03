@@ -9,6 +9,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.block.corn.CornPlant;
+import com.gendeathrow.hatchery.block.feeder.FeederBlock;
+import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
 import com.gendeathrow.hatchery.block.fertilizedDirt.FertilizedDirt;
 import com.gendeathrow.hatchery.block.fertilizedDirt.FertilizedFarmland;
 import com.gendeathrow.hatchery.block.nestblock.NestBlock;
@@ -29,7 +31,9 @@ public class ModItems
 	public static Block pen = new NestPenBlock().setRegistryName(Hatchery.MODID, "pen").setCreativeTab(Hatchery.hatcheryTabs);
 	public static Block pen_chicken = new NestPenBlock().setRegistryName(Hatchery.MODID, "pen_chicken");
 	
-	public static CornPlant CornPlant = new CornPlant();
+	public static Block CornPlant = new CornPlant().setRegistryName(Hatchery.MODID, "corn");
+	
+	public static Block feeder = new FeederBlock().setRegistryName(Hatchery.MODID, "feeder").setUnlocalizedName("feeder");
 	
 	public static Block fertlizedDirt = new FertilizedDirt().setRegistryName(Hatchery.MODID, "fertilized_dirt").setCreativeTab(Hatchery.hatcheryTabs); 
 	public static Block fertilzedFarmland = new FertilizedFarmland().setRegistryName(Hatchery.MODID, "fertilized_farmland");
@@ -41,6 +45,7 @@ public class ModItems
 	public static HatcheryEgg hatcheryEgg = new HatcheryEgg();
 	public static AnimalNet animalNet = new AnimalNet();
 	public static ChickenManure manure = new ChickenManure();
+	
 	public static CornSeed cornSeeds= new CornSeed(pen, pen);
 	public static Corn corn = new Corn(1);
 	
@@ -74,12 +79,24 @@ public class ModItems
 		GameRegistry.register(ModItems.fertilzedFarmland);
 			ItemBlock fertlizedfarm = new ItemBlock(ModItems.fertilzedFarmland);
 			GameRegistry.register(fertlizedfarm.setRegistryName(ModItems.fertilzedFarmland.getRegistryName()));
+			
+	    //Corn
+			
+//			GameRegistry.register(ModItems.CornPlant);
+//			ItemBlock corn = new ItemBlock(ModItems.CornPlant);
+//			GameRegistry.register(corn.setRegistryName(ModItems.CornPlant.getRegistryName()));
+//			
+			
+			GameRegistry.register(ModItems.feeder);
+			ItemBlock feederitem = new ItemBlock(ModItems.feeder);
+			GameRegistry.register(feederitem.setRegistryName(ModItems.feeder.getRegistryName()));
 	}
 	
 	public static void RegisterTileEntitys()
 	{
 		GameRegistry.registerTileEntity(NestTileEntity.class, NestTileEntity.class.getName());
 		GameRegistry.registerTileEntity(NestPenTileEntity.class, NestPenTileEntity.class.getName());
+		GameRegistry.registerTileEntity(FeederTileEntity.class, FeederTileEntity.class.getName());
 	}
 	
 	public static void RegisterItems()

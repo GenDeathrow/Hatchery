@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
 import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
 import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 
@@ -30,8 +31,12 @@ public class HatcheryTileProvider implements IWailaDataProvider
         //registrar.registerBodyProvider(INSTANCE, HatcheryTileEntity.class);
         registrar.registerTailProvider(INSTANCE, NestTileEntity.class);
         registrar.registerNBTProvider(INSTANCE, NestTileEntity.class);
+        
         registrar.registerTailProvider(INSTANCE, NestPenTileEntity.class);
         registrar.registerNBTProvider(INSTANCE, NestPenTileEntity.class);
+        
+        registrar.registerTailProvider(INSTANCE, FeederTileEntity.class);
+        registrar.registerNBTProvider(INSTANCE, FeederTileEntity.class);
     }
     
 	@Override
@@ -93,9 +98,14 @@ public class HatcheryTileProvider implements IWailaDataProvider
 					}
 				}
 			}
-			
-			
-			
+		}	
+		else if(tileEntity instanceof FeederTileEntity)
+		{
+			if(accessor.getNBTData().hasKey("qty"))
+			{
+				accessor.getNBTData().getString("qty");
+				currenttip.add(I18n.format("text.storedseed", new Object[0]) +": "+ accessor.getNBTData().getString("qty"));
+			}
 		}
 		return currenttip;
 	}
@@ -121,6 +131,13 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			tag.setLong("nextDrop",  ((NestPenTileEntity) te).getTimeToNextDrop());
 			NBTTagList list = hte.getInventoryContents(hte);
 			if(list != null) tag.setTag("inventory", list);
+		}
+		else if(te instanceof FeederTileEntity)
+		{
+
+			FeederTileEntity hte = (FeederTileEntity) te;
+			
+			tag.setString("qty", hte.getSeedsInv() +"/"+ hte.getMaxSeedInv());
 		}
 		return tag;
 	}
