@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -15,6 +16,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -88,6 +90,25 @@ public class NestPenBlock extends Block implements ITileEntityProvider
     		return true;
     	}
     	return false;
+    }
+	
+	
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+        if (!worldIn.isRemote)
+        {
+    		NestPenTileEntity te = (NestPenTileEntity)worldIn.getTileEntity(pos);
+    		
+    		te.dropContents();
+    		
+    		if(te.storedEntity() != null)
+    		{
+    			te.storedEntity().setPosition(te.getPos().getX(), te.getPos().getY(), te.getPos().getZ());
+    			worldIn.spawnEntityInWorld(te.storedEntity());
+    		}
+        }
+        
+        super.breakBlock(worldIn, pos, state);
     }
     
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)

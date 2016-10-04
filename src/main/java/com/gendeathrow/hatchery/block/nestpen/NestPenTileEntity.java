@@ -41,7 +41,10 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 {
 	
 	private EntityChicken chickenStored;
+	
 	private NBTTagCompound entityNBT;
+	
+	private ItemStack egg;
 	
 	private int TimetoNextEgg = 0;
 	
@@ -81,6 +84,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			entityin.setPosition(this.pos.getX(),this.pos.getY() , this.pos.getZ());
 			entityin.motionY = 0;
 			
+			createEgg();
+			
 			NestPenBlock.setState(true, this.worldObj, this.pos);
 			return true;
 		}else return false;
@@ -94,6 +99,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		Entity respondEntity = this.storedEntity();
 		entityNBT = new NBTTagCompound();	
 		this.chickenStored = null;
+		this.egg = null;
 		NestPenBlock.setState(false, this.worldObj, this.pos);
 		return respondEntity;
 	}
@@ -103,14 +109,31 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		try
   		{
 			chickenStored = (EntityChicken) EntityList.createEntityFromNBT(this.entityNBT , this.getWorld());
+			createEgg();
   		}
   		catch (Throwable e)
   		{
   			chickenStored = null;
   			this.entityNBT = new NBTTagCompound();
+  			
   			Hatchery.logger.error("Error trying to add chicken tp pen 'Null NBT' " + e);
   		}
 
+	}
+	
+	private void createEgg()
+	{
+		this.egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
+		
+    	NBTTagCompound babyTag = storedEntity().writeToNBT(new NBTTagCompound());
+    	babyTag.setString("id", EntityList.getEntityString(this.storedEntity()));
+    	
+    	EntityAgeable baby = (EntityAgeable) EntityList.createEntityFromNBT(babyTag, this.worldObj);
+    	baby.setGrowingAge(-24000);
+    	
+    	egg.setStackDisplayName(baby.getDisplayName().getFormattedText() +" Egg");
+    	
+    	ItemStackEntityNBTHelper.addEntitytoItemStack(egg, (EntityLiving)baby);
 	}
 
 	boolean firstload = true;
@@ -128,6 +151,10 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			this.createEntity();
 		}
 
+		if(chickenStored != null)
+		{
+			this.chickenStored.onLivingUpdate();	
+		}
 		if(this.worldObj.isRemote) 
 		{
 			updateClient();
@@ -136,7 +163,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			
 			if(chickenStored == null) return;
 			
-			this.chickenStored.onLivingUpdate();
+			//this.chickenStored.onLivingUpdate();
 			
 			if(this.chickenStored.getRNG().nextFloat() < 0.02F)
 			{
@@ -183,21 +210,9 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	        {
 	            if(rand.nextInt(99)+1 < Settings.eggNestDropRate)
 	            {
-	            	ItemStack hatcheryegg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
+	            	if(this.egg == null) createEgg();
 	            	
-	            	NBTTagCompound babyTag = storedEntity().writeToNBT(new NBTTagCompound());
-	            	babyTag.setString("id", EntityList.getEntityString(this.storedEntity()));
-	            	
-	            	EntityAgeable baby = (EntityAgeable) EntityList.createEntityFromNBT(babyTag, this.worldObj);
-	            	baby.setGrowingAge(-24000);
-	            	
-	            	hatcheryegg.setStackDisplayName(baby.getDisplayName().getFormattedText() +" Egg");
-	            	
-	            	ItemStackEntityNBTHelper.addEntitytoItemStack(hatcheryegg, (EntityLiving)baby);
-	            	
-	            	putStackInInventoryAllSlots(this, hatcheryegg, EnumFacing.DOWN);
-	            	
-
+	            	putStackInInventoryAllSlots(this, this.egg.copy(), EnumFacing.DOWN);
 	            }
 	            
 	            putStackInInventoryAllSlots(this, new ItemStack(Items.FEATHER, 1), EnumFacing.DOWN);
@@ -211,8 +226,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
             
         	if(this.chickenStored.capturedDrops != null && this.chickenStored.capturedDrops.size() > 0)
         	{
-        		System.out.println("Items Captured");
-        		
+        		        		
         		for(EntityItem entity : this.chickenStored.capturedDrops)
         		{
         			putStackInInventoryAllSlots(this, entity.getEntityItem(), EnumFacing.DOWN);
@@ -255,12 +269,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		
 		if(compound.hasKey("storedEntity"))
 		{
-			//System.out.println("String: "+ compound.getTag("storedEntity").toString());
-			 
 			this.entityNBT = (NBTTagCompound) compound.getTag("storedEntity");
 		}
-		//else System.out.println("null");
-		
 		
         NBTTagList nbttaglist = compound.getTagList("Items", 5);
 

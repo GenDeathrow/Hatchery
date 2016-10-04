@@ -223,7 +223,7 @@ public class FeederTileEntity extends TileEntity  implements IInventory
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) 
 	{
-		return stack.getItem() instanceof ItemSeeds;
+		return this.seedInventory < this.maxSeedInventory ? stack.getItem() instanceof ItemSeeds : false;
 	}
 
 	@Override

@@ -378,10 +378,10 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 		
 		ItemStack test = ItemStack.loadItemStackFromNBT(egg);
 		
-		if(test != null)
-		{
-			System.out.println("Sending ItemStack "+ test.getDisplayName());
-		}
+//		if(test != null)
+//		{
+//			System.out.println("Sending ItemStack "+ test.getDisplayName());
+//		}
     	//this.eggSlot[0] = ItemStack.loadItemStackFromNBT(pkt.getNbtCompound().getCompoundTag("egg"));
 
   

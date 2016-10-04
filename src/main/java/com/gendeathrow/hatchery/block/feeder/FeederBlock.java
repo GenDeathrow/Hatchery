@@ -71,17 +71,20 @@ public class FeederBlock extends Block implements ITileEntityProvider
     			List<EntityChicken> entitys = worldIn.getEntitiesWithinAABB(EntityChicken.class, RANGE_AABB);
     			for(EntityChicken entity : entitys)
     			{
-    				if(entity.isChild())
+    				if(te.getSeedsInv() > 0)
     				{
-    	                te.decrSeedsInv();
-    	                entity.ageUp((int)((float)(-entity.getGrowingAge() / 20) * 0.35F), true);
+    				
+    					if(entity.isChild())
+    					{
+    						te.decrSeedsInv();
+    						entity.ageUp((int)((float)(-entity.getGrowingAge() / 20) * 0.35F), true);
+    					}
+    					else
+    					{
+    						te.decrSeedsInv();
+    						entity.timeUntilNextEgg -= 5;
+    					}
     				}
-    				else
-    				{
-    					te.decrSeedsInv();
-    					entity.timeUntilNextEgg -= 5;
-    				}
-    					
     			}
     		}
     	}
