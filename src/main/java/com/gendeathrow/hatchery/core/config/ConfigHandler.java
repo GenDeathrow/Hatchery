@@ -23,7 +23,7 @@ public class ConfigHandler
 			
 			Settings.canThrowEgg = config.getBoolean("Can Throw Eggs", "mechanics", true, "Sets if players can throw eggs to hatch chickens.");
 			
-			Settings.eggNestDropRate = config.getInt("Hatchery Egg Drop Rate", "Drop Rates", 50, 0, 100, "Configure the drop rate  %  of Eggs in the Nesting Pen. ");
+			Settings.eggNestDropRate = config.getInt("Hatchery Egg Drop Rate", "Drop Rates", 40, 0, 100, "Configure the drop rate  %  of Eggs in the Nesting Pen. ");
 			
 		config.save();
 	}

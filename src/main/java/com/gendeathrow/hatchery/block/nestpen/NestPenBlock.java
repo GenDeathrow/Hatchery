@@ -1,24 +1,23 @@
 package com.gendeathrow.hatchery.block.nestpen;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -34,7 +33,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.ModItems;
 
 public class NestPenBlock extends Block implements ITileEntityProvider
@@ -69,14 +67,17 @@ public class NestPenBlock extends Block implements ITileEntityProvider
     protected static final AxisAlignedBB[] BOUNDING_BOXES = new AxisAlignedBB[] {AABB};    
 
 	protected String name;
-	
+    
+	private static boolean keepInventory;
+    
 	public NestPenBlock() 
 	{
 		super(Material.WOOD);
 		this.name = "pen";
 		this.setUnlocalizedName("pen");
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-		this.setHardness(5);
+		this.setHardness(2);
+		this.setHarvestLevel("axe", 0);
 	}
 
 	
@@ -95,7 +96,7 @@ public class NestPenBlock extends Block implements ITileEntityProvider
 	
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
     {
-        if (!worldIn.isRemote)
+        if (!keepInventory)
         {
     		NestPenTileEntity te = (NestPenTileEntity)worldIn.getTileEntity(pos);
     		
@@ -103,12 +104,22 @@ public class NestPenBlock extends Block implements ITileEntityProvider
     		
     		if(te.storedEntity() != null)
     		{
-    			te.storedEntity().setPosition(te.getPos().getX(), te.getPos().getY(), te.getPos().getZ());
+    			te.storedEntity().setPosition(te.getPos().getX() + .5, te.getPos().getY(), te.getPos().getZ() + .5);
     			worldIn.spawnEntityInWorld(te.storedEntity());
     		}
+    		
         }
         
+        
+        
         super.breakBlock(worldIn, pos, state);
+    }
+    
+    
+    @Nullable
+    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
+        return Item.getItemFromBlock(ModItems.pen);
     }
     
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
@@ -128,17 +139,17 @@ public class NestPenBlock extends Block implements ITileEntityProvider
     {
     	 IBlockState iblockstate = worldIn.getBlockState(pos);
          TileEntity tileentity = worldIn.getTileEntity(pos);
-         boolean keepInventory = true;
+         keepInventory = true;
 
          if (hasChicken)
          {
+             worldIn.setBlockState(pos, ModItems.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 2);
              worldIn.setBlockState(pos, ModItems.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
-            // worldIn.setBlockState(pos, ModItems.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
          }
          else
          {
+             worldIn.setBlockState(pos, ModItems.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 2);
              worldIn.setBlockState(pos, ModItems.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
-            // worldIn.setBlockState(pos, ModItems.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
          }
 
          keepInventory = false;
@@ -154,6 +165,49 @@ public class NestPenBlock extends Block implements ITileEntityProvider
     public static boolean hasChicken(IBlockState state)
     {
 		return state.getBlock() == ModItems.pen_chicken;
+    }
+    
+    public static EntityChicken getNearByMate(World world, IBlockState state, BlockPos pos)
+    {
+        TileEntity tileentity = world.getTileEntity(pos);
+
+        if (!(tileentity instanceof NestPenTileEntity))
+        {
+            return null;
+        }
+        else
+        {
+        	
+        	for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
+        	{
+        		if(enumfacing == EnumFacing.UP || enumfacing == EnumFacing.DOWN) continue;
+        	
+            		BlockPos blockpos = pos.offset(enumfacing);
+            		Block block = world.getBlockState(blockpos).getBlock();
+            		
+                    if (block instanceof NestPenBlock)
+                    {
+                    	TileEntity tileentity1 = world.getTileEntity(blockpos);
+
+                        if (tileentity1 instanceof NestPenTileEntity)
+                        {
+                        	if(((NestPenTileEntity)tileentity1).storedEntity() != null)
+                        	{
+                        		return (EntityChicken) ((NestPenTileEntity) tileentity1).storedEntity();
+                        	}
+                        }
+                    }
+        	}
+        }
+    	
+    	return null;
+    }
+    
+    private boolean isFeederNear()
+    {
+    	
+    	
+    	return false;
     }
     
     private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state)

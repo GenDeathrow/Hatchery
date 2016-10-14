@@ -5,18 +5,26 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMate;
 import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemEgg;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
+import com.gendeathrow.hatchery.entity.ai.AutoBreeding;
 import com.gendeathrow.hatchery.entity.ai.ChickenBreeding;
 
 public class EventHandler 
@@ -30,8 +38,20 @@ public class EventHandler
 		{
 			event.setCanceled(true);
 		}
-		
 	}
+	
+//	@SubscribeEvent
+//	public void onPlayerEntityInteract(EntityInteract event)
+//	{
+//		
+//
+//		if (event.getItemStack() != null && event.getItemStack().getItem() == Items.LEAD && this.canBeLeashedTo(player))
+//        {
+//            this.setLeashedToEntity(player, true);
+//            --event.getItemStack().stackSize;
+//        }
+//		
+//	}
 	
 	@SubscribeEvent
 	public void onHoeEvent(UseHoeEvent event)
@@ -88,7 +108,31 @@ public class EventHandler
 				chicken.tasks.addTask(priority, new ChickenBreeding(chicken, 1.0F));
 //				Hatchery.logger.info("... Dont");
 			}
+			
+			// Not yet
+			//chicken.tasks.addTask(priority, new AutoBreeding(chicken, 1.0f));
+			
 		}
 	}
 	
+	@SubscribeEvent
+	public void AttachCap(AttachCapabilitiesEvent.Entity event)
+	{
+		if(event.getEntity() instanceof EntityChicken)
+		{
+			event.addCapability(new ResourceLocation(Hatchery.MODID,"eatting_animal"), new CapabilityAnimalStatsHandler());
+		}
+	}
+
+
+	@SubscribeEvent
+	public void EntityUpdate(LivingUpdateEvent event)
+	{
+		if(!(event.getEntity() instanceof EntityAnimal)) return;
+		
+		if(event.getEntity().hasCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null))
+		{
+			event.getEntity().getCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null).update();
+		}
+	}
 }

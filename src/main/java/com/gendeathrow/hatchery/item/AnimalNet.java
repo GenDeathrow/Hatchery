@@ -123,21 +123,23 @@ public class AnimalNet extends Item
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-
+		//System.out.println("item used");
         if (!worldIn.isRemote)
         {
-    	    
+        	//System.out.println("server");    
     	    if (hand == EnumHand.OFF_HAND && playerIn.getHeldItemMainhand().getItem() == ModItems.animalNet) 
     	    {
+    	    	//System.out.println("faild both hands"); 
     	    	return EnumActionResult.FAIL;
     	    }
     		if(playerIn.worldObj.getBlockState(pos).getBlock() == ModItems.pen_chicken)
     		{
+    			//System.out.println("has chicken!");
     			NestPenTileEntity pen = (NestPenTileEntity)playerIn.worldObj.getTileEntity(pos);
     			
     			if(!hasCapturedAnimal(stack) && pen.storedEntity() != null)
     			{	
-
+    				//System.out.println("getting entity");
     				setCapturedNBT(stack, pen.storedEntity());
     				pen.tryGetRemoveEntity();
     				
@@ -149,21 +151,37 @@ public class AnimalNet extends Item
         	{
           		NBTTagCompound entitynbt = (NBTTagCompound) stack.getTagCompound().getTag("storedEntity");
           		 
-         		if(entitynbt == null) { return  EnumActionResult.FAIL; }
+          		
+         		if(entitynbt == null) 
+         		{
+         			//System.out.println("entity nbt null?");
+         			return  EnumActionResult.FAIL; 
+         		}
         		
         		Entity entity = buildEntity(worldIn, entitynbt); 
         		
-        		if(entity == null) { return  EnumActionResult.FAIL; }
+        		if(entity == null) 
+        		{
+        		//	System.out.println("entity null?");
+        			return  EnumActionResult.FAIL; 
+        		}
 	  			entity.setPositionAndRotation(pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D, Math.abs(playerIn.rotationYaw), 0);
-	  	    	 	  			
+	  	    	 	
+	  			//System.out.println("world or pen");
 	  			
         		if(playerIn.worldObj.getBlockState(pos).getBlock() == ModItems.pen)
         		{
+        			//System.out.println("pen!");
+        			
          			NestPenTileEntity pen = (NestPenTileEntity)playerIn.worldObj.getTileEntity(pos);
          		   
          			pen.trySetEntity(entity);
         		}
-        		else worldIn.spawnEntityInWorld(entity);
+        		else 
+        		{
+        			//System.out.println("World!");
+        			worldIn.spawnEntityInWorld(entity);
+        		}
 	  			
 	  	        playerIn.addStat(StatList.getObjectUseStats(this));
 

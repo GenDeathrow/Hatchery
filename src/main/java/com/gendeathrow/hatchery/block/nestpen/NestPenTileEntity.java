@@ -6,11 +6,10 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -37,6 +36,7 @@ import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
+
 public class NestPenTileEntity extends TileEntity  implements ITickable, IInventory
 {
 	
@@ -44,7 +44,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	
 	private NBTTagCompound entityNBT;
 	
-	private ItemStack egg;
+	//private ItemStack egg;
 	
 	private int TimetoNextEgg = 0;
 	
@@ -72,6 +72,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	
 	public boolean trySetEntity(Entity entityin)
 	{
+		//System.out.println("trying");
 		if(this.storedEntity() != null) return false;
 		
 		if(entityin instanceof EntityChicken)
@@ -84,7 +85,9 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			entityin.setPosition(this.pos.getX(),this.pos.getY() , this.pos.getZ());
 			entityin.motionY = 0;
 			
-			createEgg();
+			//createEgg();
+			
+			//System.out.println("setting entity and egg");
 			
 			NestPenBlock.setState(true, this.worldObj, this.pos);
 			return true;
@@ -99,7 +102,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		Entity respondEntity = this.storedEntity();
 		entityNBT = new NBTTagCompound();	
 		this.chickenStored = null;
-		this.egg = null;
+		//TODO this.egg = null;
 		NestPenBlock.setState(false, this.worldObj, this.pos);
 		return respondEntity;
 	}
@@ -109,11 +112,12 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		try
   		{
 			chickenStored = (EntityChicken) EntityList.createEntityFromNBT(this.entityNBT , this.getWorld());
-			createEgg();
+			//createEgg();
   		}
   		catch (Throwable e)
   		{
   			chickenStored = null;
+  		//TODO this.egg = null;
   			this.entityNBT = new NBTTagCompound();
   			
   			Hatchery.logger.error("Error trying to add chicken tp pen 'Null NBT' " + e);
@@ -121,19 +125,44 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 
 	}
 	
-	private void createEgg()
+	private ItemStack createEgg()
 	{
-		this.egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
+		//TODO this.egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
 		
-    	NBTTagCompound babyTag = storedEntity().writeToNBT(new NBTTagCompound());
-    	babyTag.setString("id", EntityList.getEntityString(this.storedEntity()));
+		ItemStack egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
+		
     	
-    	EntityAgeable baby = (EntityAgeable) EntityList.createEntityFromNBT(babyTag, this.worldObj);
+		EntityChicken mate  = NestPenBlock.getNearByMate(worldObj, this.worldObj.getBlockState(pos), pos);
+		EntityChicken baby = null;
+		if(mate != null)
+		{
+			baby = ((EntityChicken) ((EntityAnimal)this.chickenStored).createChild(mate));
+			mate.setGrowingAge(6010);
+		}
+		else if(this.rand.nextInt(99)+1 < Settings.eggNestDropRate)
+		{
+			NBTTagCompound babyTag = storedEntity().writeToNBT(new NBTTagCompound());
+			babyTag.setString("id", EntityList.getEntityString(this.storedEntity()));
+			baby = (EntityChicken) EntityList.createEntityFromNBT(babyTag, this.worldObj);
+		}
+		else 
+		{
+			return null;
+		}
+
+		chickenStored.setGrowingAge(6000);
+
+		
     	baby.setGrowingAge(-24000);
+    	baby.resetInLove();
+    	baby.timeUntilNextEgg = 6000;
+    	
     	
     	egg.setStackDisplayName(baby.getDisplayName().getFormattedText() +" Egg");
     	
     	ItemStackEntityNBTHelper.addEntitytoItemStack(egg, (EntityLiving)baby);
+    	
+    	return egg;
 	}
 
 	boolean firstload = true;
@@ -155,6 +184,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		{
 			this.chickenStored.onLivingUpdate();	
 		}
+		
 		if(this.worldObj.isRemote) 
 		{
 			updateClient();
@@ -176,6 +206,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 
 			return;
 		}
+		
 		if(chickenStored != null)
 		{
 			this.chickenStored.captureDrops = true;
@@ -193,31 +224,19 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
                 }
 	        }
 	        
-	        int i = chickenStored.getGrowingAge();
-
-            if (i < 0)
-            {
-                ++i;
-                chickenStored.setGrowingAge(i);
-            }
-            else if (i > 0)
-            {
-                --i;
-                chickenStored.setGrowingAge(i);
-            }
-	        
-	        if (!this.worldObj.isRemote && !chickenStored.isChild() && !chickenStored.isChickenJockey() && --TimetoNextEgg <= 0)
+	        if (!this.worldObj.isRemote && !chickenStored.isChild() && !chickenStored.isChickenJockey())
 	        {
-	            if(rand.nextInt(99)+1 < Settings.eggNestDropRate)
+	            if(chickenStored.getGrowingAge() == 0)
 	            {
-	            	if(this.egg == null) createEgg();
-	            	
-	            	putStackInInventoryAllSlots(this, this.egg.copy(), EnumFacing.DOWN);
+	            	putStackInInventoryAllSlots(this, createEgg(), EnumFacing.DOWN);
 	            }
 	            
-	            putStackInInventoryAllSlots(this, new ItemStack(Items.FEATHER, 1), EnumFacing.DOWN);
-	            putStackInInventoryAllSlots(this, new ItemStack(ModItems.manure, rand.nextInt(2)+1), EnumFacing.DOWN);
-	        	this.TimetoNextEgg = this.rand.nextInt(6000) + 6000;
+	            if(--TimetoNextEgg <= 0)
+	            {
+	            	putStackInInventoryAllSlots(this, new ItemStack(Items.FEATHER, 1), EnumFacing.DOWN);
+	            	putStackInInventoryAllSlots(this, new ItemStack(ModItems.manure, rand.nextInt(2)+1), EnumFacing.DOWN);
+	            	this.TimetoNextEgg = this.rand.nextInt(6000) + 6000;
+	            }
 	        }
 	        
 	        

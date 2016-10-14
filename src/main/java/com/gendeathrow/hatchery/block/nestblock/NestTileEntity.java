@@ -114,7 +114,7 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 						
 							if(entitychicken != null)
 							{
-								entitychicken.setLocationAndAngles(getPos().getX(), getPos().getY() + 1, getPos().getZ(), 0.0F, 0.0F);
+								entitychicken.setLocationAndAngles(getPos().getX() + .5, getPos().getY() + .5, getPos().getZ() + .5, 0.0F, 0.0F);
 								this.worldObj.spawnEntityInWorld(entitychicken);
 								worldObj.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
 							}
@@ -229,10 +229,10 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
     private void spawnMCChicken()
     {
 		EntityChicken chicken = new EntityChicken(worldObj);
-		chicken.setPosition(getPos().getX(), getPos().getY() + 1, getPos().getZ());
+		chicken.setPosition(getPos().getX(), getPos().getY() + .5, getPos().getZ());
 		chicken.setGrowingAge(-24000);
 		worldObj.spawnEntityInWorld(chicken);
-    	worldObj.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
+    	worldObj.playSound((EntityPlayer)null, getPos().getX() + .5, getPos().getY() + 1, getPos().getZ() + .5, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
     }
     
     @Optional.Method(modid = "chickens")
@@ -241,7 +241,7 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
         EntityChickensChicken entitychicken = new EntityChickensChicken(this.worldObj);
         entitychicken.setChickenType(getChickenType(this.eggSlot[0]));
         entitychicken.setGrowingAge(-24000);
-        entitychicken.setPosition(getPos().getX(), getPos().getY() + 1, getPos().getZ());
+        entitychicken.setPosition(getPos().getX() + .5 , getPos().getY() + .5, getPos().getZ() + .5);
         this.worldObj.spawnEntityInWorld(entitychicken);
     }
     

@@ -1,6 +1,7 @@
 package com.gendeathrow.hatchery.block.nestblock;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nullable;
 
@@ -18,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -27,6 +29,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
+import com.gendeathrow.hatchery.core.ModItems;
 
 public class NestBlock extends Block implements ITileEntityProvider
 {
@@ -45,7 +49,7 @@ public class NestBlock extends Block implements ITileEntityProvider
 		this.setUnlocalizedName("nest"); 
 		this.setRegistryName(Hatchery.MODID,"nest");
 		this.setCreativeTab(Hatchery.hatcheryTabs);	
-		this.setHardness(5);
+		this.setHardness(1);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(hasEgg, false));
 	}
 	
@@ -64,7 +68,31 @@ public class NestBlock extends Block implements ITileEntityProvider
 //    	te.bonusPlayer = true;
 //    }
 
-	
+	@Override
+	 public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+	 {
+
+		 if(worldIn.getTileEntity(pos)  != null && worldIn.getTileEntity(pos) instanceof NestTileEntity)
+		 {
+ 			
+			 ItemStack stack = ((NestTileEntity)worldIn.getTileEntity(pos)).eggSlot[0];
+			 if(stack != null)
+			 {
+				 this.spawnAsEntity(worldIn, pos, stack);
+			 }
+			
+
+		 }
+		 
+		 super.breakBlock(worldIn, pos, state);
+	 }
+	 
+    @Nullable
+    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
+        return Item.getItemFromBlock(ModItems.nest);
+    }
+	 
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn)
 	{
@@ -101,7 +129,6 @@ public class NestBlock extends Block implements ITileEntityProvider
 	@Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-			
 			
     	if(doesHaveEgg(state))
     	{
@@ -230,29 +257,29 @@ public class NestBlock extends Block implements ITileEntityProvider
         return 0;
     }
 	
-    @Override
-    public int damageDropped(IBlockState state) 
-    {
-        return getMetaFromState(state);
-    }
+//    @Override
+//    public int damageDropped(IBlockState state) 
+//    {
+//        return getMetaFromState(state);
+//    }
     
     
     
-    /**
-     * Called on both Client and Server when World#addBlockEvent is called. On the Server, this may perform additional
-     * changes to the world, like pistons replacing the block with an extended base. On the client, the update may
-     * involve replacing tile entities, playing sounds, or performing other visual actions to reflect the server side
-     * changes.
-     *  
-     * @param state The block state retrieved from the block position prior to this method being invoked
-     * @param pos The position of the block event. Can be used to retrieve tile entities.
-     */
-    @Override
-    public boolean eventReceived(IBlockState state, World worldIn, BlockPos pos, int id, int param)
-    {
-        super.eventReceived(state, worldIn, pos, id, param);
-        
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity == null ? false : tileentity.receiveClientEvent(id, param);
-    }
+//    /**
+//     * Called on both Client and Server when World#addBlockEvent is called. On the Server, this may perform additional
+//     * changes to the world, like pistons replacing the block with an extended base. On the client, the update may
+//     * involve replacing tile entities, playing sounds, or performing other visual actions to reflect the server side
+//     * changes.
+//     *  
+//     * @param state The block state retrieved from the block position prior to this method being invoked
+//     * @param pos The position of the block event. Can be used to retrieve tile entities.
+//     */
+//    @Override
+//    public boolean eventReceived(IBlockState state, World worldIn, BlockPos pos, int id, int param)
+//    {
+//        super.eventReceived(state, worldIn, pos, id, param);
+//        
+//        TileEntity tileentity = worldIn.getTileEntity(pos);
+//        return tileentity == null ? false : tileentity.receiveClientEvent(id, param);
+//    }
 }

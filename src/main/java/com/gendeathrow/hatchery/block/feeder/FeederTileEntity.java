@@ -35,20 +35,6 @@ public class FeederTileEntity extends TileEntity  implements IInventory
 	@Override
 	public void readFromNBT(NBTTagCompound compound)
 	{
-//        NBTTagList nbttaglist = compound.getTagList("Items", 1);
-//
-//        for (int i = 0; i < nbttaglist.tagCount(); ++i)
-//        {
-//            NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
-//            int j = nbttagcompound.getByte("Slot") & 255;
-//
-//            if (j >= 0 && j < this.inventory.length)
-//            {
-//                this.inventory[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
-//            }
-//        }
-		
-		
 		this.seedInventory = compound.getInteger("seeds");
 		
 		super.readFromNBT(compound);
@@ -56,22 +42,6 @@ public class FeederTileEntity extends TileEntity  implements IInventory
 
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
-
-//		NBTTagList nbttaglist = new NBTTagList();
-//
-//        for (int i = 0; i < this.inventory.length; ++i)
-//        {
-//            if (this.inventory[i] != null)
-//            {
-//                NBTTagCompound nbttagcompound = new NBTTagCompound();
-//                nbttagcompound.setByte("Slot", (byte)i);
-//                this.inventory[i].writeToNBT(nbttagcompound);
-//                nbttaglist.appendTag(nbttagcompound);
-//            }
-//        }
-//        
-//        compound.setTag("Items", nbttaglist);
-		
 		compound.setInteger("seeds", this.seedInventory);
 		return super.writeToNBT(compound);
 	}
@@ -91,15 +61,7 @@ public class FeederTileEntity extends TileEntity  implements IInventory
 	{
 		return this.maxSeedInventory;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	////////////////////////////////////////////////////
 	// Inventory
@@ -178,8 +140,12 @@ public class FeederTileEntity extends TileEntity  implements IInventory
         
 		this.markDirty();
 	}
+	public void setSeeds(int qty)
+	{
+		this.seedInventory = qty;
+	}
 	
-	public void setSeeds(int qty, ItemStack stack)
+	public void setSeeds(int qty, ItemStack stack, boolean creative)
 	{
 		if(isItemValidForSlot(0, stack))
 		{
@@ -192,9 +158,11 @@ public class FeederTileEntity extends TileEntity  implements IInventory
 					this.seedInventory = this.maxSeedInventory;
 				}
 				
-				stack.stackSize -= qty;
-				
-				if(stack.stackSize <= 0) stack= null;
+				if(!creative)
+				{
+					stack.stackSize -= qty;
+					if(stack.stackSize <= 0) stack= null;
+				}
 			}
 		}
         

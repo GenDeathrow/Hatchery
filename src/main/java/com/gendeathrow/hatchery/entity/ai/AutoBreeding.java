@@ -3,8 +3,12 @@ package com.gendeathrow.hatchery.entity.ai;
 import java.util.List;
 import java.util.Random;
 
+import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.core.Settings;
+import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
+
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -12,16 +16,12 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
-import com.gendeathrow.hatchery.core.ModItems;
-import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
-
-public class ChickenBreeding extends EntityAIBase
+public class AutoBreeding extends EntityAIBase
 {
 
     protected final EntityAnimal theAnimal;
@@ -31,50 +31,36 @@ public class ChickenBreeding extends EntityAIBase
     protected int spawnBabyDelay;
     /** The speed the creature moves at during mating behavior. */
     protected double moveSpeed;
-
-    public ChickenBreeding(EntityAnimal animal, double speedIn)
-    {
-        this.theAnimal = animal;
+    
+	public AutoBreeding(EntityAnimal animal, double speedIn) 
+	{
+	    this.theAnimal = animal;
         this.theWorld = animal.worldObj;
         this.moveSpeed = speedIn;
         this.setMutexBits(3);
-    }
+	}
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     public boolean shouldExecute()
     {
-        if (!this.theAnimal.isInLove())
-        {
-            return false;
-        }
-        else
-        {
-            this.targetMate = this.getNearbyMate();
+    	if(theAnimal.getLeashed() && theAnimal.getLeashedToEntity() != null && theAnimal.getLeashedToEntity() instanceof EntityAnimal && this.theAnimal.canMateWith((EntityAnimal) theAnimal.getLeashedToEntity()))
+    	{
+            this.targetMate = (EntityAnimal) theAnimal.getLeashedToEntity();
             return this.targetMate != null;
-        }
-    }
-
-    
-    public EntityAnimal getAnimal()
-    {
-    	return this.theAnimal;
+    	}
+    	
+    	return false;
     }
     
     
-    public EntityAnimal getTargetMate()
-    {
-    	return this.targetMate;
-    }
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     public boolean continueExecuting()
     {
-        return this.targetMate.isEntityAlive() && this.targetMate.isInLove() && this.spawnBabyDelay < 60;
+        return this.targetMate.isEntityAlive() && this.spawnBabyDelay < 60;
     }
 
+    
     /**
      * Resets the task
      */
@@ -95,32 +81,12 @@ public class ChickenBreeding extends EntityAIBase
 
         if (this.spawnBabyDelay >= 60 && this.theAnimal.getDistanceSqToEntity(this.targetMate) < 9.0D)
         {
-            this.spawnEgg();
+          //  this.spawnEgg();
         }
     }
-
-    /**
-     * Loops through nearby animals and finds another animal of the same type that can be mated with. Returns the first
-     * valid mate found.
-     */
-    protected EntityAnimal getNearbyMate()
-    {
-        List<EntityAnimal> list = this.theWorld.<EntityAnimal>getEntitiesWithinAABB(this.theAnimal.getClass(), this.theAnimal.getEntityBoundingBox().expandXyz(8.0D));
-        double d0 = Double.MAX_VALUE;
-        EntityAnimal entityanimal = null;
-
-        for (EntityAnimal entityanimal1 : list)
-        {
-            if (this.theAnimal.canMateWith(entityanimal1) && this.theAnimal.getDistanceSqToEntity(entityanimal1) < d0)
-            {
-                entityanimal = entityanimal1;
-                d0 = this.theAnimal.getDistanceSqToEntity(entityanimal1);
-            }
-        }
-
-        return entityanimal;
-    }
-
+    
+    
+    
     private void spawnEgg()
     {
         EntityAgeable entityageable = this.theAnimal.createChild(this.targetMate);
@@ -151,28 +117,21 @@ public class ChickenBreeding extends EntityAIBase
             entityageable.setGrowingAge(-24000);
             entityageable.setLocationAndAngles(this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, 0.0F, 0.0F);
             
+            Entity entity = entityageable;
             
-            //NBTTagCompound eTag = new NBTTagCompound();
+            if(Settings.eggBreeding)
+            {
+            	ItemStack egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
             
-            //entityageable.writeEntityToNBT(eTag);
-            
-            //eTag.setString("id", EntityList.getEntityString(entityageable));
-            
-            //System.out.println(eTag.toString());
-            
-            ItemStack egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
-            
-            ItemStackEntityNBTHelper.addEntitytoItemStack(egg, entityageable);
+            	ItemStackEntityNBTHelper.addEntitytoItemStack(egg, entityageable);
 
-            //egg.setTagCompound(eTag);
+            	egg.setStackDisplayName(entityageable.getDisplayName().getFormattedText() +" Egg");
             
             
-            egg.setStackDisplayName(entityageable.getDisplayName().getFormattedText() +" Egg");
+            	entity = new EntityItem(this.theWorld, this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, egg);
+            }
             
-            
-            EntityItem entityItem = new EntityItem(this.theWorld, this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, egg);
-            
-            this.theWorld.spawnEntityInWorld(entityItem);
+            this.theWorld.spawnEntityInWorld(entity);
             
             Random random = this.theAnimal.getRNG();
 
@@ -194,5 +153,4 @@ public class ChickenBreeding extends EntityAIBase
         }
  
     }
-
 }

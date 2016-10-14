@@ -47,11 +47,13 @@ public class CommonProxy
 		ModItems.RegisterBlocks();
 		ModItems.RegisterTileEntitys();
 		ModItems.RegisterItems();
-		ModItems.RegisterRecipes();
+
+
 	}
 	
 	public void postInit(FMLPostInitializationEvent event)
 	{
-	
+		ModItems.RegisterOreDic();
+		ModItems.RegisterRecipes();
 	}
 }

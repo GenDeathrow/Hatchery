@@ -5,7 +5,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.block.corn.CornPlant;
@@ -112,12 +115,53 @@ public class ModItems
 		
 	}
 	
+	public static void RegisterOreDic()
+	{
+		OreDictionary.registerOre("dirt", ModItems.fertlizedDirt);
+		OreDictionary.registerOre("manure", ModItems.manure);
+	}
+	
 	public static void RegisterRecipes()
 	{
-
+	    IRecipe animalNetRecipe = new ShapedOreRecipe(new ItemStack(ModItems.animalNet), new Object[] {
+            "xSS",
+            "SAA",
+            "xxA",
+            'S', "stickWood",   // can use ordinary items, blocks, itemstacks in ShapedOreRecipe
+            'A', "string",  // look in OreDictionary for vanilla definitions
+	    });
+	    GameRegistry.addRecipe(animalNetRecipe);
+	    
+	    IRecipe penRecipe = new ShapedOreRecipe(new ItemStack(ModItems.pen), new Object[] {	    
+	    	"WxW", 
+	    	"WNW", 
+	    	"WWW",
+	    	'W', "plankWood", 
+	    	'N', ModItems.nest
+	    });
+	    
+	    GameRegistry.addRecipe(penRecipe);
+	    
+	    IRecipe fertDirtRecipe = new ShapedOreRecipe(new ItemStack(ModItems.fertlizedDirt), new Object[] {
+	    	"PPP", 
+	    	"PDP", 
+	    	"PPP",
+	    	'P', "manure",
+	    	'D', "dirt"
+		});
+	    GameRegistry.addRecipe(fertDirtRecipe);
+	    
+	    IRecipe feederRecipe = new ShapedOreRecipe(new ItemStack(ModItems.feeder), new Object[] {
+	    	".I.", 
+	    	"SBS", 
+	    	"SSS",
+	    	'I', "ingotIron",
+	    	'B', "blockIron",
+	    	'S', "slabWood"
+		});
+	    GameRegistry.addRecipe(feederRecipe);
+	    
 		GameRegistry.addRecipe(new ItemStack(ModItems.nest), "xxx", "AxA", "AAA",'A', Blocks.HAY_BLOCK);
-		GameRegistry.addRecipe(new ItemStack(ModItems.animalNet), "xSS", "SAA", "xxA",'S', Items.STICK, 'A', Items.STRING);
-	 	GameRegistry.addRecipe(new ItemStack(ModItems.pen), "WxW", "WNW", "WWW",'W', Blocks.PLANKS, 'N', ModItems.nest);
-	 	GameRegistry.addRecipe(new ItemStack(ModItems.fertlizedDirt), "PPP", "PDP", "PPP",'P', ModItems.manure, 'D', Blocks.DIRT);
+
 	}
 }

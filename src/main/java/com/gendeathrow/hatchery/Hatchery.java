@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
+import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
 import com.gendeathrow.hatchery.core.ModItems;
 import com.gendeathrow.hatchery.core.config.ConfigHandler;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
@@ -62,6 +63,9 @@ public class Hatchery {
 	    	logger = event.getModLog();
 	
 	    	Hatchery.network = NetworkRegistry.INSTANCE.newSimpleChannel(Hatchery.CHANNELNAME);
+	    	
+	    	
+	    	CapabilityAnimalStatsHandler.register();
 	    	
 	    	network.registerMessage(HatcheryPacket.ServerHandler.class, HatcheryPacket.class, 0, Side.SERVER);
 	    	network.registerMessage(HatcheryPacket.ClientHandler.class, HatcheryPacket.class, 1, Side.CLIENT);

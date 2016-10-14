@@ -5,8 +5,6 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import org.lwjgl.input.Keyboard;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
@@ -20,7 +18,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -36,24 +36,29 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
+import com.gendeathrow.hatchery.common.capability.IAnimalStats;
 
 public class FeederBlock extends Block implements ITileEntityProvider
 {
-
+    public static final PropertyInteger LEVEL = PropertyInteger.create("level", 0, 3);
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
 	//public static final PropertyEnum QTY;
 	protected static final AxisAlignedBB Base_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 0.125D, 0.875D);
 	protected static final AxisAlignedBB Container_AABB = new AxisAlignedBB(0.3125D, 0.0D, 0.3125D, 0.6875D,0.5625D, 0.625);
-    
+	protected static final AxisAlignedBB bounding = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 0.5625D, 0.875D);
+	   
 	
 	public FeederBlock() 
 	{
 		super(Material.WOOD);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 		this.setHardness(2);
+		this.setHarvestLevel("axe", 0);
 		this.setCreativeTab(Hatchery.hatcheryTabs);
 		this.setTickRandomly(true);
+
 	}
 	
 	
@@ -73,23 +78,69 @@ public class FeederBlock extends Block implements ITileEntityProvider
     			{
     				if(te.getSeedsInv() > 0)
     				{
-    				
-    					if(entity.isChild())
-    					{
-    						te.decrSeedsInv();
-    						entity.ageUp((int)((float)(-entity.getGrowingAge() / 20) * 0.35F), true);
-    					}
-    					else
-    					{
-    						te.decrSeedsInv();
-    						entity.timeUntilNextEgg -= 5;
-    					}
+ 						if(entity.hasCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null))
+						{
+ 		   					
+ 							IAnimalStats cap = entity.getCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null);
+ 							
+							if(cap != null && cap.canEat())
+							{
+								if(entity.isChild())
+								{
+									te.decrSeedsInv();
+    								
+    	    						entity.ageUp((int)((float)(-entity.getGrowingAge() / 10) * 0.35F), true);
+								}
+								else
+								{
+									te.decrSeedsInv();
+									entity.timeUntilNextEgg -= 5;
+								}
+
+							}
+
+						}
     				}
     			}
     		}
     	}
 	}
 	
+    boolean keepInventory;
+    
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+		if (!keepInventory)
+        {
+			
+        }
+		
+		ItemStack stack = this.createStackedBlock(state);
+		if(stack != null)
+		{
+    		if(worldIn.getTileEntity(pos)  != null && worldIn.getTileEntity(pos) instanceof FeederTileEntity)
+    		{
+    			if(!stack.hasTagCompound())
+    			{
+    				stack.setTagCompound(new NBTTagCompound());
+    			}
+    		 
+    			stack.getTagCompound().setInteger("seedInv", ((FeederTileEntity)worldIn.getTileEntity(pos)).getSeedsInv());
+    			 
+    		}
+    	
+    		this.spawnAsEntity(worldIn, pos, stack);
+		}
+		
+		super.breakBlock(worldIn, pos, state);
+    }
+    
+    @Override
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
+    {
+    	return new java.util.ArrayList<ItemStack>();
+    }
+        
 	@Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
@@ -100,15 +151,14 @@ public class FeederBlock extends Block implements ITileEntityProvider
 			
 			if(heldItem != null && te != null && te.isItemValidForSlot(0, heldItem))
 			{
-
-				if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+				
+				if (playerIn.isSneaking())
 				{
-					System.out.println("shift");
-					te.setSeeds(1, heldItem);
+                    	te.setSeeds(1, heldItem, playerIn.capabilities.isCreativeMode);
 				}
 				else
 				{
-					te.setSeeds(heldItem.stackSize, heldItem);
+                    	te.setSeeds(heldItem.stackSize, heldItem, playerIn.capabilities.isCreativeMode);
 				}
     			
     			return true;
@@ -122,6 +172,12 @@ public class FeederBlock extends Block implements ITileEntityProvider
         addCollisionBoxToList(pos, entityBox, collidingBoxes, Base_AABB);
         addCollisionBoxToList(pos, entityBox, collidingBoxes, Container_AABB);
 
+    }
+    
+	@Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+    {
+        return bounding;
     }
 	
 	@Override
@@ -137,6 +193,14 @@ public class FeederBlock extends Block implements ITileEntityProvider
     
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
+    	if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("seedInv"))
+    	{
+            if(worldIn.getTileEntity(pos) != null && worldIn.getTileEntity(pos) instanceof FeederTileEntity)
+            {
+            
+            	((FeederTileEntity)worldIn.getTileEntity(pos)).setSeeds(stack.getTagCompound().getInteger("seedInv"));
+            }
+     	}
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing()), 2);
     }
     
