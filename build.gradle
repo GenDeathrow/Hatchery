@@ -20,12 +20,12 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "0.1.6"
+version = "0.1.7"
 group= "com.gendeathrow.hatchery" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "hatchery-1.10.2"
 
 minecraft {
-    version = "1.10.2-12.18.1.2011"
+    version = "1.10.2-12.18.2.2099"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.

@@ -23,6 +23,7 @@ import com.gendeathrow.hatchery.core.ModItems;
 import com.gendeathrow.hatchery.core.config.ConfigHandler;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
+import com.gendeathrow.hatchery.util.RegisterEggsUtil;
 
 
 
@@ -91,7 +92,6 @@ public class Hatchery {
 	    @EventHandler
 	    public void postInit(FMLPostInitializationEvent event)
 	    {
-	    	
 	    	proxy.postInit(event);
 	    }
 	    

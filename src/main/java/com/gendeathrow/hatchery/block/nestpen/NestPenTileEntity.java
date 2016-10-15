@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
@@ -51,6 +52,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	private Random rand = new Random();
 	
 	ItemStack[] inventory = new ItemStack[5];
+	
+	private int isMating = 600;
 	
 	
 	public NestPenTileEntity()
@@ -130,35 +133,37 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		//TODO this.egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
 		
 		ItemStack egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
-		
     	
 		EntityChicken mate  = NestPenBlock.getNearByMate(worldObj, this.worldObj.getBlockState(pos), pos);
 		EntityChicken baby = null;
 		if(mate != null)
 		{
-			baby = ((EntityChicken) ((EntityAnimal)this.chickenStored).createChild(mate));
-			mate.setGrowingAge(6010);
+			baby = this.chickenStored.createChild(mate);
+	    	baby.resetInLove();
+			mate.setGrowingAge(6000);
 		}
 		else if(this.rand.nextInt(99)+1 < Settings.eggNestDropRate)
 		{
 			NBTTagCompound babyTag = storedEntity().writeToNBT(new NBTTagCompound());
 			babyTag.setString("id", EntityList.getEntityString(this.storedEntity()));
 			baby = (EntityChicken) EntityList.createEntityFromNBT(babyTag, this.worldObj);
+
+
 		}
 		else 
 		{
 			return null;
 		}
-
-		chickenStored.setGrowingAge(6000);
-
 		
+		if(baby == null) return null;
+
     	baby.setGrowingAge(-24000);
     	baby.resetInLove();
     	baby.timeUntilNextEgg = 6000;
     	
-    	
-    	egg.setStackDisplayName(baby.getDisplayName().getFormattedText() +" Egg");
+		chickenStored.setGrowingAge(6000);
+
+	  	egg.setStackDisplayName(baby.getDisplayName().getFormattedText() +" Egg");
     	
     	ItemStackEntityNBTHelper.addEntitytoItemStack(egg, (EntityLiving)baby);
     	
@@ -210,6 +215,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		if(chickenStored != null)
 		{
 			this.chickenStored.captureDrops = true;
+			
 			
 //			if(this.chickenStored.timeUntilNextEgg > 1000) this.chickenStored.timeUntilNextEgg = 1000;
 //			if(this.TimetoNextEgg > 1200)this.TimetoNextEgg  = 1200;

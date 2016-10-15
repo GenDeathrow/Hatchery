@@ -16,10 +16,16 @@ public class NestTileEntityRender extends TileEntitySpecialRenderer<NestTileEnti
 		
 	public void renderTileEntityAt(NestTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
     {
-    	if(NestBlock.doesHaveEgg(te.getWorld().getBlockState(te.getPos()))) 
-    	{
-    		renderAModelAt(te, x, y, z, partialTicks, destroyStage);   
-    	}
+		try
+		{
+			if(NestBlock.doesHaveEgg(te.getWorld().getBlockState(te.getPos()))) 
+			{
+				renderAModelAt(te, x, y, z, partialTicks, destroyStage);   
+			}
+		}catch(IllegalArgumentException e)
+		{
+			//System.out.println("Error Rendering");
+		}
         super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
     }
    
