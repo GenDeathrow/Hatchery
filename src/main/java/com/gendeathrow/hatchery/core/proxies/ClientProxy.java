@@ -2,10 +2,15 @@ package com.gendeathrow.hatchery.core.proxies;
 
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -13,11 +18,14 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
 import com.gendeathrow.hatchery.block.nestblock.NestTileEntityRender;
 import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntityRenderer;
-import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModFluids;
+import com.gendeathrow.hatchery.core.init.ModItems;
 
 public class ClientProxy extends CommonProxy
 {
@@ -51,18 +59,13 @@ public class ClientProxy extends CommonProxy
 	public void registerEventHandlers()
 	{
 		super.registerEventHandlers();
-		
-		
-//			GuiEventHandler guieventhandler = new GuiEventHandler();
-//    		MinecraftForge.EVENT_BUS.register(guieventhandler);
-//   
-//    		FMLCommonHandler.instance().bus().register(new KeyBinds());
 	}
 	
 	@Override
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		super.preInit(event);
+		registerFluidModel(ModFluids.blockLiquidFertilizer,  "fertilizer");
 	}
 	
 	@Override
@@ -75,17 +78,17 @@ public class ClientProxy extends CommonProxy
 	public void initRenderers()
 	{
 		
-		registerBlockModel(ModItems.nest, 0, ModItems.nest.getRegistryName().toString());
+		registerBlockModel(ModBlocks.nest, 0, ModBlocks.nest.getRegistryName().toString());
 		
-		registerBlockModel(ModItems.pen, 0, ModItems.pen.getRegistryName().toString());
-		registerBlockModel(ModItems.pen_chicken, 0, ModItems.pen_chicken.getRegistryName().toString());
+		registerBlockModel(ModBlocks.pen, 0, ModBlocks.pen.getRegistryName().toString());
+		registerBlockModel(ModBlocks.pen_chicken, 0, ModBlocks.pen_chicken.getRegistryName().toString());
 		
-		registerBlockModel(ModItems.feeder, 0, ModItems.feeder.getRegistryName().toString());
+		registerBlockModel(ModBlocks.feeder, 0, ModBlocks.feeder.getRegistryName().toString());
 		
-		registerBlockModel(ModItems.fertlizedDirt, 0, ModItems.fertlizedDirt.getRegistryName().toString());
-		registerBlockModel(ModItems.fertilzedFarmland, 0, ModItems.fertilzedFarmland.getRegistryName().toString());
+		registerBlockModel(ModBlocks.fertlizedDirt, 0, ModBlocks.fertlizedDirt.getRegistryName().toString());
+		registerBlockModel(ModBlocks.fertilzedFarmland, 0, ModBlocks.fertilzedFarmland.getRegistryName().toString());
 		
-		//registerBlockModel(ModItems.CornPlant, 0, ModItems.CornPlant.getRegistryName().toString());
+
 		
 		registerItemModel(ModItems.hatcheryEgg);
 		registerItemModel(ModItems.animalNet);
@@ -94,7 +97,6 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(NestTileEntity.class, new NestTileEntityRender());
 		ClientRegistry.bindTileEntitySpecialRenderer(NestPenTileEntity.class, new NestPenTileEntityRenderer());
 		
-		//registerItemModel(ModItems.nestItem);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -117,11 +119,33 @@ public class ClientProxy extends CommonProxy
 	    Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, model);
 	}
 	
-//	@SideOnly(Side.CLIENT)
-//	public static void registerItemModel(Item item)
-//	{
-//		 Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-//	}
+	
+
+	private void registerFluidModel(Block fluidBlock, String name) 
+	{
+		Item item = Item.getItemFromBlock(fluidBlock);
+
+		ModelBakery.registerItemVariants(item);
+
+		final ModelResourceLocation modelResourceLocation = new ModelResourceLocation(Hatchery.MODID +":fluid", name);
+		ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition(){
+
+			@Override
+			public ModelResourceLocation getModelLocation(ItemStack stack) {
+
+				return modelResourceLocation;
+			}
+
+		});
+
+		ModelLoader.setCustomStateMapper(fluidBlock, new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState p_178132_1_) 
+			{
+				return modelResourceLocation;
+			}
+		});
+	}
 	
 	@SideOnly(Side.CLIENT)
 	public static void registerItemModel(Item item)
@@ -147,24 +171,5 @@ public class ClientProxy extends CommonProxy
 	{
 		super.postInit(event);
 	}
-	
-	
-	public void VoxelMenu()
-	{
-//		try
-//		{
-//
-//			Class<? extends GuiMainMenu> ingameGuiClass = (Class<? extends GuiMainMenu>) Class.forName("com.thevoxelbox.voxelmenu.ingame.GuiIngameMenu");
-//			Method mRegisterCustomScreen = ingameGuiClass.getDeclaredMethod("registerCustomScreen", String.class, Class.class, String.class);
-//			
-//			mRegisterCustomScreen.invoke(null, "", EM_Gui_Menu.class, StatCollector.translateToLocal("options.enviromine.menu.title"));
-//		
-//			boolean voxelMenuExists = true;
-//		} catch (ClassNotFoundException ex) { // This means VoxelMenu does not
-//			// 	exist
-//			boolean voxelMenuExists = false;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-	}
+
 }

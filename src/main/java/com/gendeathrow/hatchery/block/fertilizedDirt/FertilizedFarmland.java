@@ -25,7 +25,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModItems;
 
 public class FertilizedFarmland extends Block
 {
@@ -74,7 +75,7 @@ public class FertilizedFarmland extends Block
             }
             else if (!this.hasCrops(worldIn, pos))
             {
-                worldIn.setBlockState(pos, ModItems.fertlizedDirt.getDefaultState());
+                worldIn.setBlockState(pos, ModBlocks.fertlizedDirt.getDefaultState());
             }
         }
         else if (i < 7)
@@ -114,7 +115,7 @@ public class FertilizedFarmland extends Block
     {
         if (!worldIn.isRemote && worldIn.rand.nextFloat() < fallDistance - 0.5F && entityIn instanceof EntityLivingBase && (entityIn instanceof EntityPlayer || worldIn.getGameRules().getBoolean("mobGriefing")) && entityIn.width * entityIn.width * entityIn.height > 0.512F)
         {
-            worldIn.setBlockState(pos, ModItems.fertlizedDirt.getDefaultState());
+            worldIn.setBlockState(pos, ModBlocks.fertlizedDirt.getDefaultState());
         }
 
         super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
@@ -150,7 +151,7 @@ public class FertilizedFarmland extends Block
 
         if (worldIn.getBlockState(pos.up()).getMaterial().isSolid())
         {
-            worldIn.setBlockState(pos, ModItems.fertlizedDirt.getDefaultState());
+            worldIn.setBlockState(pos, ModBlocks.fertlizedDirt.getDefaultState());
         }
     }
 
@@ -167,7 +168,7 @@ public class FertilizedFarmland extends Block
             case EAST:
                 IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
                 Block block = iblockstate.getBlock();
-                return !iblockstate.isOpaqueCube() && block != ModItems.fertilzedFarmland;
+                return !iblockstate.isOpaqueCube() && block != ModBlocks.fertilzedFarmland;
             default:
                 return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
         }
@@ -179,12 +180,12 @@ public class FertilizedFarmland extends Block
     @Nullable
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
-        return ModItems.fertlizedDirt.getItemDropped(ModItems.fertlizedDirt.getDefaultState(), rand, fortune);
+        return ModBlocks.fertlizedDirt.getItemDropped(ModBlocks.fertlizedDirt.getDefaultState(), rand, fortune);
     }
 
     public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
     {
-        return new ItemStack(ModItems.fertlizedDirt);
+        return new ItemStack(ModBlocks.fertlizedDirt);
     }
 
     /**

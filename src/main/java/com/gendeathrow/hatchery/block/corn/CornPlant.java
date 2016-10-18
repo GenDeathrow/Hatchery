@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.core.init.ModItems;
 
 public class CornPlant extends BlockCrops
 {
@@ -29,15 +29,15 @@ public class CornPlant extends BlockCrops
 
     }
     
-    protected Item getSeed()
-    {
-        return ModItems.cornSeeds;
-    }
-
-    protected Item getCrop()
-    {
-        return ModItems.corn;
-    }
+//    protected Item getSeed()
+//    {
+//        return ModItems.cornSeeds;
+//    }
+//
+//    protected Item getCrop()
+//    {
+//        return ModItems.corn;
+//    }
 
     /**
      * Spawns this Block's drops into the World as EntityItems.

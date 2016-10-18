@@ -6,7 +6,10 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.gendeathrow.hatchery.core.EventHandler;
-import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModFluids;
+import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.core.init.ModRecipes;
 
 public class CommonProxy
 {
@@ -39,21 +42,23 @@ public class CommonProxy
 	
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		
+		ModBlocks.preInit(event);
+		ModItems.RegisterItems();
+		ModFluids.registerFluids();		
 	}
 	
 	public void init(FMLInitializationEvent event)
 	{
-		ModItems.RegisterBlocks();
-		ModItems.RegisterTileEntitys();
-		ModItems.RegisterItems();
+
 
 
 	}
 	
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		ModItems.RegisterOreDic();
-		ModItems.RegisterRecipes();
+		ModRecipes.RegisterOreDic();
+		ModRecipes.RegisterRecipes();
 	}
+	
+
 }

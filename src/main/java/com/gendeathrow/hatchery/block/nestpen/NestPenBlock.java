@@ -33,7 +33,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
 
 public class NestPenBlock extends Block implements ITileEntityProvider
 {
@@ -119,7 +119,7 @@ public class NestPenBlock extends Block implements ITileEntityProvider
     @Nullable
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
-        return Item.getItemFromBlock(ModItems.pen);
+        return Item.getItemFromBlock(ModBlocks.pen);
     }
     
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
@@ -143,13 +143,13 @@ public class NestPenBlock extends Block implements ITileEntityProvider
 
          if (hasChicken)
          {
-             worldIn.setBlockState(pos, ModItems.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 2);
-             worldIn.setBlockState(pos, ModItems.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
+             worldIn.setBlockState(pos, ModBlocks.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 2);
+             worldIn.setBlockState(pos, ModBlocks.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
          }
          else
          {
-             worldIn.setBlockState(pos, ModItems.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 2);
-             worldIn.setBlockState(pos, ModItems.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
+             worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 2);
+             worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
          }
 
          keepInventory = false;
@@ -164,7 +164,7 @@ public class NestPenBlock extends Block implements ITileEntityProvider
     
     public static boolean hasChicken(IBlockState state)
     {
-		return state.getBlock() == ModItems.pen_chicken;
+		return state.getBlock() == ModBlocks.pen_chicken;
     }
     
     public static EntityChicken getNearByMate(World world, IBlockState state, BlockPos pos)

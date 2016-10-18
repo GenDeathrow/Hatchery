@@ -23,7 +23,7 @@ public class HatcheryEgg extends ItemEgg
 		super();
 		
 		this.setUnlocalizedName("hatcheryegg");
-		this.setRegistryName("hatcheryegg");
+		//this.setRegistryName("hatcheryegg");
 		this.setCreativeTab(Hatchery.hatcheryTabs);
 	}
 	

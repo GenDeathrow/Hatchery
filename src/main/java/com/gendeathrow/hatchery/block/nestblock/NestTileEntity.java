@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -28,7 +27,7 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.Optional.Interface;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 import com.setycz.chickens.ChickensRegistry;

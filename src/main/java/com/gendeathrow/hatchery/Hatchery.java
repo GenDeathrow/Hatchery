@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -19,8 +20,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
-import com.gendeathrow.hatchery.core.ModItems;
 import com.gendeathrow.hatchery.core.config.ConfigHandler;
+import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
 import com.gendeathrow.hatchery.util.RegisterEggsUtil;
@@ -57,17 +58,19 @@ public class Hatchery {
 	 
 	    };
 	    
+	    static{
+	    	FluidRegistry.enableUniversalBucket();
+	    }
+	    
 	    
 	    @EventHandler
 	    public void preInit(FMLPreInitializationEvent event)
 	    {
 	    	logger = event.getModLog();
-	
 	    	Hatchery.network = NetworkRegistry.INSTANCE.newSimpleChannel(Hatchery.CHANNELNAME);
 	    	
-	    	
 	    	CapabilityAnimalStatsHandler.register();
-	    	
+
 	    	network.registerMessage(HatcheryPacket.ServerHandler.class, HatcheryPacket.class, 0, Side.SERVER);
 	    	network.registerMessage(HatcheryPacket.ClientHandler.class, HatcheryPacket.class, 1, Side.CLIENT);
 	    	
@@ -80,7 +83,6 @@ public class Hatchery {
 	    	proxy.init(event);
 	    	
 	    	ConfigHandler.loadConfig();
-
 	    	
 	    	// waila integration
 	        FMLInterModComms.sendMessage("Waila", "register", "com.gendeathrow.hatchery.core.waila.HatcheryTileProvider.load");

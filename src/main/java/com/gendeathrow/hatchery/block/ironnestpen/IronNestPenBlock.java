@@ -27,7 +27,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModItems;
 
 public class IronNestPenBlock extends Block implements ITileEntityProvider
 {
@@ -105,12 +106,12 @@ public class IronNestPenBlock extends Block implements ITileEntityProvider
 
          if (hasChicken)
          {
-             worldIn.setBlockState(pos, ModItems.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
+             worldIn.setBlockState(pos, ModBlocks.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
             // worldIn.setBlockState(pos, ModItems.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
          }
          else
          {
-             worldIn.setBlockState(pos, ModItems.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
+             worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
             // worldIn.setBlockState(pos, ModItems.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
          }
 
@@ -126,7 +127,7 @@ public class IronNestPenBlock extends Block implements ITileEntityProvider
     
     public static boolean hasChicken(IBlockState state)
     {
-		return state.getBlock() == ModItems.pen_chicken;
+		return state.getBlock() == ModBlocks.pen_chicken;
     }
     
     private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state)

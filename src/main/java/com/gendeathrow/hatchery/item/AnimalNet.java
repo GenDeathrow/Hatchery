@@ -22,7 +22,8 @@ import net.minecraft.world.World;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
-import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModItems;
 
 public class AnimalNet extends Item
 {
@@ -31,8 +32,8 @@ public class AnimalNet extends Item
 	{
 		super();
 		
-		this.setUnlocalizedName("animalnet");
-		this.setRegistryName("animalnet");
+		//this.setUnlocalizedName("animalnet");
+		//this.setRegistryName("animalnet");
 		this.setCreativeTab(Hatchery.hatcheryTabs);
         this.setMaxStackSize(1);
 	}
@@ -132,7 +133,7 @@ public class AnimalNet extends Item
     	    	//System.out.println("faild both hands"); 
     	    	return EnumActionResult.FAIL;
     	    }
-    		if(playerIn.worldObj.getBlockState(pos).getBlock() == ModItems.pen_chicken)
+    		if(playerIn.worldObj.getBlockState(pos).getBlock() == ModBlocks.pen_chicken)
     		{
     			//System.out.println("has chicken!");
     			NestPenTileEntity pen = (NestPenTileEntity)playerIn.worldObj.getTileEntity(pos);
@@ -169,7 +170,7 @@ public class AnimalNet extends Item
 	  	    	 	
 	  			//System.out.println("world or pen");
 	  			
-        		if(playerIn.worldObj.getBlockState(pos).getBlock() == ModItems.pen)
+        		if(playerIn.worldObj.getBlockState(pos).getBlock() == ModBlocks.pen)
         		{
         			//System.out.println("pen!");
         			

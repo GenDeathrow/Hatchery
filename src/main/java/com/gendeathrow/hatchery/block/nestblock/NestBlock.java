@@ -19,7 +19,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -29,8 +28,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
-import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
 
 public class NestBlock extends Block implements ITileEntityProvider
 {
@@ -47,7 +45,7 @@ public class NestBlock extends Block implements ITileEntityProvider
 		super(Material.LEAVES);
 		this.name = "nest";
 		this.setUnlocalizedName("nest"); 
-		this.setRegistryName(Hatchery.MODID,"nest");
+		//this.setRegistryName(Hatchery.MODID,"nest");
 		this.setCreativeTab(Hatchery.hatcheryTabs);	
 		this.setHardness(1);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(hasEgg, false));
@@ -90,7 +88,7 @@ public class NestBlock extends Block implements ITileEntityProvider
     @Nullable
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
-        return Item.getItemFromBlock(ModItems.nest);
+        return Item.getItemFromBlock(ModBlocks.nest);
     }
 	 
 	@Override

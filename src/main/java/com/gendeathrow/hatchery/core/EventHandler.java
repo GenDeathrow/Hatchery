@@ -8,7 +8,6 @@ import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.util.ResourceLocation;
@@ -16,7 +15,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
+import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -24,7 +23,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
-import com.gendeathrow.hatchery.entity.ai.AutoBreeding;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModFluids;
+import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.entity.ai.ChickenBreeding;
 
 public class EventHandler 
@@ -40,19 +41,6 @@ public class EventHandler
 		}
 	}
 	
-//	@SubscribeEvent
-//	public void onPlayerEntityInteract(EntityInteract event)
-//	{
-//		
-//
-//		if (event.getItemStack() != null && event.getItemStack().getItem() == Items.LEAD && this.canBeLeashedTo(player))
-//        {
-//            this.setLeashedToEntity(player, true);
-//            --event.getItemStack().stackSize;
-//        }
-//		
-//	}
-	
 	@SubscribeEvent
 	public void onHoeEvent(UseHoeEvent event)
 	{
@@ -61,13 +49,13 @@ public class EventHandler
 		
          if (event.getWorld().isAirBlock(event.getPos().up()))
          {
-     		if(block == ModItems.fertlizedDirt)
+     		if(block == ModBlocks.fertlizedDirt)
     		{
      			event.getWorld().playSound(((EntityPlayer) null), event.getPos(), SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
      	        if (!event.getWorld().isRemote)
      	        {
-     	        	event.getWorld().setBlockState(event.getPos(), ModItems.fertilzedFarmland.getDefaultState(), 11);
+     	        	event.getWorld().setBlockState(event.getPos(), ModBlocks.fertilzedFarmland.getDefaultState(), 11);
      	        	event.getCurrent().damageItem(1, event.getEntityLiving());
      	        }
      	        
@@ -116,9 +104,9 @@ public class EventHandler
 	}
 	
 	@SubscribeEvent
-	public void AttachCap(AttachCapabilitiesEvent.Entity event)
+	public void AttachCap(AttachCapabilitiesEvent event)
 	{
-		if(event.getEntity() instanceof EntityChicken)
+		if(event.getObject() instanceof EntityChicken)
 		{
 			event.addCapability(new ResourceLocation(Hatchery.MODID,"eatting_animal"), new CapabilityAnimalStatsHandler());
 		}

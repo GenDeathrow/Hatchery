@@ -18,7 +18,7 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
-import com.gendeathrow.hatchery.core.ModItems;
+import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
 public class ChickenBreeding extends EntityAIBase

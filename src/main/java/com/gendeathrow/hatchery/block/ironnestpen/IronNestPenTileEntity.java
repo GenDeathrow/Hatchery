@@ -32,8 +32,8 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.core.ModItems;
 import com.gendeathrow.hatchery.core.Settings;
+import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 

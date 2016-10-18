@@ -3,8 +3,8 @@ package com.gendeathrow.hatchery.entity.ai;
 import java.util.List;
 import java.util.Random;
 
-import com.gendeathrow.hatchery.core.ModItems;
 import com.gendeathrow.hatchery.core.Settings;
+import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
 import net.minecraft.entity.Entity;

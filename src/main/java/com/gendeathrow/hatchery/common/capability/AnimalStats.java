@@ -4,22 +4,23 @@ import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
 public class AnimalStats implements IAnimalStats
 {
-	Random rand = new Random();
+	public static Random rand = new Random();
 	
-	int timeToEat = 200 + rand.nextInt(200);
-	long timeSinceLast = Minecraft.getSystemTime();
+	private int timeToEat = 200 + rand.nextInt(200);
+	
+	public AnimalStats(){}
 	
 	@Override
 	public void update() 
 	{
 		if(timeToEat >= 0) timeToEat--;
 	}
-	
 	
     public AnimalStats readFromNBT(NBTTagCompound nbt)
     {
