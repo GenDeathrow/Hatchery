@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
@@ -31,6 +32,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.item.HatcheryEgg;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
@@ -84,10 +86,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			
 			entityin.setPosition(this.pos.getX(),this.pos.getY() , this.pos.getZ());
 			entityin.motionY = 0;
-			
-			//createEgg();
-			
-			//System.out.println("setting entity and egg");
+
+			((EntityChicken) entityin).setGrowingAge(6000);
 			
 			NestPenBlock.setState(true, this.worldObj, this.pos);
 			return true;
@@ -133,14 +133,12 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		if(mate != null)
 		{
 			baby = this.chickenStored.createChild(mate);
-	    	baby.resetInLove();
 			mate.setGrowingAge(6000);
 		}
 		else if(this.rand.nextInt(99)+1 < Settings.eggNestDropRate)
 		{
-			NBTTagCompound babyTag = storedEntity().writeToNBT(new NBTTagCompound());
-			babyTag.setString("id", EntityList.getEntityString(this.storedEntity()));
-			baby = (EntityChicken) EntityList.createEntityFromNBT(babyTag, this.worldObj);
+			baby = this.chickenStored.createChild((EntityAgeable) this.storedEntity());
+			
 		}
 		else 
 		{
@@ -148,7 +146,10 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		}
 		
 		if(baby == null) return null;
-
+		
+		
+    	baby.resetInLove();
+    	baby.setHealth(baby.getMaxHealth());
     	baby.setGrowingAge(-24000);
     	baby.resetInLove();
     	baby.timeUntilNextEgg = 6000;
@@ -157,6 +158,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 
 	  	egg.setStackDisplayName(baby.getDisplayName().getFormattedText() +" Egg");
     	
+	  	HatcheryEgg.setColor(egg, baby);
+	  	
     	ItemStackEntityNBTHelper.addEntitytoItemStack(egg, (EntityLiving)baby);
     	
     	return egg;
@@ -203,6 +206,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		{
 			this.chickenStored.captureDrops = true;
 			
+			
+			//TODO this is just for debugging
 //			if(this.chickenStored.timeUntilNextEgg > 1000) this.chickenStored.timeUntilNextEgg = 1000;
 //			if(this.TimetoNextEgg > 1200)this.TimetoNextEgg  = 1200;
  			

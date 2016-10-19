@@ -8,9 +8,11 @@ import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -72,6 +74,8 @@ public class ClientProxy extends CommonProxy
 	public void init(FMLInitializationEvent event)
 	{
 		super.init(event);
+		
+		
 	}
 	
 	@Override
@@ -93,12 +97,23 @@ public class ClientProxy extends CommonProxy
 		registerItemModel(ModItems.hatcheryEgg);
 		registerItemModel(ModItems.animalNet);
 		registerItemModel(ModItems.manure);
+		
+		registerItemColorHandler(ModItems.hatcheryEgg);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(NestTileEntity.class, new NestTileEntityRender());
 		ClientRegistry.bindTileEntitySpecialRenderer(NestPenTileEntity.class, new NestPenTileEntityRenderer());
 		
 	}
 	
+    public void registerItemColorHandler(Item item)
+    {
+        if (item instanceof IItemColor)
+        {
+            IItemColor iItemColor = (IItemColor)item;
+            FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler(iItemColor,item);
+        }
+    }
+
 	@SideOnly(Side.CLIENT)
 	public static void registerBlockModel(Block block)
 	{

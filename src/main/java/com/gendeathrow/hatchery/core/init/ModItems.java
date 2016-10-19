@@ -30,9 +30,6 @@ public class ModItems
 
 	public static void RegisterItems()
 	{
-//		GameRegistry.register(ModItems.hatcheryEgg.setRegistryName("hatcheryegg"));
-//		GameRegistry.register(ModItems.animalNet.setRegistryName("animalnet"));
-//		GameRegistry.register(ModItems.manure.setRegistryName("chickenmanure"));	
 		registerItem(ModItems.hatcheryEgg, "hatcheryegg");
 		registerItem(ModItems.animalNet, "animalnet");
 		registerItem(ModItems.manure, "chickenmanure");
@@ -47,13 +44,6 @@ public class ModItems
 		GameRegistry.register(item.setRegistryName(name));
 		ITEMS.add(item);
 	}
-	
-	
-//	public static void RegisterOreDic()
-//	{
-//		OreDictionary.registerOre("dirt", ModBlocks.fertlizedDirt);
-//		OreDictionary.registerOre("manure", ModItems.manure);
-//	}
 	
 
 }

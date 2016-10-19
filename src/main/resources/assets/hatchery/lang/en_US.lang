@@ -7,6 +7,7 @@ tile.hatchery.fertilized_farmland.name=Fertilized Farmland
 tile.hatchery.feeder.name=Chicken Feeder
 
 tile.fluid.liquid_fertilizer.name=Liquid Fertilizer
+fluid.liquid_fertilizer=Liquid Fertilizer
 
 item.hatchery.hatcheryegg.name=Egg
 item.hatchery.animalnet.name=Animal Net

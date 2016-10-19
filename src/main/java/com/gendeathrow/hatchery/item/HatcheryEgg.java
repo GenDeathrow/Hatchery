@@ -1,9 +1,15 @@
 package com.gendeathrow.hatchery.item;
 
+import java.util.HashMap;
+
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.stats.StatList;
@@ -14,9 +20,12 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.util.RegisterEggsUtil;
 
-public class HatcheryEgg extends ItemEgg
+public class HatcheryEgg extends ItemEgg implements IItemColor
 {
+	
+	public static HashMap<String, Integer> ENTITYTORGB = new HashMap<String, Integer>();
 	
 	public HatcheryEgg()
 	{
@@ -26,7 +35,6 @@ public class HatcheryEgg extends ItemEgg
 		//this.setRegistryName("hatcheryegg");
 		this.setCreativeTab(Hatchery.hatcheryTabs);
 	}
-	
 	
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
@@ -72,6 +80,25 @@ public class HatcheryEgg extends ItemEgg
       }
 
       return nbttaglist;
+    }
+
+    @Override
+    public int getColorFromItemstack(ItemStack stack, int tintIndex) 
+    { 	
+    	if(!stack.hasTagCompound()) {return 0xdfce9b;}
+    	return stack.getTagCompound().getInteger("eggColor"); 
+    }
+    
+    
+    public static void setColor(ItemStack itemstackIn, Entity entity)
+    {
+    	if(!itemstackIn.hasTagCompound()) itemstackIn.setTagCompound(new NBTTagCompound());
+    	
+    	NBTTagCompound entitytag = entity.writeToNBT(new NBTTagCompound());
+    	String post = "";
+    	if(entitytag.hasKey("Type")) post =  entitytag.getTag("Type").toString();
+      	 
+    	itemstackIn.getTagCompound().setInteger("eggColor", RegisterEggsUtil.getEggColor(EntityList.getEntityString(entity)+post));
     }
 
 

@@ -10,6 +10,9 @@ item.hatchery.hatcheryegg.name=Ei
 item.hatchery.animalnet.name=Tierfangnetz
 item.hatchery.chickenmanure.name=Hühnermist
 
+tile.fluid.liquid_fertilizer.name=Liquid Fertilizer
+fluid.liquid_fertilizer=Liquid Fertilizer
+
 text.hatching=Ausbrütend
 text.nothatching=Nicht ausbrütend
 text.chicken=Huhn

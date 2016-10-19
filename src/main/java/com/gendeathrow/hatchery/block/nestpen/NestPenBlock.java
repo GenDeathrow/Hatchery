@@ -109,9 +109,6 @@ public class NestPenBlock extends Block implements ITileEntityProvider
     		}
     		
         }
-        
-        
-        
         super.breakBlock(worldIn, pos, state);
     }
     

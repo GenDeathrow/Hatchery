@@ -95,6 +95,8 @@ public class Hatchery {
 	    public void postInit(FMLPostInitializationEvent event)
 	    {
 	    	proxy.postInit(event);
+	    	
+	    	//RegisterEggsUtil.register();
 	    }
 	    
 		@EventHandler
