@@ -5,6 +5,7 @@ tile.hatchery.pen.name=Nesting Pen
 tile.hatchery.fertilized_dirt.name=Fertilized Dirt
 tile.hatchery.fertilized_farmland.name=Fertilized Farmland
 tile.hatchery.feeder.name=Chicken Feeder
+tile.hatchery.manure_block.name=Chicken Manure Block
 
 tile.fluid.liquid_fertilizer.name=Liquid Fertilizer
 fluid.liquid_fertilizer=Liquid Fertilizer
@@ -12,23 +13,31 @@ fluid.liquid_fertilizer=Liquid Fertilizer
 item.hatchery.hatcheryegg.name=Egg
 item.hatchery.animalnet.name=Animal Net
 item.hatchery.chickenmanure.name=Chicken Manure
+item.hatchery.sprayer.name=Fertilizer Sprayer
 
-text.hatching=Hatching
-text.nothatching=Not Hatching
-text.chicken=Chicken
-text.nxdrop=Next Drop
-text.nochicken=Use 'Animal Net' to capture a chicken
-text.storedseed=Stored Seeds
+
+#TOOLTIP
+tooltip.hatchery.sprayer.desc=%1$s Volume: %2$dmb / %3$dmb
+
+#TEXT
+text.hatchery.hatching=Hatching
+text.hatchery.nothatching=Not Hatching
+text.hatchery.chicken=Chicken
+text.hatchery.nxdrop=Next Drop
+text.hatchery.nochicken=Use 'Animal Net' to capture a chicken
+text.hatchery.storedseed=Stored Seeds
 
 
 #JEI
-jei.tile.hatchery.feeder=You may fit up to 200 seeds per feeder. Feeders will look for chickens in a 4x1x4 area for chickens. Baby chicks will grow faster when around a feeder, And adults will drop items faster. You can pipe seeds into the feeders.
+jei.tile.hatchery.feeder=You can store up to 200 seeds per feeder. Feeders will look for chickens in a 4x1x4 area for chickens. Baby chicks will grow faster when around a feeder, And adults will drop items faster. You can pipe seeds into the feeders.
 jei.tile.hatchery.nest=Place an egg into the nest and it will auto hatch your chicken over a random time. Placing a redstone lamp(Heat lamp will replace later) up to 3 blocks above the nest will increase speed. Sitting on the egg will also increase speed of hatching. 
 jei.tile.hatchery.fertilized_dirt=Gives tree's a random bonemeal effect
 jei.tile.hatchery.fertilized_farmland=Gives plants a random bonemeal effect. Get farmland by using a hoe on fertilized dirt
 jei.tile.hatchery.pen=Nesting pens store chickens to collect resources and chickens will lay eggs. Use an Animal net to place chickens into the Nesting Pen. Placing two nesting pens will auto breed the two chickens. This works with Modded Chickens that allow special breeding mechanics. Nesting Pens Drop Chicken Manure, Feathers, and Hatchery Eggs. 
 jei.tile.hatchery.pen_chicken=Nesting pens store chickens to collect resources and chickens will lay eggs. Placing two nesting pens will auto breed the two chickens. This works with Modded Chickens that allow special breeding mechanics. Nesting Pens Drop Chicken Manure, Feathers, and Hatchery Eggs.
+jei.tile.hatchery.manure_block=A block of chicken manure. Enjoy!
 
 jei.item.hatchery.animalnet=Use an animal net to pickup any passive animal. Use the Animal net to specifically place a chicken into the Nesting Pen's.
 jei.item.hatchery.hatcheryegg=Hatchery Eggs are dynamically created eggs, Used to be able to breed two parents and create a custom egg. Mainly for Modded Chickens with new breeding mechanics.
-jei.item.hatchery.chickenmanure=Use manure to make fertilized dirt, liquid fertilizer, or use it as bonemeal for plants. 
+jei.item.hatchery.chickenmanure=Drops from nesting pens. Use manure to make fertilized dirt, Manure Blocks, liquid fertilizer, or use it as bonemeal for plants.
+jei.item.hatchery.sprayer=The fertilizer sprayer is used to turn dirt/farmland into fertilized dirt/farmland, and acts much like a watering can causing block updates. Spray Holds 3000mb. 

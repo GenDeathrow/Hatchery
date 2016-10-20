@@ -1,8 +1,10 @@
 package com.gendeathrow.hatchery.core.init;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapelessRecipes;
@@ -62,17 +64,16 @@ public class ModRecipes
 	    
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.nest), "xxx", "AxA", "AAA",'A', Blocks.HAY_BLOCK);
 
-	    IRecipe sprayerRecipe = new ShapedOreRecipe(new ItemStack(ModBlocks.feeder), new Object[] {
-	    	"LD.", 
+	    IRecipe sprayerRecipe = new ShapedOreRecipe(new ItemStack(ModItems.sprayer), new Object[] {
+	    	"DD.", 
 	    	".IB", 
 	    	"IGI",
 	    	'I', "ingotIron",
 	    	'G', "blockGlass",
-	    	'D',  new ItemStack(Blocks.HARDENED_CLAY,1,13),
-	    	'L',  new ItemStack(Blocks.HARDENED_CLAY,1,5)
+	    	'D', "ingotIron",
+	    	'B',  new ItemStack(Blocks.STONE_BUTTON)
 	    	
 		});
-		
 	    GameRegistry.addRecipe(sprayerRecipe);
 	    
 	    NBTTagCompound tag = new NBTTagCompound();
@@ -82,17 +83,26 @@ public class ModRecipes
 	    bucket.setTagCompound(tag);
 	    
 	    
-	    IRecipe bucketFert = new ShapedOreRecipe(ModFluids.getFertilizerBucket(), new Object[] {
-	    	"FFF", 
-	    	"FBF", 
-	    	"FFF",
-	    	'F', ModBlocks.fertlizedDirt,
-	    	'B',  Items.WATER_BUCKET
-	    	
-		}); 
+//	    IRecipe bucketFert = new ShapedOreRecipe(ModFluids.getFertilizerBucket(), new Object[] {
+//	    	"FFF", 
+//	    	"FBF", 
+//	    	"FFF",
+//	    	'F', ModBlocks.fertlizedDirt,
+//	    	'B',  Items.WATER_BUCKET
+//	    	
+//		}); 
+	    
+	    List<ItemStack> bucketFertIngre = new ArrayList<ItemStack>(); 
+	    	bucketFertIngre.add(new ItemStack(ModBlocks.manureBlock));
+	    	bucketFertIngre.add(new ItemStack(Items.WATER_BUCKET));
+	    IRecipe bucketFert = new ShapelessRecipes(ModFluids.getFertilizerBucket(), bucketFertIngre);
 	    GameRegistry.addRecipe(bucketFert);
+	    
+	    
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.nest), "xxx", "AxA", "AAA",'A', Blocks.HAY_BLOCK);
 
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.manureBlock), "XXX", "XXX", "XXX",'X', ModItems.manure);
+		//GameRegistry.addRecipe(new ItemStack(ModItems.manure,9), ModBlocks.manureBlock);
 
-		// GameRegistry.addRecipe(new ItemStack(Items.EGG), new Object[]{ ModItems.hatcheryEgg });
 	}
 }

@@ -1,21 +1,18 @@
 package com.gendeathrow.hatchery.item;
 
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFarmland;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -24,13 +21,11 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
@@ -172,7 +167,7 @@ public class Sprayer extends Item
 		{
 			int chance = this.rand.nextInt(99)+1;
 			
-			if(chance < 75)
+			if(chance < 60)
 			{
 		        for (int xAxis = -2; xAxis <= 2; xAxis++) 
 		        {
@@ -182,11 +177,11 @@ public class Sprayer extends Item
 		            {
 		            	Block checkBlock = worldIn.getBlockState(pos.add(xAxis, yAxis, zAxis)).getBlock();
 		            	
-		            	Block aboveBlock = worldIn.getBlockState(pos.add(xAxis, yAxis, zAxis)).getBlock();
+		            	boolean aboveBlockValid = (worldIn.getBlockState(pos.add(xAxis, yAxis+1, zAxis)).getBlock() instanceof IGrowable && worldIn.getBlockState(pos.add(xAxis, yAxis+1, zAxis)).getBlock() != Blocks.GRASS) || (worldIn.getBlockState(pos.add(xAxis, yAxis+1, zAxis)).getBlock() != Blocks.GRASS || worldIn.getBlockState(pos.add(xAxis, yAxis+1, zAxis)).getBlock() == Blocks.AIR);
 		            	
 		               	if((checkBlock == Blocks.FARMLAND || checkBlock == Blocks.DIRT))
 		               	{
-		               		if(rand.nextInt(99)+1 < 30)
+		               		if(aboveBlockValid && rand.nextInt(99)+1 < 30)
 		               		{
 		               			Block block;
 		               			if(checkBlock == Blocks.FARMLAND)
@@ -201,13 +196,8 @@ public class Sprayer extends Item
 		               			worldIn.setBlockState(pos.add(xAxis, yAxis, zAxis), block.getDefaultState(), 2);
 		               			worldIn.setBlockState(pos.add(xAxis, yAxis, zAxis), block.getDefaultState(), 1);
 		               			
-
-		               			
-		               			if(this.rand.nextDouble() < .45) 
-		               			{
-			               			FluidUtil.getFluidHandler(stack).drain(2, true);
-			               			stack.setItemDamage(this.capacity - getAmount(stack));
-		               			}
+		               			FluidUtil.getFluidHandler(stack).drain(10, true);
+		               			stack.setItemDamage(this.capacity - getAmount(stack));
 
 		               		}
 		               	}
@@ -215,9 +205,9 @@ public class Sprayer extends Item
 		               	{
 	               			worldIn.scheduleBlockUpdate(pos.add(xAxis, yAxis, zAxis), checkBlock, 0, 1);
 
-	               			if(this.rand.nextDouble() < .45) 
+	               			if(this.rand.nextDouble() < .60) 
 	               			{
-	               				FluidUtil.getFluidHandler(stack).drain(1, true);
+	               				FluidUtil.getFluidHandler(stack).drain(5, true);
 	               				stack.setItemDamage(this.capacity - getAmount(stack));
 	               			}
 		               	}
@@ -244,6 +234,18 @@ public class Sprayer extends Item
 		else return 0; 
 	}
 	
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isAdvanced) 
+    {
+			FluidStack fstack = FluidUtil.getFluidContained(stack);
+			if(fstack != null)
+			{			
+				tooltip.add(I18n.format("tooltip.hatchery.sprayer.desc", I18n.format("fluid.liquid_fertilizer"), fstack.amount, this.getMaxDamage()));
+			}
+			else tooltip.add(I18n.format("tooltip.hatchery.sprayer.desc",I18n.format("fluid.liquid_fertilizer"), 0, this.getMaxDamage()));
+    }
 	
 //	@Override
 //	public boolean hasCapability(Capability<?> capability, EnumFacing facing) 

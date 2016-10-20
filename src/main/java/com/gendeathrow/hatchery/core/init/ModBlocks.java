@@ -15,6 +15,7 @@ import com.gendeathrow.hatchery.block.feeder.FeederBlock;
 import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
 import com.gendeathrow.hatchery.block.fertilizedDirt.FertilizedDirt;
 import com.gendeathrow.hatchery.block.fertilizedDirt.FertilizedFarmland;
+import com.gendeathrow.hatchery.block.manure.ManureBlock;
 import com.gendeathrow.hatchery.block.nestblock.NestBlock;
 import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
 import com.gendeathrow.hatchery.block.nestpen.NestPenBlock;
@@ -31,6 +32,7 @@ public class ModBlocks
 	public static Block feeder;
 	public static Block fertlizedDirt;
 	public static Block fertilzedFarmland;
+	public static Block manureBlock;
 	
 	
 	public static void preInit(FMLPreInitializationEvent event) 
@@ -41,6 +43,7 @@ public class ModBlocks
 		feeder = new FeederBlock();
 		fertlizedDirt = new FertilizedDirt().setCreativeTab(Hatchery.hatcheryTabs);
 		fertilzedFarmland = new FertilizedFarmland();
+		manureBlock = new ManureBlock();
 		
 		registerBlock(nest, "nest");
 		registerBlock(pen, "pen");
@@ -48,6 +51,7 @@ public class ModBlocks
 		registerBlock(feeder, "feeder");
 		registerBlock(fertlizedDirt, "fertilized_dirt");
 		registerBlock(fertilzedFarmland, "fertilized_farmland");
+		registerBlock(manureBlock, "manure_block");
 		
 		
 		GameRegistry.registerTileEntity(NestTileEntity.class, NestTileEntity.class.getName());

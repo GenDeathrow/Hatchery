@@ -91,7 +91,7 @@ public class ClientProxy extends CommonProxy
 		
 		registerBlockModel(ModBlocks.fertlizedDirt, 0, ModBlocks.fertlizedDirt.getRegistryName().toString());
 		registerBlockModel(ModBlocks.fertilzedFarmland, 0, ModBlocks.fertilzedFarmland.getRegistryName().toString());
-		
+		registerBlockModel(ModBlocks.manureBlock,0,ModBlocks.manureBlock.getRegistryName().toString());
 
 		
 		registerItemModel(ModItems.hatcheryEgg);

@@ -2,6 +2,7 @@ package com.gendeathrow.hatchery.block.fertilizedDirt;
 
 import java.util.Random;
 
+import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 
 import net.minecraft.block.Block;
@@ -10,6 +11,7 @@ import net.minecraft.block.BlockSapling;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -52,11 +54,11 @@ public class FertilizedDirt extends Block
     @Override
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
-       if(rand.nextInt(2) == 0)
+       if(rand.nextInt(99)+1 <= 60)
         {
             IBlockState iblockstate = worldIn.getBlockState(pos.up());
 
-            if (iblockstate.getBlock() instanceof IGrowable)
+            if (iblockstate.getBlock() instanceof IGrowable && iblockstate.getBlock() != Blocks.GRASS)
             {
                 IGrowable igrowable = (IGrowable)iblockstate.getBlock();
 

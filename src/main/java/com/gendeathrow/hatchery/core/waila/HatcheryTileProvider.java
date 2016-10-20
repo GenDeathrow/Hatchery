@@ -72,19 +72,19 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			if(accessor.getNBTData().getBoolean("hasEgg"))
 			{
 				float percentage = accessor.getNBTData().getFloat("hatchPercentage");
-				currenttip.add(I18n.format("text.hatching", new Object[0]) +": "+ percentage +"%");
+				currenttip.add(I18n.format("text.hatchery.hatching", new Object[0]) +": "+ percentage +"%");
 				currenttip.add(accessor.getNBTData().getString("eggName"));
 			}
-			else currenttip.add(I18n.format("text.nothatching", new Object[0]));
+			else currenttip.add(I18n.format("text.hatchery.nothatching", new Object[0]));
 		}
 		else if(tileEntity instanceof NestPenTileEntity)
 		{
 			if(accessor.getNBTData().getBoolean("hasChicken"))
 			{
-				currenttip.add(I18n.format("text.chicken", new Object[0]) +": "+ accessor.getNBTData().getString("entityname"));
-				currenttip.add(I18n.format("text.nxdrop", new Object[0]) +": "+ accessor.getNBTData().getLong("nextDrop"));
+				currenttip.add(I18n.format("text.hatchery.chicken", new Object[0]) +": "+ accessor.getNBTData().getString("entityname"));
+				currenttip.add(I18n.format("text.hatchery.nxdrop", new Object[0]) +": "+ accessor.getNBTData().getLong("nextDrop"));
 			}
-			else currenttip.add(I18n.format("text.nochicken", new Object[0]));
+			else currenttip.add(I18n.format("text.hatchery.nochicken", new Object[0]));
 			
 			if(accessor.getNBTData().hasKey("inventory"))
 			{
@@ -104,7 +104,7 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			if(accessor.getNBTData().hasKey("qty"))
 			{
 				accessor.getNBTData().getString("qty");
-				currenttip.add(I18n.format("text.storedseed", new Object[0]) +": "+ accessor.getNBTData().getString("qty"));
+				currenttip.add(I18n.format("text.hatchery.storedseed", new Object[0]) +": "+ accessor.getNBTData().getString("qty"));
 			}
 		}
 		return currenttip;
