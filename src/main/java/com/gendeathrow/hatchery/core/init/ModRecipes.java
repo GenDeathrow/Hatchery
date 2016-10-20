@@ -1,8 +1,12 @@
 package com.gendeathrow.hatchery.core.init;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -58,5 +62,37 @@ public class ModRecipes
 	    
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.nest), "xxx", "AxA", "AAA",'A', Blocks.HAY_BLOCK);
 
+	    IRecipe sprayerRecipe = new ShapedOreRecipe(new ItemStack(ModBlocks.feeder), new Object[] {
+	    	"LD.", 
+	    	".IB", 
+	    	"IGI",
+	    	'I', "ingotIron",
+	    	'G', "blockGlass",
+	    	'D',  new ItemStack(Blocks.HARDENED_CLAY,1,13),
+	    	'L',  new ItemStack(Blocks.HARDENED_CLAY,1,5)
+	    	
+		});
+		
+	    GameRegistry.addRecipe(sprayerRecipe);
+	    
+	    NBTTagCompound tag = new NBTTagCompound();
+	    tag.setString("FluidName", "liquid_fertilizer");
+	    tag.setInteger("Amount", 1000);
+	    ItemStack bucket = new ItemStack(Items.BUCKET);
+	    bucket.setTagCompound(tag);
+	    
+	    
+	    IRecipe bucketFert = new ShapedOreRecipe(ModFluids.getFertilizerBucket(), new Object[] {
+	    	"FFF", 
+	    	"FBF", 
+	    	"FFF",
+	    	'F', ModBlocks.fertlizedDirt,
+	    	'B',  Items.WATER_BUCKET
+	    	
+		}); 
+	    GameRegistry.addRecipe(bucketFert);
+
+
+		// GameRegistry.addRecipe(new ItemStack(Items.EGG), new Object[]{ ModItems.hatcheryEgg });
 	}
 }

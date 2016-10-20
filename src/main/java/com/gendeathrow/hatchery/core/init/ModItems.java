@@ -12,6 +12,7 @@ import com.gendeathrow.hatchery.item.AnimalNet;
 import com.gendeathrow.hatchery.item.ChickenManure;
 import com.gendeathrow.hatchery.item.FluidPump;
 import com.gendeathrow.hatchery.item.HatcheryEgg;
+import com.gendeathrow.hatchery.item.Sprayer;
 
 public class ModItems 
 {
@@ -22,6 +23,7 @@ public class ModItems
 	public static HatcheryEgg hatcheryEgg = new HatcheryEgg();
 	public static AnimalNet animalNet = new AnimalNet();
 	public static ChickenManure manure = new ChickenManure();
+	public static Sprayer sprayer = new Sprayer();
 	
 	//public static FluidPump pump = new FluidPump();
 	
@@ -33,6 +35,8 @@ public class ModItems
 		registerItem(ModItems.hatcheryEgg, "hatcheryegg");
 		registerItem(ModItems.animalNet, "animalnet");
 		registerItem(ModItems.manure, "chickenmanure");
+		registerItem(ModItems.sprayer, "sprayer");
+		
 		//registerItem(ModItems.pump, "fluidpump");
 		
 	}

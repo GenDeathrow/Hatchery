@@ -97,6 +97,7 @@ public class ClientProxy extends CommonProxy
 		registerItemModel(ModItems.hatcheryEgg);
 		registerItemModel(ModItems.animalNet);
 		registerItemModel(ModItems.manure);
+		registerItemModel(ModItems.sprayer);
 		
 		registerItemColorHandler(ModItems.hatcheryEgg);
 
