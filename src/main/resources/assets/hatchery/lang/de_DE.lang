@@ -5,17 +5,18 @@ tile.hatchery.pen.name=Nistgehege
 tile.hatchery.fertilized_dirt.name=Gedüngte Erde
 tile.hatchery.fertilized_farmland.name=Gedüngter Ackerboden
 tile.hatchery.feeder.name=Hühnerfütterer
-tile.hatchery.manure_block.name=Chicken Manure Block
+tile.hatchery.manure_block.name=Hühnermistblock
 
 item.hatchery.hatcheryegg.name=Ei
 item.hatchery.animalnet.name=Tierfangnetz
 item.hatchery.chickenmanure.name=Hühnermist
 
-tile.fluid.liquid_fertilizer.name=Liquid Fertilizer
-fluid.liquid_fertilizer=Liquid Fertilizer
+tile.fluid.liquid_fertilizer.name=Flüssiger Dünger
+fluid.liquid_fertilizer=Flüssiger Dünger
+item.hatchery.sprayer.name=Düngersprüher
 
 #TOOLTIP
-tooltip.hatchery.sprayer.desc=%1$s Volume: %2$dmb / %3$dmb
+tooltip.hatchery.sprayer.desc=%1$s Volumen: %2$dmb / %3$dmb
 
 #TEXT
 text.hatchery.hatching=Ausbrütend
@@ -26,15 +27,15 @@ text.hatchery.nochicken=Benutze das Tierfangnetz, um ein Huhn einzufangen
 text.hatchery.storedseed=Gelagerte Samen
 
 #JEI
-jei.tile.hatchery.feeder=You can store up to 200 seeds per feeder. Feeders will look for chickens in a 4x1x4 area for chickens. Baby chicks will grow faster when around a feeder, And adults will drop items faster. You can pipe seeds into the feeders.
-jei.tile.hatchery.nest=Place an egg into the nest and it will auto hatch your chicken over a random time. Placing a redstone lamp(Heat lamp will replace later) up to 3 blocks above the nest will increase speed. Sitting on the egg will also increase speed of hatching. 
-jei.tile.hatchery.fertilized_dirt=Gives tree's a random bonemeal effect
-jei.tile.hatchery.fertilized_farmland=Gives plants a random bonemeal effect. Get farmland by using a hoe on fertilized dirt
-jei.tile.hatchery.pen=Nesting pens store chickens to collect resources and chickens will lay eggs. Use an Animal net to place chickens into the Nesting Pen. Placing two nesting pens will auto breed the two chickens. This works with Modded Chickens that allow special breeding mechanics. Nesting Pens Drop Chicken Manure, Feathers, and Hatchery Eggs. 
-jei.tile.hatchery.pen_chicken=Nesting pens store chickens to collect resources and chickens will lay eggs. Placing two nesting pens will auto breed the two chickens. This works with Modded Chickens that allow special breeding mechanics. Nesting Pens Drop Chicken Manure, Feathers, and Hatchery Eggs.
-jei.tile.hatchery.manure_block=A block of chicken manure. Enjoy!
+jei.tile.hatchery.feeder=Du kannst bis zu 200 Samen im Fütterer lagern. Fütterer erkennen Hühner in einem 4x1x4-Bereich. Baby-Hühner werden in der Nähe eines Fütterers schneller wachsen und ausgewachsene Hühner werden Items schneller droppen. Du kannst Samen mit Röhren in den Fütterer einführen.
+jei.tile.hatchery.nest=Setze ein Ei in das Nest und es wird dein Huhn nach einer zufälligen Zeit automatisch Schlüpfen lassen. Mithilfe einer Redstonelampe (wird später mit einer Wärmelampe ersetzt) bis zu drei Blöcken über dem Nest kann die Geschwindigkeit erhöht werden. Auf dem Ei zu sitzen erhöht auch die Geschwindigkeit.
+jei.tile.hatchery.fertilized_dirt=Gibt Bäumen einen zufälligen Knochenmehl-Effekt.
+jei.tile.hatchery.fertilized_farmland=Gibt Pflanzen einen zufälligen Knochenmehl-Effekt. Erhalte Ackerboden, indem du eine Feldhacke auf gedüngte Erde anwendest.
+jei.tile.hatchery.pen=Nistgehege geben Platz für Hühner, um Ressourcen zu sammeln und Hühner Eier legen zu lassen. Benutze das Tierfangnetz, um Hühner in das Nistgehege zu setzen. Setze zwei Nistgehege, um Hühner automatisch paaren zu lassen. Dies funktioniert ebenso mit Mod-Hühnern, die spezielle Brutmechanismen zulassen. Nistgehege droppen Hühnermist, Federn und Hatchery-Eier.
+jei.tile.hatchery.pen_chicken=Nistgehege geben Platz für Hühner, um Ressourcen zu sammeln und Hühner Eier legen zu lassen. Benutze das Tierfangnetz, um Hühner in das Nistgehege zu setzen. Setze zwei Nistgehege, um Hühner automatisch paaren zu lassen. Dies funktioniert ebenso mit Mod-Hühnern, die spezielle Brutmechanismen zulassen. Nistgehege droppen Hühnermist, Federn und Hatchery-Eier.
+jei.tile.hatchery.manure_block=Ein Block Hühnermist. Viel Spaß!
 
-jei.item.hatchery.animalnet=Use an animal net to pickup any passive animal. Use the Animal net to specifically place a chicken into the Nesting Pen's.
-jei.item.hatchery.hatcheryegg=Hatchery Eggs are dynamically created eggs, Used to be able to breed two parents and create a custom egg. Mainly for Modded Chickens with new breeding mechanics.
-jei.item.hatchery.chickenmanure=Drops from nesting pens. Use manure to make fertilized dirt, liquid fertilizer, or use it as bonemeal for plants. 
-jei.item.hatchery.sprayer=The fertilizer sprayer is used to turn dirt/farmland into fertilized dirt/farmland, and acts much like a watering can causing block updates. Spray Holds 3000mb.
+jei.item.hatchery.animalnet=Benutze das Tierfangnetz, um ein passives Tier einzufangen. Benutze das Tierfangnetz, um Hühner in Nistgehege zu setzen.
+jei.item.hatchery.hatcheryegg=Hatchery-Eier sind dynamisch generierte Eier, was zwei Eltern das Brüten ermöglicht, um ein benutzerdefiniertes Ei zu erstellen. Hauptsächlich für Mod-Hühner mit neuen Brutmechanismen.
+jei.item.hatchery.chickenmanure=Drops von Nistgehegen. Benutze Hühnermist, um gedüngte Erde oder flüssigen Dünger herzustellen oder ihn als Knochenmehl-Ersatz für Pflanzen zu verwenden. 
+jei.item.hatchery.sprayer=Der Düngersprüher wird verwendet, um Erde/Ackerboden in Gedüngte Erde/Ackerboden zu verwandeln und funktioniert, ähnlich wie eine Gießkanne, mit Block-Updates. Enthält bis zu 3000mb.
