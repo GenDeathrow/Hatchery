@@ -2,7 +2,6 @@ package com.gendeathrow.hatchery.item;
 
 import java.util.HashMap;
 
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +21,7 @@ import net.minecraft.world.World;
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.util.RegisterEggsUtil;
 
-public class HatcheryEgg extends ItemEgg implements IItemColor
+public class HatcheryEgg extends ItemEgg
 {
 	
 	public static HashMap<String, Integer> ENTITYTORGB = new HashMap<String, Integer>();
@@ -82,13 +81,6 @@ public class HatcheryEgg extends ItemEgg implements IItemColor
       return nbttaglist;
     }
 
-    @Override
-    public int getColorFromItemstack(ItemStack stack, int tintIndex) 
-    { 	
-    	if(!stack.hasTagCompound()) {return 0xdfce9b;}
-    	return stack.getTagCompound().getInteger("eggColor"); 
-    }
-    
     
     public static void setColor(ItemStack itemstackIn, Entity entity)
     {

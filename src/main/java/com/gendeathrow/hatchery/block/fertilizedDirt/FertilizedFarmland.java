@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
+import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -37,11 +38,11 @@ public class FertilizedFarmland extends Block
     {
         super(Material.GROUND);
         this.setDefaultState(this.blockState.getBaseState().withProperty(MOISTURE, Integer.valueOf(0)));
-        this.setTickRandomly(true);
         this.setLightOpacity(255);
         this.setHardness(1);
         this.setHarvestLevel("shovel", 0);
         this.setUnlocalizedName("fertilized_farmland");
+        this.setTickRandomly(true);
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
@@ -49,17 +50,25 @@ public class FertilizedFarmland extends Block
         return FARMLAND_AABB;
     }
 
-    /**
-     * Used to determine ambient occlusion and culling when rebuilding chunks for render
-     */
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
-
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
+	  
+	@Override
+	public boolean isFullBlock(IBlockState state)
+	{
+		return false;
+	}
+	
     public boolean isFullCube(IBlockState state)
     {
         return false;
+    }
+	
+    public boolean isFullyOpaque(IBlockState state)
+    {
+    	return false;
     }
 
     @Override
@@ -99,6 +108,15 @@ public class FertilizedFarmland extends Block
                         {
                             igrowable.grow(worldIn, worldIn.rand, pos.up(), iblockstate);
                             worldIn.playEvent(2005, pos.up(), 0);
+                        }
+                        else 
+                        {
+                        	worldIn.scheduleBlockUpdate(pos.up(), iblockstate.getBlock(), 20, 1);
+                        	iblockstate.getBlock().updateTick(worldIn, pos.up(), iblockstate, rand);
+//                        	iblockstate.getBlock().updateTick(worldIn, pos.up(), iblockstate, rand);
+//                        	iblockstate.getBlock().updateTick(worldIn, pos.up(), iblockstate, rand);
+//                        	iblockstate.getBlock().updateTick(worldIn, pos.up(), iblockstate, rand);
+                        	worldIn.playEvent(2005, pos.up(), 0);
                         }
 
                     }
@@ -210,6 +228,12 @@ public class FertilizedFarmland extends Block
     }
     
     @Override
+    public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
+    {
+    	return (side != EnumFacing.DOWN && side != EnumFacing.UP);
+    }
+    
+    @Override
     public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, net.minecraftforge.common.IPlantable plantable)
     {
         IBlockState plant = plantable.getPlant(world, pos.offset(direction));
@@ -223,6 +247,13 @@ public class FertilizedFarmland extends Block
 
         return false;
     }
+    
+    @Override
+    public boolean isFertile(World world, BlockPos pos)
+    {
+        return true;
+    }
+    
 
     
 }

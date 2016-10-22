@@ -47,7 +47,7 @@ public class NestBlock extends Block implements ITileEntityProvider
 		this.setUnlocalizedName("nest"); 
 		//this.setRegistryName(Hatchery.MODID,"nest");
 		this.setCreativeTab(Hatchery.hatcheryTabs);	
-		this.setHardness(1);
+		this.setHardness(.4f);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(hasEgg, false));
 	}
 	

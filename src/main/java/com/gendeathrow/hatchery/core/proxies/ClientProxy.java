@@ -25,6 +25,7 @@ import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
 import com.gendeathrow.hatchery.block.nestblock.NestTileEntityRender;
 import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntityRenderer;
+import com.gendeathrow.hatchery.client.IItemColorHandler;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
@@ -108,11 +109,9 @@ public class ClientProxy extends CommonProxy
 	
     public void registerItemColorHandler(Item item)
     {
-        if (item instanceof IItemColor)
-        {
-            IItemColor iItemColor = (IItemColor)item;
-            FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler(iItemColor,item);
-        }
+
+            //IItemColor iItemColor = (IItemColor)item;
+            FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler(new IItemColorHandler(),item);
     }
 
 	@SideOnly(Side.CLIENT)

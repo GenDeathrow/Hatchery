@@ -87,7 +87,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			entityin.setPosition(this.pos.getX(),this.pos.getY() , this.pos.getZ());
 			entityin.motionY = 0;
 
-			((EntityChicken) entityin).setGrowingAge(6000);
+			if(!((EntityChicken) entityin).isChild()) ((EntityChicken) entityin).setGrowingAge(6000);
 			
 			NestPenBlock.setState(true, this.worldObj, this.pos);
 			return true;
