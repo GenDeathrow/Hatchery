@@ -24,6 +24,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -170,6 +171,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	private int idleTime = 0;
     private double lookX;  private double lookZ;
     
+    private boolean wasChild = false;
+    
 	@Override
 	public void update() 
 	{
@@ -181,7 +184,15 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 
 		if(chickenStored != null)
 		{
-			this.chickenStored.onLivingUpdate();	
+			boolean flag = false;
+			if(this.chickenStored.isChild()) wasChild = true;
+			this.chickenStored.onLivingUpdate();
+			if(wasChild && !(this.chickenStored.isChild()))
+			{
+				if(!this.worldObj.isRemote) this.updatePlayersInRange();
+			}
+			
+			
 		}
 		
 		if(this.worldObj.isRemote) 
@@ -266,6 +277,11 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		{
 			sentRequest = false;
 		}
+	}
+	
+	private void updatePlayersInRange()
+	{
+		Hatchery.network.sendToAllAround(HatcheryPacket.requestItemstackTE(this.getPos()), new TargetPoint(this.worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 150));
 	}
 
 	@Override

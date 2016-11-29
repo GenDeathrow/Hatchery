@@ -1,5 +1,7 @@
 package com.gendeathrow.hatchery.fluid;
 
+import com.gendeathrow.hatchery.Hatchery;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.fluids.BlockFluidClassic;
@@ -13,6 +15,7 @@ public class BlockLiquidFertilizer extends BlockFluidClassic {
 		this.setUnlocalizedName(fluid.getUnlocalizedName());
 		this.setRegistryName(fluid.getName());
 		fluid.setBlock(this);
+		this.setCreativeTab(Hatchery.hatcheryTabs);
 	}
 
 

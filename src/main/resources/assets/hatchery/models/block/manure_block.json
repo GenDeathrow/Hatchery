@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "hatchery:blocks/manure_block"
+        "all": "hatchery:blocks/manure_block2"
     }
 }

@@ -15,7 +15,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -24,8 +23,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModFluids;
-import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.entity.ai.ChickenBreeding;
 
 public class EventHandler 
@@ -123,4 +120,10 @@ public class EventHandler
 			event.getEntity().getCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null).update();
 		}
 	}
+	
+//	@SubscribeEvent
+//	public void craftingEvent(ItemCraftedEvent event)
+//	{
+//		System.out.println("test");
+//	}
 }

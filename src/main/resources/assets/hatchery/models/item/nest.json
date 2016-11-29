@@ -1,15 +1,30 @@
 {
     "parent": "hatchery:block/mach2",
 	"display": {
+	"ground": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 2, 0],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        },
         "thirdperson_righthand": {
-            "rotation": [ 10, -45, 170 ],
-            "translation": [ 0, 4, -2.75 ],
-            "scale": [ 0.375, 0.375, 0.375 ]
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 6, 0 ],
+            "scale": [ 0.75, 0.75, 0.75 ]
+        },
+        "thirdperson_lefthand": {
+            "rotation": [ 0, 0, 0],
+            "translation": [ 0, 6, 0 ],
+            "scale": [ 0.75, 0.75, 0.75 ]
         },
         "firstperson_righthand": {
-            "rotation": [ 30, -135, 25 ],
-            "translation": [ 0, 4, 2 ],
-            "scale": [0.375, 0.375, 0.375 ]
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ -2, 4, 0 ],
+            "scale": [0.45, 0.45, 0.45 ]
+        },
+        "firstperson_lefthand": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ -2, 4, 0],
+            "scale": [ 0.45, 0.45, 0.45 ]
         }
     }
 

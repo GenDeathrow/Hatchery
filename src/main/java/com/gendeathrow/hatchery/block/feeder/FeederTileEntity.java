@@ -2,7 +2,8 @@ package com.gendeathrow.hatchery.block.feeder;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.EntityList;
+import com.gendeathrow.hatchery.common.data.TileDataManager;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -11,24 +12,20 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
-public class FeederTileEntity extends TileEntity  implements IInventory
+public class FeederTileEntity extends TileEntity implements IInventory
 {
 
+	protected TileDataManager dataManager = new TileDataManager(this);
 	
 	private int seedInventory = 0;
 	private int maxSeedInventory = 200;
-	
-	
-	
 	
 	ItemStack[] inventory = new ItemStack[1];
 	
