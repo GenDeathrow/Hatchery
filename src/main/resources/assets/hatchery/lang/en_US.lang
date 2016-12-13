@@ -7,6 +7,7 @@ tile.hatchery.fertilized_dirt.name=Fertilized Dirt
 tile.hatchery.fertilized_farmland.name=Fertilized Farmland
 tile.hatchery.feeder.name=Chicken Feeder
 tile.hatchery.manure_block.name=Chicken Manure Block
+tile.hatchery.nursery_block.name=Nursery Monitor
 
 tile.fluid.liquid_fertilizer.name=Liquid Fertilizer
 fluid.liquid_fertilizer=Liquid Fertilizer
@@ -37,8 +38,9 @@ jei.tile.hatchery.fertilized_farmland=Gives plants a random bonemeal effect. Get
 jei.tile.hatchery.pen=Nesting pens store chickens to collect resources and chickens will lay eggs. Use an Animal net to place chickens into the Nesting Pen. Placing two nesting pens will auto breed the two chickens. This works with Modded Chickens that allow special breeding mechanics. Nesting Pens Drop Chicken Manure, Feathers, and Hatchery Eggs. 
 jei.tile.hatchery.pen_chicken=Nesting pens store chickens to collect resources and chickens will lay eggs. Placing two nesting pens will auto breed the two chickens. This works with Modded Chickens that allow special breeding mechanics. Nesting Pens Drop Chicken Manure, Feathers, and Hatchery Eggs.
 jei.tile.hatchery.manure_block=A block of chicken manure. Enjoy!
-
+jei.tile.hatchery.nursery_block=This Block will split adults and baby chicks in a 4x4 area and move them to opposite sides of the block. This is to better sort and move your chickens around.
 jei.item.hatchery.animalnet=Use an animal net to pickup any passive animal. Use the Animal net to specifically place a chicken into the Nesting Pen's.
 jei.item.hatchery.hatcheryegg=Hatchery Eggs are dynamically created eggs, Used to be able to breed two parents and create a custom egg. Mainly for Modded Chickens with new breeding mechanics.
 jei.item.hatchery.chickenmanure=Drops from nesting pens. Use manure to make fertilized dirt, Manure Blocks, liquid fertilizer, or use it as bonemeal for plants.
 jei.item.hatchery.sprayer=The fertilizer sprayer is used to turn dirt/farmland into fertilized dirt/farmland, and acts much like a watering can causing block updates. Spray Holds 3000mb. 
+
