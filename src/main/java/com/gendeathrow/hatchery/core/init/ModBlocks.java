@@ -20,6 +20,8 @@ import com.gendeathrow.hatchery.block.nestblock.NestBlock;
 import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
 import com.gendeathrow.hatchery.block.nestpen.NestPenBlock;
 import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
+import com.gendeathrow.hatchery.block.nursery.BlockMobNursery;
+import com.gendeathrow.hatchery.block.nursery.TileEntityMobNursery;
 
 public class ModBlocks 
 {
@@ -33,6 +35,7 @@ public class ModBlocks
 	public static Block fertlizedDirt;
 	public static Block fertilzedFarmland;
 	public static Block manureBlock;
+	public static Block nuseryBlock;
 	
 	
 	public static void preInit(FMLPreInitializationEvent event) 
@@ -44,6 +47,7 @@ public class ModBlocks
 		fertlizedDirt = new FertilizedDirt().setCreativeTab(Hatchery.hatcheryTabs);
 		fertilzedFarmland = new FertilizedFarmland();
 		manureBlock = new ManureBlock();
+		nuseryBlock = new BlockMobNursery();
 		
 		registerBlock(nest, "nest");
 		registerBlock(pen, "pen");
@@ -52,8 +56,9 @@ public class ModBlocks
 		registerBlock(fertlizedDirt, "fertilized_dirt");
 		registerBlock(fertilzedFarmland, "fertilized_farmland");
 		registerBlock(manureBlock, "manure_block");
-		
-		
+		registerBlock(nuseryBlock, "nursery_block");
+		  
+		GameRegistry.registerTileEntity(TileEntityMobNursery.class, "hatchery.nursery");
 		GameRegistry.registerTileEntity(NestTileEntity.class, NestTileEntity.class.getName());
 		GameRegistry.registerTileEntity(NestPenTileEntity.class, NestPenTileEntity.class.getName());
 		GameRegistry.registerTileEntity(FeederTileEntity.class, FeederTileEntity.class.getName());

@@ -24,7 +24,6 @@ import com.gendeathrow.hatchery.core.config.ConfigHandler;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
-import com.gendeathrow.hatchery.util.RegisterEggsUtil;
 
 
 

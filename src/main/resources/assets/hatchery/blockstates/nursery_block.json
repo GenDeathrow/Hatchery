@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "hatchery:nursery_sorter",  "y": 90 },
+        "facing=south": { "model": "hatchery:nursery_sorter", "y": 270 },
+        "facing=west":  { "model": "hatchery:nursery_sorter"},
+        "facing=east":  { "model": "hatchery:nursery_sorter", "y": 180}
+    }
+}

@@ -42,9 +42,6 @@ public class ModFluids
 
 		FluidRegistry.addBucketForFluid(liquidfertilizer);
 		
-		
-		
-		
 	//	FluidRegistry.
 	}
 	

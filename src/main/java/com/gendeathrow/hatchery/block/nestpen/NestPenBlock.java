@@ -15,6 +15,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -174,6 +175,7 @@ public class NestPenBlock extends Block implements ITileEntityProvider
         }
         else
         {
+        	NestPenTileEntity pen = (NestPenTileEntity) tileentity;
         	
         	for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
         	{
@@ -188,7 +190,9 @@ public class NestPenBlock extends Block implements ITileEntityProvider
 
                         if (tileentity1 instanceof NestPenTileEntity)
                         {
-                        	if(((NestPenTileEntity)tileentity1).storedEntity() != null)
+                        	NestPenTileEntity penMate =  (NestPenTileEntity) tileentity1;
+                        	EntityAnimal targetmate = (EntityAnimal) penMate.storedEntity();
+                        	if(targetmate != null && ((EntityAnimal)pen.storedEntity()).canMateWith(targetmate))
                         	{
                         		return (EntityChicken) ((NestPenTileEntity) tileentity1).storedEntity();
                         	}
@@ -286,7 +290,6 @@ public class NestPenBlock extends Block implements ITileEntityProvider
 	public static EnumFacing getFacing(IBlockState blockStateContainer)
 	{
 		return (EnumFacing)blockStateContainer.getValue(FACING);
-		
 	}
 	
 	@Override

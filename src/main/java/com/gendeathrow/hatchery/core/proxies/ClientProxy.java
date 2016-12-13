@@ -79,6 +79,7 @@ public class ClientProxy extends CommonProxy
 		
 	}
 	
+	
 	@Override
 	public void initRenderers()
 	{
@@ -95,6 +96,9 @@ public class ClientProxy extends CommonProxy
 		registerBlockModel(ModBlocks.manureBlock,0,ModBlocks.manureBlock.getRegistryName().toString());
 
 		
+		registerBlockModel(ModBlocks.nuseryBlock,0,ModBlocks.nuseryBlock.getRegistryName().toString());
+		//ModelLoader.setCustomModelResourceLocation(ModBlocks.MOB_NURSERY_ITEM, 0, new ModelResourceLocation("Hatchery:mob_nursery", "inventory"));
+
 		registerItemModel(ModItems.hatcheryEgg);
 		registerItemModel(ModItems.animalNet);
 		registerItemModel(ModItems.manure);

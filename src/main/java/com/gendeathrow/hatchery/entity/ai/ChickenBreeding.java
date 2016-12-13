@@ -19,6 +19,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.item.HatcheryEgg;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
 public class ChickenBreeding extends EntityAIBase
@@ -151,25 +152,14 @@ public class ChickenBreeding extends EntityAIBase
             entityageable.setGrowingAge(-24000);
             entityageable.setLocationAndAngles(this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, 0.0F, 0.0F);
             
-            
-            //NBTTagCompound eTag = new NBTTagCompound();
-            
-            //entityageable.writeEntityToNBT(eTag);
-            
-            //eTag.setString("id", EntityList.getEntityString(entityageable));
-            
-            //System.out.println(eTag.toString());
-            
             ItemStack egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
             
             ItemStackEntityNBTHelper.addEntitytoItemStack(egg, entityageable);
 
-            //egg.setTagCompound(eTag);
-            
-            
             egg.setStackDisplayName(entityageable.getDisplayName().getFormattedText() +" Egg");
             
-            
+        	HatcheryEgg.setColor(egg, entityageable);
+        	
             EntityItem entityItem = new EntityItem(this.theWorld, this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, egg);
             
             this.theWorld.spawnEntityInWorld(entityItem);

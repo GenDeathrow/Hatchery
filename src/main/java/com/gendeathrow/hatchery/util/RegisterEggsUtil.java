@@ -73,6 +73,16 @@ public class RegisterEggsUtil
 		//MoreChickens #DraconicEvolution
 		ENTITYIDTORGB.put("chickens.ChickensChicken90", 0x301549);
 		ENTITYIDTORGB.put("chickens.ChickensChicken91", 0xcc440c);	
+		
+		//MoreChickens #Botania
+		ENTITYIDTORGB.put("chickens.ChickensChicken120", 0x3ff123);
+		ENTITYIDTORGB.put("chickens.ChickensChicken121", 0x69d7ff);
+		ENTITYIDTORGB.put("chickens.ChickensChicken122", 0xf655f3);
+		
+		//MoreChickens
+		ENTITYIDTORGB.put("chickens.ChickensChicken500", 0x3dff1e);
+		ENTITYIDTORGB.put("chickens.ChickensChicken501", 0x43806e);
+		ENTITYIDTORGB.put("chickens.ChickensChicken502", 0x4e6961);	
 	}
 	
 	public static int getEggColor(String entityID)

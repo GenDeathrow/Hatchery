@@ -71,6 +71,17 @@ public class ModRecipes
 		});
 	    GameRegistry.addRecipe(feederRecipe);
 	    
+	    
+	    IRecipe NurseryRecipe = new ShapedOreRecipe(new ItemStack(ModBlocks.nuseryBlock), new Object[] {
+	    	"III", 
+	    	"IPI", 
+	    	"SSS",
+	    	'I', "ingotIron",
+	    	'P', Blocks.PISTON,
+	    	'S', "slabWood"
+		});
+	    GameRegistry.addRecipe(NurseryRecipe);
+	    
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.nest), "xxx", "AxA", "AAA",'A', Blocks.HAY_BLOCK);
 
 	    IRecipe sprayerRecipe = new ShapedOreRecipe(new ItemStack(ModItems.sprayer), new Object[] {
@@ -78,7 +89,7 @@ public class ModRecipes
 	    	".IB", 
 	    	"IGI",
 	    	'I', "ingotIron",
-	    	'G', "blockGlass",
+	    	'G', ModFluids.getFertilizerBucket(),
 	    	'D', "ingotIron",
 	    	'B',  new ItemStack(Blocks.STONE_BUTTON)
 	    	
@@ -104,7 +115,15 @@ public class ModRecipes
 	    List<ItemStack> bucketFertIngre = new ArrayList<ItemStack>(); 
 	    	bucketFertIngre.add(new ItemStack(ModBlocks.manureBlock));
 	    	bucketFertIngre.add(new ItemStack(Items.WATER_BUCKET));
-	    IRecipe bucketFert = new ShapelessRecipes(ModFluids.getFertilizerBucket(), bucketFertIngre);
+	    IRecipe bucketFert = new ShapelessRecipes(ModFluids.getFertilizerBucket(), bucketFertIngre)
+	    {
+	    	@Override
+	        public ItemStack[] getRemainingItems(InventoryCrafting inv)
+	        {
+				return new ItemStack[inv.getSizeInventory()];
+	    	}
+	    	
+	    };
 	    GameRegistry.addRecipe(bucketFert);
 	    
 	    
@@ -156,6 +175,7 @@ public class ModRecipes
 
 	                    	if(itemstack.getItem() == ModFluids.getFertilizerBucket().getItem())
 	                    	{
+	                    		itemstack.getItem().setContainerItem(Items.BUCKET);
 	                    		fertBuckets.add(itemstack);
 	                    		flag = true;
 	                    	}
@@ -163,6 +183,7 @@ public class ModRecipes
 	                    	{
 	                    		this.sprayerIn = itemstack;
 	                    		this.sprayerOut = itemstack.copy();
+	                    		
 	                    		flag = true;
 	                    	}
 	                    

@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.item.HatcheryEgg;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
 import net.minecraft.entity.Entity;
@@ -127,7 +128,8 @@ public class AutoBreeding extends EntityAIBase
 
             	egg.setStackDisplayName(entityageable.getDisplayName().getFormattedText() +" Egg");
             
-            
+            	HatcheryEgg.setColor(egg, entityageable);
+            	
             	entity = new EntityItem(this.theWorld, this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, egg);
             }
             

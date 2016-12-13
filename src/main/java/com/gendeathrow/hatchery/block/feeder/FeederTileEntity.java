@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -126,11 +127,13 @@ public class FeederTileEntity extends TileEntity implements IInventory
 		{
 			if (stack != null && seedInventory < this.maxSeedInventory)
 			{
-					
-				this.seedInventory++;
-				stack.stackSize--;
+				int diff = this.seedInventory - this.maxSeedInventory;
+				this.seedInventory += stack.stackSize;
+
 				if(stack.stackSize <= 0) stack= null;
-		
+				else stack.stackSize -= diff;
+				
+				FeederBlock.setFeederLevel(this.worldObj, pos, worldObj.getBlockState(pos));
 
 			}
 		}
@@ -160,6 +163,8 @@ public class FeederTileEntity extends TileEntity implements IInventory
 					stack.stackSize -= qty;
 					if(stack.stackSize <= 0) stack= null;
 				}
+
+				FeederBlock.setFeederLevel(this.worldObj, pos, worldObj.getBlockState(pos));
 			}
 		}
         

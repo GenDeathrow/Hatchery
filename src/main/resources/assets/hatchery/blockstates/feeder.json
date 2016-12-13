@@ -1,8 +1,20 @@
 {
     "variants": {
-        "facing=north": { "model": "hatchery:feeder_0" },
-        "facing=south": { "model": "hatchery:feeder_0", "y": 180 },
-        "facing=west":  { "model": "hatchery:feeder_0", "y": 270 },
-        "facing=east":  { "model": "hatchery:feeder_0", "y": 90 }
+        "facing=north,level=0": { "model": "hatchery:feeder_0" },
+        "facing=south,level=0": { "model": "hatchery:feeder_0", "y": 180 },
+        "facing=west,level=0":  { "model": "hatchery:feeder_0", "y": 270 },
+        "facing=east,level=0":  { "model": "hatchery:feeder_0", "y": 90 },
+		"facing=north,level=1": { "model": "hatchery:feeder_1" },
+        "facing=south,level=1": { "model": "hatchery:feeder_1", "y": 180 },
+        "facing=west,level=1":  { "model": "hatchery:feeder_1", "y": 270 },
+        "facing=east,level=1":  { "model": "hatchery:feeder_1", "y": 90 },
+        "facing=north,level=2": { "model": "hatchery:feeder_2" },
+        "facing=south,level=2": { "model": "hatchery:feeder_2", "y": 180 },
+        "facing=west,level=2":  { "model": "hatchery:feeder_2", "y": 270 },
+        "facing=east,level=2":  { "model": "hatchery:feeder_2", "y": 90 },
+        "facing=north,level=3": { "model": "hatchery:feeder_3" },
+        "facing=south,level=3": { "model": "hatchery:feeder_3", "y": 180 },
+        "facing=west,level=3":  { "model": "hatchery:feeder_3", "y": 270 },
+        "facing=east,level=3":  { "model": "hatchery:feeder_3", "y": 90 }
 	}
 }
