@@ -1,12 +1,11 @@
 package com.gendeathrow.hatchery.common.capability;
 
+import net.minecraft.entity.passive.EntityAnimal;
+
 public interface IAnimalStats 
 {
-	
-	
-	
-	
-	public abstract void update();
+
+	public abstract void update(EntityAnimal animal);;
 
 	/**
 	 * Returns if the entity/chicken has already eatten 

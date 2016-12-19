@@ -1,5 +1,6 @@
 {
     "textures": {
+		"particle": "hatchery:blocks/metal_side",
         "0": "blocks/planks_oak",
         "1": "hatchery:blocks/metal_door",
         "2": "hatchery:blocks/metal_side",

@@ -12,8 +12,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
 
+import com.setycz.chickens.ChickensRegistry;
+
+@Optional.Interface(iface = "com.setycz.chickens.ChickensRegistry", modid = "chickens")
 public class RegisterEggsUtil 
 {
 
@@ -85,15 +92,39 @@ public class RegisterEggsUtil
 		ENTITYIDTORGB.put("chickens.ChickensChicken502", 0x4e6961);	
 	}
 	
-	public static int getEggColor(String entityID)
+	
+	@Optional.Method(modid = "chickens")
+	public static int getChickensModColor(int type)
 	{
-		if(ENTITYIDTORGB.containsKey(entityID)) return ENTITYIDTORGB.get(entityID);
-		return 0xdfce9b;
+		if(ChickensRegistry.getByType(type) == null) return 0xdfce9b;
+		if(ChickensRegistry.getByType(type).isDye())
+		{
+			return EnumDyeColor.byDyeDamage(ChickensRegistry.getByType(type).getDyeMetadata()).getMapColor().colorValue;
+		}
+		else return ChickensRegistry.getByType(type).getBgColor();
 	}
 	
+	public static int getEggColor(NBTTagCompound entitytag, String entityID)
+	{
+		String post = "";
+		if(entitytag.hasKey("Type"))
+		{
+			post = entitytag.getTag("Type").toString();
+		}
+		
+		if(Loader.isModLoaded("chickens") && entitytag.hasKey("Type"))
+		{
+			return getChickensModColor(entitytag.getInteger("Type"));
+		}
+		else if(ENTITYIDTORGB.containsKey(entityID)) 
+		{
+			return ENTITYIDTORGB.get(entityID+post);
+		}
+		else return 0xdfce9b;
+
+	}
 	
-	
-	
+		
 	public static void getRGBfromEntityTexture(Entity entity)
 	{
 		Render<Entity> renderer = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(entity);

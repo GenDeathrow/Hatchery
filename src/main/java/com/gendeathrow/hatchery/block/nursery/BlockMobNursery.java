@@ -27,9 +27,9 @@ public class BlockMobNursery extends BlockHorizontal implements ITileEntityProvi
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.00D, 0.0D, 0.00, 1.0D, 1.5D, 1.0D);
     
     public BlockMobNursery() {
-    	super(Material.CLOTH);
+    	super(Material.IRON);
         setHardness(0.5F);
-        setSoundType(SoundType.CLOTH);
+        setSoundType(SoundType.METAL);
         setCreativeTab(Hatchery.hatcheryTabs);
     }
 

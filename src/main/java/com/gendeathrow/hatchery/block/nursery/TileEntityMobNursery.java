@@ -3,14 +3,17 @@ package com.gendeathrow.hatchery.block.nursery;
 import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.GameRules;
 
 public class TileEntityMobNursery extends TileEntity implements ITickable {
 
@@ -24,8 +27,10 @@ public class TileEntityMobNursery extends TileEntity implements ITickable {
 	{
 		if (worldObj.isRemote)
 			return;
+		
+		boolean isDayCycle = worldObj.getGameRules().getBoolean("doDaylightCycle");
 
-		if (worldObj.getWorldTime() % 10 == 0 && worldObj.getBlockState(pos).getBlock() != null) 
+		if ((isDayCycle ? worldObj.getWorldTime() % 10 == 0 : worldObj.rand.nextInt(9) == 0) && worldObj.getBlockState(pos).getBlock() != null) 
 		{
 			checkForAdult();
 			checkForChild();
@@ -75,6 +80,7 @@ public class TileEntityMobNursery extends TileEntity implements ITickable {
 	@SuppressWarnings("unchecked")
 	protected Entity checkForChild() 
 	{
+		
 		IBlockState state = getWorld().getBlockState(pos);
 		EnumFacing facing = state.getValue(BlockMobNursery.FACING);
 		float xPos = 1F, zPos = 1F;

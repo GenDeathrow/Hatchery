@@ -1,6 +1,7 @@
 package com.gendeathrow.hatchery.core.waila;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -82,7 +83,14 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			if(accessor.getNBTData().getBoolean("hasChicken"))
 			{
 				currenttip.add(I18n.format("text.hatchery.chicken", new Object[0]) +": "+ accessor.getNBTData().getString("entityname"));
-				currenttip.add(I18n.format("text.hatchery.nxdrop", new Object[0]) +": "+ accessor.getNBTData().getLong("nextDrop"));
+				
+				long uptime = accessor.getNBTData().getLong("nextDrop")/20;
+				long minutes = TimeUnit.SECONDS.toMinutes(uptime);
+				  uptime -= TimeUnit.MINUTES.toSeconds(minutes);
+				long seconds = TimeUnit.SECONDS.toSeconds(uptime);
+				String output = minutes > 0 ? minutes+":"+ (seconds < 10 ? "0"+seconds : seconds)  +" mins" : (seconds < 10 ? "0"+seconds : seconds) + " secs";
+
+				currenttip.add(I18n.format("text.hatchery.nxdrop", new Object[0]) +": "+ output);
 			}
 			else currenttip.add(I18n.format("text.hatchery.nochicken", new Object[0]));
 			

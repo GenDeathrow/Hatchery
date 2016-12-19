@@ -19,8 +19,10 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.entity.ai.ChickenBreeding;
@@ -38,6 +40,7 @@ public class EventHandler
 		}
 	}
 	
+
 	@SubscribeEvent
 	public void onHoeEvent(UseHoeEvent event)
 	{
@@ -107,6 +110,7 @@ public class EventHandler
 		{
 			event.addCapability(new ResourceLocation(Hatchery.MODID,"eatting_animal"), new CapabilityAnimalStatsHandler());
 		}
+		
 	}
 
 
@@ -117,7 +121,7 @@ public class EventHandler
 		
 		if(event.getEntity().hasCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null))
 		{
-			event.getEntity().getCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null).update();
+			event.getEntity().getCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null).update((EntityAnimal)event.getEntity());
 		}
 	}
 	

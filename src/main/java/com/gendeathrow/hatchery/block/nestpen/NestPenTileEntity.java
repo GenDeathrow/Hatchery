@@ -24,6 +24,9 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -134,7 +137,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		if(mate != null)
 		{
 			baby = this.chickenStored.createChild(mate);
-			mate.setGrowingAge(6000);
+			mate.setGrowingAge(6000 + this.rand.nextInt(5500));
 		}
 		else if(this.rand.nextInt(99)+1 < Settings.eggNestDropRate)
 		{
@@ -155,7 +158,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
     	baby.resetInLove();
     	baby.timeUntilNextEgg = 6000;
     	
-		chickenStored.setGrowingAge(6000);
+		chickenStored.setGrowingAge(6000 + this.rand.nextInt(6000));
 
 	  	egg.setStackDisplayName(baby.getDisplayName().getFormattedText() +" Egg");
     	
@@ -234,32 +237,38 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	        
 	        if (!this.worldObj.isRemote && !chickenStored.isChild() && !chickenStored.isChickenJockey())
 	        {
-	            if(chickenStored.getGrowingAge() == 0)
+	            if(chickenStored.getGrowingAge() == 0 && !(this.chickenStored.getClass() == EntityChicken.class))
 	            {
 	            	putStackInInventoryAllSlots(this, createEgg(), EnumFacing.DOWN);
 	            }
-	            
-	            if(--TimetoNextEgg <= 0)
+
+	        	if(--TimetoNextEgg <= 0)
 	            {
-	            	putStackInInventoryAllSlots(this, new ItemStack(Items.FEATHER, 1), EnumFacing.DOWN);
+            
+		            if(this.rand.nextInt(1) == 0)
+		            	putStackInInventoryAllSlots(this, new ItemStack(Items.FEATHER, 1), EnumFacing.DOWN);
+		            
 	            	putStackInInventoryAllSlots(this, new ItemStack(ModItems.manure, rand.nextInt(2)+1), EnumFacing.DOWN);
 	            	this.TimetoNextEgg = this.rand.nextInt(6000) + 6000;
+	            	
+	            	
+	            	if(this.chickenStored.capturedDrops != null && this.chickenStored.capturedDrops.size() > 0)
+	            	{
+	            		        		
+	            		for(EntityItem entity : this.chickenStored.capturedDrops)
+	            		{
+	            			putStackInInventoryAllSlots(this, entity.getEntityItem(), EnumFacing.DOWN);
+	            		}
+	            		
+	            		this.chickenStored.capturedDrops.clear();
+	            	}
 	            }
 	        }
 	        
-        	if(this.chickenStored.capturedDrops != null && this.chickenStored.capturedDrops.size() > 0)
-        	{
-        		        		
-        		for(EntityItem entity : this.chickenStored.capturedDrops)
-        		{
-        			putStackInInventoryAllSlots(this, entity.getEntityItem(), EnumFacing.DOWN);
-        		}
-        		
-        		this.chickenStored.capturedDrops.clear();
-        		
-        	}
+
 		}
 	}
+	
 	
 	private boolean sentRequest = false;
 	public void updateClient()
@@ -357,6 +366,30 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
         	}
         }
 	}
+	
+	public boolean grabItems(EntityPlayer playerIn)
+	{
+		boolean flag = false;
+        for (int i = 0; i < this.inventory.length; ++i)
+        {
+        	ItemStack stack = ItemStackHelper.getAndRemove(this.inventory, i);
+        	
+    		if(stack != null)
+    		{
+	    		if(!playerIn.inventory.addItemStackToInventory(stack))
+	    		{		    			
+	    			//player.dropItem(stack, false);
+	    			ForgeHooks.onPlayerTossEvent(playerIn, stack, false);
+	    		}
+
+	    		flag = true;
+    		}
+        }
+        
+        return flag;
+	}
+	
+	
     
     @Override
 	public String getName() 
@@ -458,29 +491,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	        }
 	}
 
-    public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) 
-    {
-        if (tile == null) 
-        {
-            return null;
-        }
 
-        IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
-
-        if (handler == null) 
-        {
-            if (side != null && tile instanceof ISidedInventory) 
-            {
-                handler = new SidedInvWrapper((ISidedInventory) tile, side);
-            } else if (tile instanceof IInventory) 
-            {
-                handler = new InvWrapper((IInventory) tile);
-            }
-        }
-
-        return handler;
-    }
-    
     
     public static ItemStack putStackInInventoryAllSlots(IInventory inventoryIn, ItemStack stack, @Nullable EnumFacing side)
     {
@@ -616,6 +627,38 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
         }
     	return nbttaglist;
     }
+
+    
+    @CapabilityInject(IItemHandler.class)
+    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
+
+    
+    public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) 
+    {
+        if (tile == null) 
+        {
+            return null;
+        }
+
+        IItemHandler handler = tile.getCapability(ITEM_HANDLER_CAPABILITY, side);
+
+        if (handler == null) 
+        {
+            if (side != null && tile instanceof ISidedInventory) 
+            {
+                handler = new SidedInvWrapper((ISidedInventory) tile, side);
+            } else if (tile instanceof IInventory) 
+            {
+                handler = new InvWrapper((IInventory) tile);
+            }
+        }
+
+        return handler;
+    }
+    
+    
+    
+
 
 
 }

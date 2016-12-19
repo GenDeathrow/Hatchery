@@ -31,7 +31,6 @@ public class HatcheryEgg extends ItemEgg
 		super();
 		
 		this.setUnlocalizedName("hatcheryegg");
-		//this.setRegistryName("hatcheryegg");
 		this.setCreativeTab(Hatchery.hatcheryTabs);
 	}
 	
@@ -87,11 +86,12 @@ public class HatcheryEgg extends ItemEgg
     	if(!itemstackIn.hasTagCompound()) itemstackIn.setTagCompound(new NBTTagCompound());
     	
     	NBTTagCompound entitytag = entity.writeToNBT(new NBTTagCompound());
-    	String post = "";
-    	if(entitytag.hasKey("Type")) post =  entitytag.getTag("Type").toString();
       	 
-    	itemstackIn.getTagCompound().setInteger("eggColor", RegisterEggsUtil.getEggColor(EntityList.getEntityString(entity)+post));
+    	itemstackIn.getTagCompound().setInteger("eggColor", RegisterEggsUtil.getEggColor(entitytag, EntityList.getEntityString(entity)));
     }
+    
+    
+    
 
 
 }

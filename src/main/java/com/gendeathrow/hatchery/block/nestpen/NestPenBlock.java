@@ -31,6 +31,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -88,10 +89,12 @@ public class NestPenBlock extends Block implements ITileEntityProvider
     	if(!worldIn.isRemote)
     	{
     		NestPenTileEntity te = (NestPenTileEntity)worldIn.getTileEntity(pos);
-    		te.dropContents();
-    		return true;
+    		
+    		if(te == null) return false;
+    		    		
+    		return te.grabItems(playerIn);
     	}
-    	return false;
+    	return true;
     }
 	
 	
@@ -192,7 +195,8 @@ public class NestPenBlock extends Block implements ITileEntityProvider
                         {
                         	NestPenTileEntity penMate =  (NestPenTileEntity) tileentity1;
                         	EntityAnimal targetmate = (EntityAnimal) penMate.storedEntity();
-                        	if(targetmate != null && ((EntityAnimal)pen.storedEntity()).canMateWith(targetmate))
+
+                        	if(targetmate != null && pen.storedEntity().getClass() == targetmate.getClass())
                         	{
                         		return (EntityChicken) ((NestPenTileEntity) tileentity1).storedEntity();
                         	}
@@ -203,6 +207,8 @@ public class NestPenBlock extends Block implements ITileEntityProvider
     	
     	return null;
     }
+    
+    
     
     private boolean isFeederNear()
     {
