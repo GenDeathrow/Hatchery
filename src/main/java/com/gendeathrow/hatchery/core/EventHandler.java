@@ -9,6 +9,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -34,8 +35,9 @@ public class EventHandler
 	public void onPlayerInteract(RightClickItem event) 
 	{
 
-		if(!(Settings.canThrowEgg) && event.getItemStack().getItem() instanceof ItemEgg)
+		if(!(Settings.canThrowEgg) && event.getItemStack().getItem() instanceof ItemEgg && !event.getItemStack().getItem().getRegistryName().toString().equalsIgnoreCase("chickens:liquid_egg"))
 		{
+			System.out.println(event.getItemStack().getItem().getRegistryName().toString());
 			event.setCanceled(true);
 		}
 	}

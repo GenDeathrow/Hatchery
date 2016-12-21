@@ -83,7 +83,22 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			if(accessor.getNBTData().getBoolean("hasChicken"))
 			{
 				currenttip.add(I18n.format("text.hatchery.chicken", new Object[0]) +": "+ accessor.getNBTData().getString("entityname"));
-				
+
+	    		if(accessor.getNBTData().hasKey("Growth"))
+	    		{
+	    			currenttip.add("Growth: "+ accessor.getNBTData().getInteger("Growth"));
+	    		}
+	    		if(accessor.getNBTData().hasKey("Gain"))
+	    		{
+	    			currenttip.add("Gain: "+ accessor.getNBTData().getInteger("Gain"));
+	    		}
+	    		if(accessor.getNBTData().hasKey("Strength"))
+	    		{
+	    			currenttip.add("Strength: "+ accessor.getNBTData().getInteger("Strength"));
+	    		}
+
+	    		
+	    		
 				long uptime = accessor.getNBTData().getLong("nextDrop")/20;
 				long minutes = TimeUnit.SECONDS.toMinutes(uptime);
 				  uptime -= TimeUnit.MINUTES.toSeconds(minutes);
@@ -134,11 +149,35 @@ public class HatcheryTileProvider implements IWailaDataProvider
 		{
 			NestPenTileEntity hte = (NestPenTileEntity) te;
 			
-			tag.setBoolean("hasChicken", ((NestPenTileEntity) te).storedEntity() != null);
-			if(((NestPenTileEntity) te).storedEntity() != null) tag.setString("entityname",  ((NestPenTileEntity) te).storedEntity().getDisplayName().getFormattedText());
-			tag.setLong("nextDrop",  ((NestPenTileEntity) te).getTimeToNextDrop());
+			tag.setBoolean("hasChicken", hte.storedEntity() != null);
+			if(hte.storedEntity() != null) 
+			{
+				tag.setString("entityname",  hte.storedEntity().getDisplayName().getFormattedText());
+
+	    		NBTTagCompound entityNBT = hte.storedEntity().getEntityData();
+
+	    		if(entityNBT.hasKey("Gain"))
+	    		{
+	    			tag.setInteger("Gain", entityNBT.getInteger("Gain"));
+	    		}
+	    		if(entityNBT.hasKey("Strength"))
+	    		{
+	    			tag.setInteger("Strength", entityNBT.getInteger("Strength"));
+	    		}
+	    		if(entityNBT.hasKey("Growth"))
+	    		{
+	    			tag.setInteger("Growth", entityNBT.getInteger("Growth"));
+	    		}
+	    		
+			}
+			
+			tag.setLong("nextDrop",  hte.getTimeToNextDrop());
 			NBTTagList list = hte.getInventoryContents(hte);
 			if(list != null) tag.setTag("inventory", list);
+			
+			
+
+	    		
 		}
 		else if(te instanceof FeederTileEntity)
 		{

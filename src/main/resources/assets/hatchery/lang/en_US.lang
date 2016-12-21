@@ -44,3 +44,4 @@ jei.item.hatchery.hatcheryegg=Hatchery Eggs are dynamically created eggs, Used t
 jei.item.hatchery.chickenmanure=Drops from nesting pens. Use manure to make fertilized dirt, Manure Blocks, liquid fertilizer, or use it as bonemeal for plants.
 jei.item.hatchery.sprayer=The fertilizer sprayer is used to turn dirt/farmland into fertilized dirt/farmland, and acts much like a watering can causing block updates. Spray Holds 3000mb. 
 
+jei.gui.nesting_pen_drop=Nesting Pen Chicken Drops

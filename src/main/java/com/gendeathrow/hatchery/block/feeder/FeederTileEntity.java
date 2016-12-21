@@ -2,8 +2,6 @@ package com.gendeathrow.hatchery.block.feeder;
 
 import javax.annotation.Nullable;
 
-import com.gendeathrow.hatchery.common.data.TileDataManager;
-
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -14,11 +12,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+
+import com.gendeathrow.hatchery.common.data.TileDataManager;
 
 public class FeederTileEntity extends TileEntity implements IInventory
 {
@@ -326,6 +326,24 @@ public class FeederTileEntity extends TileEntity implements IInventory
     private static boolean canCombine(ItemStack stack1, ItemStack stack2)
     {
         return stack1.getItem() != stack2.getItem() ? false : (stack1.getMetadata() != stack2.getMetadata() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
+    }
+    
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) 
+    {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) 
+    {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
+        {
+            return (T) new InvWrapper(this);
+        }
+        return super.getCapability(capability, facing);
+        
     }
 
 }

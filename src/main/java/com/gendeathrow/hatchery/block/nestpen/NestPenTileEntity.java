@@ -657,7 +657,23 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
     }
     
     
-    
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) 
+    {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) 
+    {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
+        {
+            return (T) new InvWrapper(this);
+        }
+        return super.getCapability(capability, facing);
+        
+    }
 
 
 

@@ -130,7 +130,7 @@ public class ModRecipes
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.nest), "xxx", "AxA", "AAA",'A', Blocks.HAY_BLOCK);
 
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.manureBlock), "XXX", "XXX", "XXX",'X', ModItems.manure);
-		//GameRegistry.addRecipe(new ItemStack(ModItems.manure,9), ModBlocks.manureBlock);
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.manure,9), ModBlocks.manureBlock);
 		
 		GameRegistry.addRecipe(new RefillSprayer());
 

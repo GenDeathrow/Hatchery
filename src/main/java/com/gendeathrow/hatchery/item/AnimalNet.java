@@ -186,7 +186,8 @@ public class AnimalNet extends Item
 	  			
 	  	        playerIn.addStat(StatList.getObjectUseStats(this));
 
-	  	        stack.getTagCompound().setTag("storedEntity", new NBTTagCompound());
+	  	        //stack.getTagCompound().setTag("storedEntity", new NBTTagCompound());
+	  	        stack.getTagCompound().removeTag("storedEntity");
 	  	        
 	  	        stack.setStackDisplayName(I18n.translateToLocal(stack.getUnlocalizedName()+".name"));
 	  	        

@@ -1,6 +1,7 @@
 package com.gendeathrow.hatchery.item;
 
 import java.util.HashMap;
+import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -17,6 +18,8 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.util.RegisterEggsUtil;
@@ -90,8 +93,35 @@ public class HatcheryEgg extends ItemEgg
     	itemstackIn.getTagCompound().setInteger("eggColor", RegisterEggsUtil.getEggColor(entitytag, EntityList.getEntityString(entity)));
     }
     
-    
-    
 
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    {
+    	if(stack.hasTagCompound())
+    	{
+    		//Support for DNA on Chickens Mod
+    		NBTTagCompound tag = stack.getTagCompound();
+    		
+    		if(tag.hasKey("storedEntity"))
+    		{
+    			NBTTagCompound entityNBT = tag.getCompoundTag("storedEntity");
+    			
+    			if(entityNBT.hasKey("Growth"))
+    			{
+    				tooltip.add("Growth: "+ entityNBT.getInteger("Growth"));
+    			}
+    			if(entityNBT.hasKey("Gain"))
+    			{
+    				tooltip.add("Gain: "+ entityNBT.getInteger("Gain"));
+    			}
+    			if(entityNBT.hasKey("Strength"))
+    			{
+    				tooltip.add("Strength: "+ entityNBT.getInteger("Strength"));
+    			}
+
+    		}
+    		
+    	}
+    }
 
 }
