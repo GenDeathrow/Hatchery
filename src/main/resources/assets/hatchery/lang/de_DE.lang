@@ -2,18 +2,19 @@ itemGroup.hatchery=Hatchery
 
 tile.hatchery.nest.name=Brutnest
 tile.hatchery.pen.name=Nistgehege
+tile.hatchery.pen_chicken.name=Nistgehege
 tile.hatchery.fertilized_dirt.name=Gedüngte Erde
 tile.hatchery.fertilized_farmland.name=Gedüngter Ackerboden
 tile.hatchery.feeder.name=Hühnerfütterer
 tile.hatchery.manure_block.name=Hühnermistblock
 tile.hatchery.nursery_block.name=Kükenüberwachung
 
+tile.fluid.liquid_fertilizer.name=Flüssiger Dünger
+fluid.liquid_fertilizer=Flüssiger Dünger
+
 item.hatchery.hatcheryegg.name=Ei
 item.hatchery.animalnet.name=Tierfangnetz
 item.hatchery.chickenmanure.name=Hühnermist
-
-tile.fluid.liquid_fertilizer.name=Flüssiger Dünger
-fluid.liquid_fertilizer=Flüssiger Dünger
 item.hatchery.sprayer.name=Düngersprüher
 
 #TOOLTIP
@@ -35,9 +36,10 @@ jei.tile.hatchery.fertilized_farmland=Gibt Pflanzen einen zufälligen Knochenmeh
 jei.tile.hatchery.pen=Nistgehege geben Platz für Hühner, um Ressourcen zu sammeln und Hühner Eier legen zu lassen. Benutze das Tierfangnetz, um Hühner in das Nistgehege zu setzen. Setze zwei Nistgehege, um Hühner automatisch paaren zu lassen. Dies funktioniert ebenso mit Mod-Hühnern, die spezielle Brutmechanismen zulassen. Nistgehege droppen Hühnermist, Federn und Hatchery-Eier.
 jei.tile.hatchery.pen_chicken=Nistgehege geben Platz für Hühner, um Ressourcen zu sammeln und Hühner Eier legen zu lassen. Benutze das Tierfangnetz, um Hühner in das Nistgehege zu setzen. Setze zwei Nistgehege, um Hühner automatisch paaren zu lassen. Dies funktioniert ebenso mit Mod-Hühnern, die spezielle Brutmechanismen zulassen. Nistgehege droppen Hühnermist, Federn und Hatchery-Eier.
 jei.tile.hatchery.manure_block=Ein Block Hühnermist. Viel Spaß!
-
 jei.tile.hatchery.nursery_block=Dieser Block trennt ausgewachsene Hühner und Küken in einem 4x4-Bereich und transportiert sie zur gegenüberliegenden Seite des Blocks. Dies ist zum besseren Sortieren und Bewegen deiner Hühner geeignet.
 jei.item.hatchery.animalnet=Benutze das Tierfangnetz, um ein passives Tier einzufangen. Benutze das Tierfangnetz, um Hühner in Nistgehege zu setzen.
 jei.item.hatchery.hatcheryegg=Hatchery-Eier sind dynamisch generierte Eier, was zwei Eltern das Brüten ermöglicht, um ein benutzerdefiniertes Ei zu erstellen. Hauptsächlich für Mod-Hühner mit neuen Brutmechanismen.
 jei.item.hatchery.chickenmanure=Drops von Nistgehegen. Benutze Hühnermist, um gedüngte Erde oder flüssigen Dünger herzustellen oder ihn als Knochenmehl-Ersatz für Pflanzen zu verwenden.
 jei.item.hatchery.sprayer=Der Düngersprüher wird verwendet, um Erde/Ackerboden in Gedüngte Erde/Ackerboden zu verwandeln und funktioniert, ähnlich wie eine Gießkanne, mit Block-Updates. Enthält bis zu 3000mb.
+
+jei.gui.nesting_pen_drop=Nistgehege-Hühnerdrops
