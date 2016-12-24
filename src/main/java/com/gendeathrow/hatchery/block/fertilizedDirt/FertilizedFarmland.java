@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.IGrowable;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
@@ -16,8 +17,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -38,39 +41,52 @@ public class FertilizedFarmland extends Block
     {
         super(Material.GROUND);
         this.setDefaultState(this.blockState.getBaseState().withProperty(MOISTURE, Integer.valueOf(0)));
-        this.setLightOpacity(255);
-        this.setHardness(1);
+        this.setHardness(.06F);
         this.setHarvestLevel("shovel", 0);
         this.setUnlocalizedName("fertilized_farmland");
         this.setTickRandomly(true);
+        this.setSoundType(SoundType.GROUND);
+        this.setLightOpacity(255);
+        
     }
 
+    @Override
+    public boolean getUseNeighborBrightness(IBlockState state)
+    {
+        return true;
+    }
+    
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
     {
         return FARMLAND_AABB;
     }
 
-	public boolean isOpaqueCube(IBlockState state)
-	{
-		return false;
-	}
-	  
-	@Override
-	public boolean isFullBlock(IBlockState state)
-	{
-		return false;
-	}
-	
+    public boolean isOpaqueCube(IBlockState state)
+    {
+        return false;
+    }
+
     public boolean isFullCube(IBlockState state)
     {
         return false;
     }
-	
-    public boolean isFullyOpaque(IBlockState state)
+    
+    public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos)
     {
-    	return false;
+        return false;
     }
-
+    
+    @SideOnly(Side.CLIENT)
+    public BlockRenderLayer getBlockLayer()
+    {
+        return BlockRenderLayer.CUTOUT_MIPPED;
+    }
+    
+    public boolean isVisuallyOpaque()
+    {
+        return false;
+    }
+    
     @Override
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
@@ -102,6 +118,7 @@ public class FertilizedFarmland extends Block
 
                 if (igrowable.canGrow(worldIn, pos.up(), iblockstate, worldIn.isRemote))
                 {
+                	Block o = Blocks.FARMLAND;
                     if (!worldIn.isRemote)
                     {
                         if (igrowable.canUseBonemeal(worldIn, worldIn.rand, pos.up(), iblockstate))
@@ -230,6 +247,7 @@ public class FertilizedFarmland extends Block
     @Override
     public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
     {
+    	//return true;
     	return (side != EnumFacing.DOWN && side != EnumFacing.UP);
     }
     

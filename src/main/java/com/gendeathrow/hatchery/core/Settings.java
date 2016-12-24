@@ -7,6 +7,9 @@ public class Settings
 	public static boolean canThrowEgg = true;
 	public static int eggNestDropRate = 50;
 	
+	//Clients
+	public static boolean renderChickenFlaps;
+	
 	
 	
 }

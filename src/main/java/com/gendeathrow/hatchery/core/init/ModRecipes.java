@@ -29,6 +29,7 @@ public class ModRecipes
 	{
 		OreDictionary.registerOre("dirt", ModBlocks.fertlizedDirt);
 		OreDictionary.registerOre("manure", ModItems.manure);
+		OreDictionary.registerOre("egg", ModItems.hatcheryEgg);
 	}
 	
 	public static void RegisterRecipes()
@@ -96,26 +97,11 @@ public class ModRecipes
 		});
 	    GameRegistry.addRecipe(sprayerRecipe);
 	    
-	    NBTTagCompound tag = new NBTTagCompound();
-	    tag.setString("FluidName", "liquid_fertilizer");
-	    tag.setInteger("Amount", 1000);
-	    ItemStack bucket = new ItemStack(Items.BUCKET);
-	    bucket.setTagCompound(tag);
-	    
-	    
-//	    IRecipe bucketFert = new ShapedOreRecipe(ModFluids.getFertilizerBucket(), new Object[] {
-//	    	"FFF", 
-//	    	"FBF", 
-//	    	"FFF",
-//	    	'F', ModBlocks.fertlizedDirt,
-//	    	'B',  Items.WATER_BUCKET
-//	    	
-//		}); 
-	    
 	    List<ItemStack> bucketFertIngre = new ArrayList<ItemStack>(); 
 	    	bucketFertIngre.add(new ItemStack(ModBlocks.manureBlock));
 	    	bucketFertIngre.add(new ItemStack(Items.WATER_BUCKET));
-	    IRecipe bucketFert = new ShapelessRecipes(ModFluids.getFertilizerBucket(), bucketFertIngre)
+
+	    	IRecipe bucketFert = new ShapelessRecipes(ModFluids.getFertilizerBucket(), bucketFertIngre)
 	    {
 	    	@Override
 	        public ItemStack[] getRemainingItems(InventoryCrafting inv)

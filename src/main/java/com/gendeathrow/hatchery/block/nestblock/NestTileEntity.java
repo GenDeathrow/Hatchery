@@ -89,11 +89,12 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 				
 				if(hatchingTick > timeToHatch)
 				{
-					
+				try
+				{	
 					if(this.eggSlot[0].getItem() == ModItems.hatcheryEgg)
 					{
 						Entity entitychicken = null;
-						
+
 						if(this.eggSlot[0].getTagCompound() == null) 
 						{
 							spawnMCChicken();
@@ -129,7 +130,12 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 						spawnChickensModChicken();
 	    	        	worldObj.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
 					}
-					
+				}
+				catch (Throwable e)
+				{
+					Hatchery.logger.error("Error trying to spawn Egg in the nest ("+this.getPos().toString()+") 'Null NBT' " + e);
+				}
+				
 					NestBlock.removeEgg(worldObj, worldObj.getBlockState(getPos()), getPos());
 					
 					markDirty();

@@ -203,6 +203,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			updateClient();
 
 			if(chickenStored == null) return;
+			if(!Settings.renderChickenFlaps) {this.chickenStored.onGround = true; return;}
 			
 			if(this.chickenStored.getRNG().nextFloat() < 0.02F)
 			{
