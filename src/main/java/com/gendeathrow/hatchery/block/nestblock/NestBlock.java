@@ -34,8 +34,8 @@ public class NestBlock extends Block implements ITileEntityProvider
 {
     public static final PropertyBool hasEgg = PropertyBool.create("hasegg");
     
-    protected static final AxisAlignedBB noEgg_AABB = new AxisAlignedBB(0.06D, 0.0D, 0.06, 0.94D, 0.15, 0.94D);
-    protected static final AxisAlignedBB withEgg_AABB = new AxisAlignedBB(0.06D, 0.0D, 0.06, 0.94D, 0.15, 0.94D);
+    protected static final AxisAlignedBB noEgg_AABB = new AxisAlignedBB(0.1875D, 0.0D, 0.1875D, 0.8125D, 0.15, 0.8125D);
+    protected static final AxisAlignedBB withEgg_AABB = new AxisAlignedBB(0.1875D, 0.0D, 0.1875D, 0.8125D, 0.25, 0.8125D);
     protected static final AxisAlignedBB[] BOUNDING_BOXES = new AxisAlignedBB[] {noEgg_AABB, withEgg_AABB};    
 
 	protected String name;
@@ -47,7 +47,7 @@ public class NestBlock extends Block implements ITileEntityProvider
 		this.setUnlocalizedName("nest"); 
 		//this.setRegistryName(Hatchery.MODID,"nest");
 		this.setCreativeTab(Hatchery.hatcheryTabs);	
-		this.setHardness(.4f);
+		this.setHardness(.2f);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(hasEgg, false));
 	}
 	
@@ -57,6 +57,7 @@ public class NestBlock extends Block implements ITileEntityProvider
 		
 	}
 	
+    
 //    public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn)
 //    {
 //    	if(worldIn.isRemote) return;
@@ -94,13 +95,13 @@ public class NestBlock extends Block implements ITileEntityProvider
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn)
 	{
-		//state = state.getActualState(worldIn, pos);
-		addCollisionBoxToList(pos, entityBox, collidingBoxes, noEgg_AABB);
-
-		if (((Boolean)state.getValue(hasEgg)).booleanValue())
-		{
-			addCollisionBoxToList(pos, entityBox, collidingBoxes, withEgg_AABB);
-		}
+//		//state = state.getActualState(worldIn, pos);
+//		addCollisionBoxToList(pos, entityBox, collidingBoxes, noEgg_AABB);
+//
+//		if (((Boolean)state.getValue(hasEgg)).booleanValue())
+//		{
+//			addCollisionBoxToList(pos, entityBox, collidingBoxes, withEgg_AABB);
+//		}
 	}
 	
 	@Override
@@ -123,6 +124,11 @@ public class NestBlock extends Block implements ITileEntityProvider
 	    //list.add(new ItemStack(itemIn, 1, 1)); //Meta 1
 	}
 	
+	@Override
+    public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
+    {
+    	return true;
+    }
 	
 	@Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
@@ -177,6 +183,12 @@ public class NestBlock extends Block implements ITileEntityProvider
     	
         return false;
 	}
+    
+	@Override
+    public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
+    {
+    	return false;
+    }
     
     public static boolean doesHaveEgg(IBlockState state)
     {
