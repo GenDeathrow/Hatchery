@@ -45,19 +45,11 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 {
 	
 	private EntityChicken chickenStored;
-	
 	private NBTTagCompound entityNBT;
-	
-	//private ItemStack egg;
-	
 	private int TimetoNextEgg = 0;
-	
 	private Random rand = new Random();
-	
 	ItemStack[] inventory = new ItemStack[5];
-	
 	private int isMating = 600;
-	
 	
 	public NestPenTileEntity()
 	{
@@ -78,9 +70,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	
 	public boolean trySetEntity(Entity entityin)
 	{
-		//System.out.println("trying");
 		if(this.storedEntity() != null) return false;
-		
 		if(entityin instanceof EntityChicken)
 		{
 			this.chickenStored = (EntityChicken) entityin;
@@ -151,7 +141,6 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		
 		if(baby == null) return null;
 		
-		
     	baby.resetInLove();
     	baby.setHealth(baby.getMaxHealth());
     	baby.setGrowingAge(-24000);
@@ -194,8 +183,6 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			{
 				if(!this.worldObj.isRemote) this.updatePlayersInRange();
 			}
-			
-			
 		}
 		
 		if(this.worldObj.isRemote) 
@@ -220,12 +207,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		if(chickenStored != null)
 		{
 			this.chickenStored.captureDrops = true;
-			
-			
-			//TODO this is just for debugging
-//			if(this.chickenStored.timeUntilNextEgg > 1000) this.chickenStored.timeUntilNextEgg = 1000;
-//			if(this.TimetoNextEgg > 1200)this.TimetoNextEgg  = 1200;
- 			
+
 	        if (chickenStored.isEntityAlive() && this.rand.nextInt(1000) < chickenStored.livingSoundTime++)
 	        {
 	        	chickenStored.livingSoundTime = -chickenStored.getTalkInterval();
@@ -245,28 +227,21 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 
 	        	if(--TimetoNextEgg <= 0)
 	            {
-            
 		            if(this.rand.nextInt(1) == 0)
 		            	putStackInInventoryAllSlots(this, new ItemStack(Items.FEATHER, 1), EnumFacing.DOWN);
-		            
 	            	putStackInInventoryAllSlots(this, new ItemStack(ModItems.manure, rand.nextInt(2)+1), EnumFacing.DOWN);
 	            	this.TimetoNextEgg = this.rand.nextInt(6000) + 6000;
 	            	
-	            	
 	            	if(this.chickenStored.capturedDrops != null && this.chickenStored.capturedDrops.size() > 0)
 	            	{
-	            		        		
 	            		for(EntityItem entity : this.chickenStored.capturedDrops)
 	            		{
 	            			putStackInInventoryAllSlots(this, entity.getEntityItem(), EnumFacing.DOWN);
 	            		}
-	            		
 	            		this.chickenStored.capturedDrops.clear();
 	            	}
 	            }
 	        }
-	        
-
 		}
 	}
 	
@@ -297,7 +272,6 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	@Override
 	public void readFromNBT(NBTTagCompound compound)
 	{
-		
 		if(compound.hasKey("storedEntity"))
 		{
 			this.entityNBT = (NBTTagCompound) compound.getTag("storedEntity");
@@ -315,14 +289,12 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
                 this.inventory[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
             }
         }
-		
-		
-		super.readFromNBT(compound);
+
+        super.readFromNBT(compound);
 	}
 
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
-
 		NBTTagCompound storedEntity = new NBTTagCompound();
 		
 		if(this.chickenStored != null)
@@ -356,7 +328,6 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	/////////////////////////////////////////////////////////////////
 	public void dropContents()
 	{
-		
         for (int i = 0; i < this.inventory.length; ++i)
         {
         	ItemStack stack = ItemStackHelper.getAndRemove(this.inventory, i);
@@ -390,8 +361,6 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
         return flag;
 	}
 	
-	
-    
     @Override
 	public String getName() 
 	{
@@ -492,10 +461,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	        }
 	}
 
-
-    
-    public static ItemStack putStackInInventoryAllSlots(IInventory inventoryIn, ItemStack stack, @Nullable EnumFacing side)
-    {
+   public static ItemStack putStackInInventoryAllSlots(IInventory inventoryIn, ItemStack stack, @Nullable EnumFacing side)
+   {
         if (inventoryIn instanceof ISidedInventory && side != null)
         {
             ISidedInventory isidedinventory = (ISidedInventory)inventoryIn;
@@ -599,13 +566,6 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
     	this.markDirty();
     }
     
-    private void playAmbientSound()
-    {
-    	
-    	this.rand.nextFloat();
-    	
-    }
-    
     /**
      * Used for sending Waila Infomation
      * @param te
@@ -629,10 +589,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
     	return nbttaglist;
     }
 
-    
     @CapabilityInject(IItemHandler.class)
     static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
-
     
     public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) 
     {
@@ -657,7 +615,6 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
         return handler;
     }
     
-    
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) 
     {
@@ -675,7 +632,5 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
         return super.getCapability(capability, facing);
         
     }
-
-
 
 }

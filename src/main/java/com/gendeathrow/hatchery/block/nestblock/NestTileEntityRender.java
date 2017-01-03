@@ -1,11 +1,14 @@
 package com.gendeathrow.hatchery.block.nestblock;
 
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
@@ -18,14 +21,17 @@ public class NestTileEntityRender extends TileEntitySpecialRenderer<NestTileEnti
     {
 		try
 		{
-			if(NestBlock.doesHaveEgg(te.getWorld().getBlockState(te.getPos()))) 
-			{
-				renderAModelAt(te, x, y, z, partialTicks, destroyStage);   
-			}
-		}catch(IllegalArgumentException e)
-		{
-			//System.out.println("Error Rendering");
-		}
+	        boolean flag = te.getWorld() != null;
+	        boolean flag1 = !flag || te.getBlockType() == ModBlocks.nest;
+			
+	        if (flag1)
+	        {
+	        	if(NestBlock.doesHaveEgg(te.getWorld().getBlockState(te.getPos()))) 
+	        	{
+	        		renderAModelAt(te, x, y, z, partialTicks, destroyStage);   
+	        	}
+	        }
+		}catch(IllegalArgumentException e) { }
         super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
     }
    
@@ -39,7 +45,6 @@ public class NestTileEntityRender extends TileEntitySpecialRenderer<NestTileEnti
 
         GlStateManager.color(1f, 1f, 1f, 1f);
         GlStateManager.translate(x, y, z);
-        //GlStateManager.rotate(-20, 0, 1, 0);
         GlStateManager.enableLighting();
         	renderItem(te);
     	GlStateManager.disableLighting();

@@ -70,7 +70,7 @@ public class NestPenBlock extends Block implements ITileEntityProvider
 
 	protected String name;
     
-	private static boolean keepInventory;
+	private static boolean keepInventory = false;
     
 	public NestPenBlock() 
 	{

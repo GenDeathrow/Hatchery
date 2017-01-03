@@ -27,6 +27,7 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.Optional.Interface;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
@@ -74,6 +75,11 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 		ticks++;
 		if (this.worldObj.getTotalWorldTime() % 80L == 0L)
 		{	
+	        boolean flag = this.getWorld() != null;
+	        boolean flag1 = !flag || this.getBlockType() == ModBlocks.nest;
+			
+	        if(flag1)
+	        {
 			if(NestBlock.doesHaveEgg(this.worldObj.getBlockState(this.getPos())))
 			{
 				int randint = 2;
@@ -141,6 +147,7 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 					markDirty();
 				}
 			}
+	        }//flag1
 		}
 		else if(hatchingTick > timeToHatch) {hatchingTick = 0; ticks = 0;}
 	}

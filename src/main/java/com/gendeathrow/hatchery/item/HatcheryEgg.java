@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -57,18 +58,6 @@ public class HatcheryEgg extends ItemEgg
         return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
     }
     
-    
-//    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-//    {
-//        if (!playerIn.capabilities.isCreativeMode)
-//        {
-//            --stack.stackSize;
-//        }
-//
-//        return EnumActionResult.PASS;
-//    }
-    
-    
     protected NBTTagList newDoubleNBTList(double[] dob)
     {
       NBTTagList nbttaglist = new NBTTagList();
@@ -83,7 +72,6 @@ public class HatcheryEgg extends ItemEgg
       return nbttaglist;
     }
 
-    
     public static void setColor(ItemStack itemstackIn, Entity entity)
     {
     	if(!itemstackIn.hasTagCompound()) itemstackIn.setTagCompound(new NBTTagCompound());
@@ -93,7 +81,11 @@ public class HatcheryEgg extends ItemEgg
     	itemstackIn.getTagCompound().setInteger("eggColor", RegisterEggsUtil.getEggColor(entitytag, EntityList.getEntityString(entity)));
     }
     
-
+    public static void createEggFromEntity(EntityAgeable entity)
+    {
+    	
+    }
+    
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {

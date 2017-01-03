@@ -102,7 +102,10 @@ public class NestBlock extends Block implements ITileEntityProvider
 //		{
 //			addCollisionBoxToList(pos, entityBox, collidingBoxes, withEgg_AABB);
 //		}
+		
+		
 	}
+
 	
 	@Override
     @Nullable
@@ -192,6 +195,8 @@ public class NestBlock extends Block implements ITileEntityProvider
     
     public static boolean doesHaveEgg(IBlockState state)
     {
+    	if(state.getBlock() != ModBlocks.nest) return false;
+    	
     	return state.getValue(hasEgg);
     }
     

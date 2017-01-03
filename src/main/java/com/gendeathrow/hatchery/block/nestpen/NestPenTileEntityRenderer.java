@@ -10,23 +10,32 @@ import net.minecraft.util.EnumFacing;
 
 import com.gendeathrow.hatchery.block.nestblock.NestBlock;
 import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
 
 public class NestPenTileEntityRenderer extends TileEntitySpecialRenderer<NestPenTileEntity>
 {
 	EntityChicken chicken;
+	
 	public void renderTileEntityAt(NestPenTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
     {
-    	renderAModelAt(te, x, y, z, partialTicks, destroyStage);   
-        super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
+        boolean flag = te.getWorld() != null;
+        boolean flag1 = !flag || te.getBlockType() == ModBlocks.pen || te.getBlockType() == ModBlocks.pen_chicken;
+
+
+        if (flag1)
+        {
+        	renderAModelAt(te, x, y, z, partialTicks, destroyStage);   
+        	super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
+        }
     }
    
     
     public void renderAModelAt(NestPenTileEntity te, double x, double y, double z, float f, float partialTicks)
     {
-    	
     	if(te.storedEntity() == null) return;
     	
     	IBlockState state = te.getWorld().getBlockState(te.getPos());
+    	
     	EnumFacing facing = NestPenBlock.getFacing(state);
     	
     	if(facing == EnumFacing.EAST || facing == EnumFacing.WEST) facing = facing.getOpposite();
@@ -39,7 +48,7 @@ public class NestPenTileEntityRenderer extends TileEntitySpecialRenderer<NestPen
         GlStateManager.translate(x + .5, y + .1, z + .5);
         GlStateManager.rotate(facing.getHorizontalAngle(), 0, 1, 0);
         GlStateManager.enableLighting();
-        	manager.doRenderEntity(te.storedEntity(), 0, 0, 0, 0, partialTicks, true);;
+        	manager.doRenderEntity(te.storedEntity(), 0, 0, 0, 0, partialTicks, true);
     	GlStateManager.disableLighting();
     	GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.popMatrix();
