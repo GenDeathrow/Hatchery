@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -30,6 +31,9 @@ public class ModRecipes
 		OreDictionary.registerOre("dirt", ModBlocks.fertlizedDirt);
 		OreDictionary.registerOre("manure", ModItems.manure);
 		OreDictionary.registerOre("egg", ModItems.hatcheryEgg);
+		if(Loader.isModLoaded("harvestcraft")) {
+			OreDictionary.registerOre("listAllegg", ModItems.hatcheryEgg);
+		}
 	}
 	
 	public static void RegisterRecipes()
@@ -63,8 +67,8 @@ public class ModRecipes
 	    GameRegistry.addRecipe(fertDirtRecipe);
 	    
 	    IRecipe feederRecipe = new ShapedOreRecipe(new ItemStack(ModBlocks.feeder), new Object[] {
-	    	".I.", 
-	    	"SBS", 
+	    	".I.",
+	    	"SBS",
 	    	"SSS",
 	    	'I', "ingotIron",
 	    	'B', "blockIron",
