@@ -9,6 +9,9 @@ tile.hatchery.feeder.name=Chicken Feeder
 tile.hatchery.manure_block.name=Chicken Manure Block
 tile.hatchery.nursery_block.name=Nursery Monitor
 
+entity.Rooster.name=Rooster
+container.roosterInventory=Rooster Stud-muffin
+
 tile.fluid.liquid_fertilizer.name=Liquid Fertilizer
 fluid.liquid_fertilizer=Liquid Fertilizer
 

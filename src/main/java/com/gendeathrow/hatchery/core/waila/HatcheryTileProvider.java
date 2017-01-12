@@ -17,8 +17,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
-import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
-import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
+import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
+import com.gendeathrow.hatchery.block.nestingpen.NestingPenTileEntity;
 
 public class HatcheryTileProvider implements IWailaDataProvider
 {
@@ -30,11 +30,11 @@ public class HatcheryTileProvider implements IWailaDataProvider
     public static void load(IWailaRegistrar registrar) 
     {
         //registrar.registerBodyProvider(INSTANCE, HatcheryTileEntity.class);
-        registrar.registerTailProvider(INSTANCE, NestTileEntity.class);
-        registrar.registerNBTProvider(INSTANCE, NestTileEntity.class);
+        registrar.registerTailProvider(INSTANCE, EggNestTileEntity.class);
+        registrar.registerNBTProvider(INSTANCE, EggNestTileEntity.class);
         
-        registrar.registerTailProvider(INSTANCE, NestPenTileEntity.class);
-        registrar.registerNBTProvider(INSTANCE, NestPenTileEntity.class);
+        registrar.registerTailProvider(INSTANCE, NestingPenTileEntity.class);
+        registrar.registerNBTProvider(INSTANCE, NestingPenTileEntity.class);
         
         registrar.registerTailProvider(INSTANCE, FeederTileEntity.class);
         registrar.registerNBTProvider(INSTANCE, FeederTileEntity.class);
@@ -66,9 +66,9 @@ public class HatcheryTileProvider implements IWailaDataProvider
 		
 
 
-		if(tileEntity instanceof NestTileEntity)
+		if(tileEntity instanceof EggNestTileEntity)
 		{
-			NestTileEntity hte = (NestTileEntity) tileEntity;
+			EggNestTileEntity hte = (EggNestTileEntity) tileEntity;
 			
 			if(accessor.getNBTData().getBoolean("hasEgg"))
 			{
@@ -78,7 +78,7 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			}
 			else currenttip.add(I18n.format("text.hatchery.nothatching", new Object[0]));
 		}
-		else if(tileEntity instanceof NestPenTileEntity)
+		else if(tileEntity instanceof NestingPenTileEntity)
 		{
 			if(accessor.getNBTData().getBoolean("hasChicken"))
 			{
@@ -137,17 +137,17 @@ public class HatcheryTileProvider implements IWailaDataProvider
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) 
 	{
 		
-		if(te instanceof NestTileEntity)
+		if(te instanceof EggNestTileEntity)
 		{
-			NestTileEntity hte = (NestTileEntity) te;
+			EggNestTileEntity hte = (EggNestTileEntity) te;
 			
 			tag.setFloat("hatchPercentage", hte.getPercentage());
 			tag.setString("eggName", hte.getStackInSlot(0).getDisplayName());
 			tag.setBoolean("hasEgg", hte.getStackInSlot(0) != null);
 		}
-		else if(te instanceof NestPenTileEntity)
+		else if(te instanceof NestingPenTileEntity)
 		{
-			NestPenTileEntity hte = (NestPenTileEntity) te;
+			NestingPenTileEntity hte = (NestingPenTileEntity) te;
 			
 			tag.setBoolean("hasChicken", hte.storedEntity() != null);
 			if(hte.storedEntity() != null) 

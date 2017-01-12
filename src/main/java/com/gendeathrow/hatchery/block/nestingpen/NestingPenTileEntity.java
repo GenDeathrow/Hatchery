@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.block.nestpen;
+package com.gendeathrow.hatchery.block.nestingpen;
 
 import java.util.Random;
 
@@ -41,7 +41,7 @@ import com.gendeathrow.hatchery.network.HatcheryPacket;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
 
-public class NestPenTileEntity extends TileEntity  implements ITickable, IInventory
+public class NestingPenTileEntity extends TileEntity  implements ITickable, IInventory
 {
 	
 	private EntityChicken chickenStored;
@@ -51,7 +51,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	ItemStack[] inventory = new ItemStack[5];
 	private int isMating = 600;
 	
-	public NestPenTileEntity()
+	public NestingPenTileEntity()
 	{
 		super();
 		entityNBT = new NBTTagCompound();
@@ -83,7 +83,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 
 			if(!((EntityChicken) entityin).isChild()) ((EntityChicken) entityin).setGrowingAge(6000);
 			
-			NestPenBlock.setState(true, this.worldObj, this.pos);
+			NestingPenBlock.setState(true, this.worldObj, this.pos);
 			return true;
 		}else return false;
 		
@@ -97,7 +97,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		entityNBT = new NBTTagCompound();	
 		this.chickenStored = null;
 		//TODO this.egg = null;
-		NestPenBlock.setState(false, this.worldObj, this.pos);
+		NestingPenBlock.setState(false, this.worldObj, this.pos);
 		return respondEntity;
 	}
 	
@@ -122,14 +122,14 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	{
 		ItemStack egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
     	
-		EntityChicken mate  = NestPenBlock.getNearByMate(worldObj, this.worldObj.getBlockState(pos), pos);
+		EntityChicken mate  = NestingPenBlock.getNearByMate(worldObj, this.worldObj.getBlockState(pos), pos);
 		EntityChicken baby = null;
 		if(mate != null)
 		{
 			baby = this.chickenStored.createChild(mate);
 			mate.setGrowingAge(6000 + this.rand.nextInt(5500));
 		}
-		else if(this.rand.nextInt(99)+1 < Settings.eggNestDropRate)
+		else if(this.rand.nextInt(99)+1 < Settings.EGG_NESTINGPEN_DROP_RATE)
 		{
 			baby = this.chickenStored.createChild((EntityAgeable) this.storedEntity());
 			
@@ -190,7 +190,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			updateClient();
 
 			if(chickenStored == null) return;
-			if(!Settings.renderChickenFlaps) {this.chickenStored.onGround = true; return;}
+			if(!Settings.SHOULD_RENDER_CHICKEN_FLAPS) {this.chickenStored.onGround = true; return;}
 			
 			if(this.chickenStored.getRNG().nextFloat() < 0.02F)
 			{
@@ -251,7 +251,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	{
 		if(this.chickenStored != null) return;
 		
-		if(!NestPenBlock.hasChicken(this.worldObj.getBlockState(pos))) return;
+		if(!NestingPenBlock.hasChicken(this.worldObj.getBlockState(pos))) return;
 	   
 		if(!sentRequest)
 		{
@@ -571,7 +571,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
      * @param te
      * @return
      */
-    public static NBTTagList getInventoryContents(NestPenTileEntity te)
+    public static NBTTagList getInventoryContents(NestingPenTileEntity te)
     {
     	NBTTagList nbttaglist = new NBTTagList();
     	
@@ -589,8 +589,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
     	return nbttaglist;
     }
 
-    @CapabilityInject(IItemHandler.class)
-    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
+//    @CapabilityInject(IItemHandler.class)
+//    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
     
     public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) 
     {
@@ -599,7 +599,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
             return null;
         }
 
-        IItemHandler handler = tile.getCapability(ITEM_HANDLER_CAPABILITY, side);
+        IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
 
         if (handler == null) 
         {

@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.entity.ai;
+package com.gendeathrow.hatchery.entities.ai;
 
 import java.util.List;
 import java.util.Random;
@@ -121,7 +121,7 @@ public class AutoBreeding extends EntityAIBase
             
             Entity entity = entityageable;
             
-            if(Settings.eggBreeding)
+            if(Settings.IS_EGG_BREEDING)
             {
             	ItemStack egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
             

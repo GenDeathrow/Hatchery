@@ -8,12 +8,15 @@ import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -21,19 +24,20 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
-import com.gendeathrow.hatchery.block.nestblock.NestTileEntityRender;
-import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
-import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntityRenderer;
+import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
+import com.gendeathrow.hatchery.block.nest.EggNestTileEntityRender;
+import com.gendeathrow.hatchery.block.nestingpen.NestingPenTileEntity;
+import com.gendeathrow.hatchery.block.nestingpen.NestingPenTileEntityRenderer;
 import com.gendeathrow.hatchery.client.IItemColorHandler;
+import com.gendeathrow.hatchery.client.render.entity.RenderRooster;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.entities.EntityRooster;
 
 public class ClientProxy extends CommonProxy
 {
-	
-	
+
 	@Override
 	public boolean isClient()
 	{
@@ -64,6 +68,20 @@ public class ClientProxy extends CommonProxy
 		super.registerEventHandlers();
 	}
 	
+	
+	@Override
+	public void registerRenderers() 
+	{
+
+		RenderingRegistry.registerEntityRenderingHandler(EntityRooster.class, new IRenderFactory() {
+			@Override
+			public Render createRenderFor(RenderManager manager) {
+				return new RenderRooster(manager);
+			}
+		});
+	}
+	
+	
 	@Override
 	public void preInit(FMLPreInitializationEvent event)
 	{
@@ -75,8 +93,6 @@ public class ClientProxy extends CommonProxy
 	public void init(FMLInitializationEvent event)
 	{
 		super.init(event);
-		
-		
 	}
 	
 	
@@ -106,8 +122,8 @@ public class ClientProxy extends CommonProxy
 		
 		registerItemColorHandler(ModItems.hatcheryEgg);
 
-		ClientRegistry.bindTileEntitySpecialRenderer(NestTileEntity.class, new NestTileEntityRender());
-		ClientRegistry.bindTileEntitySpecialRenderer(NestPenTileEntity.class, new NestPenTileEntityRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(EggNestTileEntity.class, new EggNestTileEntityRender());
+		ClientRegistry.bindTileEntitySpecialRenderer(NestingPenTileEntity.class, new NestingPenTileEntityRenderer());
 		
 	}
 	

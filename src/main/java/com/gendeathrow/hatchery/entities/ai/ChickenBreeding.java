@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.entity.ai;
+package com.gendeathrow.hatchery.entities.ai;
 
 import java.util.List;
 import java.util.Random;

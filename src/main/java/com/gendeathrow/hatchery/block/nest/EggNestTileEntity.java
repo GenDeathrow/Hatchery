@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.block.nestblock;
+package com.gendeathrow.hatchery.block.nest;
 
 import javax.annotation.Nullable;
 
@@ -9,11 +9,13 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityEgg;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -45,7 +47,7 @@ import com.setycz.chickens.chicken.EntityChickensChicken;
 		}
 )
 
-public class NestTileEntity extends TileEntity implements ITickable, IInventory
+public class EggNestTileEntity extends TileEntity implements ITickable//, IInventory
 {
 
 	boolean hasEgg;
@@ -80,7 +82,7 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 			
 	        if(flag1)
 	        {
-			if(NestBlock.doesHaveEgg(this.worldObj.getBlockState(this.getPos())))
+			if(EggNestBlock.doesHaveEgg(this.worldObj.getBlockState(this.getPos())))
 			{
 				int randint = 2;
 				
@@ -142,7 +144,7 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 					Hatchery.logger.error("Error trying to spawn Egg in the nest ("+this.getPos().toString()+") 'Null NBT' " + e);
 				}
 				
-					NestBlock.removeEgg(worldObj, worldObj.getBlockState(getPos()), getPos());
+					EggNestBlock.removeEgg(worldObj, worldObj.getBlockState(getPos()), getPos());
 					
 					markDirty();
 				}
@@ -152,17 +154,12 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
 		else if(hatchingTick > timeToHatch) {hatchingTick = 0; ticks = 0;}
 	}
 	
-	
-	
-	
-	
-	
 	private boolean sentRequest = false;
 	public void updateClient()
 	{
 		if(this.eggSlot[0] != null) return;
 		
-		boolean hasEgg = NestBlock.doesHaveEgg(this.getWorld().getBlockState(this.getPos()));
+		boolean hasEgg = EggNestBlock.doesHaveEgg(this.getWorld().getBlockState(this.getPos()));
     
 		if(!sentRequest && hasEgg)
 		{
@@ -270,89 +267,112 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
     // INVENTORY 
     /////////////////////////////////////////////////////////////////////////
     
-	@Override
+	//@Override
 	public String getName() 
 	{
 		return null;
 	}
 
-	@Override
+	//@Override
 	public boolean hasCustomName() {
 		return false;
 	}
 
-	@Override
+	//
 	public int getSizeInventory() {
 		return 1;
 	}
 
-	@Override
+	//@Override
 	public ItemStack getStackInSlot(int index) {
-		return this.eggSlot[0];
+		return this.eggSlot[index];
 	}
 
-	@Override
+	//@Override
 	public ItemStack decrStackSize(int index, int count) 
 	{
-		return this.eggSlot[0];
+	    ItemStack itemstack = ItemStackHelper.getAndSplit(this.eggSlot, index, count);
+
+        if (itemstack != null)
+        {
+            this.markDirty();
+            
+        }
+		return itemstack;
 	}
 
-	@Override
+	//@Override
 	public ItemStack removeStackFromSlot(int index) 
 	{
-		return ItemStackHelper.getAndRemove(this.eggSlot, 0);
+		
+		ItemStack stack = ItemStackHelper.getAndRemove(this.eggSlot, index);
+		
+		if(stack != null) 
+		{
+			this.markDirty();
+		}
+		
+		
+		
+		return stack;
 	}
 
-	@Override
+	//@Override
 	public void setInventorySlotContents(int index, ItemStack stack) 
 	{
-		this.eggSlot[0] = stack;
+		this.eggSlot[index] = stack;
 		
 		if (stack != null && stack.stackSize > this.getInventoryStackLimit())
         {
             stack.stackSize = this.getInventoryStackLimit();
         }
-        
+		
 		this.markDirty();
 	}
 
-	@Override
+	//@Override
 	public int getInventoryStackLimit() 
 	{
 		return 1;
 	}
 
-	@Override
+	//@Override
 	public boolean isUseableByPlayer(EntityPlayer player) 
 	{
 		return true;
 	}
 
-	@Override
+	//@Override
 	public void openInventory(EntityPlayer player) { }
 
-	@Override
+	//@Override
 	public void closeInventory(EntityPlayer player) { }
 
-	@Override
+	//@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) 
 	{
-		return true;
+		if(stack.getItem() instanceof ItemEgg)
+			return true;
+		
+		return false;
 	}
 
-	@Override
+	//@Override
 	public int getField(int id) {
 		return 0;
 	}
 
-	@Override
+	//@Override
 	public void setField(int id, int value) {}
 
-	@Override
+	//@Override
 	public int getFieldCount() {return 0;}
 
-	@Override
-	public void clear() {}
+	//@Override
+	public void clear() 
+	{
+      this.eggSlot[0] = null;
+	}
 
 	////////////////////////////////////////////////////////////
 	// PacketUpdate
@@ -362,21 +382,10 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
     public SPacketUpdateTileEntity getUpdatePacket()
     {
     	//System.out.println("[DEBUG]:Server sent tile sync packet");
-    	 
 		NBTTagCompound sendnbt = new NBTTagCompound();  	
-
 		sendnbt = this.writeToNBT(sendnbt);
-		
-		
 		NBTTagCompound egg = sendnbt.getCompoundTag("egg");
-		
 		ItemStack test = ItemStack.loadItemStackFromNBT(egg);
-		
-		if(test != null)
-		{
-			//System.out.println("Sending ItemStack "+ test.getDisplayName());
-		}
-		
        return new SPacketUpdateTileEntity(this.getPos(), this.getBlockMetadata(), sendnbt);
     }
 
@@ -384,30 +393,13 @@ public class NestTileEntity extends TileEntity implements ITickable, IInventory
     public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SPacketUpdateTileEntity pkt)
     {
     	//System.out.println("[DEBUG]:Client recived tile sync packet");
-
-
 		NBTTagCompound egg = pkt.getNbtCompound().getCompoundTag("egg");
-		
 		ItemStack test = ItemStack.loadItemStackFromNBT(egg);
-		
-//		if(test != null)
-//		{
-//			System.out.println("Sending ItemStack "+ test.getDisplayName());
-//		}
-    	//this.eggSlot[0] = ItemStack.loadItemStackFromNBT(pkt.getNbtCompound().getCompoundTag("egg"));
-
-  
   		this.readFromNBT(pkt.getNbtCompound());
     	this.markDirty();
     }
          
-    
-//    public boolean receiveClientEvent(int id, int type)
-//    {
-//    	return true;
-//    }
-    
-    ////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////
     //Wailia Intergration
     ////////////////////////////////////////////////////////////////
     

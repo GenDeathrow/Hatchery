@@ -16,10 +16,10 @@ import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
 import com.gendeathrow.hatchery.block.fertilizedDirt.FertilizedDirt;
 import com.gendeathrow.hatchery.block.fertilizedDirt.FertilizedFarmland;
 import com.gendeathrow.hatchery.block.manure.ManureBlock;
-import com.gendeathrow.hatchery.block.nestblock.NestBlock;
-import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
-import com.gendeathrow.hatchery.block.nestpen.NestPenBlock;
-import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
+import com.gendeathrow.hatchery.block.nest.EggNestBlock;
+import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
+import com.gendeathrow.hatchery.block.nestingpen.NestingPenBlock;
+import com.gendeathrow.hatchery.block.nestingpen.NestingPenTileEntity;
 import com.gendeathrow.hatchery.block.nursery.BlockMobNursery;
 import com.gendeathrow.hatchery.block.nursery.TileEntityMobNursery;
 
@@ -40,9 +40,9 @@ public class ModBlocks
 	
 	public static void preInit(FMLPreInitializationEvent event) 
 	{
-		nest = new NestBlock();
-		pen = new NestPenBlock().setCreativeTab(Hatchery.hatcheryTabs);
-		pen_chicken = new NestPenBlock();
+		nest = new EggNestBlock();
+		pen = new NestingPenBlock().setCreativeTab(Hatchery.hatcheryTabs);
+		pen_chicken = new NestingPenBlock();
 		feeder = new FeederBlock();
 		fertlizedDirt = new FertilizedDirt().setCreativeTab(Hatchery.hatcheryTabs);
 		fertilzedFarmland = new FertilizedFarmland();
@@ -59,8 +59,8 @@ public class ModBlocks
 		registerBlock(nuseryBlock, "nursery_block");
 		  
 		GameRegistry.registerTileEntity(TileEntityMobNursery.class, "hatchery.nursery");
-		GameRegistry.registerTileEntity(NestTileEntity.class, NestTileEntity.class.getName());
-		GameRegistry.registerTileEntity(NestPenTileEntity.class, NestPenTileEntity.class.getName());
+		GameRegistry.registerTileEntity(EggNestTileEntity.class, EggNestTileEntity.class.getName());
+		GameRegistry.registerTileEntity(NestingPenTileEntity.class, NestingPenTileEntity.class.getName());
 		GameRegistry.registerTileEntity(FeederTileEntity.class, FeederTileEntity.class.getName());
 		
 	}

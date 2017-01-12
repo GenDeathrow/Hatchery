@@ -2,17 +2,17 @@ package com.gendeathrow.hatchery.core;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIMate;
-import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
+import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -20,13 +20,13 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.entity.ai.ChickenBreeding;
+import com.gendeathrow.hatchery.entities.EntityRooster;
+import com.gendeathrow.hatchery.entities.ai.ChickenBreeding;
+import com.gendeathrow.hatchery.entities.ai.EntityAIMateWithRooster;
 
 public class EventHandler 
 {
@@ -35,7 +35,7 @@ public class EventHandler
 	public void onPlayerInteract(RightClickItem event) 
 	{
 
-		if(!(Settings.canThrowEgg) && event.getItemStack().getItem() instanceof ItemEgg && !event.getItemStack().getItem().getRegistryName().toString().equalsIgnoreCase("chickens:liquid_egg"))
+		if(!(Settings.CAN_THROW_EGG) && event.getItemStack().getItem() instanceof ItemEgg && !event.getItemStack().getItem().getRegistryName().toString().equalsIgnoreCase("chickens:liquid_egg"))
 		{
 			System.out.println(event.getItemStack().getItem().getRegistryName().toString());
 			event.setCanceled(true);
@@ -71,39 +71,59 @@ public class EventHandler
 	public void onSpawnCheck(EntityJoinWorldEvent event)
 	{
 
-		if(!Settings.eggBreeding) return;
-		
-		if(event.getEntity() instanceof EntityChicken)
+		if(!Settings.IS_EGG_BREEDING) return;
+		if (event.getEntity() instanceof EntityLivingBase) 
 		{
-			EntityChicken chicken = (EntityChicken) event.getEntity();
+			EntityLivingBase entity = (EntityLivingBase) event.getEntity();
 			
-			EntityAIBase rmv = null;
-			int priority = 1;
-			
-			for(EntityAITaskEntry task : chicken.tasks.taskEntries)
+			if(event.getEntity() instanceof EntityChicken)
 			{
-				if(task.action instanceof EntityAIMate)
+				EntityChicken chicken = (EntityChicken) event.getEntity();
+				World world = chicken.worldObj;
+				if (!world.isRemote) 
 				{
-					rmv = task.action;
-					priority = task.priority;
-					break;
+					chicken.tasks.addTask(2, new EntityAIMateWithRooster((EntityChicken) chicken, 1.0D));
+					chicken.tasks.removeTask(new EntityAIMate((EntityChicken) chicken, 1.0D));
+					chicken.tasks.addTask(1, new ChickenBreeding(chicken, 1.0F));
 				}
 			}
-			
-			if(rmv != null)
+		
+			if (event.getEntity() instanceof EntityRooster) 
 			{
-//				Hatchery.logger.info("Removing Old Breeding...");
-				chicken.tasks.removeTask(rmv);
-//				Hatchery.logger.info("Adding new Breeding...");
-				chicken.tasks.addTask(priority, new ChickenBreeding(chicken, 1.0F));
-//				Hatchery.logger.info("... Dont");
+				World world = event.getEntity().worldObj;
+				if (!world.isRemote) 
+				{
+					((EntityRooster) entity).tasks.removeTask(new EntityAIMate((EntityRooster) entity, 1.0D));
+					((EntityRooster) entity).tasks.removeTask(new EntityAIPanic((EntityRooster) entity, 1.4D));
+				}
 			}
-			
-			// Not yet
-			//chicken.tasks.addTask(priority, new AutoBreeding(chicken, 1.0f));
-			
 		}
 	}
+	
+	
+	////OLD CODE
+	
+//	EntityAIBase rmv = null;
+//	int priority = 1;
+//	
+//	for(EntityAITaskEntry task : chicken.tasks.taskEntries)
+//	{
+//		if(task.action instanceof EntityAIMate)
+//		{
+//			rmv = task.action;
+//			priority = task.priority;
+//			break;
+//		}
+//	}
+//	
+//	if(rmv != null)
+//	{
+////		Hatchery.logger.info("Removing Old Breeding...");
+//		chicken.tasks.removeTask(rmv);
+////		Hatchery.logger.info("Adding new Breeding...");
+//		chicken.tasks.addTask(priority, new ChickenBreeding(chicken, 1.0F));
+////		Hatchery.logger.info("... Dont");
+//	}
 	
 	@SubscribeEvent
 	public void AttachCap(AttachCapabilitiesEvent event)

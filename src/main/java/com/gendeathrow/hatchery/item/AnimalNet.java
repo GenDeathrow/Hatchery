@@ -21,7 +21,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
+import com.gendeathrow.hatchery.block.nestingpen.NestingPenTileEntity;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 
@@ -43,7 +43,6 @@ public class AnimalNet extends Item
     {
         if (target.worldObj.isRemote)
         {
-        	
             return false;
         }
            	
@@ -57,7 +56,7 @@ public class AnimalNet extends Item
 	        return false;
 	    }
 	    
-	    if (hand == EnumHand.OFF_HAND && player.getHeldItemMainhand().getItem() == ModItems.animalNet) 
+	    if (hand == EnumHand.OFF_HAND) 
 	    {
 	        return false;
 	    }
@@ -83,6 +82,7 @@ public class AnimalNet extends Item
 	  		stack.setStackDisplayName(I18n.translateToLocal(stack.getUnlocalizedName()+".name")+ " ("+ target.getDisplayName().getFormattedText() +")");
 	  		
 	  		player.getHeldItem(hand).setTagCompound(eTag);
+	  		player.setActiveHand(hand);
 	  		
 	  		target.worldObj.removeEntity(target);
 	  		return true;
@@ -136,7 +136,7 @@ public class AnimalNet extends Item
     		if(playerIn.worldObj.getBlockState(pos).getBlock() == ModBlocks.pen_chicken)
     		{
     			//System.out.println("has chicken!");
-    			NestPenTileEntity pen = (NestPenTileEntity)playerIn.worldObj.getTileEntity(pos);
+    			NestingPenTileEntity pen = (NestingPenTileEntity)playerIn.worldObj.getTileEntity(pos);
     			
     			if(!hasCapturedAnimal(stack) && pen.storedEntity() != null)
     			{	
@@ -174,7 +174,7 @@ public class AnimalNet extends Item
         		{
         			//System.out.println("pen!");
         			
-         			NestPenTileEntity pen = (NestPenTileEntity)playerIn.worldObj.getTileEntity(pos);
+         			NestingPenTileEntity pen = (NestingPenTileEntity)playerIn.worldObj.getTileEntity(pos);
          		   
          			pen.trySetEntity(entity);
         		}

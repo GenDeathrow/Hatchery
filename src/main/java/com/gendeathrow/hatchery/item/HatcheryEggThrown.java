@@ -21,6 +21,7 @@ public class HatcheryEggThrown extends EntityEgg
 {
 
 	private NBTTagCompound spawnEntity; 
+	
 	public HatcheryEggThrown(World worldIn, EntityLivingBase throwerIn, ItemStack stack) 
 	{
 		super(worldIn, throwerIn);
@@ -29,6 +30,15 @@ public class HatcheryEggThrown extends EntityEgg
 	}
 
 	
+	public HatcheryEggThrown(World worldIn, ItemStack stackIn, double x, double y, double z) 
+	{
+		super(worldIn, x, y, z);
+		
+		spawnEntity = ItemStackEntityNBTHelper.getEntityTagFromStack(stackIn);
+
+	}
+
+
 	@Override
 	protected void onImpact(RayTraceResult result)
 	    {

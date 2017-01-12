@@ -18,13 +18,9 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
-import com.gendeathrow.hatchery.common.data.TileDataManager;
-
 public class FeederTileEntity extends TileEntity implements IInventory
 {
 
-	protected TileDataManager dataManager = new TileDataManager(this);
-	
 	private int seedInventory = 0;
 	private int maxSeedInventory = 200;
 	
@@ -44,7 +40,6 @@ public class FeederTileEntity extends TileEntity implements IInventory
 		return super.writeToNBT(compound);
 	}
 	
-	
 	public int getSeedsInv()
 	{
 		return this.seedInventory;
@@ -60,7 +55,6 @@ public class FeederTileEntity extends TileEntity implements IInventory
 		return this.maxSeedInventory;
 	}
 
-	
 	////////////////////////////////////////////////////
 	// Inventory
 	////////////////////////////////////////////////////

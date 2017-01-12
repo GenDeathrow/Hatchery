@@ -17,8 +17,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import org.apache.logging.log4j.Level;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
-import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
+import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
+import com.gendeathrow.hatchery.block.nestingpen.NestingPenTileEntity;
 
 public class HatcheryPacket implements IMessage 
 {

@@ -1,137 +1,176 @@
 package com.gendeathrow.hatchery.block.fertilizermixer;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import scala.actors.threadpool.Arrays;
+
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModFluids;
+import com.gendeathrow.hatchery.core.init.ModItems;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fluids.capability.wrappers.FluidHandlerWrapper;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
-public class FertilizerMixerTileEntity extends TileEntity implements IInventory, IFluidHandler
+public class FertilizerMixerTileEntity extends TileEntity implements IInventory
 {
+	private ItemStack[] inventory = new ItemStack[1];
+	
+	private FluidTank waterTank = new FluidTank(new FluidStack(FluidRegistry.WATER, 0), 20000);
+	
+	private FluidTank fertilizerTank = new FluidTank(new FluidStack(ModFluids.liquidfertilizer, 0), 20000);
+	
+	
+	
+	
+	
+	
+	
+	// Mixing
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Override
+	public String getName() { return null; }
 
 	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
+	public boolean hasCustomName() { return false; }
+
+	@Override
+	public int getSizeInventory() 
+	{
+		return 1;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int index) 
+	{
 		return null;
 	}
 
 	@Override
-	public boolean hasCustomName() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public IFluidTankProperties[] getTankProperties() {
-		// TODO Auto-generated method stub
+	public ItemStack decrStackSize(int index, int count) 
+	{
 		return null;
 	}
 
 	@Override
-	public int fill(FluidStack resource, boolean doFill) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public FluidStack drain(FluidStack resource, boolean doDrain) {
-		// TODO Auto-generated method stub
+	public ItemStack removeStackFromSlot(int index) 
+	{
 		return null;
 	}
 
 	@Override
-	public FluidStack drain(int maxDrain, boolean doDrain) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getSizeInventory() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int index) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ItemStack decrStackSize(int index, int count) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int index) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		// TODO Auto-generated method stub
+	public void setInventorySlotContents(int index, ItemStack stack) 
+	{
 		
 	}
 
 	@Override
-	public int getInventoryStackLimit() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getInventoryStackLimit() 
+	{
+		return 64;
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isUseableByPlayer(EntityPlayer player) { return true; }
+
+	@Override
+	public void openInventory(EntityPlayer player) { }
+
+	@Override
+	public void closeInventory(EntityPlayer player) { }
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack) 
+	{
+		if(stack.getItem() == ModItems.manure || stack.getItem() == Item.getItemFromBlock(ModBlocks.manureBlock))
+				return true;
+		return false; 
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
-		// TODO Auto-generated method stub
-		
-	}
+	public int getField(int id) { return 0; }
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void setField(int id, int value) { }
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	public int getFieldCount() { return 0; }
 
 	@Override
-	public int getField(int id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int getFieldCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void clear() { }
 
 	
+	
+	// Capabilities
+	
+    @Override
+    public void readFromNBT(NBTTagCompound tag)
+    {
+        super.readFromNBT(tag);
+       	this.waterTank.readFromNBT(tag.getCompoundTag("waterTank"));
+        this.fertilizerTank.readFromNBT(tag.getCompoundTag("fertilizerTank"));
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound tag)
+    {
+    	tag = super.writeToNBT(tag);
+    	
+    	  NBTTagCompound waterTTag = new NBTTagCompound();
+          NBTTagCompound fertTTag = new NBTTagCompound();
+    		this.waterTank.writeToNBT(waterTTag);
+    		this.fertilizerTank.writeToNBT(fertTTag);
+        tag.setTag("waterTank", waterTTag);
+        tag.setTag("fertilizerTank", fertTTag);
+        return tag;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    {
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY|| capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == EnumFacing.UP)
+            return (T) this.waterTank;
+        else if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == EnumFacing.DOWN)
+            return (T) this.fertilizerTank;
+        else if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+            return (T) this.waterTank;
+        else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
+        {
+            return (T) new InvWrapper(this);
+        }
+        return super.getCapability(capability, facing);
+    }
 }

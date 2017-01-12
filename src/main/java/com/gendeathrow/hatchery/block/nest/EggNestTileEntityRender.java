@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.block.nestblock;
+package com.gendeathrow.hatchery.block.nest;
 
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 
@@ -12,12 +12,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
-public class NestTileEntityRender extends TileEntitySpecialRenderer<NestTileEntity>
+public class EggNestTileEntityRender extends TileEntitySpecialRenderer<EggNestTileEntity>
 {
 	EntityItem renderitem = new EntityItem(Minecraft.getMinecraft().theWorld, 0D, 0D, 0D, new ItemStack(Items.EGG));
 	
 		
-	public void renderTileEntityAt(NestTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
+	public void renderTileEntityAt(EggNestTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
     {
 		try
 		{
@@ -26,7 +26,7 @@ public class NestTileEntityRender extends TileEntitySpecialRenderer<NestTileEnti
 			
 	        if (flag1)
 	        {
-	        	if(NestBlock.doesHaveEgg(te.getWorld().getBlockState(te.getPos()))) 
+	        	if(EggNestBlock.doesHaveEgg(te.getWorld().getBlockState(te.getPos()))) 
 	        	{
 	        		renderAModelAt(te, x, y, z, partialTicks, destroyStage);   
 	        	}
@@ -36,7 +36,7 @@ public class NestTileEntityRender extends TileEntitySpecialRenderer<NestTileEnti
     }
    
     
-    public void renderAModelAt(NestTileEntity te, double x, double y, double z, float f, float partialTicks)
+    public void renderAModelAt(EggNestTileEntity te, double x, double y, double z, float f, float partialTicks)
     {
         GlStateManager.pushMatrix();
     	
@@ -53,7 +53,7 @@ public class NestTileEntityRender extends TileEntitySpecialRenderer<NestTileEnti
     }
     
     
-    private void renderItem(NestTileEntity te) 
+    private void renderItem(EggNestTileEntity te) 
     {
         ItemStack stack = te.getStackInSlot(0);
  
@@ -77,7 +77,7 @@ public class NestTileEntityRender extends TileEntitySpecialRenderer<NestTileEnti
             GlStateManager.popMatrix();
     }
     
-	public boolean isGlobalRenderer(NestTileEntity te)
+	public boolean isGlobalRenderer(EggNestTileEntity te)
 	{
 		return true;
 	}

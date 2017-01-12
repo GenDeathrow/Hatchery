@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.block.nestpen;
+package com.gendeathrow.hatchery.block.nestingpen;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -8,35 +8,38 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.util.EnumFacing;
 
-import com.gendeathrow.hatchery.block.nestblock.NestBlock;
-import com.gendeathrow.hatchery.block.nestblock.NestTileEntity;
+import com.gendeathrow.hatchery.block.nest.EggNestBlock;
+import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 
-public class NestPenTileEntityRenderer extends TileEntitySpecialRenderer<NestPenTileEntity>
+public class NestingPenTileEntityRenderer extends TileEntitySpecialRenderer<NestingPenTileEntity>
 {
 	EntityChicken chicken;
 	
-	public void renderTileEntityAt(NestPenTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
+	public void renderTileEntityAt(NestingPenTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
     {
-        boolean flag = te.getWorld() != null;
-        boolean flag1 = !flag || te.getBlockType() == ModBlocks.pen || te.getBlockType() == ModBlocks.pen_chicken;
+		//	this is a temp fix to catch an error 
+		try
+		{
+			boolean flag = te.getWorld() != null;
+			boolean flag1 = !flag || (te.getBlockType() == ModBlocks.pen || te.getBlockType() == ModBlocks.pen_chicken);
 
-
-        if (flag1)
-        {
-        	renderAModelAt(te, x, y, z, partialTicks, destroyStage);   
-        	super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
-        }
+	        if (flag1)
+	        {
+	        	renderAModelAt(te, x, y, z, partialTicks, destroyStage);   
+	        	super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
+	        }
+		}catch(IllegalArgumentException e) { }
     }
    
     
-    public void renderAModelAt(NestPenTileEntity te, double x, double y, double z, float f, float partialTicks)
+    public void renderAModelAt(NestingPenTileEntity te, double x, double y, double z, float f, float partialTicks)
     {
     	if(te.storedEntity() == null) return;
     	
     	IBlockState state = te.getWorld().getBlockState(te.getPos());
     	
-    	EnumFacing facing = NestPenBlock.getFacing(state);
+    	EnumFacing facing = NestingPenBlock.getFacing(state);
     	
     	if(facing == EnumFacing.EAST || facing == EnumFacing.WEST) facing = facing.getOpposite();
 
@@ -55,7 +58,7 @@ public class NestPenTileEntityRenderer extends TileEntitySpecialRenderer<NestPen
     }
     
     
-    private float getCorrectYawAngle(NestPenTileEntity te)
+    private float getCorrectYawAngle(NestingPenTileEntity te)
     {
     	
     	return 0;

@@ -3,31 +3,61 @@ package com.gendeathrow.hatchery.core.config;
 import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.gendeathrow.hatchery.core.Settings;
 
 public class ConfigHandler 
 {
+	
+	
 	public static File dir = new File("config/hatchery");
 	public static File configFile = new File(dir, "hatchery.cfg");
-	public static Configuration config;
+	public Configuration CONFIG;
+	
+	public static final ConfigHandler INSTANCE = new ConfigHandler();
+	//public Configuration CONFIG;
+
+
+	public final String[] usedCategories = { "Rooster Spawn Settings" };
+
+	public void loadConfig(FMLPreInitializationEvent event) 
+	{
+		CONFIG = new Configuration(configFile);
+		CONFIG.load();
+		syncConfigs();
+	}
+
+	private void syncConfigs() 
+	{
+		Settings.IS_EGG_BREEDING = CONFIG.getBoolean("Breeding gives Eggs", "Special AI", true, "Replaces Default Mating, Gives an egg that must be hatched to get baby");
+		Settings.CAN_THROW_EGG = CONFIG.getBoolean("Can Throw Eggs", "mechanics", true, "Sets if players can throw eggs to hatch chickens.");
+		Settings.EGG_NESTINGPEN_DROP_RATE = CONFIG.getInt("Hatchery Egg Drop Rate", "Drop Rates", 40, 0, 100, "Configure the drop rate  %  of Eggs in the Nesting Pen. ");
+		Settings.SHOULD_RENDER_CHICKEN_FLAPS = CONFIG.getBoolean("Render Chicken Flaps", Configuration.CATEGORY_CLIENT, true, "If you feel the chickens may be dropping your FPS when in chicken pens, Cause of all that darn flapping try this.");
+
+		
+		Settings.ROOSTER_MIN_SPAWN_SIZE = CONFIG.get("Rooster Spawn Settings", "Rooster Spawn Group Minimum Size", 1).getInt(1);
+		Settings.ROOSTER_MAX_SPAWN_SIZE = CONFIG.get("Rooster Spawn Settings", "Rooster Spawn Group Maximum Size", 2).getInt(2);
+		Settings.ROOSTER_SPAWN_PROBABILITY = CONFIG.get("Rooster Spawn Settings", "Rooster Spawn Chance Probability", 10).getInt(10);
+
+		if (CONFIG.hasChanged())
+			CONFIG.save();
+	}
+
+	@SubscribeEvent
+	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) 
+	{
+		if (event.getModID().equals("hatchery"))
+			syncConfigs();
+	}
+
 	
 	
 	public static void loadConfig()
 	{
-		config = new Configuration(configFile);
-		
-		config.load();  
-		
-			Settings.eggBreeding = config.getBoolean("Breeding gives Eggs", "Special AI", true, "Replaces Default Mating, Gives an egg that must be hatched to get baby");
 			
-			Settings.canThrowEgg = config.getBoolean("Can Throw Eggs", "mechanics", true, "Sets if players can throw eggs to hatch chickens.");
-			
-			Settings.eggNestDropRate = config.getInt("Hatchery Egg Drop Rate", "Drop Rates", 40, 0, 100, "Configure the drop rate  %  of Eggs in the Nesting Pen. ");
-			
-			Settings.renderChickenFlaps = config.getBoolean("Render Chicken Flaps", Configuration.CATEGORY_CLIENT, true, "If you feel the chickens may be dropping your FPS when in chicken pens, Cause of all that darn flapping try this.");
-			
-		config.save();
 	}
 
 }
