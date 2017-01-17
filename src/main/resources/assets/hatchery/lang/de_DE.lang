@@ -9,6 +9,9 @@ tile.hatchery.feeder.name=Hühnerfütterer
 tile.hatchery.manure_block.name=Hühnermistblock
 tile.hatchery.nursery_block.name=Kükenüberwachung
 
+entity.Rooster.name=Hahn
+container.roosterInventory=Hahn Weiberheld
+
 tile.fluid.liquid_fertilizer.name=Flüssiger Dünger
 fluid.liquid_fertilizer=Flüssiger Dünger
 
