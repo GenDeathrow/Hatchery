@@ -1,0 +1,50 @@
+itemGroup.hatchery=Hatchery
+
+tile.hatchery.nest.name=Broednest
+tile.hatchery.pen.name=Kippenhok
+tile.hatchery.pen_chicken.name=Kippenhok
+tile.hatchery.fertilized_dirt.name=Bemest Grond
+tile.hatchery.fertilized_farmland.name=Bemest Land
+tile.hatchery.feeder.name=Kippen Voeder
+tile.hatchery.manure_block.name=Kippen Mest Blok
+tile.hatchery.nursery_block.name=Kwekerij Monitor
+
+entity.Rooster.name=Haan
+container.roosterInventory=Haan Stud-muffin
+
+tile.fluid.liquid_fertilizer.name=Vloeibare Mest
+fluid.liquid_fertilizer=Vloeibare Mest
+
+item.hatchery.hatcheryegg.name=Ei
+item.hatchery.animalnet.name=Dieren Net
+item.hatchery.chickenmanure.name=Kippen Mest
+item.hatchery.sprayer.name=Mest Sproeier
+
+
+#TOOLTIP
+tooltip.hatchery.sprayer.desc=%1$s Inhoud: %2$dmb / %3$dmb
+
+#TEXT
+text.hatchery.hatching=Uitkomen
+text.hatchery.nothatching=Niet Uitkomen
+text.hatchery.chicken=Kip
+text.hatchery.nxdrop=Volgende Val
+text.hatchery.nochicken=Gebruik het 'Dieren Net' om een kip te vangen
+text.hatchery.storedseed=Opgeslagen Zaden
+
+
+#JEI
+jei.tile.hatchery.feeder=Je kan tot 200 zaden opslaan per voeder. Een voeder kijkt voor kippen in een gebied van 4x1x4. Kuikens groeien sneller als er een voeder in de buurt is, en kippen laten sneller items vallen. Je kan pijpen gebruiken om zaden in de voeders te brengen.
+jei.tile.hatchery.nest=Plaats een ei in een nest en het zal het automatisch uitbroeden over een bepaalde tijd. Plaats er een redstone lamp boven om de snelheid te verhogen (tot 3 blokken). Op een ei gaan zitten helpt ook voor de snelheid van het uitbroeden.
+jei.tile.hatchery.fertilized_dirt=Geeft bomen een variabel beendermeel effect
+jei.tile.hatchery.fertilized_farmland=Geeft planten een variable beendermeel effect. Je krijgt  bemest land door een schoffel te gebruiken op bemest grond.
+jei.tile.hatchery.pen=Een kippenhok kan een kip huishouden en verzameld de items en eieren. Gebruik een Dieren net om een kip in het kippenhok te plaatsen. Door twee kippenhokken naast elkaar te plaatsen zulllen de kippen automatisch samen broeden. Dit werkt met aangepaste kippen die speciale broed mechanisme toestaan. Kippenhokken slaan kippen mest, veren en eieren op.
+jei.tile.hatchery.pen_chicken=Een kippenhok kan een kip huishouden en verzameld de items en eieren. Gebruik een Dieren net om een kip in het kippenhok te plaatsen. Door twee kippenhokken naast elkaar te plaatsen zulllen de kippen automatisch samen broeden. Dit werkt met aangepaste kippen die speciale broed mechanisme toestaan. Kippenhokken slaan kippen mest, veren en eieren op.
+jei.tile.hatchery.manure_block=Een blok van kippen mest, geniet ervan!
+jei.tile.hatchery.nursery_block=Dit blok split kuikens en kippen in en 4x4 gebied en plaatst ze aan een bepaalde kan van het blok. Hiermee kan je beter je kippen sorteren.
+jei.item.hatchery.animalnet=Gebruik een dieren net om elk passief dier op te pakken. Gebruik het dieren net om kippen in een kippenhok te plaatsen.
+jei.item.hatchery.hatcheryegg=Hatchery eieren zijn dynamisch gecreëerde eieren, om met 2 ouders een custom ei te creëren. Hoofdzakelijk voor aangepaste kippen met nieuwe broed mechanisme.
+jei.item.hatchery.chickenmanure=Valt in kippenhokken. Gebruik mest om bemest land, mest blokken, vloeibaar mest of gebruik het als beendermeel voor planten.
+jei.item.hatchery.sprayer=De mest sproeier kan gebruikt worden om grond/land in bemest grond/land te veranderen, en gedraagt zich als een gieter. De mest sproeier heeft een inhoud van 3000mb.
+
+jei.gui.nesting_pen_drop=Kippenhok Drops
