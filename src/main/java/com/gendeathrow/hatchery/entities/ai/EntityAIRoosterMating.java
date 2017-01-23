@@ -198,12 +198,14 @@ public class EntityAIRoosterMating extends EntityAIBase {
 	    }
 	
 	
-	private EntityAnimal getNearbyMate() {
+	private EntityAnimal getNearbyMate() 
+	{
 		List<EntityAnimal> list = theWorld.<EntityAnimal>getEntitiesWithinAABB(EntityChicken.class, roosterEntity.getEntityBoundingBox().expandXyz(8.0D));
 		double d0 = Double.MAX_VALUE;
 		EntityAnimal entityanimal = null;
 
-		for (EntityAnimal entityanimal1 : list) {
+		for (EntityAnimal entityanimal1 : list) 
+		{
 			if (roosterEntity.getDistanceSqToEntity(entityanimal1) < d0 && !(entityanimal1 instanceof EntityRooster) && (entityanimal1.isInLove() || entityanimal1.getGrowingAge() == 0)) {
 				entityanimal = entityanimal1;
 				d0 = roosterEntity.getDistanceSqToEntity(entityanimal1);

@@ -18,8 +18,8 @@ import com.gendeathrow.hatchery.block.fertilizedDirt.FertilizedFarmland;
 import com.gendeathrow.hatchery.block.manure.ManureBlock;
 import com.gendeathrow.hatchery.block.nest.EggNestBlock;
 import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
-import com.gendeathrow.hatchery.block.nestingpen.NestingPenBlock;
-import com.gendeathrow.hatchery.block.nestingpen.NestingPenTileEntity;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
+import com.gendeathrow.hatchery.block.nestpen.NestingPenBlock;
 import com.gendeathrow.hatchery.block.nursery.BlockMobNursery;
 import com.gendeathrow.hatchery.block.nursery.TileEntityMobNursery;
 
@@ -60,7 +60,7 @@ public class ModBlocks
 		  
 		GameRegistry.registerTileEntity(TileEntityMobNursery.class, "hatchery.nursery");
 		GameRegistry.registerTileEntity(EggNestTileEntity.class, EggNestTileEntity.class.getName());
-		GameRegistry.registerTileEntity(NestingPenTileEntity.class, NestingPenTileEntity.class.getName());
+		GameRegistry.registerTileEntity(NestPenTileEntity.class, NestPenTileEntity.class.getName());
 		GameRegistry.registerTileEntity(FeederTileEntity.class, FeederTileEntity.class.getName());
 		
 	}

@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
 import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
-import com.gendeathrow.hatchery.block.nestingpen.NestingPenTileEntity;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 
 public class HatcheryTileProvider implements IWailaDataProvider
 {
@@ -33,8 +33,8 @@ public class HatcheryTileProvider implements IWailaDataProvider
         registrar.registerTailProvider(INSTANCE, EggNestTileEntity.class);
         registrar.registerNBTProvider(INSTANCE, EggNestTileEntity.class);
         
-        registrar.registerTailProvider(INSTANCE, NestingPenTileEntity.class);
-        registrar.registerNBTProvider(INSTANCE, NestingPenTileEntity.class);
+        registrar.registerTailProvider(INSTANCE, NestPenTileEntity.class);
+        registrar.registerNBTProvider(INSTANCE, NestPenTileEntity.class);
         
         registrar.registerTailProvider(INSTANCE, FeederTileEntity.class);
         registrar.registerNBTProvider(INSTANCE, FeederTileEntity.class);
@@ -78,7 +78,7 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			}
 			else currenttip.add(I18n.format("text.hatchery.nothatching", new Object[0]));
 		}
-		else if(tileEntity instanceof NestingPenTileEntity)
+		else if(tileEntity instanceof NestPenTileEntity)
 		{
 			if(accessor.getNBTData().getBoolean("hasChicken"))
 			{
@@ -145,9 +145,9 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			tag.setString("eggName", hte.getStackInSlot(0).getDisplayName());
 			tag.setBoolean("hasEgg", hte.getStackInSlot(0) != null);
 		}
-		else if(te instanceof NestingPenTileEntity)
+		else if(te instanceof NestPenTileEntity)
 		{
-			NestingPenTileEntity hte = (NestingPenTileEntity) te;
+			NestPenTileEntity hte = (NestPenTileEntity) te;
 			
 			tag.setBoolean("hasChicken", hte.storedEntity() != null);
 			if(hte.storedEntity() != null) 

@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Level;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
-import com.gendeathrow.hatchery.block.nestingpen.NestingPenTileEntity;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 
 public class HatcheryPacket implements IMessage 
 {

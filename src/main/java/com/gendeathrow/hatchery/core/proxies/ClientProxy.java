@@ -26,8 +26,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
 import com.gendeathrow.hatchery.block.nest.EggNestTileEntityRender;
-import com.gendeathrow.hatchery.block.nestingpen.NestingPenTileEntity;
-import com.gendeathrow.hatchery.block.nestingpen.NestingPenTileEntityRenderer;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
+import com.gendeathrow.hatchery.block.nestpen.NestingPenTileEntityRenderer;
 import com.gendeathrow.hatchery.client.IItemColorHandler;
 import com.gendeathrow.hatchery.client.render.entity.RenderRooster;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
@@ -123,7 +123,7 @@ public class ClientProxy extends CommonProxy
 		registerItemColorHandler(ModItems.hatcheryEgg);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(EggNestTileEntity.class, new EggNestTileEntityRender());
-		ClientRegistry.bindTileEntitySpecialRenderer(NestingPenTileEntity.class, new NestingPenTileEntityRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(NestPenTileEntity.class, new NestingPenTileEntityRenderer());
 		
 	}
 	

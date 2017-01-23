@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.block.nestingpen;
+package com.gendeathrow.hatchery.block.nestpen;
 
 import java.util.List;
 import java.util.Random;
@@ -10,6 +10,7 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -41,8 +42,9 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	
+	public static final PropertyBool hasChicken = PropertyBool.create("false");
+	
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.00D, 0.0D, 0.00, 1.0D, 1.2D, 1.0D);
-    
     
     protected static final AxisAlignedBB NORTH_STAIRS_AABB = new AxisAlignedBB(0.25D, 0.0D, 0.0D, 0.6875D,0.125D, 0.1875D);
     protected static final AxisAlignedBB NORTH_BASE_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.25D, 0.9375D,0.125D, 1.0D);
@@ -52,19 +54,6 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
     protected static final AxisAlignedBB NORTH_WEST_WALL_AABB = new AxisAlignedBB(0.0625D, 0.1875D, 0.25D, 0.125D, 1.6D, 1.0D);
     protected static final AxisAlignedBB NORTH_EAST_WALL_AABB = new AxisAlignedBB(0.81250D, 0.1875D, 0.25D, 0.9375D, 1.6D, 1.0D);
     protected static final AxisAlignedBB[] NORTH_FACING_AABB = new AxisAlignedBB[] {NORTH_STAIRS_AABB, NORTH_BASE_AABB, NORTH_SOUTH_WALL_AABB, NORTH_WEST_WALL_AABB, NORTH_EAST_WALL_AABB};
-    
-
-    
-//    protected static final AxisAlignedBB SOUTH_STAIRS_AABB = new AxisAlignedBB(0.6875D,0.0D, 0.1875D, 0.25D, 0.125D, 0.0D);
-//    protected static final AxisAlignedBB SOUTH_BASE_AABB = new AxisAlignedBB(0.9375D, 0.0D, 1.0D, 0.125D,0.125D, 0.25D);
-//    protected static final AxisAlignedBB SOUTH_SOUTH_WALL_AABB = new AxisAlignedBB(0.9375D, 0.1875D, 1.0D, 0.125D, 1.6D, 0.9375D);
-//    protected static final AxisAlignedBB SOUTH_WEST_WALL_AABB = new AxisAlignedBB(0.125D, 0.1875D, 1.0D, 0.0625D, 1.6D, 0.25D);
-//    protected static final AxisAlignedBB SOUTH_EAST_WALL_AABB = new AxisAlignedBB(0.9375D, 0.1875D, 1.0D, 0.81250D, 1.6D, 0.25D); 
-//    protected static final AxisAlignedBB[] SOUTH_FACING_AABB = new AxisAlignedBB[] {SOUTH_STAIRS_AABB, SOUTH_BASE_AABB, SOUTH_SOUTH_WALL_AABB, SOUTH_WEST_WALL_AABB, SOUTH_EAST_WALL_AABB};
-//   
-    //protected static final AxisAlignedBB NORTH_WEST_WALL_AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.875D, 1.0D, 1.0D, 1.0D);
-    //protected static final AxisAlignedBB NORTH_EAST_WALL_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.875D, 1.0D, 1.0D, 1.0D);
-    
     
     protected static final AxisAlignedBB[] BOUNDING_BOXES = new AxisAlignedBB[] {AABB};    
 
@@ -88,7 +77,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
     {
     	if(!worldIn.isRemote)
     	{
-    		NestingPenTileEntity te = (NestingPenTileEntity)worldIn.getTileEntity(pos);
+    		NestPenTileEntity te = (NestPenTileEntity)worldIn.getTileEntity(pos);
     		
     		if(te == null) return false;
     		    		
@@ -102,7 +91,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
     {
         if (!keepInventory)
         {
-    		NestingPenTileEntity te = (NestingPenTileEntity)worldIn.getTileEntity(pos);
+    		NestPenTileEntity te = (NestPenTileEntity)worldIn.getTileEntity(pos);
     		
     		te.dropContents();
     		
@@ -144,23 +133,23 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
 
          if (hasChicken)
          {
-             worldIn.setBlockState(pos, ModBlocks.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 2);
-             worldIn.setBlockState(pos, ModBlocks.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
+             worldIn.setBlockState(pos, ModBlocks.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)));
          }
          else
          {
-             worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 2);
-             worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 1);
+             worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)));
          }
-
+			
+         
          keepInventory = false;
 
          if (tileentity != null)
          {
              tileentity.validate();
              worldIn.setTileEntity(pos, tileentity);
+             if(!worldIn.isRemote)
+            	 worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 2); 
          }
-         
     }
     
     public static boolean hasChicken(IBlockState state)
@@ -172,13 +161,13 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
     {
         TileEntity tileentity = world.getTileEntity(pos);
 
-        if (!(tileentity instanceof NestingPenTileEntity))
+        if (!(tileentity instanceof NestPenTileEntity))
         {
             return null;
         }
         else
         {
-        	NestingPenTileEntity pen = (NestingPenTileEntity) tileentity;
+        	NestPenTileEntity pen = (NestPenTileEntity) tileentity;
         	
         	for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
         	{
@@ -191,14 +180,14 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
                     {
                     	TileEntity tileentity1 = world.getTileEntity(blockpos);
 
-                        if (tileentity1 instanceof NestingPenTileEntity)
+                        if (tileentity1 instanceof NestPenTileEntity)
                         {
-                        	NestingPenTileEntity penMate =  (NestingPenTileEntity) tileentity1;
+                        	NestPenTileEntity penMate =  (NestPenTileEntity) tileentity1;
                         	EntityAnimal targetmate = (EntityAnimal) penMate.storedEntity();
 
                         	if(targetmate != null && pen.storedEntity().getClass() == targetmate.getClass())
                         	{
-                        		return (EntityChicken) ((NestingPenTileEntity) tileentity1).storedEntity();
+                        		return (EntityChicken) ((NestPenTileEntity) tileentity1).storedEntity();
                         	}
                         }
                     }
@@ -212,9 +201,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
     
     private boolean isFeederNear()
     {
-    	
-    	
-    	return false;
+      	return false;
     }
     
     private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state)
@@ -286,11 +273,10 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
         return true;
     }
     
-    
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) 
 	{
-		return new NestingPenTileEntity();
+		return new NestPenTileEntity();
 	}
 	
 	public static EnumFacing getFacing(IBlockState blockStateContainer)
@@ -301,48 +287,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn)
 	{
-//		EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
-//		
-//		System.out.println(enumfacing.getName());
-//		//state = state.getActualState(worldIn, pos);
-//		if(enumfacing == EnumFacing.NORTH)
-//		{
-//			for(AxisAlignedBB aabb: NORTH_FACING_AABB)
-//			{
-//				addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
-//			}
-//		}
-//		
-//		else if(enumfacing == EnumFacing.SOUTH)
-//		{
-//			for(AxisAlignedBB aabb: SOUTH_FACING_AABB)
-//			{
-//				addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
-//			}
-//		}
-//		
-//		else
-//		{
-//			for(AxisAlignedBB aabb: NORTH_FACING_AABB)
-//			{
-//				addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
-//			}
-//		}
-		
-//		addCollisionBoxToList(pos, entityBox, collidingBoxes, NORTH_STAIRS_AABB);
-//		addCollisionBoxToList(pos, entityBox, collidingBoxes, NORTH_BASE_AABB);
-//		addCollisionBoxToList(pos, entityBox, collidingBoxes, NORTH_SOUTH_WALL_AABB);
-//		addCollisionBoxToList(pos, entityBox, collidingBoxes, NORTH_WEST_WALL_AABB);
-//		addCollisionBoxToList(pos, entityBox, collidingBoxes, NORTH_EAST_WALL_AABB);
-		
-//
-//		if (((Boolean)state.getValue(hasEgg)).booleanValue())
-//		{
-//			addCollisionBoxToList(pos, entityBox, collidingBoxes, withEgg_AABB);
-//		}
 		addCollisionBoxToList(pos, entityBox, collidingBoxes, AABB);
-		
-		
 	}
 	
 	

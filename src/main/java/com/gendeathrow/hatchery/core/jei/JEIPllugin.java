@@ -123,7 +123,7 @@ public class JEIPllugin implements IModPlugin
         for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) 
         {
          	List<ItemStack> output = new ArrayList();
-        	output.add(chicken.createDropItem());
+        	output.add(chicken.createLayItem());
         	output.add(new ItemStack(ModItems.manure));
         	output.add(new ItemStack(Items.FEATHER));
         	output.add(new ItemStack(ModItems.hatcheryEgg));
