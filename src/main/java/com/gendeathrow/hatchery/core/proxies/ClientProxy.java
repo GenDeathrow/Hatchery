@@ -115,6 +115,9 @@ public class ClientProxy extends CommonProxy
 		registerBlockModel(ModBlocks.nuseryBlock,0,ModBlocks.nuseryBlock.getRegistryName().toString());
 		//ModelLoader.setCustomModelResourceLocation(ModBlocks.MOB_NURSERY_ITEM, 0, new ModelResourceLocation("Hatchery:mob_nursery", "inventory"));
 
+		registerBlockModel(ModBlocks.fertilizerMixer, 0, ModBlocks.fertilizerMixer.getRegistryName().toString());
+		
+		
 		registerItemModel(ModItems.hatcheryEgg);
 		registerItemModel(ModItems.animalNet);
 		registerItemModel(ModItems.manure);

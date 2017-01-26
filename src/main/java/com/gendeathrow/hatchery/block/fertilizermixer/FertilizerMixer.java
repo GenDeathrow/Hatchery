@@ -7,18 +7,24 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FertilizerMixer extends BlockContainer implements ITileEntityProvider
 {
 	
-	public static final PropertyDirection FACING = BlockHorizontal.FACING;
-	
 	public FertilizerMixer() 
 	{
 		super(Material.IRON);
-		
+		this.setHardness(2);
+		this.setHarvestLevel("pickaxe", 0);
+		this.setUnlocalizedName("fertilizer_mixer");
 	}
 
 	@Override
@@ -27,24 +33,44 @@ public class FertilizerMixer extends BlockContainer implements ITileEntityProvid
 		return new FertilizerMixerTileEntity();
 	}
 	
-    public static EnumFacing getFacing(int meta)
+	
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
+	  
+	@Override
+	public boolean isFullBlock(IBlockState state)
+	{
+		return false;
+	}
+	
+    public boolean isFullCube(IBlockState state)
     {
-        return EnumFacing.getHorizontal(meta);
+        return false;
+    }
+	
+    public boolean isFullyOpaque(IBlockState state)
+    {
+    	return false;
     }
     
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
-    public IBlockState getStateFromMeta(int meta)
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
     {
-        return this.getDefaultState().withProperty(FACING, getFacing(meta));
+        return true;
+    }
+	
+    @SideOnly(Side.CLIENT)
+    public BlockRenderLayer getBlockLayer()
+    {
+        return BlockRenderLayer.CUTOUT_MIPPED;
     }
     
-    public int getMetaFromState(IBlockState state)
+    public EnumBlockRenderType getRenderType(IBlockState state)
     {
-        int i = 0;
-        	i |= ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
-        return i;
+        return EnumBlockRenderType.MODEL;
     }
+    
 
 }

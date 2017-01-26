@@ -1,6 +1,6 @@
 itemGroup.hatchery=Hatchery
 
-tile.hatchery.nest.name=Hatchery Nest
+tile.hatchery.nest.name=Egg Nest
 tile.hatchery.pen.name=Nesting Pen
 tile.hatchery.pen_chicken.name=Nesting Pen
 tile.hatchery.fertilized_dirt.name=Fertilized Dirt
@@ -8,6 +8,7 @@ tile.hatchery.fertilized_farmland.name=Fertilized Farmland
 tile.hatchery.feeder.name=Chicken Feeder
 tile.hatchery.manure_block.name=Chicken Manure Block
 tile.hatchery.nursery_block.name=Nursery Monitor
+tile.hatchery.fertilizer_mixer.name=Fertilizer Mixer
 
 entity.Rooster.name=Rooster
 container.roosterInventory=Rooster Stud-muffin

@@ -1,5 +1,5 @@
 {
-    "parent": "hatchery:block/mach2",
+    "parent": "hatchery:block/nest",
 	"display": {
 	"ground": {
             "rotation": [ 0, 0, 0 ],

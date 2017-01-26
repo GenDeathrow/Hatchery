@@ -1,15 +1,5 @@
 package com.gendeathrow.hatchery.block.fertilizermixer;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import scala.actors.threadpool.Arrays;
-
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModFluids;
-import com.gendeathrow.hatchery.core.init.ModItems;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -17,42 +7,35 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fluids.capability.wrappers.FluidHandlerWrapper;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-public class FertilizerMixerTileEntity extends TileEntity implements IInventory
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModFluids;
+import com.gendeathrow.hatchery.core.init.ModItems;
+
+public class FertilizerMixerTileEntity extends TileEntity implements IInventory, ITickable
 {
 	private ItemStack[] inventory = new ItemStack[1];
-	
 	private FluidTank waterTank = new FluidTank(new FluidStack(FluidRegistry.WATER, 0), 20000);
-	
 	private FluidTank fertilizerTank = new FluidTank(new FluidStack(ModFluids.liquidfertilizer, 0), 20000);
 	
-	
-	
-	
-	
-	
-	
-	// Mixing
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@Override
+	public void update() 
+	{
+
+			// 1 manure block + 1000mb water = 1000mb fertilizer
+		    // 10 manure item + 1000mb = 1000mb fert
+		
+		 	// rmv fertilizer recipe
+		 	// add to jei recipes
+	}
 	
 	@Override
 	public String getName() { return null; }
@@ -154,16 +137,14 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing)
     {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY|| capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == EnumFacing.UP)
-            return (T) this.waterTank;
-        else if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == EnumFacing.DOWN)
+    	if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == EnumFacing.DOWN)
             return (T) this.fertilizerTank;
         else if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return (T) this.waterTank;
@@ -173,4 +154,6 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory
         }
         return super.getCapability(capability, facing);
     }
+
+    
 }
