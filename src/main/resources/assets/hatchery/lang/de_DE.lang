@@ -8,9 +8,10 @@ tile.hatchery.fertilized_farmland.name=Gedüngter Ackerboden
 tile.hatchery.feeder.name=Hühnerfütterer
 tile.hatchery.manure_block.name=Hühnermistblock
 tile.hatchery.nursery_block.name=Kükenüberwachung
+tile.hatchery.fertilizer_mixer.name=Düngermischer
 
 entity.Rooster.name=Hahn
-container.roosterInventory=Hahn Weiberheld
+container.roosterInventory=Hahn-Inventar
 
 tile.fluid.liquid_fertilizer.name=Flüssiger Dünger
 fluid.liquid_fertilizer=Flüssiger Dünger
