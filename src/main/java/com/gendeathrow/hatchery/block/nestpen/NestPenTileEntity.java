@@ -45,6 +45,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.Settings;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.item.HatcheryEgg;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
@@ -128,6 +129,16 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		return respondEntity;
 	}
 	
+	@Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    {
+		
+		if((oldState.getBlock() == ModBlocks.pen || oldState.getBlock() == ModBlocks.pen) && (newSate.getBlock() == ModBlocks.pen || newSate.getBlock() == ModBlocks.pen))
+		{
+			return false;
+		}
+		else return oldState != newSate;
+    }
 	
 	/**
 	 * Creates an entity from the nesting pens stored entity

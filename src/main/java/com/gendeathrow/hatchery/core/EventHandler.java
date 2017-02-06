@@ -71,8 +71,6 @@ public class EventHandler
 	public void onSpawnCheck(EntityJoinWorldEvent event)
 	{
 
-		if(!Settings.IS_EGG_BREEDING) return;
-		
 		if (event.getEntity() instanceof EntityLivingBase) 
 		{
 			EntityLivingBase entity = (EntityLivingBase) event.getEntity();
@@ -84,8 +82,15 @@ public class EventHandler
 				if (!world.isRemote) 
 				{
 					chicken.tasks.addTask(2, new EntityAIMateWithRooster((EntityChicken) chicken, 1.0D));
-					chicken.tasks.removeTask(new EntityAIMate((EntityChicken) chicken, 1.0D));
 					
+
+					// rooster breeding only or is egg breeding remove vanilla AI
+					if(Settings.ROOSTER_BREED_ONLY || Settings.IS_EGG_BREEDING)
+					{
+						chicken.tasks.removeTask(new EntityAIMate((EntityChicken) chicken, 1.0D));
+					}
+					
+					// if were not only rooster breeding add in special ai for eggs
 					if(!Settings.ROOSTER_BREED_ONLY)
 					{
 						chicken.tasks.addTask(1, new ChickenBreeding(chicken, 1.0F));

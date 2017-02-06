@@ -42,7 +42,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	
-	public static final PropertyBool hasChicken = PropertyBool.create("false");
+	//public static final PropertyBool hasChicken = PropertyBool.create("false");
 	
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.00D, 0.0D, 0.00, 1.0D, 1.2D, 1.0D);
     
