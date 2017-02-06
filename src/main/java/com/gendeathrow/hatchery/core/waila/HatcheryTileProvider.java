@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
+import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.IWailaRegistrar;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,16 +21,22 @@ import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
 import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
 import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 
-public class HatcheryTileProvider implements IWailaDataProvider
+public class HatcheryTileProvider implements IWailaDataProvider, IWailaPlugin
 {
 
 	private static final HatcheryTileProvider INSTANCE = new HatcheryTileProvider();
 	
 
+
+	@Override
+	public void register(IWailaRegistrar registrar) 
+	{
+		load(registrar);
+	}
+
 	
     public static void load(IWailaRegistrar registrar) 
     {
-        //registrar.registerBodyProvider(INSTANCE, HatcheryTileEntity.class);
         registrar.registerTailProvider(INSTANCE, EggNestTileEntity.class);
         registrar.registerNBTProvider(INSTANCE, EggNestTileEntity.class);
         
@@ -80,8 +87,11 @@ public class HatcheryTileProvider implements IWailaDataProvider
 		}
 		else if(tileEntity instanceof NestPenTileEntity)
 		{
+			System.out.println(accessor.getNBTData().toString());
 			if(accessor.getNBTData().getBoolean("hasChicken"))
 			{
+				System.out.println("client:true");
+				
 				currenttip.add(I18n.format("text.hatchery.chicken", new Object[0]) +": "+ accessor.getNBTData().getString("entityname"));
 
 	    		if(accessor.getNBTData().hasKey("Growth"))
@@ -156,7 +166,10 @@ public class HatcheryTileProvider implements IWailaDataProvider
 		}
 		else if(te instanceof NestPenTileEntity)
 		{
+
 			NestPenTileEntity hte = (NestPenTileEntity) te;
+			
+			System.out.println("server:"+ (hte.storedEntity() != null));
 			
 			tag.setBoolean("hasChicken", hte.storedEntity() != null);
 			
@@ -192,6 +205,8 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			
 			tag.setString("qty", hte.getSeedsInv() +"/"+ hte.getMaxSeedInv());
 		}
+		
+		
 		return tag;
 	}
 
