@@ -72,6 +72,7 @@ public class EventHandler
 	{
 
 		if(!Settings.IS_EGG_BREEDING) return;
+		
 		if (event.getEntity() instanceof EntityLivingBase) 
 		{
 			EntityLivingBase entity = (EntityLivingBase) event.getEntity();
@@ -84,7 +85,11 @@ public class EventHandler
 				{
 					chicken.tasks.addTask(2, new EntityAIMateWithRooster((EntityChicken) chicken, 1.0D));
 					chicken.tasks.removeTask(new EntityAIMate((EntityChicken) chicken, 1.0D));
-					chicken.tasks.addTask(1, new ChickenBreeding(chicken, 1.0F));
+					
+					if(!Settings.ROOSTER_BREED_ONLY)
+					{
+						chicken.tasks.addTask(1, new ChickenBreeding(chicken, 1.0F));
+					}
 				}
 			}
 		

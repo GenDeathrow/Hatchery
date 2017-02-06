@@ -10,10 +10,10 @@ public class Settings
 	public static int ROOSTER_MIN_SPAWN_SIZE;
 	public static int ROOSTER_MAX_SPAWN_SIZE;
 	public static int ROOSTER_SPAWN_PROBABILITY;
+	public static boolean ROOSTER_BREED_ONLY = false;
 	
 	//Clients
 	public static boolean SHOULD_RENDER_CHICKEN_FLAPS;
-	
-	
+
 	
 }

@@ -572,10 +572,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
         }
     	return nbttaglist;
     }
-
-//    @CapabilityInject(IItemHandler.class)
-//    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
-    
+   
     public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) 
     {
         if (tile == null) return null;

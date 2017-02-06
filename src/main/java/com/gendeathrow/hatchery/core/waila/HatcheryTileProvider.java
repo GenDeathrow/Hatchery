@@ -141,15 +141,25 @@ public class HatcheryTileProvider implements IWailaDataProvider
 		{
 			EggNestTileEntity hte = (EggNestTileEntity) te;
 			
-			tag.setFloat("hatchPercentage", hte.getPercentage());
-			tag.setString("eggName", hte.getStackInSlot(0).getDisplayName());
+			float hatchPercentage = 0;
+			String eggName = "";
+			float hasEgg = 0;
+			
+			if(hte.getStackInSlot(0) != null)
+			{
+				tag.setFloat("hatchPercentage", hte.getPercentage());
+				tag.setString("eggName", hte.getStackInSlot(0).getDisplayName());
+			}
+			
 			tag.setBoolean("hasEgg", hte.getStackInSlot(0) != null);
+
 		}
 		else if(te instanceof NestPenTileEntity)
 		{
 			NestPenTileEntity hte = (NestPenTileEntity) te;
 			
 			tag.setBoolean("hasChicken", hte.storedEntity() != null);
+			
 			if(hte.storedEntity() != null) 
 			{
 				tag.setString("entityname",  hte.storedEntity().getDisplayName().getFormattedText());
@@ -174,10 +184,6 @@ public class HatcheryTileProvider implements IWailaDataProvider
 			tag.setLong("nextDrop",  hte.getTimeToNextDrop());
 			NBTTagList list = hte.getInventoryContents(hte);
 			if(list != null) tag.setTag("inventory", list);
-			
-			
-
-	    		
 		}
 		else if(te instanceof FeederTileEntity)
 		{

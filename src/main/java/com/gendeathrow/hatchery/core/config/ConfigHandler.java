@@ -37,7 +37,7 @@ public class ConfigHandler
 		Settings.EGG_NESTINGPEN_DROP_RATE = CONFIG.getInt("Hatchery Egg Drop Rate", "Drop Rates", 40, 0, 100, "Configure the drop rate  %  of Eggs in the Nesting Pen. ");
 		Settings.SHOULD_RENDER_CHICKEN_FLAPS = CONFIG.getBoolean("Render Chicken Flaps", Configuration.CATEGORY_CLIENT, true, "If you feel the chickens may be dropping your FPS when in chicken pens, Cause of all that darn flapping try this.");
 
-		
+		Settings.ROOSTER_BREED_ONLY = CONFIG.get("Rooster Spawn Settings", "Can only breed chickens with roosters(Only set for Vanilla Chickens, Will likly break some modded chickens.) Not compatable with Chickens mod.)", false).getBoolean();
 		Settings.ROOSTER_MIN_SPAWN_SIZE = CONFIG.get("Rooster Spawn Settings", "Rooster Spawn Group Minimum Size", 1).getInt(1);
 		Settings.ROOSTER_MAX_SPAWN_SIZE = CONFIG.get("Rooster Spawn Settings", "Rooster Spawn Group Maximum Size", 2).getInt(2);
 		Settings.ROOSTER_SPAWN_PROBABILITY = CONFIG.get("Rooster Spawn Settings", "Rooster Spawn Chance Probability", 10).getInt(10);
