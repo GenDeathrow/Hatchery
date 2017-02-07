@@ -87,11 +87,9 @@ public class HatcheryTileProvider implements IWailaDataProvider, IWailaPlugin
 		}
 		else if(tileEntity instanceof NestPenTileEntity)
 		{
-			System.out.println(accessor.getNBTData().toString());
+
 			if(accessor.getNBTData().getBoolean("hasChicken"))
 			{
-				System.out.println("client:true");
-				
 				currenttip.add(I18n.format("text.hatchery.chicken", new Object[0]) +": "+ accessor.getNBTData().getString("entityname"));
 
 	    		if(accessor.getNBTData().hasKey("Growth"))
@@ -168,8 +166,6 @@ public class HatcheryTileProvider implements IWailaDataProvider, IWailaPlugin
 		{
 
 			NestPenTileEntity hte = (NestPenTileEntity) te;
-			
-			System.out.println("server:"+ (hte.storedEntity() != null));
 			
 			tag.setBoolean("hasChicken", hte.storedEntity() != null);
 			
