@@ -37,12 +37,12 @@ import com.gendeathrow.hatchery.network.HatcheryPacket;
 
 
 
-@Mod(modid = Hatchery.MODID, name=Hatchery.NAME, version = Hatchery.VERSION, dependencies=Hatchery.dependencies)
+@Mod(modid = Hatchery.MODID, name=Hatchery.NAME, version = Hatchery.VERSION, dependencies=Hatchery.dependencies, guiFactory = "com.gendeathrow.hatchery.client.config.ConfigGuiFactory")
 public class Hatchery 
 {
 
 		public static final String MODID = "hatchery";
-	    public static final String VERSION = "0.2.8";
+	    public static final String VERSION = "0.2.10";
 	    public static final String NAME = "Hatchery";
 	    private static final String PROXYLOC = "com.gendeathrow.hatchery.core.proxies";
 	    public static final String CHANNELNAME = "genhatchery";

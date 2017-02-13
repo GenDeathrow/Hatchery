@@ -15,7 +15,7 @@ public class ConfigHandler
 	
 	public static File dir = new File("config/hatchery");
 	public static File configFile = new File(dir, "hatchery.cfg");
-	public Configuration CONFIG;
+	public static Configuration CONFIG;
 	
 	public static final ConfigHandler INSTANCE = new ConfigHandler();
 	//public Configuration CONFIG;
@@ -59,6 +59,11 @@ public class ConfigHandler
 	public static void loadConfig()
 	{
 			
+	}
+
+	public static void load() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

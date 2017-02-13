@@ -20,11 +20,13 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
+import com.gendeathrow.hatchery.core.config.ConfigHandler;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.entities.EntityRooster;
 import com.gendeathrow.hatchery.entities.ai.ChickenBreeding;
@@ -39,11 +41,19 @@ public class EventHandler
 
 		if(!(Settings.CAN_THROW_EGG) && event.getItemStack().getItem() instanceof ItemEgg && !event.getItemStack().getItem().getRegistryName().toString().equalsIgnoreCase("chickens:liquid_egg"))
 		{
-			System.out.println(event.getItemStack().getItem().getRegistryName().toString());
 			event.setCanceled(true);
 		}
 	}
 	
+	
+	@SubscribeEvent
+	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
+	{
+		if(event.getModID().equals(Hatchery.MODID))
+		{
+			ConfigHandler.CONFIG.save();
+		}
+	}
 
 	@SubscribeEvent
 	public void onHoeEvent(UseHoeEvent event)
