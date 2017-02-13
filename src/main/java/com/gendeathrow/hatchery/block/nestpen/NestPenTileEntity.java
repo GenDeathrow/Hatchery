@@ -132,8 +132,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	@Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
     {
-		
-		if((oldState.getBlock() == ModBlocks.pen || oldState.getBlock() == ModBlocks.pen) && (newSate.getBlock() == ModBlocks.pen || newSate.getBlock() == ModBlocks.pen))
+		if((oldState.getBlock() == ModBlocks.pen || oldState.getBlock() == ModBlocks.pen_chicken) && (newSate.getBlock() == ModBlocks.pen || newSate.getBlock() == ModBlocks.pen_chicken))
 		{
 			return false;
 		}
@@ -291,7 +290,9 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			this.entityNBT = (NBTTagCompound) compound.getTag("storedEntity");
 		}
 		
-        NBTTagList nbttaglist = compound.getTagList("Items", 5);
+		this.inventory = new ItemStack[this.getSizeInventory()];
+		
+        NBTTagList nbttaglist = compound.getTagList("Items", 10);
 
         for (int i = 0; i < nbttaglist.tagCount(); ++i)
         {
@@ -338,13 +339,13 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
         }
         
         compound.setTag("Items", nbttaglist);
+       
 		return super.writeToNBT(compound);
 	}
 	
 	@Override
     public SPacketUpdateTileEntity getUpdatePacket()
     {
-//		System.out.println("sending packet");
         return new SPacketUpdateTileEntity(this.getPos(), this.getBlockMetadata(), getUpdateTag());
     }
 
@@ -357,7 +358,6 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	@Override
     public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SPacketUpdateTileEntity pkt)
     {
-//		System.out.println("Reading packet");
   		this.readFromNBT(pkt.getNbtCompound());
     }
 	

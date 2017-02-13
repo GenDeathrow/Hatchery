@@ -85,17 +85,7 @@ public class EntityAIRoosterMating extends EntityAIBase {
 		++spawnBabyDelay;
 		if (spawnBabyDelay >= 60 && roosterEntity.getDistanceSqToEntity(targetChicken) < 9.0D) 
 		{
-			
 			spawnChild();
-			
-//			NBTTagCompound nbt = new NBTTagCompound();
-//			targetChicken.writeEntityToNBT(nbt);
-//			if (Loader.isModLoaded("chickens") && nbt.hasKey("Type")) {
-//				int type = nbt.getInteger("Type");
-//				spawnChild();
-//			}
-//			else
-//				spawnBaby();
 		}
 	}
 
@@ -116,16 +106,6 @@ public class EntityAIRoosterMating extends EntityAIBase {
 			return null;
 		return FakePlayerFactory.get((WorldServer) world, new GameProfile(UUID.nameUUIDFromBytes("rooster".getBytes()), "rooster"));
 	}
-
-//	private void spawnEgg(int type) {
-//		ItemStack mobEgg = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("chickens:spawn_egg")), 1, type);
-//		targetChicken.entityDropItem(mobEgg, 0.0F);
-//		roosterEntity.setGrowingAge(0);
-//		targetChicken.setGrowingAge(6000);
-//		roosterEntity.resetInLove();
-//		targetChicken.resetInLove();
-//		return;
-//	}
 
 	 private void spawnChild()
 	    {

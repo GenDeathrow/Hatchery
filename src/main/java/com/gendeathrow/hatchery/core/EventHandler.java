@@ -3,8 +3,10 @@ package com.gendeathrow.hatchery.core;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMate;
 import net.minecraft.entity.ai.EntityAIPanic;
+import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
@@ -83,15 +85,34 @@ public class EventHandler
 				{
 					chicken.tasks.addTask(2, new EntityAIMateWithRooster((EntityChicken) chicken, 1.0D));
 					
-
 					// rooster breeding only or is egg breeding remove vanilla AI
 					if(Settings.ROOSTER_BREED_ONLY || Settings.IS_EGG_BREEDING)
 					{
-						chicken.tasks.removeTask(new EntityAIMate((EntityChicken) chicken, 1.0D));
+						EntityAIBase rmv = null;
+						int priority = 1;
+
+						for(EntityAITaskEntry task : chicken.tasks.taskEntries)
+						{
+							if(task.action instanceof EntityAIMate)
+							{
+								rmv = task.action;
+								priority = task.priority;
+								break;
+							}
+						}
+						
+						if(rmv != null)
+						{
+							chicken.tasks.removeTask(rmv);
+						}
+						
+//						chicken.tasks.removeTask(new EntityAIMate((EntityChicken) chicken, 1.0D));
+						
+						
 					}
 					
 					// if were not only rooster breeding add in special ai for eggs
-					if(!Settings.ROOSTER_BREED_ONLY)
+					if(!Settings.ROOSTER_BREED_ONLY && Settings.IS_EGG_BREEDING)
 					{
 						chicken.tasks.addTask(1, new ChickenBreeding(chicken, 1.0F));
 					}
@@ -111,29 +132,8 @@ public class EventHandler
 	}
 	
 	
-	////OLD CODE
 	
-//	EntityAIBase rmv = null;
-//	int priority = 1;
-//	
-//	for(EntityAITaskEntry task : chicken.tasks.taskEntries)
-//	{
-//		if(task.action instanceof EntityAIMate)
-//		{
-//			rmv = task.action;
-//			priority = task.priority;
-//			break;
-//		}
-//	}
-//	
-//	if(rmv != null)
-//	{
-////		Hatchery.logger.info("Removing Old Breeding...");
-//		chicken.tasks.removeTask(rmv);
-////		Hatchery.logger.info("Adding new Breeding...");
-//		chicken.tasks.addTask(priority, new ChickenBreeding(chicken, 1.0F));
-////		Hatchery.logger.info("... Dont");
-//	}
+	
 	
 	@SubscribeEvent
 	public void AttachCap(AttachCapabilitiesEvent event)
@@ -156,10 +156,4 @@ public class EventHandler
 			event.getEntity().getCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null).update((EntityAnimal)event.getEntity());
 		}
 	}
-	
-//	@SubscribeEvent
-//	public void craftingEvent(ItemCraftedEvent event)
-//	{
-//		System.out.println("test");
-//	}
 }

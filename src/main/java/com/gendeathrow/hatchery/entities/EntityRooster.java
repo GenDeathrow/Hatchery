@@ -108,7 +108,7 @@ public class EntityRooster extends EntityChicken implements IInventory {
 		{
 			if(hand == EnumHand.MAIN_HAND && (stack == null || stack.getItem() instanceof ItemSeeds))
 			{
-				if(stack !=null) System.out.println(stack.getDisplayName());
+				//if(stack !=null) System.out.println(stack.getDisplayName());
 				player.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_ROOSTER, player.worldObj, getEntityId(), 0, 0);
 				return true;
 			}

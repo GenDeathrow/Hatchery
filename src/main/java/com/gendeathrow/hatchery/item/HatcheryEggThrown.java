@@ -47,46 +47,25 @@ public class HatcheryEggThrown extends EntityEgg
 	            result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 0.0F);
 	        }
 	        
-
-            
-            
 	        if (!this.worldObj.isRemote && this.rand.nextInt(8) == 0)
 	        {
 	        	Entity entitychicken = null; 
 	        	
-	            int i = 1;
-
-	            if (this.rand.nextInt(32) == 0)
-	            {
-	                i = 4;
-	            }
-
-	            for (int j = 0; j < i; ++j)
-	            {
-	            	
-	                //System.out.println(spawnEntity);
-	    	        if(spawnEntity == null) 
-	    	        {
-	    	        	entitychicken = new EntityChicken(this.worldObj);
-	    	        	if(entitychicken instanceof EntityAgeable) ((EntityAgeable)entitychicken).setGrowingAge(-24000);
-	    	        }
-	    	        else 
-	    	        {
-	    	        	entitychicken = EntityList.createEntityFromNBT(spawnEntity, this.worldObj);
-	    	        }
-	    	        
-	    	        if(entitychicken != null)
-	    	        {
-	    	        	entitychicken.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, 0.0F);
-	    	        	this.worldObj.spawnEntityInWorld(entitychicken);
-	    	        }
-	    	        
-	            	
-	             //   EntityChicken entitychicken = new EntityChicken(this.worldObj);
-//	                entitychicken.setGrowingAge(-24000);
-	//                entitychicken.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, 0.0F);
-//	                this.worldObj.spawnEntityInWorld(entitychicken);
-	            }
+    	        if(spawnEntity == null) 
+    	        {
+    	        	entitychicken = new EntityChicken(this.worldObj);
+    	        	if(entitychicken instanceof EntityAgeable) ((EntityAgeable)entitychicken).setGrowingAge(-24000);
+    	        }
+    	        else 
+    	        {
+    	        	entitychicken = EntityList.createEntityFromNBT(spawnEntity, this.worldObj);
+    	        }
+    	        
+    	        if(entitychicken != null)
+    	        {
+    	        	entitychicken.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, 0.0F);
+    	        	this.worldObj.spawnEntityInWorld(entitychicken);
+    	        }
 	        }
 
 	        double d0 = 0.08D;
