@@ -185,7 +185,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
                         	NestPenTileEntity penMate =  (NestPenTileEntity) tileentity1;
                         	EntityAnimal targetmate = (EntityAnimal) penMate.storedEntity();
 
-                        	if(targetmate != null && pen.storedEntity().getClass() == targetmate.getClass())
+                        	if(targetmate != null && pen.storedEntity() != null && pen.storedEntity().getClass() == targetmate.getClass())
                         	{
                         		return (EntityChicken) ((NestPenTileEntity) tileentity1).storedEntity();
                         	}

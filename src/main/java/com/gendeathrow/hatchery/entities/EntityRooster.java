@@ -99,6 +99,10 @@ public class EntityRooster extends EntityChicken implements IInventory {
 
 		if(worldObj.getWorldTime()%5 == 0 && !worldObj.isRemote)
 			convertSeeds();
+		
+		
+		//Never drop eggs
+		this.timeUntilNextEgg = 500;
 	}
 	
 	@Override
@@ -110,6 +114,7 @@ public class EntityRooster extends EntityChicken implements IInventory {
 			{
 				//if(stack !=null) System.out.println(stack.getDisplayName());
 				player.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_ROOSTER, player.worldObj, getEntityId(), 0, 0);
+				
 				return true;
 			}
 			

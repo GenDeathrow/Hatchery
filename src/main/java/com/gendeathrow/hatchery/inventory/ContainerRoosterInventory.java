@@ -46,7 +46,6 @@ public class ContainerRoosterInventory extends Container {
 					if (!mergeItemStack(stack1, 0, 1, false))
 						return null;
 			}
-
 			else if (!mergeItemStack(stack1, 1, inventorySlots.size(), false))
 				return null;
 			if (stack1.stackSize == 0)

@@ -141,10 +141,6 @@ public class EventHandler
 		}
 	}
 	
-	
-	
-	
-	
 	@SubscribeEvent
 	public void AttachCap(AttachCapabilitiesEvent event)
 	{
