@@ -2,7 +2,6 @@ package com.gendeathrow.hatchery.block.fertilizermixer;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -10,6 +9,7 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -18,7 +18,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -40,6 +42,7 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 		}
 	};
 	
+	
 	private FluidTank fertilizerTank = new FluidTank(new FluidStack(ModFluids.liquidfertilizer, 0), 20000){
 		@Override
 		public boolean canFill()
@@ -58,115 +61,174 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 		return fertilizerTank;
 	}
 	
+	private ItemStack getWaterFluidIn()
+	{
+		return this.inventory[2];
+	}
+	
+	private ItemStack getFertlizerFluidOut()
+	{
+		return this.inventory[4];
+	}
+	
 	public ItemStack[] getItemInventory()
 	{
 		return inventory;
 	}
-		
-    public boolean isBurning()
-    {
-        return this.furnaceBurnTime > 0;
-    }
 
-    
+    public boolean isMixing()
+    {
+        return this.fertlizerMixTime > 0;
+    }
     
     @SideOnly(Side.CLIENT)
-    public static boolean isBurning(IInventory inventory)
+    public static boolean isMixing(IInventory inventory)
     {
-        return inventory.getField(0) > 0;
+        return inventory.getField(2) > 0;
+    }
+    
+    public boolean canMix()
+    {
+   	  	return waterTank.getFluidAmount() > 0 && this.fertilizerTank.getFluidAmount() < this.fertilizerTank.getCapacity();
+    }
+    
+    public static int getItemMixTime(ItemStack stack)
+    {
+    	if(stack == null)
+    	{
+    		return 0;
+    	}
+    	else
+    	{
+    		Item item = stack.getItem();
+    		
+    		if(item == ModItems.manure)
+    			return 100;
+    		else if(item == Item.getItemFromBlock(ModBlocks.manureBlock))
+    			return 1120;
+    	}
+    	return 0;
     }
 
-	private int furnaceBurnTime;
-    /** The number of ticks that a fresh copy of the currently-burning item would keep the furnace burning for */
-    private int currentItemBurnTime;
-    private int cookTime;
-    private int totalCookTime;
+	private int fertlizerMixTime;
+    private int currentItemMixTime;
+    private int mixTime;
+    private int totalMixTime;
 	
+    
+    
 	@Override
 	public void update() 
 	{
 
-		if(waterTank.getFluidAmount() > 0)
+		boolean flag = this.isMixing();
+		boolean flag1 = false;
+			
+		if(this.isMixing())
 		{
-			/* used for reference. 
+			this.fertlizerMixTime--;
 		}
-			 boolean flag = this.isBurning();
-		        boolean flag1 = false;
+		
+		if(!this.worldObj.isRemote)
+		{
+			if (this.isMixing() || this.inventory[0] != null)
+			{
+                if (!this.isMixing() && this.canMix())
+                {
+                	this.fertlizerMixTime = getItemMixTime(this.inventory[0]);
+                	this.currentItemMixTime = this.fertlizerMixTime;
+                			
+                	if(this.isMixing())
+                	{
+                		flag1 = true;
+                		 if(this.inventory[0] != null)
+                		 {
+                			 --this.inventory[0].stackSize;
+                    		 
+                             if (this.inventory[0].stackSize <= 0)
+                             {
+                                 this.inventory[0] = null;
+                             }
+                		 }
 
-		        if (this.isBurning())
-		        {
-		            --this.furnaceBurnTime;
-		        }
+                	}
+                }
+                
+    			
+    			if(this.isMixing() && this.canMix() && fertlizerMixTime >= 5)
+    			{
+    					this.fertlizerMixTime -= 5;
+    				
+    					this.fertilizerTank.fillInternal(new FluidStack(ModFluids.liquidfertilizer, 5), true);
+    					this.waterTank.drainInternal(5, true);
+    					
+    					flag1 = true;
+    			}
+    			else
+    			{
+    				this.mixTime = 0;
+    			}
+			}
+			else if(!this.isMixing() && this.mixTime > 0)
+			{
+				 this.mixTime = MathHelper.clamp_int(this.mixTime - 2, 0, this.totalMixTime);
+			}
+			
 
-		        if (!this.worldObj.isRemote)
-		        {
-		            if (this.isBurning() || this.furnaceItemStacks[1] != null && this.furnaceItemStacks[0] != null)
-		            {
-		                if (!this.isBurning() && this.canSmelt())
-		                {
-		                    this.furnaceBurnTime = getItemBurnTime(this.furnaceItemStacks[1]);
-		                    this.currentItemBurnTime = this.furnaceBurnTime;
+			if(this.inventory[1] != null && this.inventory[2] == null && this.waterTank.getFluidAmount() < this.waterTank.getCapacity())
+			{
+				ItemStack stack = this.inventory[1];
+				
+				IFluidHandler handler = FluidUtil.getFluidHandler(stack);
+				
+				if(handler != null)
+				{
+					if(FluidUtil.tryFluidTransfer(this.waterTank, handler, this.waterTank.getCapacity(), true) != null)
+					{
+						this.inventory[2] = stack;
+						this.inventory[1] = null;
+					}
+				}
+			}
+			
+			if(this.inventory[3] != null && this.inventory[4] == null && this.fertilizerTank.getFluidAmount() > 0)
+			{
+				System.out.println("try and fill");
+				ItemStack stack = this.inventory[3];
+				
+				IFluidHandler handler = FluidUtil.getFluidHandler(stack);
+				
+				if(handler != null)
+				{
+					if(FluidUtil.tryFluidTransfer(handler, this.fertilizerTank, this.fertilizerTank.getCapacity(), true) != null)
+					{
+						this.inventory[4] = stack;
+						this.inventory[3] = null;
+					}
+				}
+			}
+			
 
-		                    if (this.isBurning())
-		                    {
-		                        flag1 = true;
+		}
 
-		                        if (this.furnaceItemStacks[1] != null)
-		                        {
-		                            --this.furnaceItemStacks[1].stackSize;
+		if(flag != this.isMixing())
+		{
+			flag1 = true;
 
-		                            if (this.furnaceItemStacks[1].stackSize == 0)
-		                            {
-		                                this.furnaceItemStacks[1] = furnaceItemStacks[1].getItem().getContainerItem(furnaceItemStacks[1]);
-		                            }
-		                        }
-		                    }
-		                }
-
-		                if (this.isBurning() && this.canSmelt())
-		                {
-		                    ++this.cookTime;
-
-		                    if (this.cookTime == this.totalCookTime)
-		                    {
-		                        this.cookTime = 0;
-		                        this.totalCookTime = this.getCookTime(this.furnaceItemStacks[0]);
-		                        this.smeltItem();
-		                        flag1 = true;
-		                    }
-		                }
-		                else
-		                {
-		                    this.cookTime = 0;
-		                }
-		            }
-		            else if (!this.isBurning() && this.cookTime > 0)
-		            {
-		                this.cookTime = MathHelper.clamp_int(this.cookTime - 2, 0, this.totalCookTime);
-		            }
-
-		            if (flag != this.isBurning())
-		            {
-		                flag1 = true;
-		                BlockFurnace.setState(this.isBurning(), this.worldObj, this.pos);
-		            }
-		        }
-
-		        if (flag1)
-		        {
-		            this.markDirty();
-		        }
-		        */
-		    }
+			//  BlockFurnace.setState(this.isBurning(), this.worldObj, this.pos);
+		}
+		
+		
+        if (flag1)
+        {
+            this.markDirty();
+        }
 	}
 
-		    public int getCookTime(@Nullable ItemStack stack)
-		    {
-		        return 200;
-		    }
-	
-	
-	
+	public int getMixTime(@Nullable ItemStack stack)
+	{
+		return 200;
+	}
 	
 	/// INVENTORY
 	@Override
@@ -210,7 +272,10 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 	@Override
 	public void setInventorySlotContents(int index, ItemStack stack) 
 	{
-		this.inventory[index] = stack;
+		inventory[index] = stack;
+
+		if (stack != null && stack.stackSize > getInventoryStackLimit())
+			stack.stackSize = getInventoryStackLimit();
 	}
 
 	@Override
@@ -244,15 +309,18 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 	@Override
 	public int getField(int id) 
 	{ 
-		if(id == 0)
-		{
-			return this.waterTank.getFluidAmount();
-		}
-		else if(id == 1)
-		{
-			return this.fertilizerTank.getFluidAmount();
-		}
-		return 0; 
+        switch (id)
+        {
+            case 0:
+            	return this.waterTank.getFluidAmount();
+            case 1:
+            	return this.fertilizerTank.getFluidAmount();	
+            case 2:
+            	return this.fertlizerMixTime;
+            default:
+                return 0;
+        }
+
 	}
 	
 	public int waterLevel = 0;
@@ -261,33 +329,54 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 	@Override
 	public void setField(int id, int value) 
 	{ 
+		
+        switch (id)
+        {
+            case 0:
+            	waterLevel = value;
+                break;
+            case 1:
+            	fertilizerLevel = value;
+                break;
+            case 2:
+                this.fertlizerMixTime  = value;
+                break;
 
-			if(id == 0)
-			{
-				waterLevel = value;
-			}
-			else if(id == 1)
-			{
-				fertilizerLevel = value;
-			}
+        }
 	}
 
 	@Override
-	public int getFieldCount() { return 0; }
+	public int getFieldCount() { return 3; }
 
 	@Override
-	public void clear() { }
+	public void clear() { 
+		for (int i = 0; i < inventory.length; i++)
+			inventory[i] = null;
+	}
+	
+	
 
-	
-	
-	// Capabilities
-	
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
        	this.waterTank.readFromNBT(tag.getCompoundTag("waterTank"));
         this.fertilizerTank.readFromNBT(tag.getCompoundTag("fertilizerTank"));
+        
+		this.inventory = new ItemStack[this.getSizeInventory()];
+		
+        NBTTagList nbttaglist = tag.getTagList("Items", 10);
+
+        for (int i = 0; i < nbttaglist.tagCount(); ++i)
+        {
+            NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+            int j = nbttagcompound.getByte("Slot") & 255;
+
+            if (j >= 0 && j < this.inventory.length)
+            {
+                this.inventory[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
+            }
+        }
     }
 
     @Override
@@ -301,6 +390,22 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
     		this.fertilizerTank.writeToNBT(fertTTag);
         tag.setTag("waterTank", waterTTag);
         tag.setTag("fertilizerTank", fertTTag);
+        
+        NBTTagList nbttaglist = new NBTTagList();
+
+        for (int i = 0; i < this.inventory.length; ++i)
+        {
+            if (this.inventory[i] != null)
+            {
+                NBTTagCompound nbttagcompound = new NBTTagCompound();
+                nbttagcompound.setByte("Slot", (byte)i);
+                this.inventory[i].writeToNBT(nbttagcompound);
+                nbttaglist.appendTag(nbttagcompound);
+            }
+        }
+        
+        tag.setTag("Items", nbttaglist);
+        
         return tag;
     }
 

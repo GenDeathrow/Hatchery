@@ -17,6 +17,8 @@ import com.gendeathrow.hatchery.block.fertilizedDirt.FertilizedDirt;
 import com.gendeathrow.hatchery.block.fertilizedDirt.FertilizedFarmland;
 import com.gendeathrow.hatchery.block.fertilizermixer.FertilizerMixer;
 import com.gendeathrow.hatchery.block.fertilizermixer.FertilizerMixerTileEntity;
+import com.gendeathrow.hatchery.block.generator.DigesterGeneratorBlock;
+import com.gendeathrow.hatchery.block.generator.DigesterGeneratorTileEntity;
 import com.gendeathrow.hatchery.block.manure.ManureBlock;
 import com.gendeathrow.hatchery.block.nest.EggNestBlock;
 import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
@@ -39,6 +41,7 @@ public class ModBlocks
 	public static Block manureBlock;
 	public static Block nuseryBlock;
 	public static Block fertilizerMixer;
+	public static Block digesterGenerator;
 	
 	public static void preInit(FMLPreInitializationEvent event) 
 	{
@@ -51,7 +54,7 @@ public class ModBlocks
 		manureBlock = new ManureBlock();
 		nuseryBlock = new BlockMobNursery();
 		fertilizerMixer = new FertilizerMixer().setCreativeTab(Hatchery.hatcheryTabs);
-		
+		digesterGenerator = new DigesterGeneratorBlock().setCreativeTab(Hatchery.hatcheryTabs);
 		
 		registerBlock(nest, "nest");
 		registerBlock(pen, "pen");
@@ -63,13 +66,17 @@ public class ModBlocks
 		registerBlock(nuseryBlock, "nursery_block");
 		
 		registerBlock(fertilizerMixer, "fertilizer_mixer");
+		
+		registerBlock(digesterGenerator, "digester_generator");
 		  
 		GameRegistry.registerTileEntity(TileEntityMobNursery.class, "hatchery.nursery");
 		GameRegistry.registerTileEntity(EggNestTileEntity.class, EggNestTileEntity.class.getName());
 		GameRegistry.registerTileEntity(NestPenTileEntity.class, NestPenTileEntity.class.getName());
 		GameRegistry.registerTileEntity(FeederTileEntity.class, FeederTileEntity.class.getName());
-		
 		GameRegistry.registerTileEntity(FertilizerMixerTileEntity.class, FertilizerMixerTileEntity.class.getName());
+		
+		GameRegistry.registerTileEntity(DigesterGeneratorTileEntity.class, "digesterGenerator");
+		
 		
 	}
 	

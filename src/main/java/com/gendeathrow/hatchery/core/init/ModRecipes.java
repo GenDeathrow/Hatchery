@@ -87,7 +87,7 @@ public class ModRecipes
 		});
 	    GameRegistry.addRecipe(NurseryRecipe);
 	    
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.nest), "xxx", "AxA", "AAA",'A', Blocks.HAY_BLOCK);
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.nest), "xxx", "AxA", "xAx",'A', Blocks.HAY_BLOCK);
 
 	    IRecipe sprayerRecipe = new ShapedOreRecipe(new ItemStack(ModItems.sprayer), new Object[] {
 	    	"DD.", 

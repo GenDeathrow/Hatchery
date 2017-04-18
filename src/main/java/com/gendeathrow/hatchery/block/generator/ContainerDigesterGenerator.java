@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.inventory;
+package com.gendeathrow.hatchery.block.generator;
 
 import javax.annotation.Nullable;
 
@@ -8,25 +8,17 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.gendeathrow.hatchery.block.fertilizermixer.FertilizerMixerTileEntity;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModFluids;
-import com.gendeathrow.hatchery.core.init.ModItems;
-
-public class ContainerFertlizerMixer extends Container 
+public class ContainerDigesterGenerator extends Container 
 {
-	
+
 	private final int HOTBAR_SLOT_COUNT = 9;
 	private final int PLAYER_INVENTORY_ROW_COUNT = 3;
 	private final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
@@ -38,54 +30,48 @@ public class ContainerFertlizerMixer extends Container
 	private final int TE_INVENTORY_SLOT_COUNT = 9;
 	
 	private final IInventory inventory;
-	private final ItemStack[] manure;
-	private int waterTank;
-	private int fertilizerTank;
-	
-	public ContainerFertlizerMixer(InventoryPlayer playerInventory, FertilizerMixerTileEntity fertilizerInventory) 
-	{
-		inventory = fertilizerInventory;
-		manure = fertilizerInventory.getItemInventory();
-		
-		waterTank = fertilizerInventory.getWaterTank().getFluidAmount();
-		fertilizerTank = fertilizerInventory.getFertilizerTank().getFluidAmount();
-		
-		int i;
 
-		addSlotToContainer(new Slot(fertilizerInventory, 0, 17, 34)
-		{
-			 public boolean isItemValid(@Nullable ItemStack stack)
-             {
-				 if(stack.getItem() == ModItems.manure || stack.getItem() == Item.getItemFromBlock(ModBlocks.manureBlock))
-				 {
-					 return true;
-				 }
-				 else return false;
-             }
-			 
-		});
+	private int fertilizerTank;
+	private int rfEnergy;
+	
+
+	public ContainerDigesterGenerator(InventoryPlayer playerInventory, DigesterGeneratorTileEntity tileEntity) 
+	{
+		inventory = tileEntity;
 		
-		addSlotToContainer(new SlotFluidContainer(fertilizerInventory, 1, 72, 16, FluidRegistry.WATER));
-		addSlotToContainer(new Slot(fertilizerInventory, 2, 72, 52));
+		fertilizerTank = tileEntity.getTank().getFluidAmount();
 		
+		int i;  
+
+//		addSlotToContainer(new Slot(tileEntity, 0, 17, 34)
+//		{
+//			 public boolean isItemValid(@Nullable ItemStack stack)
+//             {
+//				 if(stack.getItem() == ModItems.manure || stack.getItem() == Item.getItemFromBlock(ModBlocks.manureBlock))
+//				 {
+//					 return true;
+//				 }
+//				 else return false;
+//             }
+//			 
+//		});
 		
-		addSlotToContainer(new Slot(fertilizerInventory, 3, 122, 16));
-		addSlotToContainer(new SlotFluidContainer(fertilizerInventory, 4, 122, 52, ModFluids.liquidfertilizer));
+		//addSlotToContainer(new Slot(tileEntity, 3, 122, 16));
+		//addSlotToContainer(new SlotFluidContainer(tileEntity, 4, 122, 52, ModFluids.liquidfertilizer));
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
 	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 7 + j * 18, 83 + i * 18));
 
 	        for (i = 0; i < 9; ++i)
-	            addSlotToContainer(new Slot(playerInventory, i, 7 + i * 18, 141));
+	            addSlotToContainer(new Slot(playerInventory, i, 7 + i * 18, 141));	    
 	}
-	
+
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) 
 	{
 		return true;
 	}
-	
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) 
@@ -156,8 +142,8 @@ public class ContainerFertlizerMixer extends Container
 					listener.sendProgressBarUpdate(this, 0, this.inventory.getField(0));
 					listener.sendProgressBarUpdate(this, 1, this.inventory.getField(1));
 		 }
-		
-		this.waterTank = this.inventory.getField(0);
+
+		this.rfEnergy = this.inventory.getField(0);
 		this.fertilizerTank = this.inventory.getField(1);
     }
 

@@ -45,6 +45,7 @@ public class GuiFertilizerMixerInventory extends GuiContainer
 		int fertilizerTankAmt = (int) (((float)MIXER.fertilizerLevel / MIXER.getFertilizerTank().getCapacity()) * 58);
 		int waterTankAmt = (int) (((float)MIXER.waterLevel / MIXER.getWaterTank().getCapacity()) * 58);
 		
+
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 			drawTexturedModalRect(xOffSet + 53, yOffSet + 13 + 58 - waterTankAmt, 221, 58 - waterTankAmt, 13, waterTankAmt);
