@@ -160,7 +160,7 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
     					this.fertlizerMixTime -= 5;
     				
     					this.fertilizerTank.fillInternal(new FluidStack(ModFluids.liquidfertilizer, 5), true);
-    					this.waterTank.drainInternal(5, true);
+    					this.waterTank.drainInternal(10, true);
     					
     					flag1 = true;
     			}

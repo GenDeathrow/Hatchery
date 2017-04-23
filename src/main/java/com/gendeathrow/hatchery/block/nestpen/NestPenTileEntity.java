@@ -241,7 +241,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			{
 				if(this.rand.nextInt(1) == 0)
 					putStackInInventoryAllSlots(this, new ItemStack(Items.FEATHER, 1), EnumFacing.DOWN);
-				putStackInInventoryAllSlots(this, new ItemStack(ModItems.manure, rand.nextInt(2)+2), EnumFacing.DOWN);
+				putStackInInventoryAllSlots(this, new ItemStack(ModItems.manure, rand.nextInt(1)+1), EnumFacing.DOWN);
 				this.TimetoNextEgg = this.rand.nextInt(5000) + 2000;
 	            	
 				if(this.chickenStored.capturedDrops != null && this.chickenStored.capturedDrops.size() > 0)

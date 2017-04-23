@@ -2,10 +2,8 @@ package com.gendeathrow.hatchery.block.generator;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -16,21 +14,21 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 
 import com.gendeathrow.hatchery.block.InventoryStorage;
-import com.gendeathrow.hatchery.block.TileEntityInventoryEnergy;
+import com.gendeathrow.hatchery.block.TileUpgradable;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 
-public class DigesterGeneratorTileEntity extends TileEntity implements IInventory, IEnergyProvider, ITickable
+public class DigesterGeneratorTileEntity extends TileUpgradable implements IInventory, IEnergyProvider, ITickable
 {
 	public int time = 0;
 	
-	protected EnergyStorage storage = new EnergyStorage(400000);
+	protected EnergyStorage storage = new EnergyStorage(200000);
 	protected InventoryStorage inventory = new InventoryStorage(this, 2);
-
+  
+	
 	private FluidTank fertlizerTank = new FluidTank(new FluidStack(ModFluids.liquidfertilizer, 0), 5000){
 		@Override
 	    public boolean canDrain()
@@ -38,10 +36,10 @@ public class DigesterGeneratorTileEntity extends TileEntity implements IInventor
 			return false;
 		}
 	};
-
-	public boolean hasSpeedUpgrade()
+	
+	public DigesterGeneratorTileEntity() 
 	{
-		return false;
+		super(1);
 	}
 
 	protected boolean canGenerate() {
@@ -71,7 +69,8 @@ public class DigesterGeneratorTileEntity extends TileEntity implements IInventor
 	}
 	
 	
-	int maxEnergyOut = 1000;
+	int rfEnergyFuel = 15000;
+	int rfTick = 60;
 	int fuelRF;
 	boolean isActive = true;
 
@@ -85,12 +84,12 @@ public class DigesterGeneratorTileEntity extends TileEntity implements IInventor
 			{
 				if (fuelRF <= 0) 
 				{
-					fuelRF = 1000;
+					fuelRF = rfEnergyFuel;
 					getTank().drainInternal(50, true);
 				}
 				
-				storage.modifyEnergyStored(10);
-				fuelRF -= 10;
+				storage.modifyEnergyStored(rfTick);
+				fuelRF -= rfTick;
 			}
 			
 			
@@ -98,7 +97,7 @@ public class DigesterGeneratorTileEntity extends TileEntity implements IInventor
 				for (EnumFacing facing : EnumFacing.VALUES) 
 				{
 						TileEntity tile = worldObj.getTileEntity(pos.offset(facing));
-						if (tile != null && tile instanceof IEnergyHandler) 
+						if (tile != null && tile instanceof IEnergyReceiver) 
 						{
 							int received = ((IEnergyReceiver) tile).receiveEnergy(facing.getOpposite(), storage.getEnergyStored(), false);
 							extractEnergy(facing, received, false);

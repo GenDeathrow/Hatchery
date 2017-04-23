@@ -17,7 +17,9 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
+import com.gendeathrow.hatchery.block.fertilizermixer.ContainerFertlizerMixer;
 import com.gendeathrow.hatchery.block.fertilizermixer.FertilizerMixerTileEntity;
+import com.gendeathrow.hatchery.block.fertilizermixer.GuiFertilizerMixerInventory;
 import com.gendeathrow.hatchery.block.generator.ContainerDigesterGenerator;
 import com.gendeathrow.hatchery.block.generator.DigesterGeneratorTileEntity;
 import com.gendeathrow.hatchery.block.generator.GuiDigesterGenerator;
@@ -29,9 +31,7 @@ import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.init.ModRecipes;
 import com.gendeathrow.hatchery.entities.EntityRooster;
-import com.gendeathrow.hatchery.inventory.ContainerFertlizerMixer;
 import com.gendeathrow.hatchery.inventory.ContainerRoosterInventory;
-import com.gendeathrow.hatchery.inventory.GuiFertilizerMixerInventory;
 import com.gendeathrow.hatchery.inventory.GuiRoosterInventory;
 import com.gendeathrow.hatchery.item.HatcheryEggThrown;
 
@@ -40,7 +40,7 @@ public class CommonProxy implements IGuiHandler
 	public static final int GUI_ID_ROOSTER = 1;
 	public static final int GUI_ID_FERTLIZERMIXER = 2;
 	public static final int GUI_ID_DIGESTER_GEN = 3;
-	public static final int GUI_ID_PENS = 0;
+	public static final int GUI_ID_PENS = 4;
 	
 	
 	public boolean isClient()
@@ -96,27 +96,29 @@ public class CommonProxy implements IGuiHandler
 		 }
 		 else if (ID == GUI_ID_FERTLIZERMIXER || ID == GUI_ID_DIGESTER_GEN) 
 		 {
+			 
 				BlockPos blockpos = new BlockPos(x,y,z);
 				IBlockState block = world.getBlockState(blockpos);
 				
 				if (block != null && block.getBlock().hasTileEntity(block))
 				{
 					TileEntity tile = world.getTileEntity(blockpos); 
+					
 					if(tile instanceof FertilizerMixerTileEntity)
 					{
 						return new ContainerFertlizerMixer(player.inventory, (FertilizerMixerTileEntity) tile);
 					}
-//					else if(tile instanceof DigesterGeneratorTileEntity)
-//					{
-//						return new ContainerDigesterGenerator(player.inventory, (DigesterGeneratorTileEntity) tile);
-//					}
+					else if(tile instanceof DigesterGeneratorTileEntity)
+					{
+						return new ContainerDigesterGenerator(player.inventory, (DigesterGeneratorTileEntity) tile);
+					}
 				}
 		 }
 				
 		return null;
 	}
 
-	@SuppressWarnings("null")
+
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world,	int x, int y, int z) 
 	{
@@ -131,15 +133,15 @@ public class CommonProxy implements IGuiHandler
 			BlockPos blockpos = new BlockPos(x,y,z);
 			IBlockState block = world.getBlockState(blockpos);
 			
-			if(block != null) return null;
+			if(block == null) return null;
 			
 			if (block.getBlock().hasTileEntity(block))
 			{
 				TileEntity tile = world.getTileEntity(blockpos); 
 				if(tile instanceof FertilizerMixerTileEntity)
 					return new GuiFertilizerMixerInventory(player.inventory, (FertilizerMixerTileEntity) tile);
-//				else if(tile instanceof DigesterGeneratorTileEntity)
-//					return new GuiDigesterGenerator(player.inventory, (DigesterGeneratorTileEntity) tile);
+				else if(tile instanceof DigesterGeneratorTileEntity)
+					return new GuiDigesterGenerator(player.inventory, (DigesterGeneratorTileEntity) tile);
 			}
 				  
 		}

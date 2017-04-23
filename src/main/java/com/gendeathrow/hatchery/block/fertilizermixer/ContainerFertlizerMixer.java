@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.inventory;
+package com.gendeathrow.hatchery.block.fertilizermixer;
 
 import javax.annotation.Nullable;
 
@@ -19,7 +19,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.gendeathrow.hatchery.block.fertilizermixer.FertilizerMixerTileEntity;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
@@ -49,7 +48,7 @@ public class ContainerFertlizerMixer extends Container
 		
 		waterTank = fertilizerInventory.getWaterTank().getFluidAmount();
 		fertilizerTank = fertilizerInventory.getFertilizerTank().getFluidAmount();
-		
+
 		int i;
 
 		addSlotToContainer(new Slot(fertilizerInventory, 0, 17, 34)

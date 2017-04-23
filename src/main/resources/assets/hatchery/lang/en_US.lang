@@ -9,6 +9,10 @@ tile.hatchery.feeder.name=Chicken Feeder
 tile.hatchery.manure_block.name=Chicken Manure Block
 tile.hatchery.nursery_block.name=Nursery Monitor
 tile.hatchery.fertilizer_mixer.name=Fertilizer Mixer
+tile.hatchery.digester_generator=Methane Digester Generator
+
+container.generator.generating=Generating: %rf/t
+container.hoveramt=%/%
 
 entity.Rooster.name=Rooster
 container.roosterInventory=Rooster Stud-muffin
@@ -36,6 +40,7 @@ text.hatchery.storedseed=Stored Seeds
 
 #JEI
 jei.tile.hatchery.feeder=You can store up to 200 seeds per feeder. Feeders will look for chickens in a 4x1x4 area for chickens. Baby chicks will grow faster when around a feeder, And adults will drop items faster. You can pipe seeds into the feeders.
+jei.tile.hatchery.digester_generator=Methane-powered generator produces energy from the liquid manure in a digester. Anaerobic manure digesters (also called methane digesters) collect manure and convert the energy stored in its organic matter into methane, which is used to produce energy (60 rf/t) for on-farm or off-farm use.
 jei.tile.hatchery.nest=Place an egg into the nest and it will auto hatch your chicken over a random time. Placing a redstone lamp(Heat lamp will replace later) up to 3 blocks above the nest will increase speed. Sitting on the egg will also increase speed of hatching. 
 jei.tile.hatchery.fertilized_dirt=Gives tree's a random bonemeal effect
 jei.tile.hatchery.fertilized_farmland=Gives plants a random bonemeal effect. Get farmland by using a hoe on fertilized dirt
