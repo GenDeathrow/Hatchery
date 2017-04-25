@@ -25,20 +25,28 @@ public class ModItems
 	public static Sprayer sprayer = new Sprayer();
 	
 	//Upgrades  
+	
+	// RF power converter (Transformer Upgrade)
 	// rf tier 1 +10rf/t
-	public static RFEfficiencyUpgrade rfUpgradeTier1 = (RFEfficiencyUpgrade) new RFEfficiencyUpgrade(1).setMaxStackSize(16);
+	public static RFEfficiencyUpgrade rfUpgradeTier1 = (RFEfficiencyUpgrade) new RFEfficiencyUpgrade(1);
 	// rf tier 2 +30rf/t
 	public static RFEfficiencyUpgrade rfUpgradeTier2 = new RFEfficiencyUpgrade(2);
 	// rf tier 3
 	public static RFEfficiencyUpgrade rfUpgradeTier3 = new RFEfficiencyUpgrade(3);
 	
-	// 
+	// speed upgrade (faster / increases power comsumption)
+	
+	// insulation (decrease sound)
+	
+	// RF Efficiency upgrade (decrease power usage)  1-0.75, 2-0.65, 3-0.5
+	
+	// Capacity upgrades (increase RF, Tank Capacitys) RF 100,000 x tier, fluid (1-x2, 2-x3, 2-x4)
+	
+	// Feeder upgrade (auto feeds chickens much like a feeder) requires seeds to be added.  
 	
 	
 	//public static FluidPump pump = new FluidPump();
 	
-	//public static CornSeed cornSeeds= new CornSeed(pen, pen);
-//	  public static Corn corn = new Corn(1);
 
 	public static void RegisterItems()
 	{
@@ -47,7 +55,9 @@ public class ModItems
 		registerItem(ModItems.manure, "chickenmanure");
 		registerItem(ModItems.sprayer, "sprayer");
 		
-		registerItem(ModItems.rfUpgradeTier1, "upgrade_rf_tier1");
+		registerItem(ModItems.rfUpgradeTier1, "rf_upgrade_1");
+		registerItem(ModItems.rfUpgradeTier2, "rf_upgrade_2");
+		registerItem(ModItems.rfUpgradeTier3, "rf_upgrade_3");
 		
 		//registerItem(ModItems.pump, "fluidpump");
 		

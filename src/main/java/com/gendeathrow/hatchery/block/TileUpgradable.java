@@ -6,17 +6,21 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileUpgradable extends TileEntity
 {
-
-	protected ItemStack[] upgrades = new ItemStack[1];
+	protected InventoryStorage upgradeStorage;
 	
 	public TileUpgradable(int upgradeSize)
 	{
-		this.upgrades = new ItemStack[upgradeSize];
+		this.upgradeStorage = new InventoryStorage(this, upgradeSize).setID("Upgrades");
 	}
 	
 	public ItemStack[] getUpgrades()
 	{
-		return this.upgrades;
+		return this.upgradeStorage.getInventory();
+	}
+	
+	public InventoryStorage getUpgradeStorage()
+	{
+		return this.upgradeStorage;
 	}
 	
 	public boolean hasUpgrade(String type, int level)
@@ -34,16 +38,22 @@ public class TileUpgradable extends TileEntity
 		return false;
 	}
 	
+	
+	protected void onUpgradeChange() {}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) 
 	{
+		this.upgradeStorage.readFromNBT(nbt);
+		
 		super.readFromNBT(nbt);
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) 
 	{
-
+		this.upgradeStorage.writeToNBT(nbt);
+		
 		return super.writeToNBT(nbt);
 	}
 	

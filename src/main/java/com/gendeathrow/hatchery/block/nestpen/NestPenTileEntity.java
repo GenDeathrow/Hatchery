@@ -66,7 +66,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	{
 		super();
 		entityNBT = new NBTTagCompound();
-		this.TimetoNextEgg = this.rand.nextInt(6000) + 6000;
+		this.TimetoNextEgg = this.rand.nextInt(5000) + 2000;
 	}
 	
 	public int getTimeToNextDrop()

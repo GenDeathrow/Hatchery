@@ -14,7 +14,7 @@ public class BaseUpgrade extends Item implements IUpgradeItem
 	public BaseUpgrade(int tier, String type)
 	{
 		super();
-		
+		this.setMaxStackSize(1);
 		this.upgradeTier = tier;
 		this.upgradeType = type;
 	}

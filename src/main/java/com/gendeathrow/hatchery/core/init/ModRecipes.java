@@ -30,10 +30,11 @@ public class ModRecipes
 	{
 		OreDictionary.registerOre("dirt", ModBlocks.fertlizedDirt);
 		OreDictionary.registerOre("manure", ModItems.manure);
+		OreDictionary.registerOre("manureBlock", ModBlocks.manureBlock);
 		OreDictionary.registerOre("egg", ModItems.hatcheryEgg);
-		if(Loader.isModLoaded("harvestcraft")) {
+		//if(Loader.isModLoaded("harvestcraft")) {
 			OreDictionary.registerOre("listAllegg", ModItems.hatcheryEgg);
-		}
+		//}
 	}
 	
 	public static void RegisterRecipes()
@@ -87,7 +88,7 @@ public class ModRecipes
 		});
 	    GameRegistry.addRecipe(NurseryRecipe);
 	    
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.nest), "xxx", "AxA", "xAx",'A', Blocks.HAY_BLOCK);
+		//GameRegistry.addRecipe(new ItemStack(ModBlocks.nest), "xxx", "AxA", "xAx",'A', Blocks.HAY_BLOCK);
 
 	    IRecipe sprayerRecipe = new ShapedOreRecipe(new ItemStack(ModItems.sprayer), new Object[] {
 	    	"DD.", 
@@ -117,12 +118,60 @@ public class ModRecipes
 	    GameRegistry.addRecipe(bucketFert);
 	    
 	    
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.nest), "xxx", "AxA", "AAA",'A', Blocks.HAY_BLOCK);
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.nest), "xxx", "AxA", "xAx",'A', Blocks.HAY_BLOCK);
 
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.manureBlock), "XXX", "XXX", "XXX",'X', ModItems.manure);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.manure,9), ModBlocks.manureBlock);
 		
 		GameRegistry.addRecipe(new RefillSprayer());
+		
+		GameRegistry.addRecipe(
+				new ItemStack(ModBlocks.digesterGenerator),
+				"III",
+				"PRB",
+				"IxI", 
+				'I', Items.IRON_INGOT,
+				'R', Blocks.REDSTONE_ORE,
+				'P', Blocks.PISTON, 
+				'B', Items.BUCKET);
+		
+		GameRegistry.addRecipe(
+				new ItemStack(ModBlocks.fertilizerMixer), 
+				"xHx",
+				"IPI",
+				"IBI", 
+				'H', Blocks.HOPPER, 
+				'I', Items.IRON_INGOT, 
+				'P', Blocks.PISTON, 
+				'B', Items.BUCKET);
+		
+		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier1), 
+				"TRT",
+				"RGR",
+				"TRT",
+				'T', Blocks.REDSTONE_TORCH,
+				'R', Items.REDSTONE,
+				'G', Items.GOLD_NUGGET);
+		
+		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier2), 
+				"SXS",
+				"RUR",
+				"GXG",
+				'S', Items.GLOWSTONE_DUST,
+				'U', ModItems.rfUpgradeTier1,
+				'R', Items.REDSTONE,
+				'X', Blocks.REDSTONE_BLOCK,
+				'G', Items.GOLD_INGOT);
+				
+		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier3), 
+				"EXD",
+				"XUX",
+				"GXG",
+				'E', Items.EMERALD,
+				'D', Items.DIAMOND,
+				'U', ModItems.rfUpgradeTier2,
+				'X', Blocks.REDSTONE_BLOCK,
+				'G', Blocks.GOLD_BLOCK);
 
 	}
 	

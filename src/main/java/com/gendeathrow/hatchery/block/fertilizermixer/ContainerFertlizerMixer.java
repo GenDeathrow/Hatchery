@@ -10,18 +10,15 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.inventory.SlotFluidContainer;
+import com.gendeathrow.hatchery.inventory.SlotUpgrade;
 
 public class ContainerFertlizerMixer extends Container 
 {
@@ -37,6 +34,7 @@ public class ContainerFertlizerMixer extends Container
 	private final int TE_INVENTORY_SLOT_COUNT = 9;
 	
 	private final IInventory inventory;
+	private final IInventory upgrades;
 	private final ItemStack[] manure;
 	private int waterTank;
 	private int fertilizerTank;
@@ -45,13 +43,14 @@ public class ContainerFertlizerMixer extends Container
 	{
 		inventory = fertilizerInventory;
 		manure = fertilizerInventory.getItemInventory();
+		upgrades = fertilizerInventory.getUpgradeStorage();
 		
 		waterTank = fertilizerInventory.getWaterTank().getFluidAmount();
 		fertilizerTank = fertilizerInventory.getFertilizerTank().getFluidAmount();
 
 		int i;
 
-		addSlotToContainer(new Slot(fertilizerInventory, 0, 17, 34)
+		addSlotToContainer(new Slot(fertilizerInventory, 0, 17, 16)
 		{
 			 public boolean isItemValid(@Nullable ItemStack stack)
              {
@@ -68,8 +67,11 @@ public class ContainerFertlizerMixer extends Container
 		addSlotToContainer(new Slot(fertilizerInventory, 2, 72, 52));
 		
 		
-		addSlotToContainer(new Slot(fertilizerInventory, 3, 122, 16));
-		addSlotToContainer(new SlotFluidContainer(fertilizerInventory, 4, 122, 52, ModFluids.liquidfertilizer));
+		addSlotToContainer(new Slot(fertilizerInventory, 3, 104, 16));
+		addSlotToContainer(new SlotFluidContainer(fertilizerInventory, 4, 104, 52, ModFluids.liquidfertilizer));
+		
+		addSlotToContainer(new SlotUpgrade(upgrades, 0, 8, 52));
+		addSlotToContainer(new SlotUpgrade(upgrades, 1, 31, 52));
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
@@ -77,6 +79,7 @@ public class ContainerFertlizerMixer extends Container
 
 	        for (i = 0; i < 9; ++i)
 	            addSlotToContainer(new Slot(playerInventory, i, 7 + i * 18, 141));
+
 	}
 	
 	@Override
@@ -97,14 +100,14 @@ public class ContainerFertlizerMixer extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (slotIndex <= 5)
+            if (slotIndex < (this.inventory.getSizeInventory() + this.upgrades.getInventoryStackLimit()))
             {
-                if (!this.mergeItemStack(itemstack1, slotIndex, this.inventorySlots.size(), true))
+                if (!this.mergeItemStack(itemstack1, (this.inventory.getSizeInventory() + this.upgrades.getInventoryStackLimit()), this.inventorySlots.size(), true))
                 {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 0, slotIndex, false))
+            else if (!this.mergeItemStack(itemstack1, 0, (this.inventory.getSizeInventory() + this.upgrades.getInventoryStackLimit()), false))
             {
                 return null;
             }
@@ -117,6 +120,8 @@ public class ContainerFertlizerMixer extends Container
             {
                 slot.onSlotChanged();
             }
+            
+
         }
         
 		return  itemstack;
@@ -167,28 +172,5 @@ public class ContainerFertlizerMixer extends Container
 	}
 	
 	
-	public class SlotFluidContainer extends Slot
-	{
-		Fluid fluid;
-		public SlotFluidContainer(IInventory inventoryIn, int index,int xPosition, int yPosition, Fluid fluid) 
-		{
-			super(inventoryIn, index, xPosition, yPosition);
-			this.fluid = fluid;
-		}
-
-		public boolean isItemValid(@Nullable ItemStack stack)
-        {
-			if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN))
-			{
-				IFluidHandler fluidHandler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
-				
-				if(fluidHandler != null)
-					return true;
-			}
-			
-			return false;
-        }
 	
-	
-	}
 }

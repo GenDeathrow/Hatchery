@@ -1,5 +1,7 @@
 package com.gendeathrow.hatchery.item;
 
+import net.minecraft.item.ItemStack;
+
 public class RFEfficiencyUpgrade  extends BaseUpgrade
 {
 	protected final static String type = "rfupgrade";
@@ -9,9 +11,9 @@ public class RFEfficiencyUpgrade  extends BaseUpgrade
 		super(tier, type);
 	}
 
-	
-	public void Initialize()
+	@Override
+	public int getUpgradeTier(ItemStack stack, String type) 
 	{
-		
+		return this.upgradeTier;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -13,7 +14,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import org.lwjgl.opengl.GL11;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.core.init.ModFluids;
 
 public class GuiDigesterGenerator extends GuiContainer
 {
@@ -33,42 +33,40 @@ public class GuiDigesterGenerator extends GuiContainer
 	{
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;
-		
-		fontRendererObj.drawString(I18n.format(new TextComponentTranslation("container.generator.generating", 60).getFormattedText(), GENERATOR.storage.getEnergyStored()), xOffSet + 100 , yOffSet + 15, 4210752);
-		//fontRendererObj.drawString(I18n.format(new TextComponentTranslation("container.fertilizermixerinventory").getFormattedText()), xSize - 170, ySize - 93, 4210752);
-		
-
-
-	}  
-
-	List<String> hover =  new ArrayList<String>();
-	DecimalFormat formatter = new DecimalFormat("#,###");
 	
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTickTime, int x, int y) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.getTextureManager().bindTexture(GUI_GENERATOR_INVENTORY);
-		int xOffSet = (width - xSize) / 2;
-		int yOffSet = (height - ySize) / 2;
-		drawTexturedModalRect(xOffSet, yOffSet, 0, 0, xSize, ySize);
+		previousFertAmt = fertilizerTankAmt;
+		previousRFLevel = rfEnergyLevels;
+		
+		fertilizerTankAmt = (int) (((float)GENERATOR.tankLevel / GENERATOR.getTank().getCapacity()) * 58);
+		rfEnergyLevels = (int) (((float)GENERATOR.storage.getEnergyStored() / GENERATOR.storage.getMaxEnergyStored()) * 58);
+		
+		
+		int rfOut = previousRFLevel - rfEnergyLevels > 0 ? previousRFLevel - rfEnergyLevels: 0;
+		int fertIn = previousFertAmt - fertilizerTankAmt > 0 ? previousFertAmt - fertilizerTankAmt : 0;  
+		
+		String generatingRFString = new TextComponentTranslation("container.generator.generating", GENERATOR.getRFPerTick()).getFormattedText();
+		String rfOutString = new TextComponentTranslation("container.generator.rfout", rfOut).getFormattedText();
+		String fertInString = new TextComponentTranslation("container.generator.fertin", fertIn).getFormattedText();
 
-		int fertilizerTankAmt = (int) (((float)GENERATOR.tankLevel / GENERATOR.getTank().getCapacity()) * 58);
-		int rfEnergyLevels = (int) (((float)GENERATOR.storage.getEnergyStored() / GENERATOR.storage.getMaxEnergyStored()) * 58);
+		GlStateManager.pushMatrix();
+			GlStateManager.translate(95, 15, 0);
+				GlStateManager.scale(0.75, 0.75, 0);
+					fontRendererObj.drawString(generatingRFString, 0 , 0, 4210752);
+		GlStateManager.popMatrix();
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		fontRendererObj.drawString(new TextComponentTranslation("container.upgrades").getFormattedText(), xSize - 80, 40, 4210752);
 
-		drawTexturedModalRect(xOffSet + 53, yOffSet + 13 + 58 - fertilizerTankAmt, 208, 58 - fertilizerTankAmt, 13, fertilizerTankAmt);
-				drawTexturedModalRect(xOffSet + 16, yOffSet + 13 + 58 - rfEnergyLevels, 220, 58 - rfEnergyLevels, 13, rfEnergyLevels);
-				
-
+		
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-this.guiLeft, -this.guiTop, 0);
 		
 		hover.clear();
-				
-		if(x > xOffSet+16 && x < xOffSet+28 && y > yOffSet+13 && y < yOffSet+59)
+		
+		if(x > xOffSet+16 && x < xOffSet+28 && y > yOffSet+13 && y < yOffSet+70)
 		{
 			hover.add(formatter.format((int)GENERATOR.storage.getEnergyStored()) +"rf / "+ formatter.format(this.GENERATOR.storage.getMaxEnergyStored())+"rf");
 		}
-		else if(x > xOffSet+53 && x < xOffSet+66 && y > yOffSet+13 && y < yOffSet+59)
+		else if(x > xOffSet+53 && x < xOffSet+66 && y > yOffSet+13 && y < yOffSet+70)
 		{
 			hover.add("Liquid Fertlizer:");
 			hover.add(formatter.format(((int)GENERATOR.tankLevel)) +"mb/"+ formatter.format(this.GENERATOR.getTank().getCapacity())+"mb");
@@ -76,6 +74,35 @@ public class GuiDigesterGenerator extends GuiContainer
 
 		if(hover.size() > 0)
 			this.drawHoveringText(hover, x, y);
+		
+		GlStateManager.translate(this.guiLeft, this.guiTop, 0);
+		GlStateManager.popMatrix();
+	}  
+
+	int previousFertAmt = 0;
+	int previousRFLevel = 0;
+	int fertilizerTankAmt = 0;
+	int rfEnergyLevels = 0;
+	
+	List<String> hover =  new ArrayList<String>();
+	DecimalFormat formatter = new DecimalFormat("#,###");
+	
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float partialTickTime, int x, int y) {
+		
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		
+		mc.getTextureManager().bindTexture(GUI_GENERATOR_INVENTORY);
+
+		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, xSize, ySize);
+
+
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+		drawTexturedModalRect(guiLeft + 53, guiTop + 13 + 58 - fertilizerTankAmt, 208, 58 - fertilizerTankAmt, 13, fertilizerTankAmt);
+		drawTexturedModalRect(guiLeft + 15, guiTop + 13 + 58 - rfEnergyLevels, 220, 58 - rfEnergyLevels, 13, rfEnergyLevels);
+				
+
 	}
 	
 

@@ -16,6 +16,8 @@ public class InventoryStorage  implements IInventory
 	
 	public TileEntity tile;
 	
+	
+	private String ID = "Items";
 
 	public InventoryStorage(TileEntity tile, int invtSize)
 	{
@@ -23,6 +25,11 @@ public class InventoryStorage  implements IInventory
 		this.tile = tile;
 	}
 	
+	public InventoryStorage setID(String id)
+	{
+		this.ID = id;
+		return this;
+	}
 	
 	public ItemStack[] getInventory()
 	{
@@ -46,9 +53,7 @@ public class InventoryStorage  implements IInventory
         if (itemstack != null)
         {
             tile.markDirty();
-        }
-
-			
+        }			
 		return itemstack;
 	}
 
@@ -82,7 +87,7 @@ public class InventoryStorage  implements IInventory
 
 	public void readFromNBT(NBTTagCompound nbt) {
 
-		NBTTagList tags = nbt.getTagList("Items", 10);
+		NBTTagList tags = nbt.getTagList(this.ID, 10);
 		inventory = new ItemStack[getSizeInventory()];
 
 		for (int i = 0; i < tags.tagCount(); i++) {
@@ -105,7 +110,7 @@ public class InventoryStorage  implements IInventory
 				tags.appendTag(data);
 			}
 
-		nbt.setTag("Items", tags);
+		nbt.setTag(this.ID, tags);
 		return nbt;
 	}
 

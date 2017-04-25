@@ -11,8 +11,12 @@ tile.hatchery.nursery_block.name=Nursery Monitor
 tile.hatchery.fertilizer_mixer.name=Fertilizer Mixer
 tile.hatchery.digester_generator=Methane Digester Generator
 
-container.generator.generating=Generating: %rf/t
+container.generator.generating=Generating: %1$drf/t
+container.generator.rfout=RF Out: %1$drf/t
+container.generator.fertin=Fertilizer In: %1$d mb
 container.hoveramt=%/%
+container.fertlizermixer=Fertilizer Mixer
+container.upgrades=Upgrades
 
 entity.Rooster.name=Rooster
 container.roosterInventory=Rooster Stud-muffin

@@ -10,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
@@ -25,15 +24,17 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import cofh.api.energy.EnergyStorage;
+import cofh.api.energy.IEnergyReceiver;
 
+import com.gendeathrow.hatchery.block.InventoryStorage;
+import com.gendeathrow.hatchery.block.TileUpgradable;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
 
-public class FertilizerMixerTileEntity extends TileEntity implements IInventory, ITickable
+public class FertilizerMixerTileEntity extends TileUpgradable implements IInventory, ITickable, IEnergyReceiver
 {
-	private ItemStack[] inventory = new ItemStack[5];
-	
 	private FluidTank waterTank = new FluidTank(new FluidStack(FluidRegistry.WATER, 0), 20000){
 		@Override
 	    public boolean canDrain()
@@ -51,6 +52,18 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 		}
 	};
 	
+	//private ItemStack[] inventory = new ItemStack[5];
+	
+	protected InventoryStorage inventory = new InventoryStorage(this, 5);
+	
+	protected EnergyStorage storage = new EnergyStorage(20000);
+	
+	public FertilizerMixerTileEntity() 
+	{
+		super(2);
+	}
+
+	
 	public FluidTank getWaterTank()
 	{
 		return waterTank;
@@ -63,17 +76,17 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 	
 	private ItemStack getWaterFluidIn()
 	{
-		return this.inventory[2];
+		return this.inventory.getStackInSlot(2);
 	}
 	
 	private ItemStack getFertlizerFluidOut()
 	{
-		return this.inventory[4];
+		return this.inventory.getStackInSlot(4);
 	}
 	
 	public ItemStack[] getItemInventory()
 	{
-		return inventory;
+		return inventory.getInventory();
 	}
 
     public boolean isMixing()
@@ -131,23 +144,23 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 		
 		if(!this.worldObj.isRemote)
 		{
-			if (this.isMixing() || this.inventory[0] != null)
+			if (this.isMixing() || this.inventory.getStackInSlot(0) != null)
 			{
                 if (!this.isMixing() && this.canMix())
                 {
-                	this.fertlizerMixTime = getItemMixTime(this.inventory[0]);
+                	this.fertlizerMixTime = getItemMixTime(this.inventory.getStackInSlot(0));
                 	this.currentItemMixTime = this.fertlizerMixTime;
                 			
                 	if(this.isMixing())
                 	{
                 		flag1 = true;
-                		 if(this.inventory[0] != null)
+                		 if(this.inventory.getStackInSlot(0) != null)
                 		 {
-                			 --this.inventory[0].stackSize;
+                			 --this.inventory.getStackInSlot(0).stackSize;
                     		 
-                             if (this.inventory[0].stackSize <= 0)
+                             if (this.inventory.getStackInSlot(0).stackSize <= 0)
                              {
-                                 this.inventory[0] = null;
+                                 this.inventory.setInventorySlotContents(0,null);
                              }
                 		 }
 
@@ -175,9 +188,9 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 			}
 			
 
-			if(this.inventory[1] != null && this.inventory[2] == null && this.waterTank.getFluidAmount() < this.waterTank.getCapacity())
+			if(this.inventory.getStackInSlot(1) != null && (this.inventory.getStackInSlot(2) == null) && this.waterTank.getFluidAmount() < this.waterTank.getCapacity())
 			{
-				ItemStack stack = this.inventory[1];
+				ItemStack stack = this.inventory.getStackInSlot(1);
 				
 				IFluidHandler handler = FluidUtil.getFluidHandler(stack);
 				
@@ -185,16 +198,15 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 				{
 					if(FluidUtil.tryFluidTransfer(this.waterTank, handler, this.waterTank.getCapacity(), true) != null)
 					{
-						this.inventory[2] = stack;
-						this.inventory[1] = null;
+						this.inventory.setInventorySlotContents(2, stack);
+						this.inventory.setInventorySlotContents(1, null);
 					}
 				}
 			}
 			
-			if(this.inventory[3] != null && this.inventory[4] == null && this.fertilizerTank.getFluidAmount() > 0)
+			if(this.inventory.getStackInSlot(3) != null && this.inventory.getStackInSlot(4) == null && this.fertilizerTank.getFluidAmount() > 0)
 			{
-				System.out.println("try and fill");
-				ItemStack stack = this.inventory[3];
+				ItemStack stack = this.inventory.getStackInSlot(3);
 				
 				IFluidHandler handler = FluidUtil.getFluidHandler(stack);
 				
@@ -202,8 +214,8 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 				{
 					if(FluidUtil.tryFluidTransfer(handler, this.fertilizerTank, this.fertilizerTank.getCapacity(), true) != null)
 					{
-						this.inventory[4] = stack;
-						this.inventory[3] = null;
+						this.inventory.setInventorySlotContents(4, stack);
+						this.inventory.setInventorySlotContents(3, null);
 					}
 				}
 			}
@@ -244,38 +256,27 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int index) 
+	public ItemStack getStackInSlot(int slot) 
 	{
-		return this.inventory[index];
+		return this.inventory.getStackInSlot(slot);
 	}
 
 	@Override
-	public ItemStack decrStackSize(int index, int count) 
+	public ItemStack decrStackSize(int slot, int count) 
 	{
-        ItemStack itemstack = ItemStackHelper.getAndSplit(this.inventory, index, count);
-
-        if (itemstack != null)
-        {
-            this.markDirty();
-        }
-
-			
-		return itemstack;
+		return this.inventory.decrStackSize(slot, count);
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int index) 
+	public ItemStack removeStackFromSlot(int slot) 
 	{
-		return ItemStackHelper.getAndRemove(this.inventory, index);
+		return this.inventory.removeStackFromSlot(slot);
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) 
+	public void setInventorySlotContents(int slot, ItemStack stack) 
 	{
-		inventory[index] = stack;
-
-		if (stack != null && stack.stackSize > getInventoryStackLimit())
-			stack.stackSize = getInventoryStackLimit();
+		this.inventory.setInventorySlotContents(slot, stack);
 	}
 
 	@Override
@@ -288,10 +289,10 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 	public boolean isUseableByPlayer(EntityPlayer player) { return true; }
 
 	@Override
-	public void openInventory(EntityPlayer player) { }
+	public void openInventory(EntityPlayer player) { this.inventory.openInventory(player); }
 
 	@Override
-	public void closeInventory(EntityPlayer player) { }
+	public void closeInventory(EntityPlayer player) { this.inventory.closeInventory(player); }
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) 
@@ -350,8 +351,7 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
 
 	@Override
 	public void clear() { 
-		for (int i = 0; i < inventory.length; i++)
-			inventory[i] = null;
+		this.inventory.clear();
 	}
 	
 	
@@ -363,20 +363,7 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
        	this.waterTank.readFromNBT(tag.getCompoundTag("waterTank"));
         this.fertilizerTank.readFromNBT(tag.getCompoundTag("fertilizerTank"));
         
-		this.inventory = new ItemStack[this.getSizeInventory()];
-		
-        NBTTagList nbttaglist = tag.getTagList("Items", 10);
-
-        for (int i = 0; i < nbttaglist.tagCount(); ++i)
-        {
-            NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
-            int j = nbttagcompound.getByte("Slot") & 255;
-
-            if (j >= 0 && j < this.inventory.length)
-            {
-                this.inventory[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
-            }
-        }
+        this.inventory.readFromNBT(tag);
     }
 
     @Override
@@ -384,27 +371,14 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
     {
     	tag = super.writeToNBT(tag);
     	
-    	  NBTTagCompound waterTTag = new NBTTagCompound();
-          NBTTagCompound fertTTag = new NBTTagCompound();
+    	NBTTagCompound waterTTag = new NBTTagCompound();
+        NBTTagCompound fertTTag = new NBTTagCompound();
     		this.waterTank.writeToNBT(waterTTag);
     		this.fertilizerTank.writeToNBT(fertTTag);
         tag.setTag("waterTank", waterTTag);
         tag.setTag("fertilizerTank", fertTTag);
         
-        NBTTagList nbttaglist = new NBTTagList();
-
-        for (int i = 0; i < this.inventory.length; ++i)
-        {
-            if (this.inventory[i] != null)
-            {
-                NBTTagCompound nbttagcompound = new NBTTagCompound();
-                nbttagcompound.setByte("Slot", (byte)i);
-                this.inventory[i].writeToNBT(nbttagcompound);
-                nbttaglist.appendTag(nbttagcompound);
-            }
-        }
-        
-        tag.setTag("Items", nbttaglist);
+        this.inventory.writeToNBT(tag);
         
         return tag;
     }
@@ -429,6 +403,29 @@ public class FertilizerMixerTileEntity extends TileEntity implements IInventory,
         }
         return super.getCapability(capability, facing);
     }
+
+    
+    // ENERGY
+    
+	@Override
+	public int getEnergyStored(EnumFacing from) {
+		return this.storage.getMaxEnergyStored();
+	}
+
+	@Override
+	public int getMaxEnergyStored(EnumFacing from) {
+		return this.storage.getMaxEnergyStored();
+	}
+
+	@Override
+	public boolean canConnectEnergy(EnumFacing from) {
+		return true;
+	}
+
+	@Override
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
+		return this.storage.receiveEnergy(maxReceive, simulate);
+	}
 
     
 }

@@ -1,7 +1,5 @@
 package com.gendeathrow.hatchery.block.generator;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -9,12 +7,12 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.gendeathrow.hatchery.core.init.ModFluids;
+import com.gendeathrow.hatchery.inventory.SlotFluidContainer;
+import com.gendeathrow.hatchery.inventory.SlotUpgrade;
 
 public class ContainerDigesterGenerator extends Container 
 {
@@ -30,34 +28,30 @@ public class ContainerDigesterGenerator extends Container
 	private final int TE_INVENTORY_SLOT_COUNT = 9;
 	
 	private final IInventory inventory;
+	
+	private final IInventory upgrades;
 
 	private int fertilizerTank;
 	private int rfEnergy;
+	private int rfPerTick;
 	
 
 	public ContainerDigesterGenerator(InventoryPlayer playerInventory, DigesterGeneratorTileEntity tileEntity) 
 	{
 		inventory = tileEntity;
 		
+		upgrades = tileEntity.getUpgradeStorage();
+		
 		fertilizerTank = tileEntity.getTank().getFluidAmount();
 		
 		int i;  
 
-//		addSlotToContainer(new Slot(tileEntity, 0, 17, 34)
-//		{
-//			 public boolean isItemValid(@Nullable ItemStack stack)
-//             {
-//				 if(stack.getItem() == ModItems.manure || stack.getItem() == Item.getItemFromBlock(ModBlocks.manureBlock))
-//				 {
-//					 return true;
-//				 }
-//				 else return false;
-//             }
-//			 
-//		});
+		addSlotToContainer(new Slot(inventory, 0, 72, 16));
+		addSlotToContainer(new SlotFluidContainer(inventory, 1, 72, 52, ModFluids.liquidfertilizer));
 		
-		//addSlotToContainer(new Slot(tileEntity, 3, 122, 16));
-		//addSlotToContainer(new SlotFluidContainer(tileEntity, 4, 122, 52, ModFluids.liquidfertilizer));
+        
+		addSlotToContainer(new SlotUpgrade(upgrades, 0, 107, 59));
+		addSlotToContainer(new SlotUpgrade(upgrades, 1, 134, 59));
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
@@ -65,6 +59,7 @@ public class ContainerDigesterGenerator extends Container
 
 	        for (i = 0; i < 9; ++i)
 	            addSlotToContainer(new Slot(playerInventory, i, 7 + i * 18, 141));	    
+
 	}
 
 	@Override
@@ -84,14 +79,14 @@ public class ContainerDigesterGenerator extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (slotIndex <= 5)
+            if (slotIndex < (this.inventory.getSizeInventory() + this.upgrades.getInventoryStackLimit()))
             {
-                if (!this.mergeItemStack(itemstack1, slotIndex, this.inventorySlots.size(), true))
+                if (!this.mergeItemStack(itemstack1, (this.inventory.getSizeInventory() + this.upgrades.getInventoryStackLimit()), this.inventorySlots.size(), true))
                 {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 0, slotIndex, false))
+            else if (!this.mergeItemStack(itemstack1, 0, (this.inventory.getSizeInventory() + this.upgrades.getInventoryStackLimit()), false))
             {
                 return null;
             }
@@ -141,10 +136,12 @@ public class ContainerDigesterGenerator extends Container
 					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
 					listener.sendProgressBarUpdate(this, 0, this.inventory.getField(0));
 					listener.sendProgressBarUpdate(this, 1, this.inventory.getField(1));
+					listener.sendProgressBarUpdate(this, 2, this.inventory.getField(2));
 		 }
 
 		this.rfEnergy = this.inventory.getField(0);
 		this.fertilizerTank = this.inventory.getField(1);
+		this.rfPerTick = this.inventory.getField(2);
     }
 
 	@Override
@@ -153,29 +150,4 @@ public class ContainerDigesterGenerator extends Container
 		inventory.closeInventory(player);
 	}
 	
-	
-	public class SlotFluidContainer extends Slot
-	{
-		Fluid fluid;
-		public SlotFluidContainer(IInventory inventoryIn, int index,int xPosition, int yPosition, Fluid fluid) 
-		{
-			super(inventoryIn, index, xPosition, yPosition);
-			this.fluid = fluid;
-		}
-
-		public boolean isItemValid(@Nullable ItemStack stack)
-        {
-			if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN))
-			{
-				IFluidHandler fluidHandler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
-				
-				if(fluidHandler != null)
-					return true;
-			}
-			
-			return false;
-        }
-	
-	
-	}
 }
