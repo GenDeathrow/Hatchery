@@ -47,6 +47,11 @@ public class NestingPenDropRecipeWrapper extends BlankRecipeWrapper
         ingredients.setOutputs(ItemStack.class, output);
 	}
 
+	public List getInput() {
+		return inputs;
+	}
 
-
+	public List<ItemStack> getOutput() {
+		return output;
+	}
 }

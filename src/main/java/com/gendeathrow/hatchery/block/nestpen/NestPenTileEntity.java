@@ -32,6 +32,7 @@ import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.datafix.IDataFixer;
 import net.minecraft.util.datafix.IDataWalker;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IInteractionObject;
@@ -57,7 +58,10 @@ import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
 public class NestPenTileEntity extends TileEntity  implements ITickable, IInventory
 {
-	private EntityChicken chickenStored = null;
+	private static final AxisAlignedBB EMPTY_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+
+	private EntityChicken chickenStored;
+
 	private NBTTagCompound entityNBT;
 	private int TimetoNextEgg = 0;
 	private Random rand = new Random();
@@ -149,23 +153,23 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	 */
 	private void createEntity()
 	{
-		try
+		if (this.entityNBT.hasNoTags()) {
+			chickenStored = null;
+		} else {
+			try {
+				chickenStored = (EntityChicken) EntityList.createEntityFromNBT(this.entityNBT, this.getWorld());
+			} catch (Throwable e) {
+				chickenStored = null;
+				this.entityNBT = new NBTTagCompound();
+				Hatchery.logger.error("Error trying to add chicken tp pen 'Null NBT' " + e);
+			}
+		}
+
+		if (this.chickenStored != null)
 		{
-			if(this.entityNBT != null && !this.entityNBT.hasNoTags())
-			{
-				chickenStored = (EntityChicken) EntityList.createEntityFromNBT(this.entityNBT , this.getWorld());
-			}
-			else
-			{
-	  			chickenStored = null;
-	  			this.entityNBT = new NBTTagCompound();
-			}
-			
-  		}catch (Throwable e){
-  			chickenStored = null;
-  			this.entityNBT = new NBTTagCompound();
-  			Hatchery.logger.error("Error trying to add chicken tp pen 'Null NBT' " + e);
-  		}
+			this.chickenStored.setEntityBoundingBox(EMPTY_AABB); // prevent collision calculations
+			this.chickenStored.setNoAI(true); // prevent path navigation calculations
+		}
 	}
 	
 	/**

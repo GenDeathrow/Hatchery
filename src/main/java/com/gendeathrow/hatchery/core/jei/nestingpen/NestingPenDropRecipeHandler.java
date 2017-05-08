@@ -1,10 +1,7 @@
 package com.gendeathrow.hatchery.core.jei.nestingpen;
 
-import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import mezz.jei.util.Ingredients;
-import net.minecraft.item.ItemStack;
 
 public class NestingPenDropRecipeHandler implements IRecipeHandler<NestingPenDropRecipeWrapper> 
 {
@@ -37,10 +34,7 @@ public class NestingPenDropRecipeHandler implements IRecipeHandler<NestingPenDro
 	@Override
 	public boolean isRecipeValid(NestingPenDropRecipeWrapper recipe) 
 	{
-		IIngredients ingredients = new Ingredients();
-		recipe.getIngredients(ingredients);
-		return ingredients.getInputs(ItemStack.class).size() > 0 && ingredients.getOutputs(ItemStack.class).size() > 0;
-
+		return recipe.getInput().size() > 0 && recipe.getOutput().size() > 0;
 	}
 
 }
