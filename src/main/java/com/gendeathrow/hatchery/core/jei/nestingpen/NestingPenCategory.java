@@ -8,11 +8,11 @@ import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
-import mezz.jei.util.Translator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 import com.gendeathrow.hatchery.Hatchery;
+import net.minecraft.util.text.translation.I18n;
 
 public class NestingPenCategory extends BlankRecipeCategory<NestingPenDropRecipeWrapper>
 {
@@ -26,7 +26,7 @@ public class NestingPenCategory extends BlankRecipeCategory<NestingPenDropRecipe
 
     public NestingPenCategory(IGuiHelper guiHelper) 
     {
-        title = Translator.translateToLocal("jei.gui.nesting_pen_drop");
+        title = I18n.translateToLocal("jei.gui.nesting_pen_drop");
 
         ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/nestingpen_drops.png");
         background = guiHelper.createDrawable(location, 0, 0, 91, 78);
