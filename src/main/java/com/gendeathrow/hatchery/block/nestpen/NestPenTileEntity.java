@@ -31,7 +31,9 @@ import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.datafix.IDataFixer;
 import net.minecraft.util.datafix.IDataWalker;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
@@ -54,6 +56,8 @@ import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
 public class NestPenTileEntity extends TileEntity  implements ITickable, IInventory
 {
+	private static final AxisAlignedBB EMPTY_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+
 	private EntityChicken chickenStored;
 	private NBTTagCompound entityNBT;
 	private int TimetoNextEgg = 0;
@@ -154,6 +158,12 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 				this.entityNBT = new NBTTagCompound();
 				Hatchery.logger.error("Error trying to add chicken tp pen 'Null NBT' " + e);
 			}
+		}
+
+		if (this.chickenStored != null)
+		{
+			this.chickenStored.setEntityBoundingBox(EMPTY_AABB); // prevent collision calculations
+			this.chickenStored.setNoAI(true); // prevent path navigation calculations
 		}
 	}
 	
