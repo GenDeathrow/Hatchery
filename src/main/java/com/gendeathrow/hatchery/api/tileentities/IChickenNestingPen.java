@@ -1,6 +1,8 @@
 package com.gendeathrow.hatchery.api.tileentities;
 
+import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -25,11 +27,11 @@ public interface IChickenNestingPen
 	/**
 	 *  <b>if ShouldDRopHatcheryEgg() == true</b> <br><br>
 	 * Return child from breading two types of Chickens in nesting pens.<br>
-	 * This entity will be placed in Hatchery egg to be ready for hatching in a egg nest.
+	 * This entity will be placed in Hatchery egg to be ready for hatching in a egg nest.<br>
 	 * @param parent1
 	 * @param parent2
-	 * @return EntityLivingBase
+	 * @return EntityAnimal
 	 */
-	public abstract EntityLivingBase getChild(EntityLivingBase parent1, EntityLivingBase parent2);
+	public abstract EntityAnimal getChild(EntityAnimal parent1, EntityAnimal parent2);
 
 }

@@ -23,7 +23,7 @@ import com.gendeathrow.hatchery.api.items.IUpgradeItem;
 import com.gendeathrow.hatchery.block.InventoryStorage;
 import com.gendeathrow.hatchery.block.TileUpgradable;
 import com.gendeathrow.hatchery.core.init.ModFluids;
-import com.gendeathrow.hatchery.item.RFEfficiencyUpgrade;
+import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 
 public class DigesterGeneratorTileEntity extends TileUpgradable implements IInventory, IEnergyProvider, ITickable
 {

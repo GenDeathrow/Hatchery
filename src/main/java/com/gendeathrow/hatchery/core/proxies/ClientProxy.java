@@ -100,33 +100,18 @@ public class ClientProxy extends CommonProxy
 	public void initRenderers()
 	{
 		
-		registerBlockModel(ModBlocks.nest, 0, ModBlocks.nest.getRegistryName().toString());
+		//Register Blocks
+		for(Block block : ModBlocks.BLOCKS)
+		{
+			registerBlockModel(block, 0, block.getRegistryName().toString());
+		}
 		
-		registerBlockModel(ModBlocks.pen, 0, ModBlocks.pen.getRegistryName().toString());
-		registerBlockModel(ModBlocks.pen_chicken, 0, ModBlocks.pen_chicken.getRegistryName().toString());
-		
-		registerBlockModel(ModBlocks.feeder, 0, ModBlocks.feeder.getRegistryName().toString());
-		
-		registerBlockModel(ModBlocks.fertlizedDirt, 0, ModBlocks.fertlizedDirt.getRegistryName().toString());
-		registerBlockModel(ModBlocks.fertilzedFarmland, 0, ModBlocks.fertilzedFarmland.getRegistryName().toString());
-		registerBlockModel(ModBlocks.manureBlock,0,ModBlocks.manureBlock.getRegistryName().toString());
+		//Register Items
+		for(Item item : ModItems.ITEMS)
+		{
+			registerItemModel(item);
+		}
 
-		
-		registerBlockModel(ModBlocks.nuseryBlock,0,ModBlocks.nuseryBlock.getRegistryName().toString());
-		//ModelLoader.setCustomModelResourceLocation(ModBlocks.MOB_NURSERY_ITEM, 0, new ModelResourceLocation("Hatchery:mob_nursery", "inventory"));
-
-		registerBlockModel(ModBlocks.fertilizerMixer, 0, ModBlocks.fertilizerMixer.getRegistryName().toString());
-		
-		registerBlockModel(ModBlocks.digesterGenerator, 0, ModBlocks.digesterGenerator.getRegistryName().toString());
-		
-		registerItemModel(ModItems.hatcheryEgg);
-		registerItemModel(ModItems.animalNet);
-		registerItemModel(ModItems.manure);
-		registerItemModel(ModItems.sprayer);
-		registerItemModel(ModItems.rfUpgradeTier1);
-		registerItemModel(ModItems.rfUpgradeTier2);
-		registerItemModel(ModItems.rfUpgradeTier3);
-		
 		registerItemColorHandler(ModItems.hatcheryEgg);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(EggNestTileEntity.class, new EggNestTileEntityRender());

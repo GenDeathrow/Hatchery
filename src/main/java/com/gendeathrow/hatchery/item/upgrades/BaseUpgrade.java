@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.item;
+package com.gendeathrow.hatchery.item.upgrades;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
