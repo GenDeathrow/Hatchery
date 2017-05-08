@@ -144,15 +144,17 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	 */
 	private void createEntity()
 	{
-		try
-		{
-			chickenStored = (EntityChicken) EntityList.createEntityFromNBT(this.entityNBT , this.getWorld());
-			
-  		}catch (Throwable e){
-  			chickenStored = null;
-  			this.entityNBT = new NBTTagCompound();
-  			Hatchery.logger.error("Error trying to add chicken tp pen 'Null NBT' " + e);
-  		}
+		if (this.entityNBT.hasNoTags()) {
+			chickenStored = null;
+		} else {
+			try {
+				chickenStored = (EntityChicken) EntityList.createEntityFromNBT(this.entityNBT, this.getWorld());
+			} catch (Throwable e) {
+				chickenStored = null;
+				this.entityNBT = new NBTTagCompound();
+				Hatchery.logger.error("Error trying to add chicken tp pen 'Null NBT' " + e);
+			}
+		}
 	}
 	
 	/**
