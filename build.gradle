@@ -41,29 +41,28 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
+repositories {
+    maven { // Hwyla (Waila updated for 1.10)
+        name "TehNut Maven"
+        url "http://tehnut.info/maven/"
+    }
+    maven { // JEI
+        name = "Progwml6 Maven"
+        url "http://dvs1.progwml6.com/files/maven/"
+    }
+    maven { // for Chickens
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+}
+
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-      
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
-    // except that these dependencies get remapped to your current MCP mappings
-    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-
+    deobfCompile "chickens:chickens:${chickens_version}"
+    deobfCompile "mcp.mobius.waila:Hwyla:${HWYLA_version}_${minecraft_version}"
+    // compile against the JEI API
+    deobfCompile "mezz.jei:jei_${minecraft_version}:${jei_version}:api"
+    // at runtime, use the full JEI jar
+    runtime "mezz.jei:jei_${minecraft_version}:${jei_version}"
 }
 
 processResources
