@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -32,6 +33,7 @@ import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.datafix.IDataFixer;
 import net.minecraft.util.datafix.IDataWalker;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
@@ -44,6 +46,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.api.tileentities.IChickenNestingPen;
 import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
@@ -54,7 +57,7 @@ import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
 public class NestPenTileEntity extends TileEntity  implements ITickable, IInventory
 {
-	private EntityChicken chickenStored;
+	private EntityChicken chickenStored = null;
 	private NBTTagCompound entityNBT;
 	private int TimetoNextEgg = 0;
 	private Random rand = new Random();
@@ -132,11 +135,13 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	@Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
     {
-		if((oldState.getBlock() == ModBlocks.pen || oldState.getBlock() == ModBlocks.pen_chicken) && (newSate.getBlock() == ModBlocks.pen || newSate.getBlock() == ModBlocks.pen_chicken))
-		{
-			return false;
-		}
-		else return oldState != newSate;
+		
+		return false;
+//		if((oldState.getBlock() == ModBlocks.pen || oldState.getBlock() == ModBlocks.pen_chicken) && (newSate.getBlock() == ModBlocks.pen || newSate.getBlock() == ModBlocks.pen_chicken))
+//		{
+//			return false;
+//		}
+//		else return oldState != newSate;
     }
 	
 	/**
@@ -146,7 +151,15 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	{
 		try
 		{
-			chickenStored = (EntityChicken) EntityList.createEntityFromNBT(this.entityNBT , this.getWorld());
+			if(this.entityNBT != null && !this.entityNBT.hasNoTags())
+			{
+				chickenStored = (EntityChicken) EntityList.createEntityFromNBT(this.entityNBT , this.getWorld());
+			}
+			else
+			{
+	  			chickenStored = null;
+	  			this.entityNBT = new NBTTagCompound();
+			}
 			
   		}catch (Throwable e){
   			chickenStored = null;
@@ -163,12 +176,20 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	{
 		ItemStack egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
     	
-		EntityChicken mate  = NestingPenBlock.getNearByMate(worldObj, this.worldObj.getBlockState(pos), pos);
-		EntityChicken baby = null;
+		EntityChicken mate  = (EntityChicken) NestingPenBlock.getNearByMate(worldObj, this.worldObj.getBlockState(pos), pos);
+		EntityAnimal baby = null;
 		if(mate != null)
 		{
-			baby = this.chickenStored.createChild(mate);
-			mate.setGrowingAge(6000 + this.rand.nextInt(5500));
+			
+			if(this.chickenStored instanceof IChickenNestingPen)
+			{
+				baby = ((IChickenNestingPen) this.chickenStored).getChild(this.chickenStored, mate);
+			}
+			else
+			{
+				baby = this.chickenStored.createChild(mate);
+				mate.setGrowingAge(6000 + this.rand.nextInt(5500));
+			}
 		}
 		else if(this.rand.nextInt(99)+1 < Settings.EGG_NESTINGPEN_DROP_RATE)
 			baby = this.chickenStored.createChild((EntityAgeable) this.storedEntity());
@@ -181,7 +202,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
     	baby.setHealth(baby.getMaxHealth());
     	baby.setGrowingAge(-24000);
     	baby.resetInLove();
-    	baby.timeUntilNextEgg = 6000;
+    	if(baby instanceof EntityChicken)
+    		((EntityChicken)baby).timeUntilNextEgg = 6000;
     	
 		chickenStored.setGrowingAge(6000 + this.rand.nextInt(6000));
 
@@ -189,6 +211,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	}
 
     private boolean wasChild = false;
+    private boolean isFlapping = false;
     
 	@Override
 	public void update() 
@@ -203,28 +226,44 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		
 		if(this.chickenStored.isChild()) wasChild = true;
 		
+
+
 		this.chickenStored.onLivingUpdate();
 		
 		this.chickenStored.captureDrops = true;
 
 		this.playChickenSound();
 		
+		
 		if(this.worldObj.isRemote) 
 		{
-			if(!Settings.SHOULD_RENDER_CHICKEN_FLAPS) {this.chickenStored.onGround = true; return;}
-			
-			if(this.chickenStored.getRNG().nextFloat() < 0.02F)
+			if(!Settings.SHOULD_RENDER_CHICKEN_FLAPS) 
 			{
-				this.chickenStored.onGround = true;
+				return;
 			}
-			else if(this.chickenStored.getRNG().nextFloat() < 0.02F)
+			
+			this.chickenStored.oFlap = this.chickenStored.wingRotation;
+			this.chickenStored.oFlapSpeed = this.chickenStored.destPos;
+			this.chickenStored.destPos = (float)((double)this.chickenStored.destPos + (double)(this.isFlapping ? -1 : 4) * 0.3D);
+			this.chickenStored.destPos = MathHelper.clamp_float(this.chickenStored.destPos, 0.0F, 1.0F);
+	        
+	        
+			if(isFlapping || this.chickenStored.getRNG().nextFloat() < 0.02F)
 			{
-				this.chickenStored.onGround = false;
+				this.isFlapping = true;
+				
+				 if(this.chickenStored.wingRotDelta < 1.0F)
+					 this.chickenStored.wingRotDelta = 1.0F;
 			}
 
-			return;
+			
+			
+			if(isFlapping && this.chickenStored.getRNG().nextFloat() < 0.02F)
+				this.isFlapping = false;
 		}
-		else if (!this.worldObj.isRemote && !chickenStored.isChild() && !chickenStored.isChickenJockey())
+		
+		
+		if (!this.worldObj.isRemote && !chickenStored.isChild() && !chickenStored.isChickenJockey())
 		{
 			if(wasChild && !(this.chickenStored.isChild())) 
 			{

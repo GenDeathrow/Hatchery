@@ -96,6 +96,7 @@ public class Hatchery
 					EntityRegistry.addSpawn(EntityRooster.class, Settings.ROOSTER_SPAWN_PROBABILITY, Settings.ROOSTER_MIN_SPAWN_SIZE, Settings.ROOSTER_MAX_SPAWN_SIZE, EnumCreatureType.CREATURE, allBiomes);
 			
 	    	PROXY.preInit(event);
+	    	
 	    }
 	    
 		public static int getUniqueEntityId() 

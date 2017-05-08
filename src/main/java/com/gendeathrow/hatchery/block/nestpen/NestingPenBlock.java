@@ -130,17 +130,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
     	 IBlockState iblockstate = worldIn.getBlockState(pos);
          TileEntity tileentity = worldIn.getTileEntity(pos);
          keepInventory = true;
-
-         if (hasChicken)
-         {
-             worldIn.setBlockState(pos, ModBlocks.pen_chicken.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)));
-         }
-         else
-         {
-             worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)));
-         }
-			
-         
+         	worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)));
          keepInventory = false;
 
          if (tileentity != null)
@@ -152,12 +142,12 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
          }
     }
     
-    public static boolean hasChicken(IBlockState state)
-    {
-		return state.getBlock() == ModBlocks.pen_chicken;
-    }
+//    public static boolean hasChicken(IBlockState state)
+//    {
+//		return state.getBlock() == ModBlocks.pen_chicken;
+//    }
     
-    public static EntityChicken getNearByMate(World world, IBlockState state, BlockPos pos)
+    public static EntityAnimal getNearByMate(World world, IBlockState state, BlockPos pos)
     {
         TileEntity tileentity = world.getTileEntity(pos);
 
@@ -187,7 +177,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
 
                         	if(targetmate != null && pen.storedEntity() != null && pen.storedEntity().getClass() == targetmate.getClass())
                         	{
-                        		return (EntityChicken) ((NestPenTileEntity) tileentity1).storedEntity();
+                        		return (EntityAnimal)((NestPenTileEntity) tileentity1).storedEntity();
                         	}
                         }
                     }

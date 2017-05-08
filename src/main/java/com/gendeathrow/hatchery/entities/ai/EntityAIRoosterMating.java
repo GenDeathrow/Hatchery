@@ -186,7 +186,8 @@ public class EntityAIRoosterMating extends EntityAIBase {
 
 		for (EntityAnimal entityanimal1 : list) 
 		{
-			if (roosterEntity.getDistanceSqToEntity(entityanimal1) < d0 && !(entityanimal1 instanceof EntityRooster) && (entityanimal1.isInLove() || entityanimal1.getGrowingAge() == 0)) {
+			if (roosterEntity.canEntityBeSeen(entityanimal1) && roosterEntity.getDistanceSqToEntity(entityanimal1) < d0 && !(entityanimal1 instanceof EntityRooster) && (entityanimal1.isInLove() || entityanimal1.getGrowingAge() == 0)) 
+			{
 				entityanimal = entityanimal1;
 				d0 = roosterEntity.getDistanceSqToEntity(entityanimal1);
 			}

@@ -1,5 +1,6 @@
 package com.gendeathrow.hatchery.item;
 
+import net.minecraft.block.BlockFence;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -96,6 +97,7 @@ public class AnimalNet extends Item
 	{
 		NBTTagCompound stacknbt = getNBT(stack);
 			NBTTagCompound eNBT = new NBTTagCompound();
+			entity.onGround = true;
 			eNBT = entity.writeToNBT(eNBT);
 			eNBT.setString("id", EntityList.getEntityString(entity));
 		stacknbt.setTag("storedEntity", eNBT);
@@ -115,7 +117,8 @@ public class AnimalNet extends Item
     	    {
     	    	return EnumActionResult.FAIL;
     	    }
-    		if(playerIn.worldObj.getBlockState(pos).getBlock() == ModBlocks.pen_chicken)
+    	    
+    	    if(playerIn.worldObj.getBlockState(pos).getBlock() == ModBlocks.pen || playerIn.worldObj.getBlockState(pos).getBlock() == ModBlocks.pen_chicken)
     		{
     			NestPenTileEntity pen = (NestPenTileEntity)playerIn.worldObj.getTileEntity(pos);
     			
@@ -124,10 +127,30 @@ public class AnimalNet extends Item
     				setCapturedNBT(stack, pen.storedEntity());
     				pen.tryGetRemoveEntity();
      			}
+    			else if(stack.getTagCompound() != null)
+    			{
+            		NBTTagCompound entitynbt =  getEntityTag(stack);
+              		
+             		if(entitynbt == null) 
+             			return  EnumActionResult.FAIL; 
+            		
+            		Entity entity = buildEntity(worldIn, entitynbt); 
+            		
+            		if(entity == null) 
+            			return  EnumActionResult.FAIL; 
+            		
+         			pen.trySetEntity(entity);
+         			
+    	  	        playerIn.addStat(StatList.getObjectUseStats(this));
+
+    	  	        //stack.getTagCompound().setTag("storedEntity", new NBTTagCompound());
+    	  	        stack.getTagCompound().removeTag("storedEntity");
+    			}
+
     		}
     		else if(stack.getTagCompound() != null)
         	{
-          		NBTTagCompound entitynbt = (NBTTagCompound) stack.getTagCompound().getTag("storedEntity");
+          		NBTTagCompound entitynbt = getEntityTag(stack);
           		
          		if(entitynbt == null) 
          			return  EnumActionResult.FAIL; 
@@ -136,16 +159,18 @@ public class AnimalNet extends Item
         		
         		if(entity == null) 
         			return  EnumActionResult.FAIL; 
+        		
 
-        		entity.setPositionAndRotation(pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D, Math.abs(playerIn.rotationYaw), 0);
+        		BlockPos pos2 = pos.offset(facing);
+                double d0 = 0.0D;
+                if (facing == EnumFacing.UP && playerIn.worldObj.getBlockState(pos2).getBlock() instanceof BlockFence) //Forge: Fix Vanilla bug comparing state instead of block
+                {
+                    d0 = 0.5D;
+                }
+   
+        		entity.setPositionAndRotation(pos2.getX() + 0.5D, pos2.getY() + d0, pos2.getZ() + 0.5D , Math.abs(playerIn.rotationYaw), 0);
 	  			
-        		if(playerIn.worldObj.getBlockState(pos).getBlock() == ModBlocks.pen)
-        		{
-         			NestPenTileEntity pen = (NestPenTileEntity)playerIn.worldObj.getTileEntity(pos);
-         			pen.trySetEntity(entity);
-        		}
-        		else 
-        			worldIn.spawnEntityInWorld(entity);
+       			worldIn.spawnEntityInWorld(entity);
 	  			
 	  	        playerIn.addStat(StatList.getObjectUseStats(this));
 
@@ -159,6 +184,11 @@ public class AnimalNet extends Item
         }
        return EnumActionResult.FAIL;
     }
+	
+	private static NBTTagCompound getEntityTag(ItemStack stack)
+	{
+		return (NBTTagCompound) stack.getTagCompound().getTag("storedEntity");
+	}
 	
 	private static Entity buildEntity(World worldIn, NBTTagCompound entitynbt)
 	{
