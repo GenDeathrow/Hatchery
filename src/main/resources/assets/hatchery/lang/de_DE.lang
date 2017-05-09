@@ -9,6 +9,14 @@ tile.hatchery.feeder.name=Hühnerfütterer
 tile.hatchery.manure_block.name=Hühnermistblock
 tile.hatchery.nursery_block.name=Kükenüberwachung
 tile.hatchery.fertilizer_mixer.name=Düngermischer
+tile.hatchery.digester_generator=Methanfermenter-Generator
+
+container.generator.generating=Generiert: %1$drf/t
+container.generator.rfout=RF: %1$drf/t
+container.generator.fertin=Dünger: %1$d mb
+container.hoveramt=%/%
+container.fertlizermixer=Düngermischer
+container.upgrades=Verbesserungen
 
 entity.Rooster.name=Hahn
 container.roosterInventory=Hahn-Inventar
@@ -34,6 +42,7 @@ text.hatchery.storedseed=Gelagerte Samen
 
 #JEI
 jei.tile.hatchery.feeder=Du kannst bis zu 200 Samen im Fütterer lagern. Fütterer erkennen Hühner in einem 4x1x4-Bereich. Baby-Hühner werden in der Nähe eines Fütterers schneller wachsen und ausgewachsene Hühner werden Items schneller droppen. Du kannst Samen mit Röhren in den Fütterer einführen.
+jei.tile.hatchery.digester_generator=Der Methanfermenter-Generator erzeugt Energie aus Gülle in einem Fermenter. Anaerobe Düngerkocher (auch Methankocher genannt) sammeln Dünger und wandeln die in ihrer organischen Substanz gespeicherte Energie in Methan um, das zur Erzeugung von Energie (60 rf/t) für die landwirtschaftliche Nutzung verwendet wird.
 jei.tile.hatchery.nest=Setze ein Ei in das Nest und es wird dein Huhn nach einer zufälligen Zeit automatisch Schlüpfen lassen. Mithilfe einer Redstonelampe (wird später mit einer Wärmelampe ersetzt) bis zu drei Blöcken über dem Nest kann die Geschwindigkeit erhöht werden. Auf dem Ei zu sitzen erhöht auch die Geschwindigkeit.
 jei.tile.hatchery.fertilized_dirt=Gibt Bäumen einen zufälligen Knochenmehl-Effekt.
 jei.tile.hatchery.fertilized_farmland=Gibt Pflanzen einen zufälligen Knochenmehl-Effekt. Erhalte Ackerboden, indem du eine Feldhacke auf gedüngte Erde anwendest.
