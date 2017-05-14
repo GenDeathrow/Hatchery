@@ -10,7 +10,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -64,10 +67,27 @@ public class ContainerFertlizerMixer extends Container
 		});
 		
 		addSlotToContainer(new SlotFluidContainer(fertilizerInventory, 1, 72, 16, FluidRegistry.WATER));
-		addSlotToContainer(new Slot(fertilizerInventory, 2, 72, 52));
+		addSlotToContainer(new Slot(fertilizerInventory, 2, 72, 52)
+		{
+			@Override
+			public boolean isItemValid(@Nullable ItemStack stack){
+				return false;
+		    }
+			
+		});
 		
 		
-		addSlotToContainer(new Slot(fertilizerInventory, 3, 104, 16));
+		addSlotToContainer(new Slot(fertilizerInventory, 3, 104, 16)		{
+			@Override
+			public boolean isItemValid(@Nullable ItemStack stack){
+				if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN))
+				{
+					return true;
+				}
+				return false;
+		    }
+			
+		});
 		addSlotToContainer(new SlotFluidContainer(fertilizerInventory, 4, 104, 52, ModFluids.liquidfertilizer));
 		
 		addSlotToContainer(new SlotUpgrade(upgrades, 0, 8, 52));
@@ -100,14 +120,14 @@ public class ContainerFertlizerMixer extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (slotIndex < (this.inventory.getSizeInventory() + this.upgrades.getInventoryStackLimit()))
+            if (slotIndex < (this.inventory.getSizeInventory() + this.upgrades.getSizeInventory()))
             {
-                if (!this.mergeItemStack(itemstack1, (this.inventory.getSizeInventory() + this.upgrades.getInventoryStackLimit()), this.inventorySlots.size(), true))
+                if (!this.mergeItemStack(itemstack1, this.inventory.getSizeInventory(),  this.inventorySlots.size(), true))
                 {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 0, (this.inventory.getSizeInventory() + this.upgrades.getInventoryStackLimit()), false))
+            else if (!this.mergeItemStack(itemstack1, 0, this.inventory.getSizeInventory(), false))
             {
                 return null;
             }
@@ -120,28 +140,18 @@ public class ContainerFertlizerMixer extends Container
             {
                 slot.onSlotChanged();
             }
-            
 
+            if (itemstack1.stackSize == itemstack.stackSize)
+            {
+                return null;
+            }
+
+            slot.onPickupFromSlot(player, itemstack1);
         }
         
-		return  itemstack;
+		return itemstack;
 	}
 
-	@Override
-	public void addListener(IContainerListener listener) {
-		if (this.listeners.contains(listener)) {
-			throw new IllegalArgumentException("Listener already listening");
-		} else {
-			this.listeners.add(listener);
-			listener.updateCraftingInventory(this, this.getInventory());
-			this.detectAndSendChanges();
-		}
-	}
-
-	@Override
-    public void onCraftMatrixChanged(IInventory inv) {
-        detectAndSendChanges();
-    }
 	
 	@SideOnly(Side.CLIENT)
 	@Override

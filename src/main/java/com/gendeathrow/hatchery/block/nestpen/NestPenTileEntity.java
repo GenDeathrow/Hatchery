@@ -5,19 +5,14 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -28,19 +23,12 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.datafix.DataFixer;
-import net.minecraft.util.datafix.FixTypes;
-import net.minecraft.util.datafix.IDataFixer;
-import net.minecraft.util.datafix.IDataWalker;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -48,12 +36,11 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.api.tileentities.IChickenNestingPen;
+import com.gendeathrow.hatchery.block.InventoryStorage;
 import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.item.HatcheryEgg;
-import com.gendeathrow.hatchery.network.HatcheryPacket;
-import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
 
 public class NestPenTileEntity extends TileEntity  implements ITickable, IInventory
@@ -64,10 +51,20 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 
 	private NBTTagCompound entityNBT;
 	private int TimetoNextEgg = 0;
-	private Random rand = new Random();
-	ItemStack[] inventory = new ItemStack[5];
+	private Random rand = new Random();  
+	//ItemStack[] inventory = new ItemStack[5];
+	
+	InventoryStorage inventory = new InventoryStorage(this, 5);
+	
 	private int isMating = 600;
 	private boolean updateEntity = false;
+	
+    private boolean wasChild = false;
+    private boolean notFlapping = false;
+    
+    private float newWingRotDelta;
+    private float newWingRotation;
+
 	
 	public NestPenTileEntity()
 	{
@@ -126,26 +123,26 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	public Entity tryGetRemoveEntity()
 	{
 		if(this.storedEntity() == null) return null;
-		Entity respondEntity = this.storedEntity();
+		Entity returnEntity = this.storedEntity();
 		entityNBT = new NBTTagCompound();	
 		this.chickenStored = null;
 		
 		NestingPenBlock.setState(false, this.worldObj, this.pos);
 		
 		this.markDirty();
-		return respondEntity;
+		return returnEntity;
 	}
-	
+
+	// Currently this handles the old ModBlocks.pn
 	@Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
     {
-		
-		return false;
-//		if((oldState.getBlock() == ModBlocks.pen || oldState.getBlock() == ModBlocks.pen_chicken) && (newSate.getBlock() == ModBlocks.pen || newSate.getBlock() == ModBlocks.pen_chicken))
-//		{
-//			return false;
-//		}
-//		else return oldState != newSate;
+		if((oldState.getBlock() == ModBlocks.pen || oldState.getBlock() == ModBlocks.pen_chicken) && (newSate.getBlock() == ModBlocks.pen || newSate.getBlock() == ModBlocks.pen_chicken))
+		{
+			return false;
+		}
+		else 
+		  return oldState != newSate;
     }
 	
 	/**
@@ -187,7 +184,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			
 			if(this.chickenStored instanceof IChickenNestingPen)
 			{
-				baby = ((IChickenNestingPen) this.chickenStored).getChild(this.chickenStored, mate);
+				baby = (EntityAnimal) ((IChickenNestingPen) this.chickenStored).getChild(this.chickenStored, mate);
 			}
 			else
 			{
@@ -214,9 +211,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		return HatcheryEgg.createEggFromEntity(worldObj, baby);
 	}
 
-    private boolean wasChild = false;
-    private boolean isFlapping = false;
-    
+
+	
 	@Override
 	public void update() 
 	{
@@ -230,14 +226,11 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		
 		if(this.chickenStored.isChild()) wasChild = true;
 		
-
-
 		this.chickenStored.onLivingUpdate();
 		
 		this.chickenStored.captureDrops = true;
 
 		this.playChickenSound();
-		
 		
 		if(this.worldObj.isRemote) 
 		{
@@ -248,22 +241,32 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			
 			this.chickenStored.oFlap = this.chickenStored.wingRotation;
 			this.chickenStored.oFlapSpeed = this.chickenStored.destPos;
-			this.chickenStored.destPos = (float)((double)this.chickenStored.destPos + (double)(this.isFlapping ? -1 : 4) * 0.3D);
+			this.chickenStored.destPos = (float)((double)this.chickenStored.destPos + (double)(this.notFlapping ? -1 : 4) * 0.3D);
 			this.chickenStored.destPos = MathHelper.clamp_float(this.chickenStored.destPos, 0.0F, 1.0F);
 	        
 	        
-			if(isFlapping || this.chickenStored.getRNG().nextFloat() < 0.02F)
+			if(notFlapping || this.chickenStored.getRNG().nextFloat() < 0.02F)
 			{
-				this.isFlapping = true;
+				this.notFlapping = true;
 				
-				 if(this.chickenStored.wingRotDelta < 1.0F)
-					 this.chickenStored.wingRotDelta = 1.0F;
+				 if(newWingRotDelta < 1.0F)
+					 newWingRotDelta = 1.0F;
+				 
+				 newWingRotDelta = (float)((double)newWingRotDelta * 0.9D);
+				 
+				if(this.chickenStored.getRNG().nextFloat() < 0.02F)
+				{
+					this.notFlapping = false;
+				}
+
 			}
 
+			newWingRotation += newWingRotDelta * 2.0F;		
 			
+			this.chickenStored.wingRotDelta = newWingRotDelta;
+			this.chickenStored.wingRotation = newWingRotation;
 			
-			if(isFlapping && this.chickenStored.getRNG().nextFloat() < 0.02F)
-				this.isFlapping = false;
+			this.chickenStored.onGround = true;
 		}
 		
 		
@@ -311,7 +314,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			
 			if (!chickenStored.isSilent())
 			{
-				this.worldObj.playSound((EntityPlayer)null, this.pos.getX(), this.pos.getY(), this.pos.getZ(), SoundEvents.ENTITY_CHICKEN_AMBIENT, chickenStored.getSoundCategory(), 1, 1);
+				chickenStored.playLivingSound();
+				//this.worldObj.playSound((EntityPlayer)null, this.pos.getX(), this.pos.getY(), this.pos.getZ(), SoundEvents.ENTITY_CHICKEN_AMBIENT, chickenStored.getSoundCategory(), 1, 1);
 			}
 		}
 	}
@@ -332,21 +336,24 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		{
 			this.entityNBT = (NBTTagCompound) compound.getTag("storedEntity");
 		}
-		
-		this.inventory = new ItemStack[this.getSizeInventory()];
-		
-        NBTTagList nbttaglist = compound.getTagList("Items", 10);
 
-        for (int i = 0; i < nbttaglist.tagCount(); ++i)
-        {
-            NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
-            int j = nbttagcompound.getByte("Slot") & 255;
-
-            if (j >= 0 && j < this.inventory.length)
-            {
-                this.inventory[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
-            }
-        }
+		
+		this.inventory.readFromNBT(compound);
+		
+//		this.inventory = new ItemStack[this.getSizeInventory()];
+//		
+//        NBTTagList nbttaglist = compound.getTagList("Items", 10);
+//
+//        for (int i = 0; i < nbttaglist.tagCount(); ++i)
+//        {
+//            NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+//            int j = nbttagcompound.getByte("Slot") & 255;
+//
+//            if (j >= 0 && j < this.inventory.length)
+//            {
+//                this.inventory[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
+//            }
+//        }
 
         this.updateEntity = true;
         super.readFromNBT(compound);
@@ -370,18 +377,20 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		
         NBTTagList nbttaglist = new NBTTagList();
 
-        for (int i = 0; i < this.inventory.length; ++i)
-        {
-            if (this.inventory[i] != null)
-            {
-                NBTTagCompound nbttagcompound = new NBTTagCompound();
-                nbttagcompound.setByte("Slot", (byte)i);
-                this.inventory[i].writeToNBT(nbttagcompound);
-                nbttaglist.appendTag(nbttagcompound);
-            }
-        }
+        this.inventory.writeToNBT(compound);
         
-        compound.setTag("Items", nbttaglist);
+//        for (int i = 0; i < this.inventory.length; ++i)
+//        {
+//            if (this.inventory[i] != null)
+//            {
+//                NBTTagCompound nbttagcompound = new NBTTagCompound();
+//                nbttagcompound.setByte("Slot", (byte)i);
+//                this.inventory[i].writeToNBT(nbttagcompound);
+//                nbttaglist.appendTag(nbttagcompound);
+//            }
+//        }
+        
+//        compound.setTag("Items", nbttaglist);
        
 		return super.writeToNBT(compound);
 	}
@@ -409,9 +418,9 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	/////////////////////////////////////////////////////////////////
 	public void dropContents()
 	{
-        for (int i = 0; i < this.inventory.length; ++i)
+        for (int i = 0; i < this.inventory.getSizeInventory(); ++i)
         {
-        	ItemStack stack = ItemStackHelper.getAndRemove(this.inventory, i);
+        	ItemStack stack = ItemStackHelper.getAndRemove(this.inventory.getInventory(), i);
         	
         	if(stack != null)
         	{
@@ -423,9 +432,9 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	public boolean grabItems(EntityPlayer playerIn)
 	{
 		boolean flag = false;
-        for (int i = 0; i < this.inventory.length; ++i)
+        for (int i = 0; i < this.inventory.getSizeInventory(); ++i)
         {
-        	ItemStack stack = ItemStackHelper.getAndRemove(this.inventory, i);
+        	ItemStack stack = ItemStackHelper.getAndRemove(this.inventory.getInventory(), i);
         	
     		if(stack != null)
     		{
@@ -454,35 +463,36 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	@Override
 	public ItemStack getStackInSlot(int index) 
 	{
-		return this.inventory[index];
+		return this.inventory.getStackInSlot(index);
 	}
 
 	@Override
 	public ItemStack decrStackSize(int index, int count) 
 	{
-        ItemStack itemstack = ItemStackHelper.getAndSplit(this.inventory, index, count);
+//        ItemStack itemstack = ItemStackHelper.getAndSplit(this.inventory, index, count);
+//
+//        if (itemstack != null)
+//            this.markDirty();
 
-        if (itemstack != null)
-            this.markDirty();
-
-        return itemstack;
+        return this.inventory.decrStackSize(index, count);
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int index) 
 	{
-		return ItemStackHelper.getAndRemove(this.inventory, index);
+		return this.inventory.removeStackFromSlot(index); //ItemStackHelper.getAndRemove(this.inventory, index);
 	}
 
 	@Override
 	public void setInventorySlotContents(int index,@Nullable ItemStack stack) 
 	{
-		this.inventory[index] = stack;
-		
-		if (stack != null && stack.stackSize > this.getInventoryStackLimit())
-            stack.stackSize = this.getInventoryStackLimit();
-        
-		this.markDirty();
+		this.inventory.setInventorySlotContents(index, stack);
+//		this.inventory[index] = stack;
+//		
+//		if (stack != null && stack.stackSize > this.getInventoryStackLimit())
+//            stack.stackSize = this.getInventoryStackLimit();
+//        
+//		this.markDirty();
 	}
 
 	@Override
@@ -510,14 +520,17 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	@Override
 	public void clear() 
 	{
-	        for (int i = 0; i < this.inventory.length; ++i)
-	        {
-	            this.inventory[i] = null;
-	        }
+		this.inventory.clear();
+//	        for (int i = 0; i < this.inventory.length; ++i)
+//	        {
+//	            this.inventory[i] = null;
+//	        }
 	}
 
    public static ItemStack putStackInInventoryAllSlots(IInventory inventoryIn, ItemStack stack, @Nullable EnumFacing side)
    {
+	   
+	   
         if (inventoryIn instanceof ISidedInventory && side != null)
         {
             ISidedInventory isidedinventory = (ISidedInventory)inventoryIn;
@@ -613,14 +626,14 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
     {
     	NBTTagList nbttaglist = new NBTTagList();
     	
-        for (int i = 0; i < te.inventory.length; ++i)
+        for (int i = 0; i < te.inventory.getSizeInventory(); ++i)
         {
-            if (te.inventory[i] != null)
+            if (te.inventory.getStackInSlot(i) != null)
             {
                 NBTTagCompound nbttagcompound = new NBTTagCompound();
                 nbttagcompound.setByte("Slot", (byte)i);
-                nbttagcompound.setString("id", te.inventory[i].getDisplayName());
-                nbttagcompound.setInteger("cnt", te.inventory[i].stackSize);
+                nbttagcompound.setString("id", te.inventory.getStackInSlot(i).getDisplayName());
+                nbttagcompound.setInteger("cnt", te.inventory.getStackInSlot(i).stackSize);
                 nbttaglist.appendTag(nbttagcompound);
             }
         }
@@ -663,4 +676,5 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
         }
         return super.getCapability(capability, facing);
     }
+
 }

@@ -2,6 +2,8 @@ package com.gendeathrow.hatchery.common.capability;
 
 import java.util.concurrent.Callable;
 
+import com.gendeathrow.hatchery.Hatchery;
+
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -23,7 +25,7 @@ public class CapabilityAnimalStatsHandler implements ICapabilityProvider
     @CapabilityInject(IAnimalStats.class)
     private static void capRegistered(Capability<IAnimalStats> cap)
     {
-        System.out.println("IAnimalStats was registered wheeeeee!");
+        Hatchery.logger.info("IAnimalStats was registered wheeeeee!");
     }
     
 	public static void register()

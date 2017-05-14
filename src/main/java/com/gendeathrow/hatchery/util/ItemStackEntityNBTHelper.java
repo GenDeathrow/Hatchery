@@ -16,6 +16,7 @@ public class ItemStackEntityNBTHelper
 		NBTTagCompound nbt = getStackNBT(stackIn);
 		NBTTagCompound eTag = new NBTTagCompound();
 			entityIn.writeEntityToNBT(eTag);
+			entityIn.writeToNBT(eTag);
 			eTag.setString("id", EntityList.getEntityString(entityIn));
 			nbt.setTag("storedEntity", eTag);
 		stackIn.setTagCompound(nbt);

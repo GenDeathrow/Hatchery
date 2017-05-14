@@ -23,6 +23,9 @@ import com.gendeathrow.hatchery.block.fertilizermixer.GuiFertilizerMixerInventor
 import com.gendeathrow.hatchery.block.generator.ContainerDigesterGenerator;
 import com.gendeathrow.hatchery.block.generator.DigesterGeneratorTileEntity;
 import com.gendeathrow.hatchery.block.generator.GuiDigesterGenerator;
+import com.gendeathrow.hatchery.block.nestpen.ContainerNestingPen;
+import com.gendeathrow.hatchery.block.nestpen.GuiNestingPen;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 import com.gendeathrow.hatchery.core.EventHandler;
 import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.config.ConfigHandler;
@@ -40,7 +43,7 @@ public class CommonProxy implements IGuiHandler
 	public static final int GUI_ID_ROOSTER = 1;
 	public static final int GUI_ID_FERTLIZERMIXER = 2;
 	public static final int GUI_ID_DIGESTER_GEN = 3;
-	public static final int GUI_ID_PENS = 4;
+	public static final int GUI_ID_NESTINGPEN = 4;
 	
 	
 	public boolean isClient()
@@ -94,24 +97,21 @@ public class CommonProxy implements IGuiHandler
 				if (entity != null && entity instanceof EntityRooster)
 					return new ContainerRoosterInventory(player.inventory, (EntityRooster) entity);
 		 }
-		 else if (ID == GUI_ID_FERTLIZERMIXER || ID == GUI_ID_DIGESTER_GEN) 
+		 else if (ID == GUI_ID_FERTLIZERMIXER || ID == GUI_ID_DIGESTER_GEN || ID == GUI_ID_NESTINGPEN) 
 		 {
 			 
 				BlockPos blockpos = new BlockPos(x,y,z);
 				IBlockState block = world.getBlockState(blockpos);
 				
 				if (block != null && block.getBlock().hasTileEntity(block))
-				{
+				{  
 					TileEntity tile = world.getTileEntity(blockpos); 
-					
 					if(tile instanceof FertilizerMixerTileEntity)
-					{
 						return new ContainerFertlizerMixer(player.inventory, (FertilizerMixerTileEntity) tile);
-					}
 					else if(tile instanceof DigesterGeneratorTileEntity)
-					{
 						return new ContainerDigesterGenerator(player.inventory, (DigesterGeneratorTileEntity) tile);
-					}
+					else if(tile instanceof NestPenTileEntity)
+						return new ContainerNestingPen(player.inventory, (NestPenTileEntity) tile, player);
 				}
 		 }
 				
@@ -128,20 +128,23 @@ public class CommonProxy implements IGuiHandler
 			if (entity != null && entity instanceof EntityRooster)
 				return new GuiRoosterInventory(player.inventory, entity);
 		}
-		else if (ID == GUI_ID_FERTLIZERMIXER || ID == GUI_ID_DIGESTER_GEN) 
+		else if (ID == GUI_ID_FERTLIZERMIXER || ID == GUI_ID_DIGESTER_GEN || ID == GUI_ID_NESTINGPEN) 
 		{
 			BlockPos blockpos = new BlockPos(x,y,z);
 			IBlockState block = world.getBlockState(blockpos);
 			
 			if(block == null) return null;
-			
+		
 			if (block.getBlock().hasTileEntity(block))
 			{
-				TileEntity tile = world.getTileEntity(blockpos); 
+				TileEntity tile = world.getTileEntity(blockpos);
+				
 				if(tile instanceof FertilizerMixerTileEntity)
 					return new GuiFertilizerMixerInventory(player.inventory, (FertilizerMixerTileEntity) tile);
 				else if(tile instanceof DigesterGeneratorTileEntity)
 					return new GuiDigesterGenerator(player.inventory, (DigesterGeneratorTileEntity) tile);
+				else if(tile instanceof NestPenTileEntity)
+					return new GuiNestingPen(player.inventory, (NestPenTileEntity) tile);
 			}
 				  
 		}

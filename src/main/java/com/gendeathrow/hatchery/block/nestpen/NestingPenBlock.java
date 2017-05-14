@@ -2,24 +2,34 @@ package com.gendeathrow.hatchery.block.nestpen;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
+import mcjty.theoneprobe.api.ElementAlignment;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -30,15 +40,21 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.api.tileentities.IChickenNestingPen;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.proxies.CommonProxy;
+import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
 
-public class NestingPenBlock extends Block implements ITileEntityProvider
+public class NestingPenBlock extends Block implements ITileEntityProvider, TOPInfoProvider
+
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	
@@ -75,14 +91,56 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
 	@Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
+		
+		
+	   	if(!playerIn.isSneaking())
+	   	{
+				playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_NESTINGPEN, worldIn, pos.getX(), pos.getY(), pos.getZ());
+				return true;
+	   	}
+	 
+			
     	if(!worldIn.isRemote)
     	{
     		NestPenTileEntity te = (NestPenTileEntity)worldIn.getTileEntity(pos);
     		
     		if(te == null) return false;
-    		    		
-    		return te.grabItems(playerIn);
+    	
+    		
+    		if(heldItem != null)
+    		{
+    			
+    			if(heldItem.getItem() == Items.SPAWN_EGG)
+    			{
+    				
+    				   String entityID = ItemMonsterPlacer.getEntityIdFromItem(heldItem);
+
+    		           Entity entity = EntityList.createEntityByIDFromName(entityID, worldIn);
+
+    		           if (entity instanceof EntityChicken || entity instanceof IChickenNestingPen)
+    		           {
+    		        	   EntityLiving entityliving = (EntityLiving)entity;
+    		               entity.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
+    		               entityliving.rotationYawHead = entityliving.rotationYaw;
+    		               entityliving.renderYawOffset = entityliving.rotationYaw;
+    		               entityliving.onInitialSpawn(worldIn.getDifficultyForLocation(new BlockPos(entityliving)), (IEntityLivingData)null);
+    		                    
+   		    		       if (!playerIn.capabilities.isCreativeMode)
+   		                   {
+   		                        --heldItem.stackSize;
+   		                   }
+   		    		       te.trySetEntity(entityliving);
+   		    		       return true;
+    		           }
+    			}
+    			
+    		}
+
+    		if(playerIn.isSneaking()) 
+    			te.grabItems(playerIn);
     	}
+    	
+
     	return true;
     }
 	
@@ -345,6 +403,38 @@ public class NestingPenBlock extends Block implements ITileEntityProvider
     {
     	return false;
     }
+
+
+	@Override
+	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) 
+	{
+		TileEntity te = world.getTileEntity(data.getPos());
+        if (te instanceof NestPenTileEntity) {
+        	NestPenTileEntity tileEntity = (NestPenTileEntity) te;
+            IProbeInfo horizontal = probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER));
+
+            if(tileEntity.storedEntity() != null)
+            {
+            	
+				long uptime = tileEntity.getTimeToNextDrop()/20;
+				long minutes = TimeUnit.SECONDS.toMinutes(uptime);
+				  uptime -= TimeUnit.MINUTES.toSeconds(minutes);
+				long seconds = TimeUnit.SECONDS.toSeconds(uptime);
+				String output = minutes > 0 ? minutes+":"+ (seconds < 10 ? "0"+seconds : seconds)  +" mins" : (seconds < 10 ? "0"+seconds : seconds) + " secs";
+				
+				
+            	horizontal.text(TextFormatting.GREEN + I18n.format("text.hatchery.chicken", new Object[0]) +": "+ tileEntity.storedEntity().getName());
+            	
+            	horizontal.text(TextFormatting.GREEN + "Time to NextDrop: " + output);
+            }
+            else
+            {
+            	horizontal.text(TextFormatting.RED + I18n.format("text.hatchery.nochicken", new Object[0]));
+            }
+            
+            
+        }	
+	}
 	
     
 

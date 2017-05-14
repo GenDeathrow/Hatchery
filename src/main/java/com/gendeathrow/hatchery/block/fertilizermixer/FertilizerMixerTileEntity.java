@@ -5,11 +5,9 @@ import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
@@ -206,16 +204,25 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 			
 			if(this.inventory.getStackInSlot(3) != null && this.inventory.getStackInSlot(4) == null && this.fertilizerTank.getFluidAmount() > 0)
 			{
-				ItemStack stack = this.inventory.getStackInSlot(3);
+				ItemStack oldStack = this.inventory.getStackInSlot(3);
+				ItemStack newStack = this.inventory.getStackInSlot(3).copy();
 				
-				IFluidHandler handler = FluidUtil.getFluidHandler(stack);
+				if(newStack.stackSize > 1)
+					newStack.stackSize = 1;
+				
+				IFluidHandler handler = FluidUtil.getFluidHandler(newStack);
 				
 				if(handler != null)
 				{
+
 					if(FluidUtil.tryFluidTransfer(handler, this.fertilizerTank, this.fertilizerTank.getCapacity(), true) != null)
 					{
-						this.inventory.setInventorySlotContents(4, stack);
-						this.inventory.setInventorySlotContents(3, null);
+						this.inventory.setInventorySlotContents(4, newStack);
+						
+						if(oldStack.stackSize > 1)
+							this.inventory.decrStackSize(3, 1);
+						else
+							this.inventory.setInventorySlotContents(3, null);
 					}
 				}
 			}
@@ -409,7 +416,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
     
 	@Override
 	public int getEnergyStored(EnumFacing from) {
-		return this.storage.getMaxEnergyStored();
+		return this.storage.getEnergyStored();
 	}
 
 	@Override

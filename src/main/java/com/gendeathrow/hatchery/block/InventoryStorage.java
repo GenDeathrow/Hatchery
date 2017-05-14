@@ -1,5 +1,7 @@
 package com.gendeathrow.hatchery.block;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -13,20 +15,16 @@ public class InventoryStorage  implements IInventory
 {
 
 	public ItemStack[] inventory;
-	
-	public TileEntity tile;
-	
-	
+	public TileEntity inventoryTile;
 	private String ID = "Items";
 
 	public InventoryStorage(TileEntity tile, int invtSize)
 	{
 		this.inventory = new ItemStack[invtSize];
-		this.tile = tile;
+		this.inventoryTile = tile;
 	}
 	
-	public InventoryStorage setID(String id)
-	{
+	public InventoryStorage setID(String id){
 		this.ID = id;
 		return this;
 	}
@@ -41,10 +39,11 @@ public class InventoryStorage  implements IInventory
 		return inventory.length;
 	}
 
-	@Override
-	public ItemStack getStackInSlot(int slot) {
-		return inventory[slot];
-	}
+    @Nullable
+    public ItemStack getStackInSlot(int index)
+    {
+        return index >= 0 && index < this.inventory.length ? this.inventory[index] : null;
+    }
 
 	@Override
 	public ItemStack decrStackSize(int slot, int count) {
@@ -52,7 +51,7 @@ public class InventoryStorage  implements IInventory
 
         if (itemstack != null)
         {
-            tile.markDirty();
+            inventoryTile.markDirty();
         }			
 		return itemstack;
 	}
@@ -73,6 +72,8 @@ public class InventoryStorage  implements IInventory
 
 		if (stack != null && stack.stackSize > getInventoryStackLimit())
 			stack.stackSize = getInventoryStackLimit();
+
+        this.markDirty();
 	}
 
 	@Override
@@ -113,6 +114,50 @@ public class InventoryStorage  implements IInventory
 		nbt.setTag(this.ID, tags);
 		return nbt;
 	}
+	
+	
+    @Nullable
+    public ItemStack addItem(ItemStack stack)
+    {
+        ItemStack itemstack = stack.copy();
+
+        for (int i = 0; i < this.getSizeInventory(); ++i)
+        {
+            ItemStack itemstack1 = this.getStackInSlot(i);
+
+            if (itemstack1 == null)
+            {
+                this.setInventorySlotContents(i, itemstack);
+                this.markDirty();
+                return null;
+            }
+
+            if (ItemStack.areItemsEqual(itemstack1, itemstack))
+            {
+                int j = Math.min(this.getInventoryStackLimit(), itemstack1.getMaxStackSize());
+                int k = Math.min(itemstack.stackSize, j - itemstack1.stackSize);
+
+                if (k > 0)
+                {
+                    itemstack1.stackSize += k;
+                    itemstack.stackSize -= k;
+
+                    if (itemstack.stackSize <= 0)
+                    {
+                        this.markDirty();
+                        return null;
+                    }
+                }
+            }
+        }
+
+        if (itemstack.stackSize != stack.stackSize)
+        {
+            this.markDirty();
+        }
+
+        return itemstack;
+    }
 
 	@Override
 	public void openInventory(EntityPlayer playerIn) 
@@ -168,7 +213,7 @@ public class InventoryStorage  implements IInventory
 
 	@Override
 	public void markDirty() {
-		tile.markDirty();
+		inventoryTile.markDirty();
 	}
 
 	@Override

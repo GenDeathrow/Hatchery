@@ -1,5 +1,7 @@
 package com.gendeathrow.hatchery.block.generator;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -46,9 +48,16 @@ public class ContainerDigesterGenerator extends Container
 		
 		int i;  
 
-		addSlotToContainer(new Slot(inventory, 0, 72, 16));
-		addSlotToContainer(new SlotFluidContainer(inventory, 1, 72, 52, ModFluids.liquidfertilizer));
-		
+
+		addSlotToContainer(new SlotFluidContainer(inventory, 0, 72, 16, ModFluids.liquidfertilizer));
+	
+		addSlotToContainer(new Slot(inventory, 1, 72, 52)
+		{
+			@Override
+			public boolean isItemValid(@Nullable ItemStack stack){
+				return false;
+		    }
+		});
         
 		addSlotToContainer(new SlotUpgrade(upgrades, 0, 107, 59));
 		addSlotToContainer(new SlotUpgrade(upgrades, 1, 134, 59));
@@ -57,8 +66,8 @@ public class ContainerDigesterGenerator extends Container
 	            for (int j = 0; j < 9; ++j)
 	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 7 + j * 18, 83 + i * 18));
 
-	        for (i = 0; i < 9; ++i)
-	            addSlotToContainer(new Slot(playerInventory, i, 7 + i * 18, 141));	    
+        for (i = 0; i < 9; ++i)
+            addSlotToContainer(new Slot(playerInventory, i, 7 + i * 18, 141));	    
 
 	}
 
@@ -79,14 +88,14 @@ public class ContainerDigesterGenerator extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (slotIndex < (this.inventory.getSizeInventory() + this.upgrades.getInventoryStackLimit()))
+            if (slotIndex < (this.inventory.getSizeInventory() + this.upgrades.getSizeInventory()))
             {
-                if (!this.mergeItemStack(itemstack1, (this.inventory.getSizeInventory() + this.upgrades.getInventoryStackLimit()), this.inventorySlots.size(), true))
+                if (!this.mergeItemStack(itemstack1, this.inventory.getSizeInventory(), this.inventorySlots.size(), true))
                 {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 0, (this.inventory.getSizeInventory() + this.upgrades.getInventoryStackLimit()), false))
+            else if (!this.mergeItemStack(itemstack1, 0, this.inventory.getSizeInventory(), false))
             {
                 return null;
             }
