@@ -9,14 +9,20 @@ import net.minecraft.nbt.NBTTagCompound;
 public class ItemStackEntityNBTHelper 
 {
 
-	
-	
 	public static ItemStack addEntitytoItemStack(ItemStack stackIn, EntityLiving entityIn)
+	{
+		return addEntitytoItemStack(stackIn, entityIn, false);
+	}
+	
+	public static ItemStack addEntitytoItemStack(ItemStack stackIn, EntityLiving entityIn, boolean saveAll)
 	{
 		NBTTagCompound nbt = getStackNBT(stackIn);
 		NBTTagCompound eTag = new NBTTagCompound();
 			entityIn.writeEntityToNBT(eTag);
-			entityIn.writeToNBT(eTag);
+			
+			if(saveAll)
+				entityIn.writeToNBT(eTag);
+			
 			eTag.setString("id", EntityList.getEntityString(entityIn));
 			nbt.setTag("storedEntity", eTag);
 		stackIn.setTagCompound(nbt);

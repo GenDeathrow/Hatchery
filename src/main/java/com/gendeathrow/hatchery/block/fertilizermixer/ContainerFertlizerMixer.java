@@ -169,6 +169,7 @@ public class ContainerFertlizerMixer extends Container
 					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
 					listener.sendProgressBarUpdate(this, 0, this.inventory.getField(0));
 					listener.sendProgressBarUpdate(this, 1, this.inventory.getField(1));
+					listener.sendProgressBarUpdate(this, 3, this.inventory.getField(3));
 		 }
 		
 		this.waterTank = this.inventory.getField(0);

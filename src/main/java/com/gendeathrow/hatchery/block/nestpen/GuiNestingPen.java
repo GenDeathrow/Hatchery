@@ -8,6 +8,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 
 public class GuiNestingPen extends GuiContainer
 {
@@ -32,7 +33,7 @@ public class GuiNestingPen extends GuiContainer
 	     */
 	    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	    {
-	        this.fontRendererObj.drawString("Nesting Pen", 8, 6, 4210752);
+	        this.fontRendererObj.drawString(new TextComponentTranslation("container.nestingpen").getFormattedText(), 8, 6, 4210752);
 	        this.fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
 	    }
 

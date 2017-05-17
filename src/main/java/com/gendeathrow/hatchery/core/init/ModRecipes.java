@@ -131,7 +131,7 @@ public class ModRecipes
 				"PRB",
 				"IxI", 
 				'I', Items.IRON_INGOT,
-				'R', Blocks.REDSTONE_ORE,
+				'R', Blocks.REDSTONE_BLOCK,
 				'P', Blocks.PISTON, 
 				'B', Items.BUCKET);
 		

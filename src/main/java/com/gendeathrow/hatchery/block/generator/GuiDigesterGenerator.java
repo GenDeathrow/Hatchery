@@ -14,6 +14,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import org.lwjgl.opengl.GL11;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.core.init.ModFluids;
 
 public class GuiDigesterGenerator extends GuiContainer
 {
@@ -64,12 +65,12 @@ public class GuiDigesterGenerator extends GuiContainer
 		
 		if(x > xOffSet+16 && x < xOffSet+28 && y > yOffSet+13 && y < yOffSet+70)
 		{
-			hover.add(formatter.format((int)GENERATOR.storage.getEnergyStored()) +"rf / "+ formatter.format(this.GENERATOR.storage.getMaxEnergyStored())+"rf");
+			hover.add(formatter.format((int)GENERATOR.storage.getEnergyStored()) +"/ "+ formatter.format(this.GENERATOR.storage.getMaxEnergyStored())+" RF");
 		}
 		else if(x > xOffSet+53 && x < xOffSet+66 && y > yOffSet+13 && y < yOffSet+70)
 		{
-			hover.add("Liquid Fertlizer:");
-			hover.add(formatter.format(((int)GENERATOR.tankLevel)) +"mb/"+ formatter.format(this.GENERATOR.getTank().getCapacity())+"mb");
+			hover.add(ModFluids.liquidfertilizer.getName()+":");
+			hover.add(formatter.format(((int)GENERATOR.tankLevel)) +"/"+ formatter.format(this.GENERATOR.getTank().getCapacity())+" mb");
 		}
 
 		if(hover.size() > 0)

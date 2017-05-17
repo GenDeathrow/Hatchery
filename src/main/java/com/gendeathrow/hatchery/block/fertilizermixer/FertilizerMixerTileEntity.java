@@ -18,6 +18,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidHandlerFluidMap;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -49,6 +50,9 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 			return false;
 		}
 	};
+	
+	  
+	private FluidHandlerFluidMap fluidMap = new FluidHandlerFluidMap().addHandler(ModFluids.liquidfertilizer, fertilizerTank).addHandler(FluidRegistry.WATER, waterTank);
 	
 	//private ItemStack[] inventory = new ItemStack[5];
 	
@@ -166,14 +170,24 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
                 }
                 
     			
-    			if(this.isMixing() && this.canMix() && fertlizerMixTime >= 5)
+    			if(this.isMixing() && this.canMix() && fertlizerMixTime >= 5 && this.storage.getEnergyStored() >= 10)
     			{
     					this.fertlizerMixTime -= 5;
+    					this.storage.extractEnergy(10, false);
     				
     					this.fertilizerTank.fillInternal(new FluidStack(ModFluids.liquidfertilizer, 5), true);
-    					this.waterTank.drainInternal(10, true);
+    					this.waterTank.drainInternal(5, true);
     					
     					flag1 = true;
+    			}
+    			else if(this.isMixing() && this.canMix() && fertlizerMixTime >= 1)
+    			{
+					this.fertlizerMixTime -= 1;
+    				
+					this.fertilizerTank.fillInternal(new FluidStack(ModFluids.liquidfertilizer, 1), true);
+					this.waterTank.drainInternal(1, true);
+					
+					flag1 = true;
     			}
     			else
     			{
@@ -325,6 +339,8 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
             	return this.fertilizerTank.getFluidAmount();	
             case 2:
             	return this.fertlizerMixTime;
+            case 3:
+            	return this.storage.getEnergyStored();
             default:
                 return 0;
         }
@@ -333,7 +349,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 	
 	public int waterLevel = 0;
 	public int fertilizerLevel = 0;
-
+	public int storedEnergyLevel = 0;
 	@Override
 	public void setField(int id, int value) 
 	{ 
@@ -348,13 +364,15 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
                 break;
             case 2:
                 this.fertlizerMixTime  = value;
+            case 3:
+            	this.storage.setEnergyStored(value);
                 break;
 
         }
 	}
 
 	@Override
-	public int getFieldCount() { return 3; }
+	public int getFieldCount() { return 4; }
 
 	@Override
 	public void clear() { 
@@ -400,10 +418,13 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
-    	if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == EnumFacing.DOWN)
-            return (T) this.fertilizerTank;
-        else if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-            return (T) this.waterTank;
+//    	if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == EnumFacing.DOWN)
+//            return (T) this.fertilizerTank;
+//        else if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+//            return (T) this.waterTank;
+    	
+    	if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+    		return (T) this.fluidMap;
         else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
         {
             return (T) new InvWrapper(this);
