@@ -111,7 +111,8 @@ public class AnimalNet extends Item
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-        if (!worldIn.isRemote)
+        
+		if (!worldIn.isRemote)
         {
     	    if (hand == EnumHand.OFF_HAND && playerIn.getHeldItemMainhand().getItem() == ModItems.animalNet) 
     	    {
@@ -145,6 +146,9 @@ public class AnimalNet extends Item
 
     	  	        //stack.getTagCompound().setTag("storedEntity", new NBTTagCompound());
     	  	        stack.getTagCompound().removeTag("storedEntity");
+    	  	        
+    	  	        
+    	  	        stack.setStackDisplayName(I18n.translateToLocal(stack.getUnlocalizedName()+".name"));
     			}
 
     		}

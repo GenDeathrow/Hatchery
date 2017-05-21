@@ -1,7 +1,7 @@
 {
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
     "textures": {
-        "0": "hatchery:blocks/generator_front_off",
+        "0": "hatchery:blocks/generator_front",
         "1": "hatchery:blocks/generator_vent",
         "2": "hatchery:blocks/generator_back",
         "3": "hatchery:blocks/generator_top",

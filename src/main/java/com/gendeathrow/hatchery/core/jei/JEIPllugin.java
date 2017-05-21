@@ -11,6 +11,7 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.ISubtypeRegistry;
 import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.ingredients.IIngredientBlacklist;
 import mezz.jei.api.ingredients.IIngredientRegistry;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import net.minecraft.block.Block;
@@ -71,9 +72,10 @@ public class JEIPllugin implements IModPlugin
         
         registry.addRecipes(recipes);
 
-        IItemBlacklist itemBlacklist = registry.getJeiHelpers().getItemBlacklist();
+        IIngredientBlacklist itemBlacklist = registry.getJeiHelpers().getIngredientBlacklist();
         
-        itemBlacklist.addItemToBlacklist(new ItemStack(ModBlocks.pen_chicken));
+        itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.pen_chicken));
+        itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.digesterGeneratorOn));
      }
 
 	@Override

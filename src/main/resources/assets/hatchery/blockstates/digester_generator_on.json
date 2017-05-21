@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=down":  { "model": "hatchery:generator_on", "x": 180 },
+        "facing=up":    { "model": "hatchery:generator_on" },
+        "facing=north": { "model": "hatchery:generator_on" },
+        "facing=south": { "model": "hatchery:generator_on", "y": 180 },
+        "facing=west":  { "model": "hatchery:generator_on", "y": 270 },
+        "facing=east":  { "model": "hatchery:generator_on", "y": 90 }
+	}
+}

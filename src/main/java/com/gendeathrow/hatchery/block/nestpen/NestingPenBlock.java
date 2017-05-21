@@ -11,6 +11,7 @@ import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -92,16 +93,13 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
 		
-		
-	   	if(!playerIn.isSneaking())
-	   	{
-				playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_NESTINGPEN, worldIn, pos.getX(), pos.getY(), pos.getZ());
-				return true;
-	   	}
-	 
-			
-    	if(!worldIn.isRemote)
+        if (worldIn.isRemote)
+        {
+            return true;
+        }
+        else
     	{
+        	
     		NestPenTileEntity te = (NestPenTileEntity)worldIn.getTileEntity(pos);
     		
     		if(te == null) return false;
@@ -138,13 +136,21 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 
     		if(playerIn.isSneaking()) 
     			te.grabItems(playerIn);
+    		else 
+   				playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_NESTINGPEN, worldIn, pos.getX(), pos.getY(), pos.getZ());
     	}
     	
 
     	return true;
     }
+   
 	
-	
+//	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+//    {
+//        super.breakBlock(worldIn, pos, state);
+//        worldIn.removeTileEntity(pos);
+//    }
+//	
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
     {
         if (!keepInventory)
@@ -156,9 +162,11 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     		if(te.storedEntity() != null)
     		{
     			te.storedEntity().setPosition(te.getPos().getX() + .5, te.getPos().getY(), te.getPos().getZ() + .5);
+    			te.storedEntity().setNoAI(false);
+    			te.storedEntity().captureDrops = false;
     			worldIn.spawnEntityInWorld(te.storedEntity());
     		}
-    		
+
         }
         super.breakBlock(worldIn, pos, state);
     }
@@ -185,19 +193,19 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     
     public static void setState(boolean hasChicken, World worldIn, BlockPos pos)
     {
-    	 IBlockState iblockstate = worldIn.getBlockState(pos);
-         TileEntity tileentity = worldIn.getTileEntity(pos);
-         keepInventory = true;
-         	worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)));
-         keepInventory = false;
-
-         if (tileentity != null)
-         {
-             tileentity.validate();
-             worldIn.setTileEntity(pos, tileentity);
+//    	 IBlockState iblockstate = worldIn.getBlockState(pos);
+//         TileEntity tileentity = worldIn.getTileEntity(pos);
+//         keepInventory = true;
+//         	worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)));
+//         keepInventory = false;
+//
+//         if (tileentity != null)
+//         {
+//             tileentity.validate();
+//             worldIn.setTileEntity(pos, tileentity);
              if(!worldIn.isRemote)
             	 worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 2); 
-         }
+//         }
     }
     
 //    public static boolean hasChicken(IBlockState state)

@@ -39,9 +39,15 @@ public class FertilizerMixer extends BlockContainer implements ITileEntityProvid
 	@Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-		
-		playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_FERTLIZERMIXER, worldIn, pos.getX(), pos.getY(), pos.getZ());
-			
+        if (worldIn.isRemote)
+        {
+            return true;
+        }
+        else
+        {
+        	playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_FERTLIZERMIXER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        }
+        
 		return true;
     }
 	

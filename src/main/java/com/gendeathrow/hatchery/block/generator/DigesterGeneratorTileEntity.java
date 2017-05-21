@@ -1,5 +1,7 @@
 package com.gendeathrow.hatchery.block.generator;
 
+import net.minecraft.block.BlockFurnace;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -7,6 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -22,6 +26,7 @@ import cofh.api.energy.IEnergyReceiver;
 import com.gendeathrow.hatchery.api.items.IUpgradeItem;
 import com.gendeathrow.hatchery.block.InventoryStorage;
 import com.gendeathrow.hatchery.block.TileUpgradable;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 
@@ -35,6 +40,8 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 	private int rfPerTick = 20;
 	private int baseRfPerTick = 20;
 	
+	boolean isGenerating;
+	
 	private FluidTank fertlizerTank = new FluidTank(new FluidStack(ModFluids.liquidfertilizer, 0), 5000){
 		@Override
 	    public boolean canDrain()
@@ -47,10 +54,30 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 	{
 		super(2);
 	}
+	
+	
+	
+
+	// Currently this handles the old ModBlocks.pn
+	@Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    {
+		if((oldState.getBlock() == ModBlocks.digesterGenerator || oldState.getBlock() == ModBlocks.digesterGeneratorOn) && (newSate.getBlock() == ModBlocks.digesterGenerator || newSate.getBlock() == ModBlocks.digesterGeneratorOn))
+		{
+			return false;
+		}
+		else 
+		  return oldState != newSate;
+    }
 
 	protected boolean canGenerate() {
 		return fuelRF > 0 ? true : getTank().getFluidAmount() >= 50;
 	}
+	
+    public boolean isGenerating()
+    {
+        return this.fuelRF > 0;
+    }
 	
 	@Override
 	public boolean canConnectEnergy(EnumFacing from) {
@@ -83,6 +110,8 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 	@Override
 	public void update() 
 	{
+        boolean flag = this.isGenerating();
+        
 		if(!this.worldObj.isRemote)
 		{
 			updateRFPerTick();
@@ -99,7 +128,8 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 				fuelRF -= getRFPerTick();
 			}
 			
-			if ((storage.getEnergyStored() > 0)) {
+			if ((storage.getEnergyStored() > 0)) 
+			{
 				for (EnumFacing facing : EnumFacing.VALUES) 
 				{
 						TileEntity tile = worldObj.getTileEntity(pos.offset(facing));
@@ -125,6 +155,13 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 						this.inventory.setInventorySlotContents(0, null);
 					}
 				}
+			}
+			
+			
+			if (flag != isGenerating())
+			{
+				//flag1 = true;
+				DigesterGeneratorBlock.setState(this.isGenerating(), this.worldObj, this.pos);
 			}
 		}
 	}

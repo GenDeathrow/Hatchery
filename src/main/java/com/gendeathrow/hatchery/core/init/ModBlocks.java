@@ -42,6 +42,7 @@ public class ModBlocks
 	public static Block nuseryBlock;
 	public static Block fertilizerMixer;
 	public static Block digesterGenerator;
+	public static Block digesterGeneratorOn;
 	
 	public static void preInit(FMLPreInitializationEvent event) 
 	{
@@ -54,7 +55,8 @@ public class ModBlocks
 		manureBlock = new ManureBlock();
 		nuseryBlock = new BlockMobNursery();
 		fertilizerMixer = new FertilizerMixer().setCreativeTab(Hatchery.hatcheryTabs);
-		digesterGenerator = new DigesterGeneratorBlock().setCreativeTab(Hatchery.hatcheryTabs);
+		digesterGenerator = new DigesterGeneratorBlock(false).setCreativeTab(Hatchery.hatcheryTabs);
+		digesterGeneratorOn = new DigesterGeneratorBlock(true).setTickRandomly(true);
 		
 		registerBlock(nest, "nest");
 		registerBlock(pen, "pen");
@@ -68,6 +70,8 @@ public class ModBlocks
 		registerBlock(fertilizerMixer, "fertilizer_mixer");
 		
 		registerBlock(digesterGenerator, "digester_generator");
+		registerBlock(digesterGeneratorOn, "digester_generator_on"); 
+		  digesterGeneratorOn.setUnlocalizedName(Hatchery.MODID +".digester_generator");
 		  
 		GameRegistry.registerTileEntity(TileEntityMobNursery.class, "hatchery.nursery");
 		GameRegistry.registerTileEntity(EggNestTileEntity.class, EggNestTileEntity.class.getName());

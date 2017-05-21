@@ -78,7 +78,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		return this.TimetoNextEgg;
 	}
 	
-	public Entity storedEntity()
+	public EntityAgeable storedEntity()
 	{
 		return this.chickenStored;
 	}
@@ -123,7 +123,13 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	public Entity tryGetRemoveEntity()
 	{
 		if(this.storedEntity() == null) return null;
-		Entity returnEntity = this.storedEntity();
+		
+		this.chickenStored.setNoAI(false);
+		this.chickenStored.captureDrops = false;
+		
+		EntityAgeable returnEntity = this.storedEntity();
+
+		
 		entityNBT = new NBTTagCompound();	
 		this.chickenStored = null;
 		

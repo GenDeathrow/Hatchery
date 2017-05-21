@@ -11,6 +11,7 @@ import com.gendeathrow.hatchery.item.AnimalNet;
 import com.gendeathrow.hatchery.item.ChickenManure;
 import com.gendeathrow.hatchery.item.HatcheryEgg;
 import com.gendeathrow.hatchery.item.Sprayer;
+import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
 import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 
 public class ModItems 
@@ -31,21 +32,32 @@ public class ModItems
 	
 	//Upgrades  
 	
-	// RF power converter (Transformer Upgrade)
-	// rf tier 1 +10rf/t
 	public static RFEfficiencyUpgrade rfUpgradeTier1 = (RFEfficiencyUpgrade) new RFEfficiencyUpgrade(1);
-	// rf tier 2 +30rf/t
 	public static RFEfficiencyUpgrade rfUpgradeTier2 = new RFEfficiencyUpgrade(2);
-	// rf tier 3
 	public static RFEfficiencyUpgrade rfUpgradeTier3 = new RFEfficiencyUpgrade(3);
 	
-	// speed upgrade (faster / increases power comsumption)
+	public static BaseUpgrade speedUpgradeTier1 = new BaseUpgrade(1, "speed_upgrade");
+	public static BaseUpgrade speedUpgradeTier2 = new BaseUpgrade(2, "speed_upgrade");
+	public static BaseUpgrade speedUpgradeTier3 = new BaseUpgrade(3, "speed_upgrade");
+
+	public static BaseUpgrade tankUpgradeTier1 = new BaseUpgrade(1, "tank_upgrade");
+	public static BaseUpgrade tankUpgradeTier2 = new BaseUpgrade(2, "tank_upgrade");
+	public static BaseUpgrade tankUpgradeTier3 = new BaseUpgrade(3, "tank_upgrade");
+	
+	// Capacity upgrades (increase RF, Tank Capacitys) RF 100,000 x tier, fluid (1-x2, 2-x3, 2-x4)
+	
+	public static BaseUpgrade rfCapacityUpgradeTier1 = new BaseUpgrade(1, "rf_capacity_upgrade");
+	public static BaseUpgrade rfCapacityUpgradeTier2 = new BaseUpgrade(2, "rf_capacity_upgrade");
+	public static BaseUpgrade rfCapacityUpgradeTier3 = new BaseUpgrade(3, "rf_capacity_upgrade");
+	
+
+	// RF Efficiency upgrade (decrease power usage)  1-0.75, 2-0.65, 3-0.5
+	public static BaseUpgrade rfEfficiencyUpgradeTier1 = new BaseUpgrade(1, "rf_efficiency_upgrade");
+	public static BaseUpgrade rfEfficiencyUpgradeTier2 = new BaseUpgrade(2, "rf_efficiency_upgrade");
+	public static BaseUpgrade rfEfficiencyUpgradeTier3 = new BaseUpgrade(3, "rf_efficiency_upgrade");
 	
 	// insulation (decrease sound)
 	
-	// RF Efficiency upgrade (decrease power usage)  1-0.75, 2-0.65, 3-0.5
-	
-	// Capacity upgrades (increase RF, Tank Capacitys) RF 100,000 x tier, fluid (1-x2, 2-x3, 2-x4)
 	
 	// Feeder upgrade (auto feeds chickens much like a feeder) requires seeds to be added.  
 	
@@ -68,6 +80,14 @@ public class ModItems
 		registerItem(ModItems.rfUpgradeTier1, "rf_upgrade_1");
 		registerItem(ModItems.rfUpgradeTier2, "rf_upgrade_2");
 		registerItem(ModItems.rfUpgradeTier3, "rf_upgrade_3");
+		
+//		registerItem(ModItems.speedUpgradeTier1, "speed_upgrade_1");
+//		registerItem(ModItems.speedUpgradeTier2, "speed_upgrade_2");
+//		registerItem(ModItems.speedUpgradeTier3, "speed_upgrade_3");
+//		
+//		registerItem(ModItems.tankUpgradeTier1, "tank_upgrade_1");
+//		registerItem(ModItems.tankUpgradeTier2, "tank_upgrade_2");
+//		registerItem(ModItems.tankUpgradeTier3, "tank_upgrade_3");
 		
 		//registerItem(ModItems.pump, "fluidpump");
 		
