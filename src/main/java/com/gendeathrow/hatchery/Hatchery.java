@@ -11,6 +11,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -32,6 +33,7 @@ import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.config.ConfigHandler;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
+import com.gendeathrow.hatchery.core.theoneprobe.TheOneProbeSupport;
 import com.gendeathrow.hatchery.entities.EntityRooster;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
 
@@ -123,7 +125,11 @@ public class Hatchery
 	    	
 	    	// waila integration
 	        FMLInterModComms.sendMessage("Waila", "register", "com.gendeathrow.hatchery.core.waila.HatcheryTileProvider.load");
-	        //FMLInterModComms.sendFunctionMessage("theoneprobe", "getTheOneProbe", "com.gendeathrow.hatchery.core.theoneprobe.TheOneProbeSupport");
+	        
+	        if (Loader.isModLoaded("theoneprobe")) 
+	        {
+	        	TheOneProbeSupport.register();
+	        }
 	    	
 	    	PROXY.registerEventHandlers();
 	    	PROXY.initRenderers();

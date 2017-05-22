@@ -11,7 +11,6 @@ import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -49,18 +48,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.api.tileentities.IChickenNestingPen;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
 
 public class NestingPenBlock extends Block implements ITileEntityProvider, TOPInfoProvider
-
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	
 	//public static final PropertyBool hasChicken = PropertyBool.create("false");
-	
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.00D, 0.0D, 0.00, 1.0D, 1.2D, 1.0D);
     
     protected static final AxisAlignedBB NORTH_STAIRS_AABB = new AxisAlignedBB(0.25D, 0.0D, 0.0D, 0.6875D,0.125D, 0.1875D);
@@ -115,7 +111,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 
     		           Entity entity = EntityList.createEntityByIDFromName(entityID, worldIn);
 
-    		           if (entity instanceof EntityChicken || entity instanceof IChickenNestingPen)
+    		           if (entity instanceof EntityChicken)// || entity instanceof IChickenNestingPen)
     		           {
     		        	   EntityLiving entityliving = (EntityLiving)entity;
     		               entity.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
@@ -417,11 +413,10 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) 
 	{
 		TileEntity te = world.getTileEntity(data.getPos());
-        if (te instanceof NestPenTileEntity) {
+        if (te instanceof NestPenTileEntity) 
+        {
         	NestPenTileEntity tileEntity = (NestPenTileEntity) te;
-            IProbeInfo horizontal = probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER));
-
-            if(tileEntity.storedEntity() != null)
+        	if(tileEntity.storedEntity() != null)
             {
             	
 				long uptime = tileEntity.getTimeToNextDrop()/20;
@@ -431,18 +426,21 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 				String output = minutes > 0 ? minutes+":"+ (seconds < 10 ? "0"+seconds : seconds)  +" mins" : (seconds < 10 ? "0"+seconds : seconds) + " secs";
 				
 				
-            	horizontal.text(TextFormatting.GREEN + I18n.format("text.hatchery.chicken", new Object[0]) +": "+ tileEntity.storedEntity().getName());
-            	
-            	horizontal.text(TextFormatting.GREEN + "Time to NextDrop: " + output);
+				probeInfo.text(TextFormatting.YELLOW + I18n.format("text.hatchery.chicken", new Object[0]) +": "+ TextFormatting.GREEN + tileEntity.storedEntity().getName());
+
+				probeInfo.text(TextFormatting.YELLOW + "Time to NextDrop: "+ TextFormatting.GREEN  + output);
             }
             else
             {
-            	horizontal.text(TextFormatting.RED + I18n.format("text.hatchery.nochicken", new Object[0]));
+            	probeInfo.text(TextFormatting.RED + I18n.format("text.hatchery.nochicken", new Object[0]));
             }
             
             
         }	
 	}
+	
+    
+
 	
     
 
