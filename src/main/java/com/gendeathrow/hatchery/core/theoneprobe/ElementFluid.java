@@ -3,18 +3,18 @@ package com.gendeathrow.hatchery.core.theoneprobe;
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IElement;
 
-public class ElementNestingPen implements IElement 
+public class ElementFluid implements IElement 
 {
 	private long nextDrop;
 	private int[] stats;
 	private String entityName;
 	
-	public ElementNestingPen()
+	public ElementFluid()
 	{
 
 	}
 	
-    public ElementNestingPen(ByteBuf buf) 
+    public ElementFluid(ByteBuf buf) 
     {
 
     }

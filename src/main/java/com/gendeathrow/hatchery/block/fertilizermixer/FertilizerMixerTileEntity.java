@@ -391,6 +391,8 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
        	this.waterTank.readFromNBT(tag.getCompoundTag("waterTank"));
         this.fertilizerTank.readFromNBT(tag.getCompoundTag("fertilizerTank"));
         
+        this.storage.readFromNBT(tag);
+        
         this.inventory.readFromNBT(tag);
     }
 
@@ -408,6 +410,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
         
         this.inventory.writeToNBT(tag);
         
+        this.storage.writeToNBT(tag);
         return tag;
     }
 

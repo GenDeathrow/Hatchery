@@ -10,6 +10,7 @@ tile.hatchery.manure_block.name=Chicken Manure Block
 tile.hatchery.nursery_block.name=Nursery Monitor
 tile.hatchery.fertilizer_mixer.name=Fertilizer Mixer (WIP)
 tile.hatchery.digester_generator.name=Methane Digester Generator (WIP)
+tile.hatchery.shredder.name=Shredder
 
 container.generator.generating=Generating: %1$drf/t
 container.generator.rfout=RF Out: %1$drf/t
@@ -54,6 +55,7 @@ jei.tile.hatchery.pen=Nesting pens store chickens to collect resources and chick
 jei.tile.hatchery.pen_chicken=Nesting pens store chickens to collect resources and chickens will lay eggs. Placing two nesting pens will auto breed the two chickens. This works with Modded Chickens that allow special breeding mechanics. Nesting Pens Drop Chicken Manure, Feathers, and Hatchery Eggs.
 jei.tile.hatchery.manure_block=A block of chicken manure. Enjoy!
 jei.tile.hatchery.nursery_block=This Block will split adults and baby chicks in a 4x4 area and move them to opposite sides of the block. This is to better sort and move your chickens around.
+jei.tile.hatchery.shredder=The Shredder is used to turn feathers into feather meal, and feather fibers;
 jei.item.hatchery.animalnet=Use an animal net to pickup any passive animal. Use the Animal net to specifically place a chicken into the Nesting Pen's.
 jei.item.hatchery.hatcheryegg=Hatchery Eggs are dynamically created eggs, Used to be able to breed two parents and create a custom egg. Mainly for Modded Chickens with new breeding mechanics.
 jei.item.hatchery.chickenmanure=Drops from nesting pens. Use manure to make fertilized dirt, Manure Blocks, liquid fertilizer, or use it as bonemeal for plants.

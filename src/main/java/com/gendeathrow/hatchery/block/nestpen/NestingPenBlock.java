@@ -426,13 +426,13 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 				String output = minutes > 0 ? minutes+":"+ (seconds < 10 ? "0"+seconds : seconds)  +" mins" : (seconds < 10 ? "0"+seconds : seconds) + " secs";
 				
 				
-				probeInfo.text(TextFormatting.YELLOW + I18n.format("text.hatchery.chicken", new Object[0]) +": "+ TextFormatting.GREEN + tileEntity.storedEntity().getName());
+				probeInfo.text(TextFormatting.YELLOW + "Chicken: " + TextFormatting.GREEN + tileEntity.storedEntity().getName());
 
-				probeInfo.text(TextFormatting.YELLOW + "Time to NextDrop: "+ TextFormatting.GREEN  + output);
+				probeInfo.text(TextFormatting.YELLOW + "Next Drop: "+ TextFormatting.GREEN  + output);
             }
             else
             {
-            	probeInfo.text(TextFormatting.RED + I18n.format("text.hatchery.nochicken", new Object[0]));
+            	probeInfo.text(TextFormatting.RED + "Use 'Animal Net' to capture a chicken");
             }
             
             

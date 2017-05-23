@@ -55,13 +55,7 @@ public class TheOneProbeSupport
     			}
     		});
 
-        
-    		// ELEMENT_NESTING_PEN = probe.registerElementFactory(ElementNestingPen::new);
     		return null;
     	}
     }
-
-//    public static IProbeInfo addSequenceElement(IProbeInfo probeInfo, long bits, int current, boolean large) {
-//        return probeInfo.element(new ElementSequencer(bits, current, large));
-//    }
 }
