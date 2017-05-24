@@ -26,6 +26,9 @@ import com.gendeathrow.hatchery.block.generator.GuiDigesterGenerator;
 import com.gendeathrow.hatchery.block.nestpen.ContainerNestingPen;
 import com.gendeathrow.hatchery.block.nestpen.GuiNestingPen;
 import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
+import com.gendeathrow.hatchery.block.shredder.ContainerShredder;
+import com.gendeathrow.hatchery.block.shredder.GuiShredder;
+import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.core.EventHandler;
 import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.config.ConfigHandler;
@@ -44,6 +47,7 @@ public class CommonProxy implements IGuiHandler
 	public static final int GUI_ID_FERTLIZERMIXER = 2;
 	public static final int GUI_ID_DIGESTER_GEN = 3;
 	public static final int GUI_ID_NESTINGPEN = 4;
+	public static final int GUI_ID_SHREDDER = 5;
 	
 	
 	public boolean isClient()
@@ -97,7 +101,7 @@ public class CommonProxy implements IGuiHandler
 				if (entity != null && entity instanceof EntityRooster)
 					return new ContainerRoosterInventory(player.inventory, (EntityRooster) entity);
 		 }
-		 else if (ID == GUI_ID_FERTLIZERMIXER || ID == GUI_ID_DIGESTER_GEN || ID == GUI_ID_NESTINGPEN) 
+		 else if (ID > GUI_ID_ROOSTER) 
 		 {
 			 
 				BlockPos blockpos = new BlockPos(x,y,z);
@@ -112,6 +116,8 @@ public class CommonProxy implements IGuiHandler
 						return new ContainerDigesterGenerator(player.inventory, (DigesterGeneratorTileEntity) tile);
 					else if(tile instanceof NestPenTileEntity)
 						return new ContainerNestingPen(player.inventory, (NestPenTileEntity) tile, player);
+					else if(tile instanceof ShredderTileEntity)
+						return new ContainerShredder(player.inventory, (ShredderTileEntity) tile, player);
 				}
 		 }
 				
@@ -128,7 +134,7 @@ public class CommonProxy implements IGuiHandler
 			if (entity != null && entity instanceof EntityRooster)
 				return new GuiRoosterInventory(player.inventory, entity);
 		}
-		else if (ID == GUI_ID_FERTLIZERMIXER || ID == GUI_ID_DIGESTER_GEN || ID == GUI_ID_NESTINGPEN) 
+		else if (ID > GUI_ID_ROOSTER) 
 		{
 			BlockPos blockpos = new BlockPos(x,y,z);
 			IBlockState block = world.getBlockState(blockpos);
@@ -145,8 +151,10 @@ public class CommonProxy implements IGuiHandler
 					return new GuiDigesterGenerator(player.inventory, (DigesterGeneratorTileEntity) tile);
 				else if(tile instanceof NestPenTileEntity)
 					return new GuiNestingPen(player.inventory, (NestPenTileEntity) tile);
+				else if(tile instanceof ShredderTileEntity)
+					return new GuiShredder(player.inventory, (ShredderTileEntity) tile);
 			}
-				  
+				    
 		}
 		return null;
 	}

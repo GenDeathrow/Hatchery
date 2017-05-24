@@ -26,6 +26,8 @@ import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 import com.gendeathrow.hatchery.block.nestpen.NestingPenBlock;
 import com.gendeathrow.hatchery.block.nursery.BlockMobNursery;
 import com.gendeathrow.hatchery.block.nursery.TileEntityMobNursery;
+import com.gendeathrow.hatchery.block.shredder.ShredderBlock;
+import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 
 public class ModBlocks 
 {
@@ -43,6 +45,7 @@ public class ModBlocks
 	public static Block fertilizerMixer;
 	public static Block digesterGenerator;
 	public static Block digesterGeneratorOn;
+	public static Block shredder;
 	
 	public static void preInit(FMLPreInitializationEvent event) 
 	{
@@ -57,6 +60,8 @@ public class ModBlocks
 		fertilizerMixer = new FertilizerMixer().setCreativeTab(Hatchery.hatcheryTabs);
 		digesterGenerator = new DigesterGeneratorBlock(false).setCreativeTab(Hatchery.hatcheryTabs);
 		digesterGeneratorOn = new DigesterGeneratorBlock(true).setTickRandomly(true);
+		shredder = new ShredderBlock();
+		
 		
 		registerBlock(nest, "nest");
 		registerBlock(pen, "pen");
@@ -73,7 +78,10 @@ public class ModBlocks
 		registerBlock(digesterGeneratorOn, "digester_generator_on"); 
 		  digesterGeneratorOn.setUnlocalizedName(Hatchery.MODID +".digester_generator");
 		  
+		registerBlock(shredder, "shredder");
+		  
 		GameRegistry.registerTileEntity(TileEntityMobNursery.class, "hatchery.nursery");
+		GameRegistry.registerTileEntity(ShredderTileEntity.class, "hatchery.shredder");
 		GameRegistry.registerTileEntity(EggNestTileEntity.class, EggNestTileEntity.class.getName());
 		GameRegistry.registerTileEntity(NestPenTileEntity.class, NestPenTileEntity.class.getName());
 		GameRegistry.registerTileEntity(FeederTileEntity.class, FeederTileEntity.class.getName());

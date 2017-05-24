@@ -32,6 +32,7 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
 	public ShredderBlock() 
 	{
 		super(Material.IRON);
+		this.setCreativeTab(Hatchery.hatcheryTabs);
 	}
 
 	@Override

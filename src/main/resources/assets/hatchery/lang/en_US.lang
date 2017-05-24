@@ -30,7 +30,9 @@ item.hatchery.hatcheryegg.name=Egg
 item.hatchery.animalnet.name=Animal Net
 item.hatchery.chickenmanure.name=Chicken Manure
 item.hatchery.sprayer.name=Fertilizer Sprayer
-
+item.hatchery.feather_fiber.name=Feather Fibers
+item.hatchery.feather_meal.name=Feather Meal
+item.hatchery.plastic.name=Plastic
 
 #TOOLTIP
 tooltip.hatchery.sprayer.desc=%1$s Volume: %2$dmb / %3$dmb

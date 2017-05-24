@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=down":  { "model": "hatchery:shredder", "x": 180 },
+        "facing=up":    { "model": "hatchery:shredder" },
+        "facing=north": { "model": "hatchery:shredder" },
+        "facing=south": { "model": "hatchery:shredder", "y": 180 },
+        "facing=west":  { "model": "hatchery:shredder", "y": 270 },
+        "facing=east":  { "model": "hatchery:shredder", "y": 90 }
+	}
+}
