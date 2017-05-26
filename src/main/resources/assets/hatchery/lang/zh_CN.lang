@@ -8,6 +8,20 @@ tile.hatchery.fertilized_farmland.name=肥沃的田地
 tile.hatchery.feeder.name=喂食器
 tile.hatchery.manure_block.name=鸡粪块
 tile.hatchery.nursery_block.name=鸡类繁殖分类器
+tile.hatchery.fertilizer_mixer.name=粪肥搅拌器
+tile.hatchery.digester_generator.name=沼气池（WIP）
+tile.hatchery.shredder.name=切割机
+
+container.generator.generating=产能：%1$drf/t
+container.generator.rfout=RF输出：%1$drf/t
+container.generator.fertin=粪肥量：%1$d mb
+container.hoveramt=%/%
+container.fertilizermixer=粪肥混合器（WIP）
+container.upgrades=升级
+container.nestingpen=鸡舍物品栏
+
+entity.Rooster.name=雄鸡
+container.roosterInventory=雄鸡性奋度（放置种子）
 
 tile.fluid.liquid_fertilizer.name=液化粪肥
 fluid.liquid_fertilizer=液化粪肥
@@ -16,7 +30,9 @@ item.hatchery.hatcheryegg.name=蛋
 item.hatchery.animalnet.name=动物网兜
 item.hatchery.chickenmanure.name=鸡粪
 item.hatchery.sprayer.name=液化粪肥喷雾器
-
+item.hatchery.feather_fiber.name=羽毛纤维
+item.hatchery.feather_meal.name=羽毛粉
+item.hatchery.plastic.name=塑料
 
 #TOOLTIP
 tooltip.hatchery.sprayer.desc=%1$s 存量: %2$dmb / %3$dmb
@@ -32,6 +48,8 @@ text.hatchery.storedseed=饲料（种子）存量
 
 #JEI
 jei.tile.hatchery.feeder=每个喂食器最多可存储200枚种子。当有种子时，喂食器将在4x1x4内寻找可以被喂食的鸡。被喂食的小鸡将更快长大，成年鸡则是更快的产下对应的产物。喂食器支持管道/漏斗输入输出。
+jei.tile.hatchery.digester_generator=沼气池能够从液态粪肥中产生能量。厌氧粪肥消解器（俗称沼气池）能够收集粪肥，将其中的有机物消解为甲烷，进而产生能量（20rf/t）。添加升级能够提升输出的能量。
+jei.tile.hatchery.fertilizer_mixer=粪肥混合器能够自动的制作液态粪肥。只需要提供水和粪肥即可。提供RF能量能够加速这个过程。
 jei.tile.hatchery.nest=放置一个蛋到孵化巢中，它会自动孵化出鸡（孵化时间随机）。将红石灯（以后计划用加热灯替换）放置在孵化巢上方3格高度将增加孵化的速度。坐在蛋上也会增加孵化的速度。
 jei.tile.hatchery.fertilized_dirt=随机给树一次骨粉的效果
 jei.tile.hatchery.fertilized_farmland=随机给作物一次骨粉的效果，由对着肥沃的土壤用锄锄地而得到。
@@ -39,6 +57,7 @@ jei.tile.hatchery.pen=组合鸡舍会收集在其里面的鸡的产物。使用�
 jei.tile.hatchery.pen_chicken=组合鸡舍会收集在其里面的鸡的产物。使用动物网兜将鸡放入鸡舍。放置两个鸡舍将让两只鸡繁殖。鸡舍还适用于其他模组的添加的鸡，允许特殊的育种机制。支持管道/漏斗输入输出。
 jei.tile.hatchery.manure_block=请您欣赏：一块鸡粪!!
 jei.tile.hatchery.nursery_block=这个方块会将3x9的区域（每个面3x4）分割成成年和幼年鸡，并将他们移动到相应的一侧。这是为了更好的分类和移动你的鸡。
+jei.tile.hatchery.shredder=切割机能够将羽毛切割成羽毛粉和羽毛纤维。
 jei.item.hatchery.animalnet=使用动物网兜套取任何被动型生物。使用动物网兜将鸡放入鸡舍。
 jei.item.hatchery.hatcheryegg=自定义蛋是用于动态创建的蛋，将两种亲代鸡配对来创建一个子代自定义蛋。 主要用于用户自定义改良鸡。
 jei.item.hatchery.chickenmanure=由鸡舍收集。使用鸡粪制作肥沃的土壤、鸡粪块、液体粪肥，或者用它来代替骨粉。
