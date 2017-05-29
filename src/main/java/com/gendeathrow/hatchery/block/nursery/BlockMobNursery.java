@@ -65,7 +65,12 @@ public class BlockMobNursery extends BlockHorizontal implements ITileEntityProvi
         return false;
     }
 
-	@Override
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getBlockLayer()
+	{
+		return BlockRenderLayer.CUTOUT_MIPPED;
+	}
+
 	public EnumBlockRenderType getRenderType(IBlockState state) {
 		return EnumBlockRenderType.MODEL;
 	}
