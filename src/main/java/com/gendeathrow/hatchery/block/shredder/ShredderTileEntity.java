@@ -1,12 +1,10 @@
 package com.gendeathrow.hatchery.block.shredder;
 
-import net.minecraft.block.BlockHopper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityHopper;
@@ -21,13 +19,17 @@ import cofh.api.energy.IEnergyReceiver;
 
 import com.gendeathrow.hatchery.block.InventoryStorage;
 import com.gendeathrow.hatchery.block.TileUpgradable;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
 
 public class ShredderTileEntity extends TileUpgradable implements ITickable, IInventory, IEnergyReceiver
 {
 	protected EnergyStorage energy= new EnergyStorage(100000);
+	protected net.minecraftforge.energy.EnergyStorage energy2 = new net.minecraftforge.energy.EnergyStorage(100000);
+	
+	   
+	public int animationTicks;
+	public int prevAnimationTicks;
+
 	protected InventoryStorage inventory = new InventoryStorage(this, 3);
 	protected InventoryStorage upgrades = new InventoryStorage(this, 2);
     private int transferCooldown = -1;
@@ -41,6 +43,19 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 	@Override
 	public void update() 
 	{
+		if (worldObj.isRemote) 
+		{
+			prevAnimationTicks = animationTicks;
+			if (animationTicks < 360)
+				animationTicks += 5;
+			if (animationTicks >= 360) 
+			{
+				animationTicks -= 360;
+				prevAnimationTicks -= 360;
+			}
+		}
+		
+		
         if (this.worldObj != null && !this.worldObj.isRemote)
         {
             --this.transferCooldown;

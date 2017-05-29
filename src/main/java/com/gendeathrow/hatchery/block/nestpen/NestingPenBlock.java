@@ -15,6 +15,7 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -56,6 +57,9 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	
+    public static final PropertyBool HASCHICKEN = PropertyBool.create("haschicken");
+    
+    
 	//public static final PropertyBool hasChicken = PropertyBool.create("false");
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.00D, 0.0D, 0.00, 1.0D, 1.2D, 1.0D);
     
@@ -79,7 +83,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 		super(Material.WOOD);
 		this.name = "pen";
 		this.setUnlocalizedName("pen");
-		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(HASCHICKEN, false));
 		this.setHardness(2);
 		this.setHarvestLevel("axe", 0);
 	}
@@ -189,10 +193,10 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     
     public static void setState(boolean hasChicken, World worldIn, BlockPos pos)
     {
-//    	 IBlockState iblockstate = worldIn.getBlockState(pos);
+    	 IBlockState iblockstate = worldIn.getBlockState(pos);
 //         TileEntity tileentity = worldIn.getTileEntity(pos);
 //         keepInventory = true;
-//         	worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)));
+         	worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(HASCHICKEN, hasChicken));
 //         keepInventory = false;
 //
 //         if (tileentity != null)
@@ -368,7 +372,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
             enumfacing = EnumFacing.NORTH;
         }
 
-        return this.getDefaultState().withProperty(FACING, enumfacing);
+        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(HASCHICKEN, (meta >> 2) == 1 ? true : false);
     }
 
     /**
@@ -376,7 +380,11 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((EnumFacing)state.getValue(FACING)).getIndex();
+    	int i = 0;
+    	i |= ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
+    	i |= (state.getValue(HASCHICKEN) ? 1 : 0 ) << 2;
+    	
+        return i;
     }
 
 
@@ -400,7 +408,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {FACING});
+        return new BlockStateContainer(this, new IProperty[] {FACING, HASCHICKEN});
     }
     
     public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)

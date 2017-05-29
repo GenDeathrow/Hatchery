@@ -10,7 +10,7 @@ tile.hatchery.manure_block.name=Chicken Manure Block
 tile.hatchery.nursery_block.name=Nursery Monitor
 tile.hatchery.fertilizer_mixer.name=Fertilizer Mixer (WIP)
 tile.hatchery.digester_generator.name=Methane Digester Generator (WIP)
-tile.hatchery.shredder.name=Shredder
+tile.hatchery.shredder.name=Shredder (WIP)
 
 container.generator.generating=Generating: %1$drf/t
 container.generator.rfout=RF Out: %1$drf/t
