@@ -28,6 +28,8 @@ import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
 import com.gendeathrow.hatchery.block.nest.EggNestTileEntityRender;
 import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 import com.gendeathrow.hatchery.block.nestpen.NestingPenTileEntityRenderer;
+import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
+import com.gendeathrow.hatchery.block.shredder.ShredderTileEntityRenderer;
 import com.gendeathrow.hatchery.client.IItemColorHandler;
 import com.gendeathrow.hatchery.client.render.entity.RenderRooster;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
@@ -116,7 +118,7 @@ public class ClientProxy extends CommonProxy
 
 		ClientRegistry.bindTileEntitySpecialRenderer(EggNestTileEntity.class, new EggNestTileEntityRender());
 		ClientRegistry.bindTileEntitySpecialRenderer(NestPenTileEntity.class, new NestingPenTileEntityRenderer());
-		
+		ClientRegistry.bindTileEntitySpecialRenderer(ShredderTileEntity.class, new ShredderTileEntityRenderer());		
 	}
 	
     public void registerItemColorHandler(Item item)

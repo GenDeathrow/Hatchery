@@ -231,12 +231,21 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		if(chickenStored == null) return;
 		
 		if(this.chickenStored.isChild()) wasChild = true;
+	
+		this.chickenStored.noClip = true;
+		this.chickenStored.onGround = true;
+			this.chickenStored.onLivingUpdate();
+		this.chickenStored.motionY = 0;
+		this.chickenStored.motionX = 0;
+		this.chickenStored.motionZ = 0;
+		this.chickenStored.noClip = false;
 		
-		this.chickenStored.onLivingUpdate();
 		
 		this.chickenStored.captureDrops = true;
 
 		this.playChickenSound();
+		
+		//System.out.println(this.chickenStored.posX +":"+ this.chickenStored.posY +":"+ this.chickenStored.posZ);
 		
 		if(this.worldObj.isRemote) 
 		{
@@ -295,15 +304,16 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 					putStackInInventoryAllSlots(this, new ItemStack(Items.FEATHER, 1), EnumFacing.DOWN);
 				putStackInInventoryAllSlots(this, new ItemStack(ModItems.manure, rand.nextInt(1)+1), EnumFacing.DOWN);
 				this.TimetoNextEgg = this.rand.nextInt(5000) + 2000;
-	            	
-				if(this.chickenStored.capturedDrops != null && this.chickenStored.capturedDrops.size() > 0)
+			}
+			
+			
+			if(this.chickenStored.capturedDrops != null && this.chickenStored.capturedDrops.size() > 0)
+			{
+				for(EntityItem entity : this.chickenStored.capturedDrops)
 				{
-					for(EntityItem entity : this.chickenStored.capturedDrops)
-					{
-						putStackInInventoryAllSlots(this, entity.getEntityItem(), EnumFacing.DOWN);
-					}
-					this.chickenStored.capturedDrops.clear();
+					putStackInInventoryAllSlots(this, entity.getEntityItem(), EnumFacing.DOWN);
 				}
+				this.chickenStored.capturedDrops.clear();
 			}
 		}
 		
