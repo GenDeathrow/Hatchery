@@ -1,5 +1,10 @@
 package com.gendeathrow.hatchery.block.shredder;
 
+import java.util.ArrayList;
+import java.util.Random;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -7,6 +12,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -32,12 +38,19 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 
 	protected InventoryStorage inventory = new InventoryStorage(this, 3);
 	protected InventoryStorage upgrades = new InventoryStorage(this, 2);
+	
+	protected ArrayList<ShredderRecipe> shredderRecipes = new ArrayList<ShredderRecipe>();
+	
+	
+	
     private int transferCooldown = -1;
 	int slotIn = 0;
 	
 	public ShredderTileEntity() 
 	{
 		super(2);
+		
+		shredderRecipes.add(new ShredderRecipe(new ItemStack(Items.FEATHER), new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal)));
 	}
 
 	@Override
@@ -65,10 +78,79 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
             {
             	  this.captureDroppedItems();
                   this.setTransferCooldown(8);
+                  this.shredItem();
             }
+            
+    		if ((energy.getEnergyStored() > 0)) 
+			{
+				for (EnumFacing facing : EnumFacing.VALUES) 
+				{
+						TileEntity tile = worldObj.getTileEntity(pos.offset(facing));
+						if (tile != null && tile instanceof IEnergyReceiver) 
+						{
+							//int received = ((IEnergyReceiver) tile).receiveEnergy(facing.getOpposite(), storage.getEnergyStored(), false);
+							//this.energy.extractEnergy(facing, received, false);
+						}
+				}
+			}
         }
 	}
+	
+	public void shredItem()
+	{
+		ItemStack stack = this.inventory.getStackInSlot(0);
+		boolean flag = false;		
+		
+		if(stack != null && this.isShreddableItem(stack))
+		{
+			ShredderRecipe recipe = getRecipe(stack);
 
+			
+			if(recipe != null)
+			{
+				if(recipe.getOutputItem() != null)
+				{
+					if(this.insertStack(inventory, recipe.getOutputItem(), animationTicks, EnumFacing.DOWN) == null)
+						flag = true;
+						
+				}
+				ItemStack extra = recipe.getExtraItem();
+				if(extra != null)
+				{
+					if(this.insertStack(inventory, extra, animationTicks, EnumFacing.DOWN) == null)
+						flag = true;
+				}
+			}
+
+			if(flag)
+				this.inventory.decrStackSize(0, 1);
+		}
+	}
+	
+	protected ShredderRecipe getRecipe(ItemStack stack)
+	{
+		for(ShredderRecipe recipe : this.shredderRecipes)
+		{
+			if(recipe.isInputItem(stack))
+			{
+				return recipe;
+			}
+		}
+		return null;
+	}
+
+	protected boolean isShreddableItem(ItemStack stack)
+	{
+		for(ShredderRecipe recipe : this.shredderRecipes)
+		{
+			if(recipe.isInputItem(stack))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
     public boolean isOnTransferCooldown()
     {
         return this.transferCooldown > 0;
@@ -83,27 +165,32 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 	{
         EnumFacing enumfacing = EnumFacing.DOWN;
 
-        if (isInventoryEmpty(this, enumfacing))
-        {
-            return false;
-        }
+        boolean flag = false;
 
         for (EntityItem entityitem : TileEntityHopper.getCaptureItems(this.worldObj, this.pos.getX(), this.pos.getY(), this.pos.getZ()))
         {
         	if(isShreddableItem(entityitem.getEntityItem()))
         	{
+                ItemStack itemstack = entityitem.getEntityItem().copy();
+        		ItemStack itemstack1 = insertStack(this.inventory, entityitem.getEntityItem(), 0, enumfacing);
         		
-        		return true;
+                if (itemstack1 != null && itemstack1.stackSize != 0)
+                {
+                	entityitem.setEntityItemStack(itemstack1);
+                }
+                else
+                {
+                    flag = true;
+                    entityitem.setDead();
+                }
+                
+        		return flag;
         	}
         }
-		
 		return false;
 	}
 	
-	protected boolean isShreddableItem(ItemStack stack)
-	{
-		return stack.getItem() == Items.FEATHER;
-	}
+
 	
 	/// INVENTORY
     private boolean isInventoryFull(IInventory inventoryIn, EnumFacing side)
@@ -140,6 +227,64 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 
         return true;
     }
+    
+    /**
+     * Insert the specified stack to the specified inventory and return any leftover items
+     */
+    private static ItemStack insertStack(IInventory inventoryIn, ItemStack stack, int index, EnumFacing side)
+    {
+        ItemStack itemstack = inventoryIn.getStackInSlot(index);
+
+        if (canInsertItemInSlot(inventoryIn, stack, index, side))
+        {
+            boolean flag = false;
+
+            if (itemstack == null)
+            {
+                //Forge: BUGFIX: Again, make things respect max stack sizes.
+                int max = Math.min(stack.getMaxStackSize(), inventoryIn.getInventoryStackLimit());
+                if (max >= stack.stackSize)
+                {
+                inventoryIn.setInventorySlotContents(index, stack);
+                stack = null;
+                }
+                else
+                {
+                    inventoryIn.setInventorySlotContents(index, stack.splitStack(max));
+                }
+                flag = true;
+            }
+            else if (canCombine(itemstack, stack))
+            {
+                //Forge: BUGFIX: Again, make things respect max stack sizes.
+                int max = Math.min(stack.getMaxStackSize(), inventoryIn.getInventoryStackLimit());
+                if (max > itemstack.stackSize)
+                {
+                int i = max - itemstack.stackSize;
+                int j = Math.min(stack.stackSize, i);
+                stack.stackSize -= j;
+                itemstack.stackSize += j;
+                flag = j > 0;
+                }
+            }
+        }
+
+        return stack;
+    }
+    
+    private static boolean canCombine(ItemStack stack1, ItemStack stack2)
+    {
+        return stack1.getItem() != stack2.getItem() ? false : (stack1.getMetadata() != stack2.getMetadata() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
+    }
+    
+    /**
+     * Can this hopper insert the specified item from the specified slot on the specified side?
+     */
+    private static boolean canInsertItemInSlot(IInventory inventoryIn, ItemStack stack, int index, EnumFacing side)
+    {
+        return !inventoryIn.isItemValidForSlot(index, stack) ? false : !(inventoryIn instanceof ISidedInventory) || ((ISidedInventory)inventoryIn).canInsertItem(index, stack, side);
+    }
+    
     
     private static boolean isInventoryEmpty(IInventory inventoryIn, EnumFacing side)
     {
@@ -330,5 +475,55 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 	    }
 
 	    
+	    
+	    
+	    public class ShredderRecipe
+	    {
+	    	
+	    	private ItemStack itemIn;
+	    	private ItemStack itemOut;
+	    	private ItemStack itemExtra;
+	    	private int chance;
+	    	private Random rand = new Random();
+	    	
+	    	public ShredderRecipe(ItemStack itemIn, ItemStack itemOut)
+	    	{
+	    		this.itemIn = itemIn;
+	    		this.itemOut = itemOut;
+	    		this.itemExtra = null;
+	    	}
+	    	
+	    	public ShredderRecipe(ItemStack itemIn, ItemStack itemOut, ItemStack itemExtra)
+	    	{
+	    		this(itemIn, itemOut, itemExtra, 3);
+	    	}
+	    	
+	    	public ShredderRecipe(ItemStack itemIn, ItemStack itemOut, ItemStack itemExtra, int chance)
+	    	{
+	    		this.itemIn = itemIn;
+	    		this.itemOut = itemOut;
+	    		this.itemExtra = itemExtra;
+	    		this.chance = chance;
+	    	}
+	    	
+	    	public boolean isInputItem(ItemStack stack)
+	    	{
+	    		return this.itemIn.getItem() == stack.getItem() && this.itemIn.getMetadata() == stack.getMetadata(); 
+	    	}
+	    	
+	    	public ItemStack getOutputItem()
+	    	{
+				return itemOut.copy();
+	    	}
+	    	
+	    	@Nullable
+	    	public ItemStack getExtraItem()
+	    	{
+	    		if(rand.nextInt(chance) == 1)
+	    			return itemExtra.copy();
+	    		else return null;
+	    	}
+	    	
+	    }
 
 }

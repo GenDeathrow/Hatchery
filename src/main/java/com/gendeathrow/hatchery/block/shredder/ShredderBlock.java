@@ -9,6 +9,7 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -29,10 +30,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ShredderBlock extends BlockHorizontal implements ITileEntityProvider
 {
 
+	public static final PropertyBool ISACTIVE = PropertyBool.create("isactive");
+	
+	
 	public ShredderBlock() 
 	{
 		super(Material.IRON);
 		this.setCreativeTab(Hatchery.hatcheryTabs);
+		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ISACTIVE, false));
 	}
 
 	@Override
@@ -131,48 +136,64 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
 		return (EnumFacing)blockStateContainer.getValue(FACING);
 	}
 	
-	 public IBlockState getStateFromMeta(int meta)
-	    {
-	        EnumFacing enumfacing = EnumFacing.getFront(meta);
+	/** Is the Shredder turned on? */
+	public static boolean isActive(IBlockState blockStateContainer)
+	{
+		return blockStateContainer.getValue(ISACTIVE);
+	}
+	
+	/** Update shredding */
+	public void setActive(World worldIn, BlockPos pos, IBlockState state, boolean isActiveIn)
+	{
+		worldIn.setBlockState(pos, state.withProperty(FACING,this.getFacing(state)).withProperty(ISACTIVE, isActiveIn), 2);
+	}
+	
+	public IBlockState getStateFromMeta(int meta)
+	{
+		 EnumFacing enumfacing = EnumFacing.getFront(meta);
 
-	        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-	        {
-	            enumfacing = EnumFacing.NORTH;
-	        }
+		 if (enumfacing.getAxis() == EnumFacing.Axis.Y)
+		 {
+			 enumfacing = EnumFacing.NORTH;
+		 }
 
-	        return this.getDefaultState().withProperty(FACING, enumfacing);
-	    }
+		 return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(ISACTIVE, (meta >> 2) == 1 ? true : false);
+	 }
 
 	    /**
 	     * Convert the BlockState into the correct metadata value
 	     */
-	    public int getMetaFromState(IBlockState state)
-	    {
-	        return ((EnumFacing)state.getValue(FACING)).getIndex();
-	    }
+	public int getMetaFromState(IBlockState state)
+	{
+		int i = 0;
+		i |= ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
+		i |= (state.getValue(ISACTIVE) ? 1 : 0 ) << 2;
+	    	
+		return i  ;//((EnumFacing)state.getValue(FACING)).getIndex();
+	}
 
 
-	    /**
-	     * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
-	     * blockstate.
-	     */
-	    public IBlockState withRotation(IBlockState state, Rotation rot)
-	    {
-	        return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
-	    }
+	/**
+	  * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
+	  * blockstate.
+	*/
+	public IBlockState withRotation(IBlockState state, Rotation rot)
+	{
+		return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
+	}
 
 	    /**
 	     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
 	     * blockstate.
 	     */
-	    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
-	    {
-	        return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
-	    }
+	public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
+	{
+		return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
+	}
 
-	    protected BlockStateContainer createBlockState()
-	    {
-	        return new BlockStateContainer(this, new IProperty[] {FACING});
-	    }
+	protected BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, new IProperty[] {FACING, ISACTIVE});
+	}
 	    
 }
