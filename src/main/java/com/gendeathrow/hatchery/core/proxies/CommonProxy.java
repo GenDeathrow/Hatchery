@@ -36,9 +36,9 @@ import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.init.ModRecipes;
+import com.gendeathrow.hatchery.entities.ContainerRoosterInventory;
 import com.gendeathrow.hatchery.entities.EntityRooster;
-import com.gendeathrow.hatchery.inventory.ContainerRoosterInventory;
-import com.gendeathrow.hatchery.inventory.GuiRoosterInventory;
+import com.gendeathrow.hatchery.entities.GuiRoosterInventory;
 import com.gendeathrow.hatchery.item.HatcheryEggThrown;
 
 public class CommonProxy implements IGuiHandler 

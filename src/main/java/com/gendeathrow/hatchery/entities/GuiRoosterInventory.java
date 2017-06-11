@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.inventory;
+package com.gendeathrow.hatchery.entities;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
@@ -13,7 +13,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.entities.EntityRooster;
 
 @SideOnly(Side.CLIENT)
 public class GuiRoosterInventory extends GuiContainer {

@@ -1,5 +1,7 @@
 package com.gendeathrow.hatchery.block;
 
+import com.gendeathrow.hatchery.inventory.InventoryStorage;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

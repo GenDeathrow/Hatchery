@@ -143,9 +143,9 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
 	}
 	
 	/** Update shredding */
-	public void setActive(World worldIn, BlockPos pos, IBlockState state, boolean isActiveIn)
+	public static void setActive(World worldIn, BlockPos pos, IBlockState state, boolean isActiveIn)
 	{
-		worldIn.setBlockState(pos, state.withProperty(FACING,this.getFacing(state)).withProperty(ISACTIVE, isActiveIn), 2);
+		worldIn.setBlockState(pos, state.withProperty(FACING, getFacing(state)).withProperty(ISACTIVE, isActiveIn), 2);
 	}
 	
 	public IBlockState getStateFromMeta(int meta)

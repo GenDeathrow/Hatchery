@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.block;
+package com.gendeathrow.hatchery.inventory;
 
 import javax.annotation.Nullable;
 

@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.inventory;
+package com.gendeathrow.hatchery.entities;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -7,8 +7,6 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-
-import com.gendeathrow.hatchery.entities.EntityRooster;
 
 public class ContainerRoosterInventory extends Container {
 

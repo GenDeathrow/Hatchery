@@ -44,7 +44,7 @@ public class GuiShredder extends GuiContainer
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;
 
-		previousRFLevel = rfEnergyLevels;
+		previousRFLevel = rfEnergyLevels;  
 		
 		rfEnergyLevels = (int) (((float)SHREDDER.energy.getEnergyStored() / SHREDDER.energy.getMaxEnergyStored()) * 58);
 		

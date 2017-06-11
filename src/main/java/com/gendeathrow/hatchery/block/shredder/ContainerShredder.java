@@ -13,8 +13,12 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerShredder extends Container 
 {
@@ -29,46 +33,43 @@ public class ContainerShredder extends Container
 	private final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 	private final int TE_INVENTORY_SLOT_COUNT = 9;
 	
-	private final IInventory inventory;
+	private final IItemHandler inventory;
 	
 	private final IInventory upgrades;
 	
+	private final ShredderTileEntity shredder;
+	
 	public ContainerShredder(InventoryPlayer playerInventory,	ShredderTileEntity tile, EntityPlayer player) 
 	{
-		inventory = tile;  
+		inventory = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
+
 		upgrades = tile.getUpgradeStorage();
+		
+		shredder = tile;
 		
 		int i;  
 
-		addSlotToContainer(new Slot(inventory, 0, 65, 16)
-		{
-			@Override
-			public boolean isItemValid(@Nullable ItemStack stack)
-			{
-				return tile.isShreddableItem(stack);
+		addSlotToContainer(new SlotItemHandler(inventory, 0, 65, 16){
+		    @Override
+		    public boolean canTakeStack(EntityPlayer playerIn){
+		    	return true;
 		    }
 		});
 		
-		addSlotToContainer(new Slot(inventory, 1, 55, 54)
-		{
+		addSlotToContainer(new SlotItemHandler(inventory, 1, 55, 54){
 			@Override
-			public boolean isItemValid(@Nullable ItemStack stack)
-			{
+			public boolean isItemValid(@Nullable ItemStack stack){
 				return false;
 		    }
 		});
 		
-		addSlotToContainer(new Slot(inventory, 2, 76, 54)
-		{
+		addSlotToContainer(new SlotItemHandler(inventory, 2, 76, 54){
 			@Override
-			public boolean isItemValid(@Nullable ItemStack stack)
-			{
+			public boolean isItemValid(@Nullable ItemStack stack){
 				return false;
 		    }
 		});
-		
-		
-        
+		     
 		addSlotToContainer(new SlotUpgrade(upgrades, 0, 121, 55));
 		addSlotToContainer(new SlotUpgrade(upgrades, 1, 141, 54));
 
@@ -77,10 +78,7 @@ public class ContainerShredder extends Container
 	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 7 + j * 18, 83 + i * 18));
 
         for (i = 0; i < 9; ++i)
-            addSlotToContainer(new Slot(playerInventory, i, 7 + i * 18, 141));	    
-        
-        
-        
+            addSlotToContainer(new Slot(playerInventory, i, 7 + i * 18, 141));	          
 	}
 	
 	
@@ -95,14 +93,14 @@ public class ContainerShredder extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (slotIndex < (this.inventory.getSizeInventory() + this.upgrades.getSizeInventory()))
+            if (slotIndex < (this.inventory.getSlots() + this.upgrades.getSizeInventory()))
             {
-                if (!this.mergeItemStack(itemstack1, this.inventory.getSizeInventory(), this.inventorySlots.size(), true))
+                if (!this.mergeItemStack(itemstack1, this.inventory.getSlots(), this.inventorySlots.size(), true))
                 {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 0, this.inventory.getSizeInventory(), false))
+            else if (!this.mergeItemStack(itemstack1, 0, this.inventory.getSlots(), false))
             {
                 return null;
             }
@@ -123,7 +121,7 @@ public class ContainerShredder extends Container
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void updateProgressBar(int id, int value) {
-		this.inventory.setField(id, value);
+		this.shredder.setField(id, value);
 	}
 
 	@Override
@@ -133,9 +131,7 @@ public class ContainerShredder extends Container
 		
 		for (IContainerListener listener : this.listeners) 
 		 {
-					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
-					listener.sendProgressBarUpdate(this, 0, this.inventory.getField(0));
-
+					listener.sendProgressBarUpdate(this, 0, this.shredder.getField(0));
 		 }
 
     }

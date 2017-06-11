@@ -6,42 +6,51 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyReceiver;
 
-import com.gendeathrow.hatchery.block.InventoryStorage;
+import com.gendeathrow.hatchery.api.tileentities.IContainerUpdate;
 import com.gendeathrow.hatchery.block.TileUpgradable;
 import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.storage.EnergyStorageRF;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
-public class ShredderTileEntity extends TileUpgradable implements ITickable, IInventory, IEnergyReceiver
+public class ShredderTileEntity extends TileUpgradable implements ITickable, IContainerUpdate
 {
-	protected EnergyStorage energy= new EnergyStorage(100000);
-	protected net.minecraftforge.energy.EnergyStorage energy2 = new net.minecraftforge.energy.EnergyStorage(100000);
-	
+	public EnergyStorageRF energy= new EnergyStorageRF(100000);
 	   
-	public int animationTicks;
-	public int prevAnimationTicks;
+	public int animationTicks;  
+	public int prevAnimationTicks;  
 
-	protected InventoryStorage inventory = new InventoryStorage(this, 3);
-	protected InventoryStorage upgrades = new InventoryStorage(this, 2);
+	protected InventoryStroageModifiable inventory = new InventoryStroageModifiable(3)
+	{
+		@Override
+		public boolean canExtractSlot(int slot)	{
+			if(slot > 0) 
+				return true;
+			return false;
+		}
+		
+		@Override
+		public boolean canInsertSlot(int slot, ItemStack stack)	{
+			if(slot == 0 && isShreddableItem(stack)) return true;
+			return false;
+		}
+	};
 	
-	protected ArrayList<ShredderRecipe> shredderRecipes = new ArrayList<ShredderRecipe>();
-	
-	
+	public static ArrayList<ShredderRecipe> shredderRecipes = new ArrayList<ShredderRecipe>();
 	
     private int transferCooldown = -1;
 	int slotIn = 0;
@@ -53,10 +62,19 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 		shredderRecipes.add(new ShredderRecipe(new ItemStack(Items.FEATHER), new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal)));
 	}
 
+	private int shreddingTime;
+    private int currentItemShreddingTime;
+    private int shredTime;
+    private int totalshredTime;
+	
 	@Override
 	public void update() 
 	{
-		if (worldObj.isRemote) 
+
+		boolean flag = this.isShredding();
+		boolean flag1 = false;
+		
+		if (worldObj.isRemote && ShredderBlock.isActive(this.worldObj.getBlockState(this.pos))) 
 		{
 			prevAnimationTicks = animationTicks;
 			if (animationTicks < 360)
@@ -68,31 +86,77 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 			}
 		}
 		
+		if(this.isShredding())
+		{
+			this.shreddingTime--;
+		}
+		
 		
         if (this.worldObj != null && !this.worldObj.isRemote)
         {
             --this.transferCooldown;
             
             
+            
             if (!this.isOnTransferCooldown())
             {
             	  this.captureDroppedItems();
                   this.setTransferCooldown(8);
-                  this.shredItem();
+                  //this.shredItem();
             }
             
-    		if ((energy.getEnergyStored() > 0)) 
+               
+    		if ((energy.getEnergyStored() > 10)) 
 			{
-				for (EnumFacing facing : EnumFacing.VALUES) 
-				{
-						TileEntity tile = worldObj.getTileEntity(pos.offset(facing));
-						if (tile != null && tile instanceof IEnergyReceiver) 
-						{
-							//int received = ((IEnergyReceiver) tile).receiveEnergy(facing.getOpposite(), storage.getEnergyStored(), false);
-							//this.energy.extractEnergy(facing, received, false);
-						}
-				}
+    			if (this.isShredding() || this.inventory.getStackInSlot(0) != null)
+    			{
+                	this.shreddingTime = 200;
+                	this.currentItemShreddingTime = this.shreddingTime;
+                	
+                	if(this.isShredding())
+                	{
+                		flag1 = true;
+               		 	if(this.inventory.getStackInSlot(0) != null)
+               		 	{
+               		 		this.inventory.extractItem(0, 1, false);
+               		 		
+               		 		if(this.inventory.getStackInSlot(0) != null)
+               		 			this.inventory.setStackInSlot(0, null);
+               		 	}
+                		
+                	}
+    			}
+    			
+    			if(this.isShredding() && this.canShred() && this.shreddingTime > 0)
+    			{
+    				this.shreddingTime--;
+    				this.energy.extractEnergy(20, false);
+    				
+    				if(this.shreddingTime <= 0)
+    					this.shredItem();
+    				
+    				this.energy.extractEnergy(20,false);
+    				
+    				flag1 =true;
+    			}
+
+    		}
+			else if(!this.isShredding() && this.shredTime > 0)
+			{
+				 this.shredTime = MathHelper.clamp_int(this.shredTime - 2, 0, this.totalshredTime);
 			}
+			
+        }
+        
+		if(flag != this.isShredding())
+		{
+			flag1 = true;
+			ShredderBlock.setActive(this.worldObj, this.pos, this.worldObj.getBlockState(this.pos), this.isShredding());			//  BlockFurnace.setState(this.isBurning(), this.worldObj, this.pos);
+		}
+		
+        if (flag1)
+        {
+            this.markDirty();
         }
 	}
 	
@@ -101,31 +165,62 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 		ItemStack stack = this.inventory.getStackInSlot(0);
 		boolean flag = false;		
 		
-		if(stack != null && this.isShreddableItem(stack))
+		if(stack != null && this.isShreddableItem(stack) && canShred())
 		{
 			ShredderRecipe recipe = getRecipe(stack);
-
-			
 			if(recipe != null)
 			{
-				if(recipe.getOutputItem() != null)
+				if(recipe.hasOutput())
 				{
-					if(this.insertStack(inventory, recipe.getOutputItem(), animationTicks, EnumFacing.DOWN) == null)
-						flag = true;
-						
+					this.inventory.insertItemInternal(1, recipe.getOutputItem(), false);
+					
+					if(recipe.hasExtraOutput())
+					{
+						ItemStack extra = recipe.getExtraItem();
+						if(extra != null)
+							this.inventory.insertItemInternal(2, extra, false);
+					}
+					flag = true;
 				}
-				ItemStack extra = recipe.getExtraItem();
-				if(extra != null)
-				{
-					if(this.insertStack(inventory, extra, animationTicks, EnumFacing.DOWN) == null)
-						flag = true;
-				}
+
 			}
 
 			if(flag)
-				this.inventory.decrStackSize(0, 1);
+				this.inventory.extractItemInternal(0, 1, false);
 		}
 	}
+	
+	private boolean canShred()
+	{
+        if (this.inventory.getStackInSlot(0) == null)
+        {
+            return false;
+        }
+        else
+        {
+            ShredderRecipe recipe = this.getRecipe(this.inventory.getStackInSlot(0));
+            
+            if (recipe == null) return false;
+            
+            ItemStack itemstack = recipe.itemOut;
+            if( itemstack == null) return false;
+            if (this.inventory.getStackInSlot(1) == null) return true;
+            if (!this.inventory.getStackInSlot(1).isItemEqual(itemstack)) return false;
+            int result = inventory.getStackInSlot(1).stackSize + itemstack.stackSize;
+            return result <= 64 && result <= this.inventory.getStackInSlot(1).getMaxStackSize(); //Forge BugFix: Make it respect stack sizes properly.
+        }
+	}
+	
+    public boolean isShredding()
+    {
+        return this.shreddingTime > 0;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public static boolean isShredding(IInventory inventory)
+    {
+        return inventory.getField(1) > 0;
+    }
 	
 	protected ShredderRecipe getRecipe(ItemStack stack)
 	{
@@ -139,9 +234,10 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 		return null;
 	}
 
-	protected boolean isShreddableItem(ItemStack stack)
+	public static boolean isShreddableItem(ItemStack stack)
 	{
-		for(ShredderRecipe recipe : this.shredderRecipes)
+		
+		for(ShredderRecipe recipe : shredderRecipes)
 		{
 			if(recipe.isInputItem(stack))
 			{
@@ -172,8 +268,9 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
         	if(isShreddableItem(entityitem.getEntityItem()))
         	{
                 ItemStack itemstack = entityitem.getEntityItem().copy();
-        		ItemStack itemstack1 = insertStack(this.inventory, entityitem.getEntityItem(), 0, enumfacing);
-        		
+        		//ItemStack itemstack1 = insertStack(this, itemstack, 0, enumfacing);
+                ItemStack itemstack1 = this.inventory.insertItemInternal(0, itemstack, false);
+                
                 if (itemstack1 != null && itemstack1.stackSize != 0)
                 {
                 	entityitem.setEntityItemStack(itemstack1);
@@ -187,197 +284,9 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
         		return flag;
         	}
         }
-		return false;
+		return flag;
 	}
 	
-
-	
-	/// INVENTORY
-    private boolean isInventoryFull(IInventory inventoryIn, EnumFacing side)
-    {
-        if (inventoryIn instanceof ISidedInventory)
-        {
-            ISidedInventory isidedinventory = (ISidedInventory)inventoryIn;
-            int[] aint = isidedinventory.getSlotsForFace(side);
-
-            for (int k : aint)
-            {
-                ItemStack itemstack1 = isidedinventory.getStackInSlot(k);
-
-                if (itemstack1 == null || itemstack1.stackSize != itemstack1.getMaxStackSize())
-                {
-                    return false;
-                }
-            }
-        }
-        else
-        {
-            int i = inventoryIn.getSizeInventory();
-
-            for (int j = 0; j < i; ++j)
-            {
-                ItemStack itemstack = inventoryIn.getStackInSlot(j);
-
-                if (itemstack == null || itemstack.stackSize != itemstack.getMaxStackSize())
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-    
-    /**
-     * Insert the specified stack to the specified inventory and return any leftover items
-     */
-    private static ItemStack insertStack(IInventory inventoryIn, ItemStack stack, int index, EnumFacing side)
-    {
-        ItemStack itemstack = inventoryIn.getStackInSlot(index);
-
-        if (canInsertItemInSlot(inventoryIn, stack, index, side))
-        {
-            boolean flag = false;
-
-            if (itemstack == null)
-            {
-                //Forge: BUGFIX: Again, make things respect max stack sizes.
-                int max = Math.min(stack.getMaxStackSize(), inventoryIn.getInventoryStackLimit());
-                if (max >= stack.stackSize)
-                {
-                inventoryIn.setInventorySlotContents(index, stack);
-                stack = null;
-                }
-                else
-                {
-                    inventoryIn.setInventorySlotContents(index, stack.splitStack(max));
-                }
-                flag = true;
-            }
-            else if (canCombine(itemstack, stack))
-            {
-                //Forge: BUGFIX: Again, make things respect max stack sizes.
-                int max = Math.min(stack.getMaxStackSize(), inventoryIn.getInventoryStackLimit());
-                if (max > itemstack.stackSize)
-                {
-                int i = max - itemstack.stackSize;
-                int j = Math.min(stack.stackSize, i);
-                stack.stackSize -= j;
-                itemstack.stackSize += j;
-                flag = j > 0;
-                }
-            }
-        }
-
-        return stack;
-    }
-    
-    private static boolean canCombine(ItemStack stack1, ItemStack stack2)
-    {
-        return stack1.getItem() != stack2.getItem() ? false : (stack1.getMetadata() != stack2.getMetadata() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
-    }
-    
-    /**
-     * Can this hopper insert the specified item from the specified slot on the specified side?
-     */
-    private static boolean canInsertItemInSlot(IInventory inventoryIn, ItemStack stack, int index, EnumFacing side)
-    {
-        return !inventoryIn.isItemValidForSlot(index, stack) ? false : !(inventoryIn instanceof ISidedInventory) || ((ISidedInventory)inventoryIn).canInsertItem(index, stack, side);
-    }
-    
-    
-    private static boolean isInventoryEmpty(IInventory inventoryIn, EnumFacing side)
-    {
-        if (inventoryIn instanceof ISidedInventory)
-        {
-            ISidedInventory isidedinventory = (ISidedInventory)inventoryIn;
-            int[] aint = isidedinventory.getSlotsForFace(side);
-
-            for (int i : aint)
-            {
-                if (isidedinventory.getStackInSlot(i) != null)
-                {
-                    return false;
-                }
-            }
-        }
-        else
-        {
-            int j = inventoryIn.getSizeInventory();
-
-            for (int k = 0; k < j; ++k)
-            {
-                if (inventoryIn.getStackInSlot(k) != null)
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-    
-    
-		@Override
-		public String getName() { return null; }
-
-		@Override
-		public boolean hasCustomName() { return false; }
-
-		@Override
-		public int getSizeInventory() 
-		{
-			return this.inventory.getSizeInventory();
-		}
-
-		@Override
-		public ItemStack getStackInSlot(int slot) 
-		{
-			return this.inventory.getStackInSlot(slot);
-		}
-
-		@Override
-		public ItemStack decrStackSize(int slot, int count) 
-		{
-			return this.inventory.decrStackSize(slot, count);
-		}
-
-		@Override
-		public ItemStack removeStackFromSlot(int slot) 
-		{
-			return this.inventory.removeStackFromSlot(slot);
-		}
-
-		@Override
-		public void setInventorySlotContents(int slot, ItemStack stack) 
-		{
-			this.inventory.setInventorySlotContents(slot, stack);
-		}
-
-		@Override
-		public int getInventoryStackLimit() 
-		{
-			return 64;
-		}
-
-		@Override
-		public boolean isUseableByPlayer(EntityPlayer player) { return true; }
-
-		@Override
-		public void openInventory(EntityPlayer player) { this.inventory.openInventory(player); }
-
-		@Override
-		public void closeInventory(EntityPlayer player) { this.inventory.closeInventory(player); }
-
-		@Override
-		public boolean isItemValidForSlot(int index, ItemStack stack) 
-		{
-			if(index == this.slotIn && this.isShreddableItem(stack))
-					return true;
-			else if(index > this.slotIn && (stack.getItem() == ModItems.featherFiber || stack.getItem() == ModItems.featherMeal))
-				return false;
-			return false; 
-		}
 
 		@Override
 		public int getField(int id) 
@@ -386,11 +295,13 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 	        {
 	            case 0:
 	            	return this.energy.getEnergyStored();
+	            case 1:
+	            	return this.shreddingTime;
 	            default:
 	                return 0;
 	        }
 
-		}
+		}  
 		
 		@Override
 		public void setField(int id, int value) 
@@ -401,26 +312,24 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 	            case 0:
 	            	this.energy.setEnergyStored(value);
 	                break;
+	            case 1:
+	            	this.shreddingTime = value;
 
 	        }
 		}
 
 		@Override
-		public int getFieldCount() { return 1; }
-
-		@Override
-		public void clear() { 
-			this.inventory.clear();
-		}
-		
-		
+		public int getFieldCount() { return 2; }
 
 	    @Override
 	    public void readFromNBT(NBTTagCompound tag)
 	    {
 	        super.readFromNBT(tag);
 	        this.energy.readFromNBT(tag);
-	        this.inventory.readFromNBT(tag);
+	        //.getInteger("energy")
+	       // this.inventory.readFromNBT(tag);
+	        this.inventory.deserializeNBT(tag.getCompoundTag("inventory"));
+	        
 	    }
 
 	    @Override
@@ -428,39 +337,17 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 	    {
 	    	tag = super.writeToNBT(tag);
 	    	
-	        this.inventory.writeToNBT(tag);
+	        //this.inventory.writeToNBT(tag);
+	    	tag.setTag("inventory",this.inventory.serializeNBT());
 	        this.energy.writeToNBT(tag);
 	        return tag;
 	    }
 
 
-	    // ENERGY
-	    
-		@Override
-		public int getEnergyStored(EnumFacing from) {
-			return this.energy.getEnergyStored();
-		}
-
-		@Override
-		public int getMaxEnergyStored(EnumFacing from) {
-			return this.energy.getMaxEnergyStored();
-		}
-
-		@Override
-		public boolean canConnectEnergy(EnumFacing from) {
-			return true;
-		}
-
-		@Override
-		public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-			return this.energy.receiveEnergy(maxReceive, simulate);
-		}
-
-		
 	    @Override
 	    public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	    {
-	        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+	        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
 	    }
 
 	    @SuppressWarnings("unchecked")
@@ -469,7 +356,11 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 	    {
 	    	if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
 	        {
-	            return (T) new InvWrapper(this);
+	    		 return (T) this.inventory;
+	        }
+	    	if (capability == CapabilityEnergy.ENERGY) 
+	        {
+	    		return (T) this.energy;
 	        }
 	        return super.getCapability(capability, facing);
 	    }
@@ -509,6 +400,17 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, IIn
 	    	public boolean isInputItem(ItemStack stack)
 	    	{
 	    		return this.itemIn.getItem() == stack.getItem() && this.itemIn.getMetadata() == stack.getMetadata(); 
+	    	}
+	    	
+	    	
+	    	public boolean hasOutput()
+	    	{
+	    		return itemOut != null;
+	    	}
+	    	
+	    	public boolean hasExtraOutput()
+	    	{
+	    		return itemExtra != null;
 	    	}
 	    	
 	    	public ItemStack getOutputItem()

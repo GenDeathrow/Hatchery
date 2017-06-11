@@ -36,10 +36,10 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.api.tileentities.IChickenNestingPen;
-import com.gendeathrow.hatchery.block.InventoryStorage;
 import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.inventory.InventoryStorage;
 import com.gendeathrow.hatchery.item.HatcheryEgg;
 
 
