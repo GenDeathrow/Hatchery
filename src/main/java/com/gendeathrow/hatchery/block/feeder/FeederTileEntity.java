@@ -2,6 +2,8 @@ package com.gendeathrow.hatchery.block.feeder;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.core.init.ModItems;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -187,7 +189,7 @@ public class FeederTileEntity extends TileEntity implements IInventory
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) 
 	{
-		return this.seedInventory < this.maxSeedInventory ? stack.getItem() instanceof ItemSeeds : false;
+		return this.seedInventory < this.maxSeedInventory ? (stack.getItem() instanceof ItemSeeds || stack.getItem() == ModItems.chickenFeed) : false;
 	}
 
 	@Override

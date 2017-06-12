@@ -132,6 +132,8 @@ public class ContainerShredder extends Container
 		for (IContainerListener listener : this.listeners) 
 		 {
 					listener.sendProgressBarUpdate(this, 0, this.shredder.getField(0));
+					listener.sendProgressBarUpdate(this, 1, this.shredder.getField(1));
+					listener.sendProgressBarUpdate(this, 2, this.shredder.getField(2));
 		 }
 
     }

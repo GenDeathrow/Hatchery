@@ -180,7 +180,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
-        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(HASCHICKEN, false);
     }
 
     /**
@@ -188,7 +188,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
      */
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
-        worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+        worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(HASCHICKEN, false), 2);
     }
     
     public static void setState(boolean hasChicken, World worldIn, BlockPos pos)
@@ -287,7 +287,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
                 enumfacing = EnumFacing.WEST;
             }
 
-            worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
+            worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing).withProperty(HASCHICKEN, state.getValue(HASCHICKEN)), 2);
         }
     }
 	 

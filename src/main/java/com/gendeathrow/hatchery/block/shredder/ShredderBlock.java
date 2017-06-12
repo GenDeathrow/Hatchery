@@ -66,6 +66,9 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+        
+        if(!worldIn.isRemote)
+       	 worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 2); 
     }
     
     private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state)
@@ -145,7 +148,7 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
 	/** Update shredding */
 	public static void setActive(World worldIn, BlockPos pos, IBlockState state, boolean isActiveIn)
 	{
-		worldIn.setBlockState(pos, state.withProperty(FACING, getFacing(state)).withProperty(ISACTIVE, isActiveIn), 2);
+		worldIn.setBlockState(pos, state.withProperty(FACING, getFacing(state)).withProperty(ISACTIVE, isActiveIn), 3);
 	}
 	
 	public IBlockState getStateFromMeta(int meta)

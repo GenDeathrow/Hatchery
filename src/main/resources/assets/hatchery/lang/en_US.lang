@@ -33,6 +33,11 @@ item.hatchery.sprayer.name=Fertilizer Sprayer
 item.hatchery.feather_fiber.name=Feather Fibers
 item.hatchery.feather_meal.name=Feather Meal
 item.hatchery.plastic.name=Plastic
+item.hatchery.chicken_feed.name=Chicken Feed
+item.hatchery.circuit_board.name=Circuit Board
+item.hatchery.rf_upgrade_1.name=RF Upgrade Tier 1
+item.hatchery.rf_upgrade_2.name=RF Upgrade Tier 2
+item.hatchery.rf_upgrade_3.name=RF Upgrade Tier 3
 
 #TOOLTIP
 tooltip.hatchery.sprayer.desc=%1$s Volume: %2$dmb / %3$dmb
@@ -62,5 +67,12 @@ jei.item.hatchery.animalnet=Use an animal net to pickup any passive animal. Use 
 jei.item.hatchery.hatcheryegg=Hatchery Eggs are dynamically created eggs, Used to be able to breed two parents and create a custom egg. Mainly for Modded Chickens with new breeding mechanics.
 jei.item.hatchery.chickenmanure=Drops from nesting pens. Use manure to make fertilized dirt, Manure Blocks, liquid fertilizer, or use it as bonemeal for plants.
 jei.item.hatchery.sprayer=The fertilizer sprayer is used to turn dirt/farmland into fertilized dirt/farmland, and acts much like a watering can causing block updates. Spray Holds 3000mb. 
+jei.item.hatchery.circuit_board.name=Used for crafting in upgrades
+jei.item.hatchery.rf_upgrade_1=Upgrades RF power generation 40rf/tick
+jei.item.hatchery.rf_upgrade_2=Upgrades RF power generation 60rf/tick
+jei.item.hatchery.rf_upgrade_3=Upgrades RF power generation 80rf/tick
+jei.item.hatchery.feather_fiber=Feather fibers are shredded feathers placed int he shredder, that can than be melted into a raw plastic. Used in crafting for various items. 
+jei.item.hatchery.feather_meal=Feather Meal is a by product of using the shredder of feathers. It can be added to seeds to create more food for chickens. 
+jei.item.hatchery.chicken_feed=Add Chicken Feed to feeders as an alternate food source.
 
 jei.gui.nesting_pen_drop=Nesting Pen Chicken Drops

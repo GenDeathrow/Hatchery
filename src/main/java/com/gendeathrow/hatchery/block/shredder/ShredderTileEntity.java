@@ -5,29 +5,32 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
+import cofh.api.energy.IEnergyReceiver;
 
 import com.gendeathrow.hatchery.api.tileentities.IContainerUpdate;
 import com.gendeathrow.hatchery.block.TileUpgradable;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
-public class ShredderTileEntity extends TileUpgradable implements ITickable, IContainerUpdate
+public class ShredderTileEntity extends TileUpgradable implements ITickable, IContainerUpdate, IEnergyReceiver
 {
 	public EnergyStorageRF energy= new EnergyStorageRF(100000);
 	   
@@ -66,14 +69,15 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
     private int currentItemShreddingTime;
     private int shredTime;
     private int totalshredTime;
+    
+    private int rfTick = 20;
+    
+    private ItemStack shreddedItem;
 	
 	@Override
 	public void update() 
 	{
 
-		boolean flag = this.isShredding();
-		boolean flag1 = false;
-		
 		if (worldObj.isRemote && ShredderBlock.isActive(this.worldObj.getBlockState(this.pos))) 
 		{
 			prevAnimationTicks = animationTicks;
@@ -85,79 +89,71 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 				prevAnimationTicks -= 360;
 			}
 		}
-		
-		if(this.isShredding())
-		{
-			this.shreddingTime--;
-		}
+
+		boolean flag = this.isShredding();
+		boolean flag1 = false;
 		
 		
         if (this.worldObj != null && !this.worldObj.isRemote)
         {
             --this.transferCooldown;
             
-            
-            
             if (!this.isOnTransferCooldown())
             {
             	  this.captureDroppedItems();
                   this.setTransferCooldown(8);
-                  //this.shredItem();
             }
             
                
-    		if ((energy.getEnergyStored() > 10)) 
-			{
-    			if (this.isShredding() || this.inventory.getStackInSlot(0) != null)
-    			{
-                	this.shreddingTime = 200;
-                	this.currentItemShreddingTime = this.shreddingTime;
-                	
-                	if(this.isShredding())
-                	{
-                		flag1 = true;
-               		 	if(this.inventory.getStackInSlot(0) != null)
-               		 	{
-               		 		this.inventory.extractItem(0, 1, false);
-               		 		
-               		 		if(this.inventory.getStackInSlot(0) != null)
-               		 			this.inventory.setStackInSlot(0, null);
-               		 	}
-                		
-                	}
-    			}
-    			
-    			if(this.isShredding() && this.canShred() && this.shreddingTime > 0)
-    			{
-    				this.shreddingTime--;
-    				this.energy.extractEnergy(20, false);
-    				
-    				if(this.shreddingTime <= 0)
-    					this.shredItem();
-    				
-    				this.energy.extractEnergy(20,false);
-    				
-    				flag1 =true;
-    			}
+   			if (!this.isShredding() && this.canShred() && hasPower())
+   			{
+   	           	this.shreddingTime = setShredTime(this.inventory.getStackInSlot(0));
+               	this.currentItemShreddingTime = this.shreddingTime;
+              	
+               	if(this.isShredding())
+               	{
+               		shreddedItem = this.inventory.extractItemInternal(0, 1, false);
+               	}
+   			}
+   			
+   			if(this.isShredding() && hasPower())
+   			{
+   				this.shreddingTime--;
+   				this.energy.extractEnergy(20, false);
+   				
+   				if(this.shreddingTime <= 0)
+   					this.shredItem();
+   			}
 
-    		}
-			else if(!this.isShredding() && this.shredTime > 0)
-			{
-				 this.shredTime = MathHelper.clamp_int(this.shredTime - 2, 0, this.totalshredTime);
-			}
+   		}
+
+//			else if(!this.isShredding() && this.shredTime > 0)
+//			{
+//				 this.shredTime = MathHelper.clamp_int(this.shredTime - 2, 0, this.totalshredTime);
+//			}
 			
-        }
-        
-		if(flag != this.isShredding())
-		{
+		if(flag != (this.isShredding() && hasPower())){
 			flag1 = true;
-			ShredderBlock.setActive(this.worldObj, this.pos, this.worldObj.getBlockState(this.pos), this.isShredding());			//  BlockFurnace.setState(this.isBurning(), this.worldObj, this.pos);
+			ShredderBlock.setActive(this.worldObj, this.pos, this.worldObj.getBlockState(this.pos), this.isShredding() && hasPower());			//  BlockFurnace.setState(this.isBurning(), this.worldObj, this.pos);
 		}
 		
         if (flag1)
-        {
             this.markDirty();
-        }
+   }
+	
+	public int getShreddingTime()
+	{
+		return this.shreddingTime;
+	}
+	
+	public int getTotalShredTime()
+	{
+		return this.shredTime;
+	}
+	
+	public int setShredTime(ItemStack stack)
+	{
+		return this.shredTime = this.getRecipe(stack).shredTime;
 	}
 	
 	public void shredItem()
@@ -165,9 +161,9 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 		ItemStack stack = this.inventory.getStackInSlot(0);
 		boolean flag = false;		
 		
-		if(stack != null && this.isShreddableItem(stack) && canShred())
+		if(shreddedItem != null && this.isShreddableItem(shreddedItem))
 		{
-			ShredderRecipe recipe = getRecipe(stack);
+			ShredderRecipe recipe = getRecipe(shreddedItem);
 			if(recipe != null)
 			{
 				if(recipe.hasOutput())
@@ -185,8 +181,6 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 
 			}
 
-			if(flag)
-				this.inventory.extractItemInternal(0, 1, false);
 		}
 	}
 	
@@ -213,7 +207,13 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	
     public boolean isShredding()
     {
+
         return this.shreddingTime > 0;
+    }
+    
+    public boolean hasPower()
+    {
+    	return energy.getEnergyStored() >= rfTick;
     }
     
     @SideOnly(Side.CLIENT)
@@ -236,6 +236,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 
 	public static boolean isShreddableItem(ItemStack stack)
 	{
+		if(stack == null) return false;
 		
 		for(ShredderRecipe recipe : shredderRecipes)
 		{
@@ -288,144 +289,174 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	}
 	
 
-		@Override
-		public int getField(int id) 
-		{ 
-	        switch (id)
-	        {
-	            case 0:
-	            	return this.energy.getEnergyStored();
-	            case 1:
-	            	return this.shreddingTime;
-	            default:
-	                return 0;
-	        }
-
-		}  
-		
-		@Override
-		public void setField(int id, int value) 
-		{ 
-			
-	        switch (id)
-	        {
-	            case 0:
-	            	this.energy.setEnergyStored(value);
-	                break;
-	            case 1:
-	            	this.shreddingTime = value;
-
-	        }
+	@Override
+	public int getField(int id) 
+	{ 
+		switch (id)
+		{
+			case 0:
+				return this.energy.getEnergyStored();
+			case 1:
+				return this.shreddingTime;
+			case 2:
+				return this.currentItemShreddingTime;
+			default:
+				return 0;
 		}
 
-		@Override
-		public int getFieldCount() { return 2; }
+	}  
+		
+	@Override
+	public void setField(int id, int value) 
+	{ 
+			
+		switch (id)
+		{
+			case 0:
+				this.energy.setEnergyStored(value);
+				break;
+			case 1:
+				this.shreddingTime = value;
+				break;
+			case 2:
+				this.currentItemShreddingTime = value;
+				break;
 
-	    @Override
-	    public void readFromNBT(NBTTagCompound tag)
-	    {
-	        super.readFromNBT(tag);
-	        this.energy.readFromNBT(tag);
-	        //.getInteger("energy")
-	       // this.inventory.readFromNBT(tag);
-	        this.inventory.deserializeNBT(tag.getCompoundTag("inventory"));
+		}
+	}
+
+	@Override
+	public int getFieldCount() { return 3; }
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		this.energy.readFromNBT(tag);
+		this.inventory.deserializeNBT(tag.getCompoundTag("inventory"));
 	        
-	    }
+	}
 
-	    @Override
-	    public NBTTagCompound writeToNBT(NBTTagCompound tag)
-	    {
-	    	tag = super.writeToNBT(tag);
-	    	
-	        //this.inventory.writeToNBT(tag);
-	    	tag.setTag("inventory",this.inventory.serializeNBT());
-	        this.energy.writeToNBT(tag);
-	        return tag;
-	    }
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
+	{
+		tag = super.writeToNBT(tag);
 
+		tag.setTag("inventory",this.inventory.serializeNBT());
+		this.energy.writeToNBT(tag);
+		return tag;
+	}
+	    
+	    //RF ENERGY
+	@Override
+	public int getEnergyStored(EnumFacing from) {
+		return energy.getEnergyStored();
+	}
 
-	    @Override
-	    public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-	    {
-	        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
-	    }
+	@Override
+	public int getMaxEnergyStored(EnumFacing from) {
+		return energy.getMaxEnergyStored();
+	}
 
-	    @SuppressWarnings("unchecked")
-	    @Override
-	    public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-	    {
-	    	if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
-	        {
-	    		 return (T) this.inventory;
-	        }
-	    	if (capability == CapabilityEnergy.ENERGY) 
-	        {
-	    		return (T) this.energy;
-	        }
+	@Override
+	public boolean canConnectEnergy(EnumFacing from) {
+		return true;
+	}
+
+	@Override
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
+		return energy.receiveEnergy(maxReceive, simulate);
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+	{
+		if(oldState.getBlock() == ModBlocks.shredder && newSate.getBlock() == ModBlocks.shredder){
+			return false;
+		}
+		else 
+			return oldState != newSate;
+	}
+		
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	{
+		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	{
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
+		{
+			return (T) this.inventory;
+		}
+		if (capability == CapabilityEnergy.ENERGY) 
+		{
+			return (T) this.energy;
+		}
 	        return super.getCapability(capability, facing);
-	    }
+	}
 
 	    
-	    
-	    
-	    public class ShredderRecipe
-	    {
+	public class ShredderRecipe
+	{
+		private ItemStack itemIn;
+		private ItemStack itemOut;
+		private ItemStack itemExtra;
+		private int chance;
+		private int shredTime;
+		private Random rand = new Random();
 	    	
-	    	private ItemStack itemIn;
-	    	private ItemStack itemOut;
-	    	private ItemStack itemExtra;
-	    	private int chance;
-	    	private Random rand = new Random();
+		public ShredderRecipe(ItemStack itemIn, ItemStack itemOut)
+		{
+			this(itemIn, itemOut, (ItemStack)null);
+		}
 	    	
-	    	public ShredderRecipe(ItemStack itemIn, ItemStack itemOut)
-	    	{
-	    		this.itemIn = itemIn;
-	    		this.itemOut = itemOut;
-	    		this.itemExtra = null;
-	    	}
+		public ShredderRecipe(ItemStack itemIn, ItemStack itemOut, ItemStack itemExtra)
+		{
+			this(itemIn, itemOut, itemExtra, 3, 100);
+		}
 	    	
-	    	public ShredderRecipe(ItemStack itemIn, ItemStack itemOut, ItemStack itemExtra)
-	    	{
-	    		this(itemIn, itemOut, itemExtra, 3);
-	    	}
+		public ShredderRecipe(ItemStack itemIn, ItemStack itemOut, ItemStack itemExtra, int chance, int shredTime)
+		{
+			this.itemIn = itemIn;
+			this.itemOut = itemOut;
+			this.itemExtra = itemExtra;
+			this.chance = chance;
+			this.shredTime = shredTime;
+		}
 	    	
-	    	public ShredderRecipe(ItemStack itemIn, ItemStack itemOut, ItemStack itemExtra, int chance)
-	    	{
-	    		this.itemIn = itemIn;
-	    		this.itemOut = itemOut;
-	    		this.itemExtra = itemExtra;
-	    		this.chance = chance;
-	    	}
-	    	
-	    	public boolean isInputItem(ItemStack stack)
-	    	{
-	    		return this.itemIn.getItem() == stack.getItem() && this.itemIn.getMetadata() == stack.getMetadata(); 
-	    	}
+		public boolean isInputItem(ItemStack stack)
+		{
+			return this.itemIn.isItemEqual(stack); 
+		}
 	    	
 	    	
-	    	public boolean hasOutput()
-	    	{
-	    		return itemOut != null;
-	    	}
+		public boolean hasOutput()
+		{
+			return itemOut != null;
+		}
 	    	
-	    	public boolean hasExtraOutput()
-	    	{
-	    		return itemExtra != null;
-	    	}
+		public boolean hasExtraOutput()
+		{
+			return itemExtra != null;
+		}
+		
+		public ItemStack getOutputItem()
+		{
+			return itemOut.copy();
+		}
 	    	
-	    	public ItemStack getOutputItem()
-	    	{
-				return itemOut.copy();
-	    	}
+		@Nullable
+		public ItemStack getExtraItem()
+		{
+			if(rand.nextInt(chance) == 1)
+				return itemExtra.copy();
+			else return null;
+		}
 	    	
-	    	@Nullable
-	    	public ItemStack getExtraItem()
-	    	{
-	    		if(rand.nextInt(chance) == 1)
-	    			return itemExtra.copy();
-	    		else return null;
-	    	}
-	    	
-	    }
+	}
 
 }

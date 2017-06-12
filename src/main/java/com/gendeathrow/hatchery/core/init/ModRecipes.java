@@ -151,7 +151,7 @@ public class ModRecipes
 				"TRT",
 				'T', Blocks.REDSTONE_TORCH,
 				'R', Items.REDSTONE,
-				'G', Items.GOLD_NUGGET);
+				'G', ModItems.circuitBoard);
 		
 		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier2), 
 				"SXS",
@@ -160,7 +160,7 @@ public class ModRecipes
 				'S', Items.GLOWSTONE_DUST,
 				'U', ModItems.rfUpgradeTier1,
 				'R', Items.REDSTONE,
-				'X', Blocks.REDSTONE_BLOCK,
+				'X', ModItems.circuitBoard,
 				'G', Items.GOLD_INGOT);
 				
 		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier3), 
@@ -170,8 +170,54 @@ public class ModRecipes
 				'E', Items.EMERALD,
 				'D', Items.DIAMOND,
 				'U', ModItems.rfUpgradeTier2,
-				'X', Blocks.REDSTONE_BLOCK,
+				'X', ModItems.circuitBoard,
 				'G', Blocks.GOLD_BLOCK);
+		
+		GameRegistry.addRecipe(new ItemStack(ModItems.circuitBoard), 
+				"GGG",
+				"PDP",
+				"PPP",
+				'D', new ItemStack(Items.DYE, 1, 2),
+				'P', ModItems.plastic,
+				'G', Items.GOLD_NUGGET);
+		
+		
+		////SEEDS
+		GameRegistry.addRecipe(new ItemStack(ModItems.chickenFeed, 9), 
+				"SFS",
+				"FSF",
+				"SFS",
+				'F', ModItems.featherMeal,
+				'S', Items.WHEAT_SEEDS);
+		
+		GameRegistry.addRecipe(new ItemStack(ModItems.chickenFeed, 9), 
+				"SFS",
+				"FSF",
+				"SFS",
+				'F', ModItems.featherMeal,
+				'S', Items.PUMPKIN_SEEDS);
+		
+		GameRegistry.addRecipe(new ItemStack(ModItems.chickenFeed, 9), 
+				"SFS",
+				"FSF",
+				"SFS",
+				'F', ModItems.featherMeal,
+				'S', Items.MELON_SEEDS);
+		//END SEEDS
+		
+		GameRegistry.addRecipe(
+				new ItemStack(ModBlocks.shredder),
+				"IxI",
+				"ISI",
+				"IRI", 
+				'I', Items.IRON_INGOT,
+				'R', Blocks.REDSTONE_BLOCK,
+				'S', Items.DIAMOND_SWORD, 
+				'B', Items.BUCKET);
+		
+		
+		
+		GameRegistry.addSmelting(ModItems.featherFiber, new ItemStack(ModItems.plastic), 0);
 
 	}
 	

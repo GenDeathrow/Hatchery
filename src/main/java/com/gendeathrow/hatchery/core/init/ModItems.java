@@ -28,6 +28,8 @@ public class ModItems
 	public static Item featherMeal = new Item().setUnlocalizedName("feather_meal");
 	public static Item plastic = new Item().setUnlocalizedName("plastic");
 	public static Item featherFiber = new Item().setUnlocalizedName("feather_fiber");
+	public static Item chickenFeed = new Item().setUnlocalizedName("chicken_feed");
+	public static Item circuitBoard = new Item().setUnlocalizedName("circuit_board");
 	
 	
 	//Upgrades  
@@ -75,11 +77,15 @@ public class ModItems
 		registerItem(ModItems.featherMeal, "feather_meal");
 		registerItem(ModItems.plastic, "plastic");
 		registerItem(ModItems.featherFiber, "feather_fiber");
-		
+		registerItem(ModItems.chickenFeed, "chicken_feed");		
 		
 		registerItem(ModItems.rfUpgradeTier1, "rf_upgrade_1");
 		registerItem(ModItems.rfUpgradeTier2, "rf_upgrade_2");
 		registerItem(ModItems.rfUpgradeTier3, "rf_upgrade_3");
+		
+		
+		registerItem(ModItems.circuitBoard, "circuit_board");
+
 		
 //		registerItem(ModItems.speedUpgradeTier1, "speed_upgrade_1");
 //		registerItem(ModItems.speedUpgradeTier2, "speed_upgrade_2");

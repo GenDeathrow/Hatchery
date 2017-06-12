@@ -1,17 +1,23 @@
 {
-    "variants": {
-        "facing=down,haschicken=true":  { "model": "hatchery:pen_mach3", "x": 180 },
-        "facing=up,haschicken=true":    { "model": "hatchery:pen_mach3" },
-        "facing=north,haschicken=true": { "model": "hatchery:pen_mach3" },
-        "facing=south,haschicken=true": { "model": "hatchery:pen_mach3", "y": 180 },
-        "facing=west,haschicken=true":  { "model": "hatchery:pen_mach3", "y": 270 },
-        "facing=east,haschicken=true":  { "model": "hatchery:pen_mach3", "y": 90 },
-		
-		"facing=down,haschicken=false":  { "model": "hatchery:pen_mach3", "x": 180 },
-        "facing=up,haschicken=false":    { "model": "hatchery:pen_mach3" },
-        "facing=north,haschicken=false": { "model": "hatchery:pen_mach3" },
-        "facing=south,haschicken=false": { "model": "hatchery:pen_mach3", "y": 180 },
-        "facing=west,haschicken=false":  { "model": "hatchery:pen_mach3", "y": 270 },
-        "facing=east,haschicken=false":  { "model": "hatchery:pen_mach3", "y": 90 }
+    "forge_marker": 1,
+    "defaults": {
+        "model": "hatchery:pen_mach3"
+    },
+    "variants": 
+    {
+        "normal": [{}],
+        "inventory": [{}],
+        "facing":{
+            "down": {"x": 180 },
+            "up": {},
+            "north": {},
+            "south": {"y": 180 },
+            "west": {"y": 270 },
+            "east": {"y": 90}
+        },
+        "haschicken": {
+            "true": {},
+            "false": {}
+        }
 	}
 }
