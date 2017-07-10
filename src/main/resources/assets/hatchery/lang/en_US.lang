@@ -71,7 +71,7 @@ jei.item.hatchery.circuit_board.name=Used for crafting in upgrades
 jei.item.hatchery.rf_upgrade_1=Upgrades RF power generation 40rf/tick
 jei.item.hatchery.rf_upgrade_2=Upgrades RF power generation 60rf/tick
 jei.item.hatchery.rf_upgrade_3=Upgrades RF power generation 80rf/tick
-jei.item.hatchery.feather_fiber=Feather fibers are shredded feathers placed int he shredder, that can than be melted into a raw plastic. Used in crafting for various items. 
+jei.item.hatchery.feather_fiber=Feather fibers are shredded feathers placed in the shredder, that can than be melted into a raw plastic. Used in crafting for various items. 
 jei.item.hatchery.feather_meal=Feather Meal is a by product of using the shredder of feathers. It can be added to seeds to create more food for chickens. 
 jei.item.hatchery.chicken_feed=Add Chicken Feed to feeders as an alternate food source.
 

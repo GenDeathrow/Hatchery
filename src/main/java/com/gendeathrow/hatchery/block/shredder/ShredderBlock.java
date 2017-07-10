@@ -153,26 +153,19 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
 	
 	public IBlockState getStateFromMeta(int meta)
 	{
-		 EnumFacing enumfacing = EnumFacing.getFront(meta);
+		 return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(ISACTIVE, (meta >> 2) == 1 ? true : false);
+	}
 
-		 if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-		 {
-			 enumfacing = EnumFacing.NORTH;
-		 }
-
-		 return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(ISACTIVE, (meta >> 2) == 1 ? true : false);
-	 }
-
-	    /**
-	     * Convert the BlockState into the correct metadata value
-	     */
+	/**
+	 * Convert the BlockState into the correct metadata value
+	 */
 	public int getMetaFromState(IBlockState state)
 	{
 		int i = 0;
 		i |= ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
 		i |= (state.getValue(ISACTIVE) ? 1 : 0 ) << 2;
 	    	
-		return i  ;//((EnumFacing)state.getValue(FACING)).getIndex();
+		return i  ;
 	}
 
 
@@ -185,10 +178,10 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
 		return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
 	}
 
-	    /**
-	     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-	     * blockstate.
-	     */
+	/**
+	 * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
+	 * blockstate.
+	 */
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
 	{
 		return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));

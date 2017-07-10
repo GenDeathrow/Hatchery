@@ -12,6 +12,7 @@ import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemEgg;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
@@ -144,9 +145,13 @@ public class EventHandler
 	@SubscribeEvent
 	public void AttachCap(AttachCapabilitiesEvent event)
 	{
+
 		if(event.getObject() instanceof EntityChicken)
 		{
-			event.addCapability(new ResourceLocation(Hatchery.MODID,"eatting_animal"), new CapabilityAnimalStatsHandler());
+			if(!((EntityChicken)event.getObject()).hasCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, EnumFacing.DOWN))
+			{
+				event.addCapability(new ResourceLocation(Hatchery.MODID,"eatting_animal"), new CapabilityAnimalStatsHandler());
+			}
 		}
 		
 	}

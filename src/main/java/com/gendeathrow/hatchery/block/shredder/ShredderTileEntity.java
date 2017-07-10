@@ -1,6 +1,7 @@
 package com.gendeathrow.hatchery.block.shredder;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Nullable;
@@ -12,8 +13,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -90,12 +93,14 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 			}
 		}
 
-		boolean flag = this.isShredding();
-		boolean flag1 = false;
 		
 		
         if (this.worldObj != null && !this.worldObj.isRemote)
         {
+
+    		boolean flag = this.isShredding();
+    		boolean flag1 = false;
+    		
             --this.transferCooldown;
             
             if (!this.isOnTransferCooldown())
@@ -124,6 +129,15 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
    				if(this.shreddingTime <= 0)
    					this.shredItem();
    			}
+   			
+   			
+   			if(flag != (this.isShredding() && hasPower())){
+   				flag1 = true;
+   				ShredderBlock.setActive(this.worldObj, this.pos, this.worldObj.getBlockState(this.pos), this.isShredding() && hasPower());			//  BlockFurnace.setState(this.isBurning(), this.worldObj, this.pos);
+   			}
+   			
+   	        if (flag1)
+   	            this.markDirty();
 
    		}
 
@@ -132,13 +146,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 //				 this.shredTime = MathHelper.clamp_int(this.shredTime - 2, 0, this.totalshredTime);
 //			}
 			
-		if(flag != (this.isShredding() && hasPower())){
-			flag1 = true;
-			ShredderBlock.setActive(this.worldObj, this.pos, this.worldObj.getBlockState(this.pos), this.isShredding() && hasPower());			//  BlockFurnace.setState(this.isBurning(), this.worldObj, this.pos);
-		}
-		
-        if (flag1)
-            this.markDirty();
+
    }
 	
 	public int getShreddingTime()
@@ -264,7 +272,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 
         boolean flag = false;
 
-        for (EntityItem entityitem : TileEntityHopper.getCaptureItems(this.worldObj, this.pos.getX(), this.pos.getY(), this.pos.getZ()))
+        for (EntityItem entityitem : getCaptureItems(this.worldObj, this.getXPos(), this.getYPos(), this.getZPos()))
         {
         	if(isShreddableItem(entityitem.getEntityItem()))
         	{
@@ -288,6 +296,11 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 		return flag;
 	}
 	
+	
+    public static List<EntityItem> getCaptureItems(World worldIn, double x, double y, double z)
+    {
+        return worldIn.<EntityItem>getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(x - 0.5D, y, z - 0.5D, x + 0.5D, y + 1.5D, z + 0.5D), EntitySelectors.IS_ALIVE);
+    }
 
 	@Override
 	public int getField(int id) 
@@ -306,6 +319,28 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 
 	}  
 		
+	
+    public double getXPos()
+    {
+        return (double)this.pos.getX() + 0.5D;
+    }
+
+    /**
+     * Gets the world Y position for this hopper entity.
+     */
+    public double getYPos()
+    {
+        return (double)this.pos.getY() + 0.5D;
+    }
+
+    /**
+     * Gets the world Z position for this hopper entity.
+     */
+    public double getZPos()
+    {
+        return (double)this.pos.getZ() + 0.5D;
+    }
+    
 	@Override
 	public void setField(int id, int value) 
 	{ 
