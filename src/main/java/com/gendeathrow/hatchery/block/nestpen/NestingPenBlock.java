@@ -365,14 +365,14 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        EnumFacing enumfacing = EnumFacing.getFront(meta);
+//        EnumFacing enumfacing = EnumFacing.getFront(meta);
+//
+//        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
+//        {
+//            enumfacing = EnumFacing.NORTH;
+//        }
 
-        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-        {
-            enumfacing = EnumFacing.NORTH;
-        }
-
-        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(HASCHICKEN, (meta >> 2) == 1 ? true : false);
+        return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(HASCHICKEN, (meta >> 2) == 1 ? true : false);
     }
 
     /**

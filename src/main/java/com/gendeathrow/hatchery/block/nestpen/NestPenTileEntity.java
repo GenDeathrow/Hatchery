@@ -234,7 +234,9 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	
 		this.chickenStored.noClip = true;
 		this.chickenStored.onGround = true;
+		this.chickenStored.setNoAI(true);
 			this.chickenStored.onLivingUpdate();
+		this.chickenStored.setNoAI(false);
 		this.chickenStored.motionY = 0;
 		this.chickenStored.motionX = 0;
 		this.chickenStored.motionZ = 0;
