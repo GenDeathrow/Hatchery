@@ -50,11 +50,7 @@ public class Sprayer extends Item
 
 	}
 	
-	@Override
-    public boolean showDurabilityBar(ItemStack stack)
-    {
-        return true;
-    }
+	
 //	
 //	@Override
 //    public int getDamage(ItemStack stack)
@@ -65,6 +61,14 @@ public class Sprayer extends Item
 //    	return this.capacity - properties.amount; 
 //    }
 //    
+	
+	
+	@Override
+    public boolean showDurabilityBar(ItemStack stack)
+    {
+        return true;
+    }
+
     
     @Override
     public double getDurabilityForDisplay(ItemStack stack)

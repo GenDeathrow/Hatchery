@@ -33,8 +33,23 @@ public class AnimalNet extends Item
 	{
 		super();
 		this.setCreativeTab(Hatchery.hatcheryTabs);
-        this.setMaxStackSize(1);
+        this.setMaxStackSize(16);
 	}
+	
+	@Override
+    public String getItemStackDisplayName(ItemStack stack)
+    {
+		
+		if(this.hasCapturedAnimal(stack))
+		{
+			if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("entityDisplayName"))
+			{
+				return I18n.translateToLocal(stack.getUnlocalizedName()+".name")+ " ("+ stack.getTagCompound().getString("entityDisplayName") +")";
+			}
+		}
+		return super.getItemStackDisplayName(stack);
+    	
+    }
 	
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand)
@@ -55,19 +70,8 @@ public class AnimalNet extends Item
     	}
 	    else
 	    {
-			NBTTagCompound eTag = this.getNBT(stack);
-			
-			NBTTagCompound storedEntity = new NBTTagCompound();
-				storedEntity.setString("id", EntityList.getEntityString(target));
-				((EntityLiving)target).writeEntityToNBT(storedEntity);
-	  		
-	  		eTag.setTag("storedEntity", storedEntity);
-	  		
-	  		stack.setTagCompound(eTag);
-	  		
-	  		stack.setStackDisplayName(I18n.translateToLocal(stack.getUnlocalizedName()+".name")+ " ("+ target.getDisplayName().getFormattedText() +")");
-	  		
-	  		player.getHeldItem(hand).setTagCompound(eTag);
+			stack = addEntitytoNet(player, stack, target);
+
 	  		player.setActiveHand(hand);
 	  		
 	  		target.worldObj.removeEntity(target);
@@ -93,7 +97,30 @@ public class AnimalNet extends Item
 		return (NBTTagCompound) stack.getTagCompound().getTag("storedEntity");
 	}
 	
-	public static void setCapturedNBT(ItemStack stack, Entity entity)
+	public static ItemStack addEntitytoNet(EntityPlayer player, ItemStack stack, Entity entity)
+	{
+    	ItemStack newstack = new ItemStack(ModItems.animalNet);
+    	addEntityNBT(newstack, entity);        
+
+        if (--stack.stackSize <= 0)
+        {
+        	stack.stackSize = 1;
+        	addEntityNBT(stack, entity);     
+        	return stack;
+        }
+        else
+        {
+        	if (!player.inventory.addItemStackToInventory(newstack))
+            {
+                player.dropItem(newstack, false);
+            }
+            return stack;
+        }
+
+	}
+	
+	
+	private static ItemStack addEntityNBT(ItemStack stack, Entity entity)
 	{
 		NBTTagCompound stacknbt = getNBT(stack);
 			NBTTagCompound eNBT = new NBTTagCompound();
@@ -101,11 +128,11 @@ public class AnimalNet extends Item
 			eNBT = entity.writeToNBT(eNBT);
 			eNBT.setString("id", EntityList.getEntityString(entity));
 		stacknbt.setTag("storedEntity", eNBT);
+	
+		stacknbt.setString("entityDisplayName", entity.getDisplayName().getUnformattedText());
+		stack.setTagCompound(stacknbt);
 		
-  		stack.setTagCompound(stacknbt);
-  		
-  		stack.setStackDisplayName(I18n.translateToLocal(stack.getUnlocalizedName()+".name")+ " ("+ entity.getDisplayName().getFormattedText() +")");
-  		
+		return stack;
 	}
 	
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
@@ -125,7 +152,7 @@ public class AnimalNet extends Item
     			
     			if(!hasCapturedAnimal(stack) && pen.storedEntity() != null)
     			{	
-    				setCapturedNBT(stack, pen.storedEntity());
+    				stack = addEntitytoNet(playerIn, stack, pen.storedEntity());
     				pen.tryGetRemoveEntity();
      			}
     			else if(stack.getTagCompound() != null)
@@ -145,10 +172,10 @@ public class AnimalNet extends Item
     	  	        playerIn.addStat(StatList.getObjectUseStats(this));
 
     	  	        //stack.getTagCompound().setTag("storedEntity", new NBTTagCompound());
-    	  	        stack.getTagCompound().removeTag("storedEntity");
+    	  	        //stack.getTagCompound().removeTag("storedEntity");
+    	  	        stack.setTagCompound(null);
     	  	        
-    	  	        
-    	  	        stack.setStackDisplayName(I18n.translateToLocal(stack.getUnlocalizedName()+".name"));
+    	  	        //stack.setStackDisplayName(I18n.translateToLocal(stack.getUnlocalizedName()+".name"));
     			}
 
     		}
@@ -178,10 +205,10 @@ public class AnimalNet extends Item
 	  			
 	  	        playerIn.addStat(StatList.getObjectUseStats(this));
 
-	  	        //stack.getTagCompound().setTag("storedEntity", new NBTTagCompound());
-	  	        stack.getTagCompound().removeTag("storedEntity");
+	  	        //stack.getTagCompound().removeTag("storedEntity");
+	  	        stack.setTagCompound(null);
 	  	        
-	  	        stack.setStackDisplayName(I18n.translateToLocal(stack.getUnlocalizedName()+".name"));
+	  	        //stack.setStackDisplayName(I18n.translateToLocal(stack.getUnlocalizedName()+".name"));
 	  	        
 	  	      return EnumActionResult.PASS;
         	}
