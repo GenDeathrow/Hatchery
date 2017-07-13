@@ -94,7 +94,7 @@ public class Hatchery
 			PROXY.registerRenderers();
 			
 			for (Biome allBiomes : ForgeRegistries.BIOMES.getValues())
-				if(!BiomeDictionary.isBiomeOfType(allBiomes, Type.WATER) || !BiomeDictionary.isBiomeOfType(allBiomes, Type.SWAMP))
+				if(!BiomeDictionary.isBiomeOfType(allBiomes, Type.WASTELAND)  && !BiomeDictionary.isBiomeOfType(allBiomes, Type.COLD) && !BiomeDictionary.isBiomeOfType(allBiomes, Type.NETHER)  && !BiomeDictionary.isBiomeOfType(allBiomes, Type.END)  && !BiomeDictionary.isBiomeOfType(allBiomes, Type.WATER) && !BiomeDictionary.isBiomeOfType(allBiomes, Type.SWAMP))
 					EntityRegistry.addSpawn(EntityRooster.class, Settings.ROOSTER_SPAWN_PROBABILITY, Settings.ROOSTER_MIN_SPAWN_SIZE, Settings.ROOSTER_MAX_SPAWN_SIZE, EnumCreatureType.CREATURE, allBiomes);
 			
 	    	PROXY.preInit(event);

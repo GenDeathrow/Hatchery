@@ -126,6 +126,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		
 		this.chickenStored.setNoAI(false);
 		this.chickenStored.captureDrops = false;
+		this.chickenStored.setNoGravity(false);
 		
 		EntityAgeable returnEntity = this.storedEntity();
 
@@ -234,14 +235,16 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	
 		this.chickenStored.noClip = true;
 		this.chickenStored.onGround = true;
+		this.chickenStored.setNoGravity(true);
 		this.chickenStored.setNoAI(true);
 			this.chickenStored.onLivingUpdate();
-		this.chickenStored.setNoAI(false);
+
 		this.chickenStored.motionY = 0;
 		this.chickenStored.motionX = 0;
 		this.chickenStored.motionZ = 0;
 		this.chickenStored.noClip = false;
-		
+		this.chickenStored.setNoGravity(false);
+		this.chickenStored.setNoAI(false);		
 		
 		this.chickenStored.captureDrops = true;
 

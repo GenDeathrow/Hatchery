@@ -58,7 +58,6 @@ public class CapabilityAnimalStatsHandler implements ICapabilityProvider
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) 
 	{
-		//System.out.println("checking");
 		return capability != null && capability == ANIMAL_HANDLER_CAPABILITY;
 	}
 

@@ -202,14 +202,13 @@ public class AnimalNet extends Item
         		entity.setPositionAndRotation(pos2.getX() + 0.5D, pos2.getY() + d0, pos2.getZ() + 0.5D , Math.abs(playerIn.rotationYaw), 0);
 	  			
        			worldIn.spawnEntityInWorld(entity);
-	  			
+       			
+       			if(entity instanceof EntityAnimal){
+       				if(((EntityAnimal)entity).isAIDisabled())
+       					((EntityAnimal)entity).setNoAI(false);
+       			}
 	  	        playerIn.addStat(StatList.getObjectUseStats(this));
-
-	  	        //stack.getTagCompound().removeTag("storedEntity");
 	  	        stack.setTagCompound(null);
-	  	        
-	  	        //stack.setStackDisplayName(I18n.translateToLocal(stack.getUnlocalizedName()+".name"));
-	  	        
 	  	      return EnumActionResult.PASS;
         	}
         }
