@@ -22,6 +22,7 @@ import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.inventory.SlotFluidContainer;
 import com.gendeathrow.hatchery.inventory.SlotUpgrade;
+import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
 
 public class ContainerFertlizerMixer extends Container 
 {
@@ -169,7 +170,7 @@ public class ContainerFertlizerMixer extends Container
 					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
 					listener.sendProgressBarUpdate(this, 0, this.inventory.getField(0));
 					listener.sendProgressBarUpdate(this, 1, this.inventory.getField(1));
-					listener.sendProgressBarUpdate(this, 3, this.inventory.getField(3));
+					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 3, this.inventory.getField(3));
 		 }
 		
 		this.waterTank = this.inventory.getField(0);

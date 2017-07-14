@@ -35,7 +35,7 @@ import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 public class ShredderTileEntity extends TileUpgradable implements ITickable, IContainerUpdate, IEnergyReceiver
 {
-	public EnergyStorageRF energy= new EnergyStorageRF(100000);
+	public EnergyStorageRF energy= new EnergyStorageRF(100000).setMaxReceive(100);
 	   
 	public int animationTicks;  
 	public int prevAnimationTicks;  
@@ -302,22 +302,6 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
         return worldIn.<EntityItem>getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(x - 0.5D, y, z - 0.5D, x + 0.5D, y + 1.5D, z + 0.5D), EntitySelectors.IS_ALIVE);
     }
 
-	@Override
-	public int getField(int id) 
-	{ 
-		switch (id)
-		{
-			case 0:
-				return this.energy.getEnergyStored();
-			case 1:
-				return this.shreddingTime;
-			case 2:
-				return this.currentItemShreddingTime;
-			default:
-				return 0;
-		}
-
-	}  
 		
 	
     public double getXPos()
@@ -341,14 +325,34 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
         return (double)this.pos.getZ() + 0.5D;
     }
     
+
+	@Override
+	public int getField(int id) 
+	{ 
+		switch (id)
+		{
+			case 0:
+				System.out.println("server: "+ this.energy.getEnergyStored());
+				return this.energy.getEnergyStored();
+			case 1:
+				return this.shreddingTime;
+			case 2:
+				return this.currentItemShreddingTime;
+			default:
+				return 0;
+		}
+
+	}  
+    
 	@Override
 	public void setField(int id, int value) 
 	{ 
-			
+			System.out.println(id + "<>" + value);
 		switch (id)
 		{
 			case 0:
 				this.energy.setEnergyStored(value);
+            	System.out.println("client: "+value);
 				break;
 			case 1:
 				this.shreddingTime = value;
@@ -424,13 +428,10 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
-		{
 			return (T) this.inventory;
-		}
-		if (capability == CapabilityEnergy.ENERGY) 
-		{
+		else if (capability == CapabilityEnergy.ENERGY) 
 			return (T) this.energy;
-		}
+		
 	        return super.getCapability(capability, facing);
 	}
 

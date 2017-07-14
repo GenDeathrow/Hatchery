@@ -7,6 +7,7 @@ import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -57,7 +58,7 @@ public class GuiFertilizerMixerInventory extends GuiContainer
 		
 		int fertilizerTankAmt = (int) (((float)MIXER.fertilizerLevel / MIXER.getFertilizerTank().getCapacity()) * 58);
 		int waterTankAmt = (int) (((float)MIXER.waterLevel / MIXER.getWaterTank().getCapacity()) * 58);
-		int energyAmt = (int) (((float)MIXER.storage.getEnergyStored() / MIXER.storage.getMaxEnergyStored()) * 58);
+		int energyAmt = (int) (((float)MIXER.getEnergyStored(EnumFacing.DOWN) / MIXER.getMaxEnergyStored(EnumFacing.DOWN)) * 58);
 		
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -83,7 +84,7 @@ public class GuiFertilizerMixerInventory extends GuiContainer
 			{
 
 				hover.add("RF:");
-				hover.add(formatter.format(((int)MIXER.storage.getEnergyStored())) +" / "+ formatter.format(this.MIXER.storage.getMaxEnergyStored())+"rf");
+				hover.add(formatter.format(((int)MIXER.energy.getEnergyStored())) +" / "+ formatter.format(this.MIXER.energy.getMaxEnergyStored())+"rf");
 			}
 	
 			if(hover.size() > 0)

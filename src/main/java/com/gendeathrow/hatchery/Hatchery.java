@@ -36,6 +36,7 @@ import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 import com.gendeathrow.hatchery.core.theoneprobe.TheOneProbeSupport;
 import com.gendeathrow.hatchery.entities.EntityRooster;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
+import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
 
 
 
@@ -87,6 +88,7 @@ public class Hatchery
 	    	network.registerMessage(HatcheryPacket.ServerHandler.class, HatcheryPacket.class, 0, Side.SERVER);
 	    	network.registerMessage(HatcheryPacket.ClientHandler.class, HatcheryPacket.class, 1, Side.CLIENT);
 	    	
+	    	network.registerMessage(HatcheryWindowPacket.ClientHandler.class, HatcheryWindowPacket.class, 2, Side.CLIENT);
 	    	NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, PROXY);
 	    	
 			EntityRegistry.registerModEntity(EntityRooster.class, "Rooster", 1, this, 120, 1, true);

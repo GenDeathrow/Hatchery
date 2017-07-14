@@ -12,6 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -23,7 +24,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 
 import com.gendeathrow.hatchery.block.TileUpgradable;
@@ -31,6 +31,7 @@ import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.inventory.InventoryStorage;
+import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 
 public class FertilizerMixerTileEntity extends TileUpgradable implements IInventory, ITickable, IEnergyReceiver
 {
@@ -54,11 +55,9 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 	  
 	private FluidHandlerFluidMap fluidMap = new FluidHandlerFluidMap().addHandler(ModFluids.liquidfertilizer, fertilizerTank).addHandler(FluidRegistry.WATER, waterTank);
 	
-	//private ItemStack[] inventory = new ItemStack[5];
-	
 	protected InventoryStorage inventory = new InventoryStorage(this, 5);
 	
-	protected EnergyStorage storage = new EnergyStorage(20000);
+	protected EnergyStorageRF energy = new EnergyStorageRF(20000).setMaxReceive(100);
 	
 	public FertilizerMixerTileEntity() 
 	{
@@ -170,10 +169,10 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
                 }
                 
     			
-    			if(this.isMixing() && this.canMix() && fertlizerMixTime >= 5 && this.storage.getEnergyStored() >= 10)
+    			if(this.isMixing() && this.canMix() && fertlizerMixTime >= 5 && this.energy.getEnergyStored() >= 10)
     			{
     					this.fertlizerMixTime -= 5;
-    					this.storage.extractEnergy(10, false);
+    					this.energy.extractEnergy(10, false);
     				
     					this.fertilizerTank.fillInternal(new FluidStack(ModFluids.liquidfertilizer, 5), true);
     					this.waterTank.drainInternal(5, true);
@@ -340,7 +339,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
             case 2:
             	return this.fertlizerMixTime;
             case 3:
-            	return this.storage.getEnergyStored();
+            	return this.energy.getEnergyStored();
             default:
                 return 0;
         }
@@ -365,7 +364,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
             case 2:
                 this.fertlizerMixTime  = value;
             case 3:
-            	this.storage.setEnergyStored(value);
+            	this.energy.setEnergyStored(value);
                 break;
 
         }
@@ -388,7 +387,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
        	this.waterTank.readFromNBT(tag.getCompoundTag("waterTank"));
         this.fertilizerTank.readFromNBT(tag.getCompoundTag("fertilizerTank"));
         
-        this.storage.readFromNBT(tag);
+        this.energy.readFromNBT(tag);
         
         this.inventory.readFromNBT(tag);
     }
@@ -407,45 +406,38 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
         
         this.inventory.writeToNBT(tag);
         
-        this.storage.writeToNBT(tag);
+        this.energy.writeToNBT(tag);
         return tag;
     }
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing)
     {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
-//    	if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == EnumFacing.DOWN)
-//            return (T) this.fertilizerTank;
-//        else if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-//            return (T) this.waterTank;
-    	
     	if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
     		return (T) this.fluidMap;
         else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
-        {
             return (T) new InvWrapper(this);
-        }
+		else if (capability == CapabilityEnergy.ENERGY) 
+			return (T) this.energy;
         return super.getCapability(capability, facing);
     }
 
-    
     // ENERGY
-    
 	@Override
 	public int getEnergyStored(EnumFacing from) {
-		return this.storage.getEnergyStored();
+		return this.energy.getEnergyStored();
 	}
 
 	@Override
 	public int getMaxEnergyStored(EnumFacing from) {
-		return this.storage.getMaxEnergyStored();
+		return this.energy.getMaxEnergyStored();
 	}
 
 	@Override
@@ -455,7 +447,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		return this.storage.receiveEnergy(maxReceive, simulate);
+		return this.energy.receiveEnergy(maxReceive, simulate);
 	}
 
     

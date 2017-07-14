@@ -1,6 +1,5 @@
 package com.gendeathrow.hatchery.block.generator;
 
-import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -12,6 +11,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -19,22 +19,21 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 
-import com.gendeathrow.hatchery.api.items.IUpgradeItem;
 import com.gendeathrow.hatchery.block.TileUpgradable;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.inventory.InventoryStorage;
 import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
+import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 
 public class DigesterGeneratorTileEntity extends TileUpgradable implements IInventory, IEnergyProvider, ITickable
 {
 	public int time = 0;
 	
-	protected EnergyStorage storage = new EnergyStorage(200000);
+	protected EnergyStorageRF energy = new EnergyStorageRF(200000);
 	protected InventoryStorage inventory = new InventoryStorage(this, 2);
   
 	private int rfPerTick = 20;
@@ -87,18 +86,18 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 	/* IEnergyProvider */
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-		return storage.extractEnergy(maxExtract, simulate);
+		return energy.extractEnergy(maxExtract, simulate);
 	}
 
 	/* IEnergyHandler */
 	@Override
 	public int getEnergyStored(EnumFacing from) {
-		return storage.getEnergyStored();
+		return energy.getEnergyStored();
 	}
 
 	@Override
 	public int getMaxEnergyStored(EnumFacing from) {
-		return storage.getMaxEnergyStored();
+		return energy.getMaxEnergyStored();
 	}
 	
 	
@@ -116,7 +115,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 		{
 			updateRFPerTick();
 			
-			if(isActive && canGenerate() && storage.getEnergyStored() < storage.getMaxEnergyStored())
+			if(isActive && canGenerate() && energy.getEnergyStored() < energy.getMaxEnergyStored())
 			{
 				if (fuelRF <= 0) 
 				{
@@ -124,18 +123,18 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 					getTank().drainInternal(50, true);
 				}
 				
-				storage.modifyEnergyStored(getRFPerTick());
+				energy.modifyEnergyStored(getRFPerTick());
 				fuelRF -= getRFPerTick();
 			}
 			
-			if ((storage.getEnergyStored() > 0)) 
+			if ((energy.getEnergyStored() > 0)) 
 			{
 				for (EnumFacing facing : EnumFacing.VALUES) 
 				{
 						TileEntity tile = worldObj.getTileEntity(pos.offset(facing));
 						if (tile != null && tile instanceof IEnergyReceiver) 
 						{
-							int received = ((IEnergyReceiver) tile).receiveEnergy(facing.getOpposite(), storage.getEnergyStored(), false);
+							int received = ((IEnergyReceiver) tile).receiveEnergy(facing.getOpposite(), energy.getEnergyStored(), false);
 							extractEnergy(facing, received, false);
 						}
 				}
@@ -177,7 +176,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 	public void readFromNBT(NBTTagCompound nbt) {
 
 		this.inventory.readFromNBT(nbt);
-		this.storage.readFromNBT(nbt);
+		this.energy.readFromNBT(nbt);
 		this.fertlizerTank.readFromNBT(nbt);
 		super.readFromNBT(nbt);
 	}
@@ -185,7 +184,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt = this.inventory.writeToNBT(nbt);
-		nbt = this.storage.writeToNBT(nbt);
+		nbt = this.energy.writeToNBT(nbt);
 		nbt = this.fertlizerTank.writeToNBT(nbt);
 		return super.writeToNBT(nbt);
 	}
@@ -194,7 +193,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing)
     {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 
     @SuppressWarnings("unchecked")
@@ -204,9 +203,10 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
     	if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return (T) this.fertlizerTank;
         else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
-        {
             return (T) new InvWrapper(this);
-        }
+        else if (capability == CapabilityEnergy.ENERGY)
+        	return (T) this.energy;
+    	
         return super.getCapability(capability, facing);
     }
     
@@ -283,7 +283,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
         switch (id)
         {
             case 0:
-            	return this.storage.getEnergyStored();
+            	return this.energy.getEnergyStored();
             case 1:
             	return this.getTank().getFluidAmount();
             case 2:
@@ -300,7 +300,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
         switch (id)
         {
             case 0:
-            	this.storage.setEnergyStored(value);
+            	this.energy.setEnergyStored(value);
                 break;
             case 1:
             	this.tankLevel = value;

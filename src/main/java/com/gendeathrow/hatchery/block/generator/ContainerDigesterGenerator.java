@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.inventory.SlotFluidContainer;
 import com.gendeathrow.hatchery.inventory.SlotUpgrade;
+import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
 
 public class ContainerDigesterGenerator extends Container 
 {
@@ -33,9 +34,9 @@ public class ContainerDigesterGenerator extends Container
 	
 	private final IInventory upgrades;
 
-	private int fertilizerTank;
-	private int rfEnergy;
-	private int rfPerTick;
+	//private int fertilizerTank;
+	//private int rfEnergy;
+	//private int rfPerTick;
 	
 
 	public ContainerDigesterGenerator(InventoryPlayer playerInventory, DigesterGeneratorTileEntity tileEntity) 
@@ -44,7 +45,7 @@ public class ContainerDigesterGenerator extends Container
 		
 		upgrades = tileEntity.getUpgradeStorage();
 		
-		fertilizerTank = tileEntity.getTank().getFluidAmount();
+		//fertilizerTank = tileEntity.getTank().getFluidAmount();
 		
 		int i;  
 
@@ -143,14 +144,14 @@ public class ContainerDigesterGenerator extends Container
 		for (IContainerListener listener : this.listeners) 
 		 {
 					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
-					listener.sendProgressBarUpdate(this, 0, this.inventory.getField(0));
+					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 0, this.inventory.getField(0));
 					listener.sendProgressBarUpdate(this, 1, this.inventory.getField(1));
 					listener.sendProgressBarUpdate(this, 2, this.inventory.getField(2));
 		 }
 
-		this.rfEnergy = this.inventory.getField(0);
-		this.fertilizerTank = this.inventory.getField(1);
-		this.rfPerTick = this.inventory.getField(2);
+//		this.rfEnergy = this.inventory.getField(0);
+//		this.fertilizerTank = this.inventory.getField(1);
+//		this.rfPerTick = this.inventory.getField(2);
     }
 
 	@Override

@@ -2,11 +2,8 @@ package com.gendeathrow.hatchery.block.shredder;
 
 import javax.annotation.Nullable;
 
-import com.gendeathrow.hatchery.core.init.ModFluids;
-import com.gendeathrow.hatchery.inventory.SlotFluidContainer;
-import com.gendeathrow.hatchery.inventory.SlotUpgrade;
-
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
@@ -19,6 +16,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.inventory.SlotUpgrade;
+import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
 
 public class ContainerShredder extends Container 
 {
@@ -118,6 +119,17 @@ public class ContainerShredder extends Container
 		return  itemstack;
 	}
 	
+	@Override
+	public void addListener(IContainerListener listener) {
+		if (this.listeners.contains(listener)) {
+			throw new IllegalArgumentException("Listener already listening");
+		} else {
+			this.listeners.add(listener);
+			listener.updateCraftingInventory(this, this.getInventory());
+			this.detectAndSendChanges();
+		}
+	}
+	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void updateProgressBar(int id, int value) {
@@ -130,11 +142,11 @@ public class ContainerShredder extends Container
 		super.detectAndSendChanges();
 		
 		for (IContainerListener listener : this.listeners) 
-		 {
-					listener.sendProgressBarUpdate(this, 0, this.shredder.getField(0));
-					listener.sendProgressBarUpdate(this, 1, this.shredder.getField(1));
-					listener.sendProgressBarUpdate(this, 2, this.shredder.getField(2));
-		 }
+		{
+				HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 0, this.shredder.getField(0));
+				listener.sendProgressBarUpdate(this, 1, this.shredder.getField(1));
+				listener.sendProgressBarUpdate(this, 2, this.shredder.getField(2));
+		}
 
     }
 

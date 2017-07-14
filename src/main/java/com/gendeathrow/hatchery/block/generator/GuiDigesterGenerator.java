@@ -39,7 +39,7 @@ public class GuiDigesterGenerator extends GuiContainer
 		previousRFLevel = rfEnergyLevels;
 		
 		fertilizerTankAmt = (int) (((float)GENERATOR.tankLevel / GENERATOR.getTank().getCapacity()) * 58);
-		rfEnergyLevels = (int) (((float)GENERATOR.storage.getEnergyStored() / GENERATOR.storage.getMaxEnergyStored()) * 58);
+		rfEnergyLevels = (int) (((float)GENERATOR.energy.getEnergyStored() / GENERATOR.energy.getMaxEnergyStored()) * 58);
 		
 		
 		int rfOut = previousRFLevel - rfEnergyLevels > 0 ? previousRFLevel - rfEnergyLevels: 0;
@@ -65,7 +65,7 @@ public class GuiDigesterGenerator extends GuiContainer
 		
 		if(x > xOffSet+16 && x < xOffSet+28 && y > yOffSet+13 && y < yOffSet+70)
 		{
-			hover.add(formatter.format((int)GENERATOR.storage.getEnergyStored()) +"/ "+ formatter.format(this.GENERATOR.storage.getMaxEnergyStored())+" RF");
+			hover.add(formatter.format((int)GENERATOR.energy.getEnergyStored()) +"/ "+ formatter.format(this.GENERATOR.energy.getMaxEnergyStored())+" RF");
 		}
 		else if(x > xOffSet+53 && x < xOffSet+66 && y > yOffSet+13 && y < yOffSet+70)
 		{
