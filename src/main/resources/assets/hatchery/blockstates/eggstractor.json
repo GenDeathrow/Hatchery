@@ -1,0 +1,10 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+    	"model": "hatchery:eggstractor"
+  	},
+    "variants": {
+    	"normal": [{}],
+    	"inventory": [{}]
+ 	}
+}

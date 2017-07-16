@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
@@ -11,6 +12,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.block.eggstractor.Eggstractor;
+import com.gendeathrow.hatchery.block.eggstractor.EggstractorTileEntity;
 import com.gendeathrow.hatchery.block.feeder.FeederBlock;
 import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
 import com.gendeathrow.hatchery.block.fertilizedDirt.FertilizedDirt;
@@ -46,6 +49,7 @@ public class ModBlocks
 	public static Block digesterGenerator;
 	public static Block digesterGeneratorOn;
 	public static Block shredder;
+	public static Block eggstractor;
 	
 	public static void preInit(FMLPreInitializationEvent event) 
 	{
@@ -61,6 +65,7 @@ public class ModBlocks
 		digesterGenerator = new DigesterGeneratorBlock(false).setCreativeTab(Hatchery.hatcheryTabs);
 		digesterGeneratorOn = new DigesterGeneratorBlock(true).setTickRandomly(true);
 		shredder = new ShredderBlock();
+		eggstractor = new Eggstractor(Material.GLASS);
 		
 		
 		registerBlock(nest, "nest");
@@ -79,6 +84,8 @@ public class ModBlocks
 		  digesterGeneratorOn.setUnlocalizedName(Hatchery.MODID +".digester_generator");
 		  
 		registerBlock(shredder, "shredder");
+		
+		registerBlock(eggstractor, "eggstractor");
 		  
 		GameRegistry.registerTileEntity(TileEntityMobNursery.class, "hatchery.nursery");
 		GameRegistry.registerTileEntity(ShredderTileEntity.class, "hatchery.shredder");
@@ -89,7 +96,7 @@ public class ModBlocks
 		
 		GameRegistry.registerTileEntity(DigesterGeneratorTileEntity.class, "digesterGenerator");
 		
-		
+		GameRegistry.registerTileEntity(EggstractorTileEntity.class, "hatchery.eggstractor");
 	}
 	
 	private static void registerItem(Item item, String name)

@@ -31,6 +31,10 @@ public class ModItems
 	public static Item chickenFeed = new Item().setUnlocalizedName("chicken_feed");
 	public static Item circuitBoard = new Item().setUnlocalizedName("circuit_board");
 	
+	public static Item fiberPad = new Item().setUnlocalizedName("fiber_pad");
+	
+	public static Item mealPulp = new Item().setUnlocalizedName("feather_pulp");
+	
 	
 	//Upgrades  
 	
@@ -85,7 +89,9 @@ public class ModItems
 		
 		
 		registerItem(ModItems.circuitBoard, "circuit_board");
-
+		registerItem(ModItems.fiberPad, "fiber_pad");
+		registerItem(ModItems.mealPulp, "feather_pulp");
+		
 		
 //		registerItem(ModItems.speedUpgradeTier1, "speed_upgrade_1");
 //		registerItem(ModItems.speedUpgradeTier2, "speed_upgrade_2");

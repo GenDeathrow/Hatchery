@@ -66,6 +66,8 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 		super(2);
 		
 		shredderRecipes.add(new ShredderRecipe(new ItemStack(Items.FEATHER), new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal)));
+		
+		shredderRecipes.add(new ShredderRecipe(new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal)));
 	}
 
 	private int shreddingTime;
