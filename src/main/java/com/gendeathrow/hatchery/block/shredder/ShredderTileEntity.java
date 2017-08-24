@@ -334,7 +334,6 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 		switch (id)
 		{
 			case 0:
-				System.out.println("server: "+ this.energy.getEnergyStored());
 				return this.energy.getEnergyStored();
 			case 1:
 				return this.shreddingTime;
@@ -349,12 +348,10 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	@Override
 	public void setField(int id, int value) 
 	{ 
-			System.out.println(id + "<>" + value);
 		switch (id)
 		{
 			case 0:
 				this.energy.setEnergyStored(value);
-            	System.out.println("client: "+value);
 				break;
 			case 1:
 				this.shreddingTime = value;

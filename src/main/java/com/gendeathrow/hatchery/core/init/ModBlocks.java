@@ -92,7 +92,7 @@ public class ModBlocks
 		GameRegistry.registerTileEntity(EggNestTileEntity.class, EggNestTileEntity.class.getName());
 		GameRegistry.registerTileEntity(NestPenTileEntity.class, NestPenTileEntity.class.getName());
 		GameRegistry.registerTileEntity(FeederTileEntity.class, FeederTileEntity.class.getName());
-		GameRegistry.registerTileEntity(FertilizerMixerTileEntity.class, FertilizerMixerTileEntity.class.getName());
+		GameRegistry.registerTileEntity(EggstractorTileEntity.class, EggstractorTileEntity.class.getName());
 		
 		GameRegistry.registerTileEntity(DigesterGeneratorTileEntity.class, "digesterGenerator");
 		

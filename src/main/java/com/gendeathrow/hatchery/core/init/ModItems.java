@@ -10,6 +10,7 @@ import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.item.AnimalNet;
 import com.gendeathrow.hatchery.item.ChickenManure;
 import com.gendeathrow.hatchery.item.HatcheryEgg;
+import com.gendeathrow.hatchery.item.PrizeEgg;
 import com.gendeathrow.hatchery.item.Sprayer;
 import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
 import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
@@ -34,6 +35,8 @@ public class ModItems
 	public static Item fiberPad = new Item().setUnlocalizedName("fiber_pad");
 	
 	public static Item mealPulp = new Item().setUnlocalizedName("feather_pulp");
+	
+	public static Item prizeEgg = new PrizeEgg().setUnlocalizedName("prize_egg");
 	
 	
 	//Upgrades  
@@ -91,6 +94,8 @@ public class ModItems
 		registerItem(ModItems.circuitBoard, "circuit_board");
 		registerItem(ModItems.fiberPad, "fiber_pad");
 		registerItem(ModItems.mealPulp, "feather_pulp");
+		
+		registerItem(ModItems.prizeEgg, "prize_egg");
 		
 		
 //		registerItem(ModItems.speedUpgradeTier1, "speed_upgrade_1");

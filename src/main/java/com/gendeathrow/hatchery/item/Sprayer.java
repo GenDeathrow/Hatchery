@@ -38,9 +38,7 @@ public class Sprayer extends Item
 	Random rand = new Random();
 	
 	int capacity = 3000;
-	//int maxcapacity = 3000;
-	
-	
+
 	public Sprayer()
 	{
 		this.setCreativeTab(Hatchery.hatcheryTabs);
@@ -49,19 +47,6 @@ public class Sprayer extends Item
 		this.setNoRepair();
 
 	}
-	
-	
-//	
-//	@Override
-//    public int getDamage(ItemStack stack)
-//    {
-//    	FluidStack properties = FluidUtil.getFluidContained(stack);
-//    	if(properties == null) return 0;
-//    	System.out.println(properties.amount);
-//    	return this.capacity - properties.amount; 
-//    }
-//    
-	
 	
 	@Override
     public boolean showDurabilityBar(ItemStack stack)

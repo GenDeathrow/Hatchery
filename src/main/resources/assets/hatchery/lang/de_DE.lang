@@ -8,9 +8,9 @@ tile.hatchery.fertilized_farmland.name=Gedüngter Ackerboden
 tile.hatchery.feeder.name=Hühnerfütterer
 tile.hatchery.manure_block.name=Hühnermistblock
 tile.hatchery.nursery_block.name=Kükenüberwachung
-tile.hatchery.fertilizer_mixer.name=Düngermischer (WIP)
-tile.hatchery.digester_generator=Methanfermenter-Generator (WIP)
-tile.hatchery.shredder.name=Reißwolf (WIP)
+tile.hatchery.fertilizer_mixer.name=Düngermischer
+tile.hatchery.digester_generator=Methanfermenter-Generator
+tile.hatchery.shredder.name=Reißwolf
 
 container.generator.generating=Generiert: %1$drf/t
 container.generator.rfout=RF: %1$drf/t

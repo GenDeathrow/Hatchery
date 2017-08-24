@@ -20,7 +20,7 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "0.3.5"
+version = "0.3.17"
 group= "com.gendeathrow.hatchery" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "hatchery-1.10.2"
 
@@ -48,15 +48,49 @@ repositories {
         name = "CurseForge"
         url = "https://minecraft.curseforge.com/api/maven/"
     }
+	maven { // TOP
+		name 'tterrag maven'
+	    url "http://maven.tterrag.com/"
+	}
 }
+
 
 dependencies {
     deobfCompile "chickens:chickens:${chickens_version}"
     deobfCompile "mcp.mobius.waila:Hwyla:${HWYLA_version}_${minecraft_version}"
+	deobfCompile "mcjty.theoneprobe:TheOneProbe:${top_version}"
     // compile against the JEI API
     deobfCompile "mezz.jei:jei_${minecraft_version}:${jei_version}:api"
     // at runtime, use the full JEI jar
     runtime "mezz.jei:jei_${minecraft_version}:${jei_version}"
+}
+
+jar {
+    manifest {
+        attributes 'FMLAT': 'hatchery_at.cfg'
+    }
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+    manifest {
+        attributes 'FMLAT': 'hatchery_at.cfg'
+    }
+}
+
+task apiZip(type: Zip) {
+    from(sourceSets.main.java) {
+        include "com/gendeathrow/hatchery/api/**"
+    }
+    classifier = 'api'
+}
+
+task apiJar(type: Jar) {
+    from(sourceSets.main.java) {
+        include "com/gendeathrow/hatchery/api/**"
+    }
+    classifier = 'api'
 }
 
 processResources
