@@ -33,7 +33,7 @@ public class ModRecipes
 		OreDictionary.registerOre("manureBlock", ModBlocks.manureBlock);
 		OreDictionary.registerOre("egg", ModItems.hatcheryEgg);
 		//if(Loader.isModLoaded("harvestcraft")) {
-			OreDictionary.registerOre("listAllegg", ModItems.hatcheryEgg);
+		OreDictionary.registerOre("listAllegg", ModItems.hatcheryEgg);
 		//}
 	}
 	
@@ -47,6 +47,17 @@ public class ModRecipes
             'A', "string",  // look in OreDictionary for vanilla definitions
 	    });
 	    GameRegistry.addRecipe(animalNetRecipe);
+	    
+	    IRecipe chickenMachineRecipe = new ShapedOreRecipe(new ItemStack(ModItems.chickenmachine), new Object[] {
+	            "xWx",
+	            "WEW",
+	            "ICI",
+	            'W', "plankWood",   // can use ordinary items, blocks, itemstacks in ShapedOreRecipe
+	            'E', "listAllegg",
+	            'I', Blocks.IRON_BLOCK,
+	            'C', ModItems.circuitBoard, // look in OreDictionary for vanilla definitions
+		    });
+		    GameRegistry.addRecipe(chickenMachineRecipe);
 	    
 	    IRecipe penRecipe = new ShapedOreRecipe(new ItemStack(ModBlocks.pen), new Object[] {	    
 	    	"WxW", 

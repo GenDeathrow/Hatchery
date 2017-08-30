@@ -1,6 +1,22 @@
 package com.gendeathrow.hatchery.core.proxies;
 
 
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.block.eggmachine.EggMachineEntityRenderer;
+import com.gendeathrow.hatchery.block.eggmachine.EggMachineTileEntity;
+import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
+import com.gendeathrow.hatchery.block.nest.EggNestTileEntityRender;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
+import com.gendeathrow.hatchery.block.nestpen.NestingPenTileEntityRenderer;
+import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
+import com.gendeathrow.hatchery.block.shredder.ShredderTileEntityRenderer;
+import com.gendeathrow.hatchery.client.IItemColorHandler;
+import com.gendeathrow.hatchery.client.render.entity.RenderRooster;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModFluids;
+import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.entities.EntityRooster;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -22,20 +38,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
-import com.gendeathrow.hatchery.block.nest.EggNestTileEntityRender;
-import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
-import com.gendeathrow.hatchery.block.nestpen.NestingPenTileEntityRenderer;
-import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
-import com.gendeathrow.hatchery.block.shredder.ShredderTileEntityRenderer;
-import com.gendeathrow.hatchery.client.IItemColorHandler;
-import com.gendeathrow.hatchery.client.render.entity.RenderRooster;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModFluids;
-import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.entities.EntityRooster;
 
 public class ClientProxy extends CommonProxy
 {
@@ -119,6 +121,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(EggNestTileEntity.class, new EggNestTileEntityRender());
 		ClientRegistry.bindTileEntitySpecialRenderer(NestPenTileEntity.class, new NestingPenTileEntityRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(ShredderTileEntity.class, new ShredderTileEntityRenderer());		
+		ClientRegistry.bindTileEntitySpecialRenderer(EggMachineTileEntity.class, new EggMachineEntityRenderer());
 	}
 	
     public void registerItemColorHandler(Item item)

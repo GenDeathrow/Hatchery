@@ -12,8 +12,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.eggstractor.Eggstractor;
-import com.gendeathrow.hatchery.block.eggstractor.EggstractorTileEntity;
+import com.gendeathrow.hatchery.block.eggmachine.EggMachineBlock;
+import com.gendeathrow.hatchery.block.eggmachine.EggMachineTileEntity;
 import com.gendeathrow.hatchery.block.feeder.FeederBlock;
 import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
 import com.gendeathrow.hatchery.block.fertilizedDirt.FertilizedDirt;
@@ -49,7 +49,7 @@ public class ModBlocks
 	public static Block digesterGenerator;
 	public static Block digesterGeneratorOn;
 	public static Block shredder;
-	public static Block eggstractor;
+	public static Block chickenMachine;
 	
 	public static void preInit(FMLPreInitializationEvent event) 
 	{
@@ -65,7 +65,7 @@ public class ModBlocks
 		digesterGenerator = new DigesterGeneratorBlock(false).setCreativeTab(Hatchery.hatcheryTabs);
 		digesterGeneratorOn = new DigesterGeneratorBlock(true).setTickRandomly(true);
 		shredder = new ShredderBlock();
-		eggstractor = new Eggstractor(Material.GLASS);
+		chickenMachine = new EggMachineBlock(Material.GLASS);
 		
 		
 		registerBlock(nest, "nest");
@@ -85,18 +85,18 @@ public class ModBlocks
 		  
 		registerBlock(shredder, "shredder");
 		
-		registerBlock(eggstractor, "eggstractor");
+		registerBlock(chickenMachine, "chicken_machine_block");
 		  
 		GameRegistry.registerTileEntity(TileEntityMobNursery.class, "hatchery.nursery");
 		GameRegistry.registerTileEntity(ShredderTileEntity.class, "hatchery.shredder");
 		GameRegistry.registerTileEntity(EggNestTileEntity.class, EggNestTileEntity.class.getName());
 		GameRegistry.registerTileEntity(NestPenTileEntity.class, NestPenTileEntity.class.getName());
 		GameRegistry.registerTileEntity(FeederTileEntity.class, FeederTileEntity.class.getName());
-		GameRegistry.registerTileEntity(EggstractorTileEntity.class, EggstractorTileEntity.class.getName());
+		GameRegistry.registerTileEntity(EggMachineTileEntity.class, EggMachineTileEntity.class.getName());
 		
 		GameRegistry.registerTileEntity(DigesterGeneratorTileEntity.class, "digesterGenerator");
 		
-		GameRegistry.registerTileEntity(EggstractorTileEntity.class, "hatchery.eggstractor");
+		GameRegistry.registerTileEntity(EggMachineTileEntity.class, "hatchery.chicken_machine_block");
 	}
 	
 	private static void registerItem(Item item, String name)

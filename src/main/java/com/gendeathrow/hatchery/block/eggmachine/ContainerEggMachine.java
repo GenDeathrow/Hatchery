@@ -1,5 +1,8 @@
-package com.gendeathrow.hatchery.block.eggstractor;
+package com.gendeathrow.hatchery.block.eggmachine;
 
+import javax.annotation.Nullable;
+
+import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.inventory.SlotUpgrade;
 import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
 
@@ -9,27 +12,18 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ContainerEggstractor extends Container 
+public class ContainerEggMachine extends Container 
 {
-	private final int HOTBAR_SLOT_COUNT = 9;
-	private final int PLAYER_INVENTORY_ROW_COUNT = 3;
-	private final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
-	private final int PLAYER_INVENTORY_SLOT_COUNT = PLAYER_INVENTORY_COLUMN_COUNT * PLAYER_INVENTORY_ROW_COUNT;
-	private final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
-
-	private final int VANILLA_FIRST_SLOT_INDEX = 0;
-	private final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
-	private final int TE_INVENTORY_SLOT_COUNT = 9;
-	
 	private final IInventory inventory;
 	private final IInventory upgrades;
 
 	
-	public ContainerEggstractor(InventoryPlayer playerInventory, EggstractorTileEntity eggstractorInventory) 
+	public ContainerEggMachine(InventoryPlayer playerInventory, EggMachineTileEntity eggstractorInventory) 
 	{
 		inventory = eggstractorInventory;
 		upgrades = eggstractorInventory.getUpgradeStorage();
@@ -38,21 +32,29 @@ public class ContainerEggstractor extends Container
 
 		addSlotToContainer(new Slot(eggstractorInventory, eggstractorInventory.EggInSlot, 38, 18)
 		{
-
+		    public boolean isItemValid(@Nullable ItemStack stack)
+		    {
+		        return stack.getItem() instanceof ItemEgg;
+		    }
 			 
 		});
 		
 
 		addSlotToContainer(new Slot(eggstractorInventory,  eggstractorInventory.PlasticInSlot, 63, 18)
 		{
-
+		    public boolean isItemValid(@Nullable ItemStack stack)
+		    {
+		        return stack.getItem() == ModItems.plastic;
+		    }
 			
 		});
 		
 		addSlotToContainer(new Slot(eggstractorInventory, eggstractorInventory.PrizeEggSlot, 51, 53)
 		{
-
-			
+		    public boolean isItemValid(@Nullable ItemStack stack)
+		    {
+		        return stack.getItem() == ModItems.prizeEgg;
+		    }
 		});
 		
 		

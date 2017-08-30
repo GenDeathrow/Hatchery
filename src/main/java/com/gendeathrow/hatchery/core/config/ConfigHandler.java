@@ -28,6 +28,10 @@ public class ConfigHandler
 		CONFIG = new Configuration(configFile);
 		CONFIG.load();
 		syncConfigs();
+		
+		// Loots
+		
+		ConfigLootHandler.load();
 	}
 
 	private void syncConfigs() 

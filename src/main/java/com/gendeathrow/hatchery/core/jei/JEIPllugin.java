@@ -76,6 +76,8 @@ public class JEIPllugin implements IModPlugin
         
         itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.pen_chicken));
         itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.digesterGeneratorOn));
+        itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.chickenMachine));
+        
      }
 
 	@Override

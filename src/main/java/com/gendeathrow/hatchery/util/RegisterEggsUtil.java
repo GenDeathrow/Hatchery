@@ -144,7 +144,7 @@ public class RegisterEggsUtil
 			
 		}catch(Throwable e)
 		{
-			System.out.println("Error");
+//			System.out.println("Error");
 		}
 		
 		
@@ -168,9 +168,9 @@ public class RegisterEggsUtil
 		int  red   = (clr & 0x00ff0000) >> 16;
 		int  green = (clr & 0x0000ff00) >> 8;
 		int  blue  =  clr & 0x000000ff;
-		System.out.println("Red Color value = "+ red);
-		System.out.println("Green Color value = "+ green);
-		System.out.println("Blue Color value = "+ blue);
+//		System.out.println("Red Color value = "+ red);
+//		System.out.println("Green Color value = "+ green);
+//		System.out.println("Blue Color value = "+ blue);
 	}
 	
 	

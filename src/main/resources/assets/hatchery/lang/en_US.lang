@@ -10,6 +10,7 @@ tile.hatchery.manure_block.name=Chicken Manure Block
 tile.hatchery.nursery_block.name=Nursery Monitor
 tile.hatchery.fertilizer_mixer.name=Fertilizer Mixer
 tile.hatchery.digester_generator.name=Methane Digester Generator
+tile.hatchery.chicken_machine_block.name=Lucky Egg Machine
 tile.hatchery.shredder.name=Shredder
 
 container.generator.generating=Generating: %1$drf/t
@@ -41,6 +42,8 @@ item.hatchery.circuit_board.name=Circuit Board
 item.hatchery.rf_upgrade_1.name=RF Upgrade Tier 1
 item.hatchery.rf_upgrade_2.name=RF Upgrade Tier 2
 item.hatchery.rf_upgrade_3.name=RF Upgrade Tier 3
+
+item.hatchery.chicken_machine.name=Lucky Egg Machine
 
 #TOOLTIP
 tooltip.hatchery.sprayer.desc=%1$s Volume: %2$dmb / %3$dmb
@@ -77,5 +80,5 @@ jei.item.hatchery.rf_upgrade_3=Upgrades RF power generation 80rf/tick
 jei.item.hatchery.feather_fiber=Feather fibers are shredded feathers placed in the shredder, that can than be melted into a raw plastic. Used in crafting for various items. 
 jei.item.hatchery.feather_meal=Feather Meal is a by product of using the shredder of feathers. It can be added to seeds to create more food for chickens. 
 jei.item.hatchery.chicken_feed=Add Chicken Feed to feeders as an alternate food source.
-
+jei.item.hatchery.chicken_machine=Giving the Chicken Machine power, eggs, and plastic allow you to create prize eggs. Prize eggs can give you, well prizes. 
 jei.gui.nesting_pen_drop=Nesting Pen Chicken Drops

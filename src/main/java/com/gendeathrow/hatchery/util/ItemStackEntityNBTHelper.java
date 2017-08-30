@@ -1,6 +1,5 @@
 package com.gendeathrow.hatchery.util;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;

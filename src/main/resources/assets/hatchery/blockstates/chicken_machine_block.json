@@ -1,0 +1,16 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+    	"model": "hatchery:chicken_machine_top"
+  	},
+    "variants": {
+        "facing=north,part=top": { "model": "hatchery:chicken_machine_top", "y": 180 },
+        "facing=east,part=top":  { "model": "hatchery:chicken_machine_top", "y": 270 },
+        "facing=south,part=top": { "model": "hatchery:chicken_machine_top" },
+        "facing=west,part=top":  { "model": "hatchery:chicken_machine_top", "y": 90 },
+        "facing=north,part=base": { "model": "hatchery:chicken_machine_bottom", "y": 180 },
+        "facing=east,part=base":  { "model": "hatchery:chicken_machine_bottom", "y": 270 },
+        "facing=south,part=base": { "model": "hatchery:chicken_machine_bottom" },
+        "facing=west,part=base":  { "model": "hatchery:chicken_machine_bottom", "y": 90 }
+ 	}
+}

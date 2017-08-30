@@ -1,8 +1,8 @@
 package com.gendeathrow.hatchery.core.proxies;
 
-import com.gendeathrow.hatchery.block.eggstractor.ContainerEggstractor;
-import com.gendeathrow.hatchery.block.eggstractor.EggstractorTileEntity;
-import com.gendeathrow.hatchery.block.eggstractor.GuiEggstractor;
+import com.gendeathrow.hatchery.block.eggmachine.ContainerEggMachine;
+import com.gendeathrow.hatchery.block.eggmachine.EggMachineTileEntity;
+import com.gendeathrow.hatchery.block.eggmachine.GuiEggMachine;
 import com.gendeathrow.hatchery.block.fertilizermixer.ContainerFertlizerMixer;
 import com.gendeathrow.hatchery.block.fertilizermixer.FertilizerMixerTileEntity;
 import com.gendeathrow.hatchery.block.fertilizermixer.GuiFertilizerMixerInventory;
@@ -122,8 +122,8 @@ public class CommonProxy implements IGuiHandler
 						return new ContainerNestingPen(player.inventory, (NestPenTileEntity) tile, player);
 					else if(tile instanceof ShredderTileEntity)
 						return new ContainerShredder(player.inventory, (ShredderTileEntity) tile, player);
-					else if(tile instanceof EggstractorTileEntity)
-						return new ContainerEggstractor(player.inventory, (EggstractorTileEntity) tile);
+					else if(tile instanceof EggMachineTileEntity)
+						return new ContainerEggMachine(player.inventory, (EggMachineTileEntity) tile);
 				}
 		 }
 				
@@ -159,8 +159,8 @@ public class CommonProxy implements IGuiHandler
 					return new GuiNestingPen(player.inventory, (NestPenTileEntity) tile);
 				else if(tile instanceof ShredderTileEntity)
 					return new GuiShredder(player.inventory, (ShredderTileEntity) tile);
-				else if(tile instanceof EggstractorTileEntity)
-					return new GuiEggstractor(player.inventory, (EggstractorTileEntity) tile);
+				else if(tile instanceof EggMachineTileEntity)
+					return new GuiEggMachine(player.inventory, (EggMachineTileEntity) tile);
 			}
 				    
 		}

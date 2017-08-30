@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.block.eggstractor;
+package com.gendeathrow.hatchery.block.eggmachine;
 
 import com.gendeathrow.hatchery.block.TileUpgradable;
 import com.gendeathrow.hatchery.core.init.ModItems;
@@ -17,16 +17,32 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.oredict.OreDictionary;
 
-public class EggstractorTileEntity extends TileUpgradable implements ITickable, IInventory, IEnergyReceiver
+public class EggMachineTileEntity extends TileUpgradable implements ITickable, IInventory, IEnergyReceiver
 {
 
-	protected InventoryStorage inventory = new InventoryStorage(this, 3);
-	
 	public int EggInSlot = 0;
 	public int PlasticInSlot = 1;
 	public int PrizeEggSlot = 2;
+	
+	public EggMachineTileEntity() {
+		super(2);
+	}
+	
+	
+	protected InventoryStorage inventory = new InventoryStorage(this, 3)
+	{
+		@Override
+		public boolean isItemValidForSlot(int index, ItemStack stack) {
+			if(index == EggInSlot && stack.getItem() instanceof ItemEgg) {
+				return true;
+			}
+			else if(index == PlasticInSlot && stack.getItem() == ModItems.plastic) {
+				return true;
+			}
+			return false;
+		}
+	};
 	
 	protected EnergyStorageRF energy = new EnergyStorageRF(20000){
 		@Override
@@ -42,30 +58,54 @@ public class EggstractorTileEntity extends TileUpgradable implements ITickable, 
 	
 	private int eggTime = 0;
 
-	public EggstractorTileEntity() {
-		super(2);
-	}
 	
+	float zeroedFacing;
+	float currentFacing;
+	float prevAnimationTicks;
+	float animationTicks;
+	boolean firstRun = true;
+	
+	public void updateClient()
+	{
+		if(firstRun)
+		{
+			firstRun = false;
+			EnumFacing facing = EggMachineBlock.getFacing(this.worldObj.getBlockState(this.pos));
+			this.zeroedFacing = facing.getHorizontalAngle();
+			animationTicks = this.zeroedFacing;
+		}
+		
+		prevAnimationTicks = animationTicks;
+		if (animationTicks < 360)
+			animationTicks += 5;
+		if (animationTicks >= 360) 
+		{
+			animationTicks -= 360;
+			prevAnimationTicks -= 360;
+		}
+		
+	}
 	
 	@Override
 	public void update() {
+		
+		if(this.worldObj.isRemote)
+			this.updateClient();
+		
 		ItemStack eggIn = this.inventory.getStackInSlot(this.EggInSlot);
 		ItemStack plasticIn = this.inventory.getStackInSlot(this.PlasticInSlot);
 		
-		if(eggIn != null && eggIn.getItem() instanceof ItemEgg)
-		{
+		if(eggIn != null && eggIn.getItem() instanceof ItemEgg) {
 			this.internalEggStorage += eggIn.stackSize;
 			this.inventory.setInventorySlotContents(this.EggInSlot, null);
 		}
 		
-		if(plasticIn != null && plasticIn.getItem() == ModItems.plastic)
-		{
+		if(plasticIn != null && plasticIn.getItem() == ModItems.plastic) {
 			this.internalPlasticStorage += plasticIn.stackSize;
 			this.inventory.setInventorySlotContents(this.PlasticInSlot, null);
 		}
 
-		if(this.eggTime <= 0 && this.canMakePrizeEgg())
-		{
+		if(this.eggTime <= 0 && this.canMakePrizeEgg())	{
 			this.eggTime = 200;
 			this.internalEggStorage -= eggToPrizeSize;
 			this.internalPlasticStorage-= 2;
@@ -73,18 +113,14 @@ public class EggstractorTileEntity extends TileUpgradable implements ITickable, 
 			this.markDirty();
 		}
 		
-		
 		boolean hasTimeLeft = this.eggTime > 0;
 		ItemStack prizeSlot = this.inventory.getStackInSlot(this.PrizeEggSlot);
 		boolean hasRoomForEgg = prizeSlot == null ? true : prizeSlot.stackSize < prizeSlot.getMaxStackSize();
 		
-
-		
-        if (!this.worldObj.isRemote)
-        {
-    		if(hasTimeLeft && this.energy.getEnergyStored() >= 80 && hasRoomForEgg){
+        if (!this.worldObj.isRemote){
+    		if(hasTimeLeft && this.energy.getEnergyStored() >= 40 && hasRoomForEgg){
     			--eggTime;
-    			this.energy.extractEnergy(80, false);
+    			this.energy.extractEnergy(40, false);
     			
     			if(this.eggTime <= 0) {
     				this.createPrizeEgg();
