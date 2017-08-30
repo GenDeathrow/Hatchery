@@ -44,7 +44,7 @@ public class GuiEggMachine extends GuiContainer
 		fontRendererObj.drawString(new TextComponentTranslation("container.upgrades").getFormattedText(), 120 - (this.fontRendererObj.getStringWidth(new TextComponentTranslation("container.upgrades").getUnformattedText())/2), 40, 4210752);
 		
 		fontRendererObj.drawString(new TextComponentTranslation("container.eggstractor.eggs", eggstractor.internalEggStorage).getFormattedText(), 89, 14, 4210752);
-		fontRendererObj.drawString(new TextComponentTranslation("container.eggstractor.plastic", eggstractor.internalPlasticStorage).getFormattedText(), 89, 30, 4210752);
+		fontRendererObj.drawString(new TextComponentTranslation("container.eggstractor.plastic", eggstractor.internalPlasticStorage).getFormattedText(), 89, 26, 4210752);
 
 		
 			this.itemRender.zLevel = 200;

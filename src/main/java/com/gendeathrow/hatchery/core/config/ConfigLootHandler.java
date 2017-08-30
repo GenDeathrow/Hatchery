@@ -256,7 +256,6 @@ public class ConfigLootHandler {
 		defaultList.add(new ItemDrop(new ItemStack(Items.NAME_TAG), 5,1,1));
 		defaultList.add(new ItemDrop(new ItemStack(Items.DIAMOND), 1,1,1));
 		defaultList.add(new ItemDrop(new ItemStack(Items.EMERALD), 1,1,1));
-		defaultList.add(new ItemDrop(new ItemStack(Items.GOLD_INGOT), 3,1,1));
 		defaultList.add(new ItemDrop(new ItemStack(Items.ENDER_PEARL), 2,1,1));
 		defaultList.add(new ItemDrop(new ItemStack(Items.GOLDEN_APPLE), 2,1,1));
 

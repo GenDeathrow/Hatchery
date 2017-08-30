@@ -32,9 +32,7 @@ public class ModRecipes
 		OreDictionary.registerOre("manure", ModItems.manure);
 		OreDictionary.registerOre("manureBlock", ModBlocks.manureBlock);
 		OreDictionary.registerOre("egg", ModItems.hatcheryEgg);
-		//if(Loader.isModLoaded("harvestcraft")) {
 		OreDictionary.registerOre("listAllegg", ModItems.hatcheryEgg);
-		//}
 	}
 	
 	public static void RegisterRecipes()
@@ -53,7 +51,7 @@ public class ModRecipes
 	            "WEW",
 	            "ICI",
 	            'W', "plankWood",   // can use ordinary items, blocks, itemstacks in ShapedOreRecipe
-	            'E', "listAllegg",
+	            'E', "egg",
 	            'I', Blocks.IRON_BLOCK,
 	            'C', ModItems.circuitBoard, // look in OreDictionary for vanilla definitions
 		    });

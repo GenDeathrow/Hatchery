@@ -4,6 +4,7 @@
     	"model": "hatchery:chicken_machine_top"
   	},
     "variants": {
+		"inventory": [{}],
         "facing=north,part=top": { "model": "hatchery:chicken_machine_top", "y": 180 },
         "facing=east,part=top":  { "model": "hatchery:chicken_machine_top", "y": 270 },
         "facing=south,part=top": { "model": "hatchery:chicken_machine_top" },

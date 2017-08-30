@@ -102,11 +102,10 @@ public class AnimalNet extends Item
     	ItemStack newstack = new ItemStack(ModItems.animalNet);
     	addEntityNBT(newstack, entity);        
 
-        if (--stack.stackSize <= 0)
+        if (--stack.stackSize <= 0 && !player.capabilities.isCreativeMode)
         {
         	stack.stackSize = 1;
-        	addEntityNBT(stack, entity);     
-        	return stack;
+       		return addEntityNBT(stack, entity);     
         }
         else
         {
@@ -155,7 +154,7 @@ public class AnimalNet extends Item
     				stack = addEntitytoNet(playerIn, stack, pen.storedEntity());
     				pen.tryGetRemoveEntity();
      			}
-    			else if(stack.getTagCompound() != null)
+    			else if(stack.getTagCompound() != null &&  pen.storedEntity() == null)
     			{
             		NBTTagCompound entitynbt =  getEntityTag(stack);
               		
@@ -176,6 +175,8 @@ public class AnimalNet extends Item
     	  	        stack.setTagCompound(null);
     	  	        
     	  	        //stack.setStackDisplayName(I18n.translateToLocal(stack.getUnlocalizedName()+".name"));
+    	  	        
+    	  	      worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
     			}
 
     		}
@@ -209,6 +210,8 @@ public class AnimalNet extends Item
        			}
 	  	        playerIn.addStat(StatList.getObjectUseStats(this));
 	  	        stack.setTagCompound(null);
+	  	        
+  	  	      worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 	  	      return EnumActionResult.PASS;
         	}
         }
