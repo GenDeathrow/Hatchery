@@ -1,5 +1,16 @@
 package com.gendeathrow.hatchery.block.generator;
 
+import com.gendeathrow.hatchery.block.TileUpgradable;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModFluids;
+import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.inventory.InventoryStorage;
+import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
+import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
+import com.gendeathrow.hatchery.storage.EnergyStorageRF;
+
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -19,19 +30,13 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
-
-import com.gendeathrow.hatchery.block.TileUpgradable;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModFluids;
-import com.gendeathrow.hatchery.inventory.InventoryStorage;
-import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
-import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 
 public class DigesterGeneratorTileEntity extends TileUpgradable implements IInventory, IEnergyProvider, ITickable
 {
 	public int time = 0;
+	
+	protected int baseEnergyStorage = 200000;
+	protected int baseTankStorage = 5000;
 	
 	protected EnergyStorageRF energy = new EnergyStorageRF(200000);
 	protected InventoryStorage inventory = new InventoryStorage(this, 2);
@@ -113,7 +118,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
         
 		if(!this.worldObj.isRemote)
 		{
-			updateRFPerTick();
+			updateUpgrades();
 			
 			if(isActive && canGenerate() && energy.getEnergyStored() < energy.getMaxEnergyStored())
 			{
@@ -288,6 +293,10 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
             	return this.getTank().getFluidAmount();
             case 2:
             	return this.rfPerTick;
+            case 3:
+            	return this.energy.getMaxEnergyStored();
+            case 4:
+            	return this.getTank().getCapacity();
             default:
                 return 0;
         }
@@ -307,6 +316,15 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
             	break;
             case 2:
             	this.rfPerTick = value;
+                break;
+            case 3:
+            	this.energy.setCapacity(value);
+                break;
+            case 4:
+            	System.out.println("TANK IN:"+ value);
+            	this.getTank().setCapacity(value);
+                break;
+            default:
                 break;
         }	
 	}
@@ -329,9 +347,11 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 		return this.rfPerTick;
 	}
 
-	protected void updateRFPerTick()
+	protected void updateUpgrades()
 	{
 		boolean rfupgrade = false;
+		boolean rfcapacity = false;
+		boolean tankcapacity = false;
 		
 		for(ItemStack upgrade : this.getUpgrades())
 		{
@@ -348,6 +368,67 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 					this.rfPerTick = newTick;
 				}
 			}
+			
+			if(upgrade.getItem() == ModItems.tankUpgradeTier1 && tankcapacity == false)
+			{
+				tankcapacity = true;
+				
+				int tier = upgrade.getMetadata()+1;
+				int newTank = this.baseTankStorage;
+				
+				if(tier == 1) {
+					newTank += 2000;
+				}
+				else if(tier == 2) {
+					newTank += 4000; 
+				}
+				else if(tier == 3) {
+					newTank += 6000; 
+				}
+
+				if(newTank != this.fertlizerTank.getCapacity())
+				{
+					this.fertlizerTank.setCapacity(newTank);
+					
+					System.out.println("tank level"+ this.fertlizerTank.getCapacity());
+				}
+				
+			}
+			
+			if(upgrade.getItem() == ModItems.rfCapacityUpgradeTier1 && rfcapacity == false)
+			{
+				int tier = upgrade.getMetadata()+1;
+				
+				int newEnergy = this.baseEnergyStorage;
+				
+				rfcapacity = true;
+
+				if(tier == 1) {
+					newEnergy += (int)(newEnergy * 0.5); 
+				}
+				else if(tier == 2) {
+					newEnergy += (int)(newEnergy * 0.75); 
+				}
+				else if(tier == 3) {
+					newEnergy += (int)(newEnergy * 1); 
+				}
+
+				if(newEnergy != this.energy.getMaxEnergyStored())
+				{
+					this.energy.setCapacity(newEnergy);
+				}
+			}
+		}
+
+		
+		if(!tankcapacity && this.fertlizerTank.getCapacity() != this.baseTankStorage)
+		{
+			this.fertlizerTank.setCapacity(this.baseTankStorage);
+		}
+		
+		if(!rfcapacity && this.energy.getMaxEnergyStored() != this.baseEnergyStorage)
+		{
+			this.energy.setCapacity(this.baseEnergyStorage);
 		}
 		
 		if(!rfupgrade) 

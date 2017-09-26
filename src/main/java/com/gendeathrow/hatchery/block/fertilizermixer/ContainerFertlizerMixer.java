@@ -68,6 +68,7 @@ public class ContainerFertlizerMixer extends Container
 		});
 		
 		addSlotToContainer(new SlotFluidContainer(fertilizerInventory, 1, 72, 16, FluidRegistry.WATER));
+		
 		addSlotToContainer(new Slot(fertilizerInventory, 2, 72, 52)
 		{
 			@Override
@@ -96,10 +97,10 @@ public class ContainerFertlizerMixer extends Container
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
-	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 7 + j * 18, 83 + i * 18));
+	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 
 	        for (i = 0; i < 9; ++i)
-	            addSlotToContainer(new Slot(playerInventory, i, 7 + i * 18, 141));
+	            addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 142));
 
 	}
 	
@@ -168,8 +169,14 @@ public class ContainerFertlizerMixer extends Container
 		for (IContainerListener listener : this.listeners) 
 		 {
 					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
+					
+					listener.sendProgressBarUpdate(this, 4, this.inventory.getField(4));
+					listener.sendProgressBarUpdate(this, 5, this.inventory.getField(5));
+					
 					listener.sendProgressBarUpdate(this, 0, this.inventory.getField(0));
 					listener.sendProgressBarUpdate(this, 1, this.inventory.getField(1));
+					
+					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 6, this.inventory.getField(6));
 					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 3, this.inventory.getField(3));
 		 }
 		

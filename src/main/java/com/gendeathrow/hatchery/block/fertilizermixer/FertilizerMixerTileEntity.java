@@ -2,9 +2,21 @@ package com.gendeathrow.hatchery.block.fertilizermixer;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.block.TileUpgradable;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModFluids;
+import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.inventory.InventoryStorage;
+import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
+import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
+import com.gendeathrow.hatchery.storage.EnergyStorageRF;
+
+import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,18 +36,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import cofh.api.energy.IEnergyReceiver;
-
-import com.gendeathrow.hatchery.block.TileUpgradable;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModFluids;
-import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.inventory.InventoryStorage;
-import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 
 public class FertilizerMixerTileEntity extends TileUpgradable implements IInventory, ITickable, IEnergyReceiver
 {
-	private FluidTank waterTank = new FluidTank(new FluidStack(FluidRegistry.WATER, 0), 20000){
+	int baseTankSize = 12000;
+	int baseRFStorage = 20000;
+	int baseRFTick = 20;
+	double rfEffencyMultpyler = 1;
+	double upgradeSpeedMulipyler = 1;
+	
+	private FluidTank waterTank = new FluidTank(new FluidStack(FluidRegistry.WATER, 0), 12000){
 		@Override
 	    public boolean canDrain()
 	    {
@@ -44,7 +54,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 	};
 	
 	
-	private FluidTank fertilizerTank = new FluidTank(new FluidStack(ModFluids.liquidfertilizer, 0), 20000){
+	private FluidTank fertilizerTank = new FluidTank(new FluidStack(ModFluids.liquidfertilizer, 0), 12000){
 		@Override
 		public boolean canFill()
 		{
@@ -73,16 +83,6 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 	public FluidTank getFertilizerTank()
 	{
 		return fertilizerTank;
-	}
-	
-	private ItemStack getWaterFluidIn()
-	{
-		return this.inventory.getStackInSlot(2);
-	}
-	
-	private ItemStack getFertlizerFluidOut()
-	{
-		return this.inventory.getStackInSlot(4);
 	}
 	
 	public ItemStack[] getItemInventory()
@@ -128,7 +128,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
     private int currentItemMixTime;
     private int mixTime;
     private int totalMixTime;
-	
+
     
     
 	@Override
@@ -145,6 +145,9 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 		
 		if(this.worldObj != null && !this.worldObj.isRemote)
 		{
+			updateUpgrades();
+			
+			
 			if (this.isMixing() || this.inventory.getStackInSlot(0) != null)
 			{
                 if (!this.isMixing() && this.canMix())
@@ -168,15 +171,18 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
                 	}
                 }
                 
+    			int rfNeeded = (int)((10 * this.upgradeSpeedMulipyler) * this.rfEffencyMultpyler);
     			
-    			if(this.isMixing() && this.canMix() && fertlizerMixTime >= 5 && this.energy.getEnergyStored() >= 10)
+    			if(this.isMixing() && this.canMix() && fertlizerMixTime >= 5 && this.energy.getEnergyStored() >= rfNeeded)
     			{
-    					this.fertlizerMixTime -= 5;
-    					this.energy.extractEnergy(10, false);
+    					this.fertlizerMixTime -= 5 * this.upgradeSpeedMulipyler;
+    					this.energy.extractEnergy(rfNeeded, false);
     				
-    					this.fertilizerTank.fillInternal(new FluidStack(ModFluids.liquidfertilizer, 5), true);
-    					this.waterTank.drainInternal(5, true);
+    					this.fertilizerTank.fillInternal(new FluidStack(ModFluids.liquidfertilizer,(int)(5 * this.upgradeSpeedMulipyler)), true);
+    					this.waterTank.drainInternal((int)(5 * this.upgradeSpeedMulipyler), true);
     					
+    					
+    					System.out.println("remove/add tank:"+ (5 * this.upgradeSpeedMulipyler) +" rfneeded:"+  rfNeeded);
     					flag1 = true;
     			}
     			else if(this.isMixing() && this.canMix() && fertlizerMixTime >= 1)
@@ -199,19 +205,27 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 			}
 			
 
-			if(this.inventory.getStackInSlot(1) != null && (this.inventory.getStackInSlot(2) == null) && this.waterTank.getFluidAmount() < this.waterTank.getCapacity())
+			if(this.getStackInSlot(1) != null && this.waterTank.getFluidAmount() < this.waterTank.getCapacity())
 			{
-				ItemStack stack = this.inventory.getStackInSlot(1);
+				ItemStack stack = this.getStackInSlot(1);
 				
-				IFluidHandler handler = FluidUtil.getFluidHandler(stack);
+				ItemStack newStack = this.getStackInSlot(1).copy();
+				newStack.stackSize = 1;
 				
+				IFluidHandler handler = FluidUtil.getFluidHandler(newStack);
+
 				if(handler != null)
 				{
-					if(FluidUtil.tryFluidTransfer(this.waterTank, handler, this.waterTank.getCapacity(), true) != null)
-					{
-						this.inventory.setInventorySlotContents(2, stack);
-						this.inventory.setInventorySlotContents(1, null);
-					}
+		            if (this.getStackInSlot(2) == null)
+		            {
+		            	if(FluidUtil.tryFluidTransfer(this.waterTank, handler, this.waterTank.getCapacity(), true) != null)
+		            	{
+		            		if(newStack.stackSize > 0)
+		            			this.inventory.setInventorySlotContents(2, newStack);
+						
+		            		this.decrStackSize(1, 1);
+		            	}
+		            }
 				}
 			}
 			
@@ -230,12 +244,12 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 
 					if(FluidUtil.tryFluidTransfer(handler, this.fertilizerTank, this.fertilizerTank.getCapacity(), true) != null)
 					{
-						this.inventory.setInventorySlotContents(4, newStack);
+						this.setInventorySlotContents(4, newStack);
 						
 						if(oldStack.stackSize > 1)
-							this.inventory.decrStackSize(3, 1);
+							this.decrStackSize(3, 1);
 						else
-							this.inventory.setInventorySlotContents(3, null);
+							this.setInventorySlotContents(3, null);
 					}
 				}
 			}
@@ -255,6 +269,115 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
         {
             this.markDirty();
         }
+	}
+	
+	
+	
+	
+	protected void updateUpgrades()
+	{
+		boolean rfupgrade = false;
+		boolean rfcapacity = false;
+		boolean tankcapacity = false;
+		boolean speedupgrade = false;
+		
+		for(ItemStack upgrade : this.getUpgrades())
+		{
+			if(upgrade == null) continue;
+		
+			
+			if(upgrade.getItem() instanceof RFEfficiencyUpgrade)
+			{
+				rfupgrade = true;
+				this.rfEffencyMultpyler = 1 - ((BaseUpgrade)upgrade.getItem()).getUpgradeTier(upgrade, "") * 0.10;
+			}
+			if(upgrade.getItem() == ModItems.speedUpgradeTier && speedupgrade == false)
+			{
+				speedupgrade = true;
+				this.upgradeSpeedMulipyler = 1 + ((BaseUpgrade)upgrade.getItem()).getUpgradeTier(upgrade, "") * 1 ;
+			}
+			
+			if(upgrade.getItem() == ModItems.tankUpgradeTier1 && tankcapacity == false)
+			{
+				tankcapacity = true;
+				
+				int tier = upgrade.getMetadata()+1;
+				int newTank = this.baseTankSize;
+				
+				if(tier == 1) {
+					newTank += 2000;
+				}
+				else if(tier == 2) {
+					newTank += 4000; 
+				}
+				else if(tier == 3) {
+					newTank += 6000; 
+				}
+
+				if(newTank != this.fertilizerTank.getCapacity())
+				{
+					this.fertilizerTank.setCapacity(newTank);
+				}
+				
+				if(newTank != this.waterTank.getCapacity())
+				{
+					this.waterTank.setCapacity(newTank);
+				}
+				
+			}
+			
+			if(upgrade.getItem() == ModItems.rfCapacityUpgradeTier1 && rfcapacity == false)
+			{
+				int tier = upgrade.getMetadata()+1;
+				
+				int newEnergy = this.baseRFStorage;
+				
+				rfcapacity = true;
+
+				if(tier == 1) {
+					newEnergy += (int)(newEnergy * 0.5); 
+				}
+				else if(tier == 2) {
+					newEnergy += (int)(newEnergy * 0.75); 
+				}
+				else if(tier == 3) {
+					newEnergy += (int)(newEnergy * 1); 
+				}
+
+				if(newEnergy != this.energy.getMaxEnergyStored())
+				{
+					this.energy.setCapacity(newEnergy);
+				}
+			}
+		}
+
+		
+		if(!tankcapacity && this.fertilizerTank.getCapacity() != this.baseTankSize)
+		{
+			this.fertilizerTank.setCapacity(this.baseTankSize);
+		}
+		
+		if(!tankcapacity && this.waterTank.getCapacity() != this.baseTankSize)
+		{
+			this.waterTank.setCapacity(this.baseTankSize);
+		}
+		
+		if(!rfcapacity && this.energy.getMaxEnergyStored() != this.baseRFStorage)
+		{
+			this.energy.setCapacity(this.baseRFStorage);
+		}
+		
+		if(!rfupgrade && this.rfEffencyMultpyler != 1)
+		{
+			this.rfEffencyMultpyler = 1;
+		}
+		
+		
+		if(!speedupgrade && this.upgradeSpeedMulipyler != 1)
+		{
+			this.upgradeSpeedMulipyler = 1;
+		}
+
 	}
 
 	public int getMixTime(@Nullable ItemStack stack)
@@ -340,6 +463,12 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
             	return this.fertlizerMixTime;
             case 3:
             	return this.energy.getEnergyStored();
+            case 4:
+            	return this.waterTank.getCapacity();
+            case 5:
+            	return this.fertilizerTank.getCapacity();
+            case 6: 
+            	return this.energy.getMaxEnergyStored();
             default:
                 return 0;
         }
@@ -363,9 +492,19 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
                 break;
             case 2:
                 this.fertlizerMixTime  = value;
+                break;
             case 3:
             	this.energy.setEnergyStored(value);
+            	break;
+            case 4:
+            	this.waterTank.setCapacity(value);
+            	break;
+            case 5:
+            	this.fertilizerTank.setCapacity(value);
                 break;
+            case 6:
+            	this.energy.setCapacity(value);
+            	break;
 
         }
 	}
@@ -449,6 +588,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 		return this.energy.receiveEnergy(maxReceive, simulate);
 	}
+
 
     
 }

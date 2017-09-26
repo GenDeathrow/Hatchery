@@ -31,8 +31,6 @@ public class ContainerShredder extends Container
 	private final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
 
 	private final int VANILLA_FIRST_SLOT_INDEX = 0;
-	private final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
-	private final int TE_INVENTORY_SLOT_COUNT = 9;
 	
 	private final IItemHandler inventory;
 	
@@ -51,10 +49,10 @@ public class ContainerShredder extends Container
 		int i;  
 
 		addSlotToContainer(new SlotItemHandler(inventory, 0, 65, 16){
-		    @Override
-		    public boolean canTakeStack(EntityPlayer playerIn){
-		    	return true;
-		    }
+//		    @Override
+//		    public boolean canTakeStack(EntityPlayer playerIn){
+//		    	return true;
+//		    }
 		});
 		
 		addSlotToContainer(new SlotItemHandler(inventory, 1, 55, 54){
@@ -71,15 +69,31 @@ public class ContainerShredder extends Container
 		    }
 		});
 		     
-		addSlotToContainer(new SlotUpgrade(upgrades, 0, 121, 55));
-		addSlotToContainer(new SlotUpgrade(upgrades, 1, 141, 54));
+		addSlotToContainer(new SlotUpgrade(upgrades, 0, 121, 55) {
+			public boolean isItemValid(@Nullable ItemStack stack)
+		    {
+				boolean value = super.isItemValid(stack);
+				if(value)
+					value = shredder.canUseUpgrade(stack);
+				return value;
+		    }
+		});
+		addSlotToContainer(new SlotUpgrade(upgrades, 1, 141, 54) {
+			public boolean isItemValid(@Nullable ItemStack stack)
+		    {
+				boolean value = super.isItemValid(stack);
+				if(value)
+					value = shredder.canUseUpgrade(stack);
+				return value;
+		    }
+		});
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
-	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 7 + j * 18, 83 + i * 18));
+	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 
         for (i = 0; i < 9; ++i)
-            addSlotToContainer(new Slot(playerInventory, i, 7 + i * 18, 141));	          
+            addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 142));	          
 	}
 	
 	
@@ -143,6 +157,7 @@ public class ContainerShredder extends Container
 		
 		for (IContainerListener listener : this.listeners) 
 		{
+				HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 3, this.shredder.getField(3));
 				HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 0, this.shredder.getField(0));
 				listener.sendProgressBarUpdate(this, 1, this.shredder.getField(1));
 				listener.sendProgressBarUpdate(this, 2, this.shredder.getField(2));

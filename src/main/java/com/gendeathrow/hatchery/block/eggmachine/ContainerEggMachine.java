@@ -63,10 +63,10 @@ public class ContainerEggMachine extends Container
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
-	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 7 + j * 18, 83 + i * 18));
+	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 
 	        for (i = 0; i < 9; ++i)
-	            addSlotToContainer(new Slot(playerInventory, i, 7 + i * 18, 141));
+	            addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 142));
 
 	}
 	

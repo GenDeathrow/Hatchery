@@ -260,6 +260,7 @@ public class ModRecipes
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.mealPulp, 4), ModItems.featherMeal, ModItems.featherMeal, ModItems.featherMeal,ModItems.featherMeal, ModItems.featherMeal, ModItems.featherMeal, ModItems.featherMeal, ModItems.featherMeal, Items.WATER_BUCKET);
 		
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.EGG), ModItems.hatcheryEgg);
 		
 		GameRegistry.addSmelting(ModItems.featherFiber, new ItemStack(ModItems.plastic), 0);
 		GameRegistry.addSmelting(ModItems.mealPulp, new ItemStack(Items.PAPER), 0);

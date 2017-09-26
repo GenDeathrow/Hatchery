@@ -65,10 +65,10 @@ public class ContainerDigesterGenerator extends Container
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
-	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 7 + j * 18, 83 + i * 18));
+	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 
         for (i = 0; i < 9; ++i)
-            addSlotToContainer(new Slot(playerInventory, i, 7 + i * 18, 141));	    
+            addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 142));	    
 
 	}
 
@@ -134,6 +134,7 @@ public class ContainerDigesterGenerator extends Container
 	@Override
 	public void updateProgressBar(int id, int value) {
 		this.inventory.setField(id, value);
+		System.out.println(id +":"+ value);
 	}
 
 	@Override
@@ -144,14 +145,15 @@ public class ContainerDigesterGenerator extends Container
 		for (IContainerListener listener : this.listeners) 
 		 {
 					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
-					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 0, this.inventory.getField(0));
+					listener.sendProgressBarUpdate(this, 4, this.inventory.getField(4));
 					listener.sendProgressBarUpdate(this, 1, this.inventory.getField(1));
+					
 					listener.sendProgressBarUpdate(this, 2, this.inventory.getField(2));
+					
+					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 3, this.inventory.getField(3));
+					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 0, this.inventory.getField(0));
 		 }
 
-//		this.rfEnergy = this.inventory.getField(0);
-//		this.fertilizerTank = this.inventory.getField(1);
-//		this.rfPerTick = this.inventory.getField(2);
     }
 
 	@Override

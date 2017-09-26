@@ -30,6 +30,8 @@ import com.gendeathrow.hatchery.api.tileentities.IContainerUpdate;
 import com.gendeathrow.hatchery.block.TileUpgradable;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
+import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
@@ -39,7 +41,11 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	   
 	public int animationTicks;  
 	public int prevAnimationTicks;  
-
+	
+	int baseRFStorage = 100000;
+	double rfEffencyMultpyler = 1;
+	double upgradeSpeedMulipyler = 1;
+	
 	protected InventoryStroageModifiable inventory = new InventoryStroageModifiable(3)
 	{
 		@Override
@@ -99,6 +105,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 		
         if (this.worldObj != null && !this.worldObj.isRemote)
         {
+        	updateUpgrades();
 
     		boolean flag = this.isShredding();
     		boolean flag1 = false;
@@ -125,8 +132,9 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
    			
    			if(this.isShredding() && hasPower())
    			{
-   				this.shreddingTime--;
-   				this.energy.extractEnergy(20, false);
+   				this.shreddingTime -= 1 * this.upgradeSpeedMulipyler;
+   				
+   				this.energy.extractEnergy((int)((rfTick * this.upgradeSpeedMulipyler) * this.rfEffencyMultpyler), false);
    				
    				if(this.shreddingTime <= 0)
    					this.shredItem();
@@ -150,6 +158,75 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 			
 
    }
+	@Override
+	public boolean canUseUpgrade(ItemStack item)
+	{
+		return item.getItem() == ModItems.rfCapacityUpgradeTier1 || item.getItem() == ModItems.speedUpgradeTier || item.getItem() instanceof RFEfficiencyUpgrade;
+	}
+	
+	protected void updateUpgrades()
+	{
+		boolean rfupgrade = false;
+		boolean rfcapacity = false;
+		boolean speedupgrade = false;
+		
+		for(ItemStack upgrade : this.getUpgrades())
+		{
+			if(upgrade == null) continue;
+		
+			
+			if(upgrade.getItem() instanceof RFEfficiencyUpgrade)
+			{
+				rfupgrade = true;
+				this.rfEffencyMultpyler = 1 - ((BaseUpgrade)upgrade.getItem()).getUpgradeTier(upgrade, "") * 0.10;
+			}
+			if(upgrade.getItem() == ModItems.speedUpgradeTier && speedupgrade == false)
+			{
+				speedupgrade = true;
+				this.upgradeSpeedMulipyler = 1 + ((BaseUpgrade)upgrade.getItem()).getUpgradeTier(upgrade, "") * 1 ;
+			}
+			
+						
+			if(upgrade.getItem() == ModItems.rfCapacityUpgradeTier1 && rfcapacity == false)
+			{
+				int tier = upgrade.getMetadata()+1;
+				
+				int newEnergy = this.baseRFStorage;
+				
+				rfcapacity = true;
+
+				if(tier == 1) {
+					newEnergy += (int)(newEnergy * 0.5); 
+				}
+				else if(tier == 2) {
+					newEnergy += (int)(newEnergy * 0.75); 
+				}
+				else if(tier == 3) {
+					newEnergy += (int)(newEnergy * 1); 
+				}
+
+				if(newEnergy != this.energy.getMaxEnergyStored())
+				{
+					this.energy.setCapacity(newEnergy);
+				}
+			}
+		}
+		
+		if(!rfcapacity && this.energy.getMaxEnergyStored() != this.baseRFStorage)
+		{
+			this.energy.setCapacity(this.baseRFStorage);
+		}
+		
+		if(!rfupgrade && this.rfEffencyMultpyler != 1)
+		{
+			this.rfEffencyMultpyler = 1;
+		}
+		
+		if(!speedupgrade && this.upgradeSpeedMulipyler != 1)
+		{
+			this.upgradeSpeedMulipyler = 1;
+		}
+	}
 	
 	public int getShreddingTime()
 	{
@@ -171,7 +248,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 		ItemStack stack = this.inventory.getStackInSlot(0);
 		boolean flag = false;		
 		
-		if(shreddedItem != null && this.isShreddableItem(shreddedItem))
+		if(shreddedItem != null && isShreddableItem(shreddedItem))
 		{
 			ShredderRecipe recipe = getRecipe(shreddedItem);
 			if(recipe != null)
@@ -223,7 +300,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
     
     public boolean hasPower()
     {
-    	return energy.getEnergyStored() >= rfTick;
+    	return energy.getEnergyStored() >= (rfTick * this.upgradeSpeedMulipyler) * this.rfEffencyMultpyler;
     }
     
     @SideOnly(Side.CLIENT)
@@ -339,6 +416,8 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 				return this.shreddingTime;
 			case 2:
 				return this.currentItemShreddingTime;
+			case 3:
+				return this.energy.getMaxEnergyStored();
 			default:
 				return 0;
 		}
@@ -359,12 +438,15 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 			case 2:
 				this.currentItemShreddingTime = value;
 				break;
+			case 3:
+				this.energy.setCapacity(value);
+				break;
 
 		}
 	}
 
 	@Override
-	public int getFieldCount() { return 3; }
+	public int getFieldCount() { return 4; }
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag)

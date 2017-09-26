@@ -40,6 +40,11 @@ public class TileUpgradable extends TileEntity
 		return false;
 	}
 	
+	public boolean canUseUpgrade(ItemStack item)
+	{
+		return true;
+	}
+	
 	
 	protected void onUpgradeChange() {}
 	

@@ -47,25 +47,25 @@ public class ModItems
 	public static RFEfficiencyUpgrade rfUpgradeTier2 = new RFEfficiencyUpgrade(2);
 	public static RFEfficiencyUpgrade rfUpgradeTier3 = new RFEfficiencyUpgrade(3);
 	
-	public static BaseUpgrade speedUpgradeTier1 = new BaseUpgrade(1, "speed_upgrade");
-	public static BaseUpgrade speedUpgradeTier2 = new BaseUpgrade(2, "speed_upgrade");
-	public static BaseUpgrade speedUpgradeTier3 = new BaseUpgrade(3, "speed_upgrade");
+	public static BaseUpgrade speedUpgradeTier = new BaseUpgrade(3, "speed_upgrade");
+	//public static BaseUpgrade speedUpgradeTier2 = new BaseUpgrade(2, "speed_upgrade");
+	//public static BaseUpgrade speedUpgradeTier3 = new BaseUpgrade(3, "speed_upgrade");
 
-	public static BaseUpgrade tankUpgradeTier1 = new BaseUpgrade(1, "tank_upgrade");
-	public static BaseUpgrade tankUpgradeTier2 = new BaseUpgrade(2, "tank_upgrade");
-	public static BaseUpgrade tankUpgradeTier3 = new BaseUpgrade(3, "tank_upgrade");
+	public static BaseUpgrade tankUpgradeTier1 = new BaseUpgrade(3, "tank_upgrade");
+	//public static BaseUpgrade tankUpgradeTier2 = new BaseUpgrade(2, "tank_upgrade");
+	//public static BaseUpgrade tankUpgradeTier3 = new BaseUpgrade(3, "tank_upgrade");
 	
 	// Capacity upgrades (increase RF, Tank Capacitys) RF 100,000 x tier, fluid (1-x2, 2-x3, 2-x4)
 	
-	public static BaseUpgrade rfCapacityUpgradeTier1 = new BaseUpgrade(1, "rf_capacity_upgrade");
-	public static BaseUpgrade rfCapacityUpgradeTier2 = new BaseUpgrade(2, "rf_capacity_upgrade");
-	public static BaseUpgrade rfCapacityUpgradeTier3 = new BaseUpgrade(3, "rf_capacity_upgrade");
+	public static BaseUpgrade rfCapacityUpgradeTier1 = new BaseUpgrade(3, "rf_capacity_upgrade");
+	//public static BaseUpgrade rfCapacityUpgradeTier2 = new BaseUpgrade(2, "rf_capacity_upgrade");
+	//public static BaseUpgrade rfCapacityUpgradeTier3 = new BaseUpgrade(3, "rf_capacity_upgrade");
 	
 
 	// RF Efficiency upgrade (decrease power usage)  1-0.75, 2-0.65, 3-0.5
-	public static BaseUpgrade rfEfficiencyUpgradeTier1 = new BaseUpgrade(1, "rf_efficiency_upgrade");
-	public static BaseUpgrade rfEfficiencyUpgradeTier2 = new BaseUpgrade(2, "rf_efficiency_upgrade");
-	public static BaseUpgrade rfEfficiencyUpgradeTier3 = new BaseUpgrade(3, "rf_efficiency_upgrade");
+	//public static BaseUpgrade rfEfficiencyUpgradeTier1 = new BaseUpgrade(3, "rf_efficiency_upgrade");
+	//public static BaseUpgrade rfEfficiencyUpgradeTier2 = new BaseUpgrade(2, "rf_efficiency_upgrade");
+	//public static BaseUpgrade rfEfficiencyUpgradeTier3 = new BaseUpgrade(3, "rf_efficiency_upgrade");
 	
 	// insulation (decrease sound)
 	
@@ -88,9 +88,7 @@ public class ModItems
 		registerItem(ModItems.featherFiber, "feather_fiber");
 		registerItem(ModItems.chickenFeed, "chicken_feed");		
 		
-		registerItem(ModItems.rfUpgradeTier1, "rf_upgrade_1");
-		registerItem(ModItems.rfUpgradeTier2, "rf_upgrade_2");
-		registerItem(ModItems.rfUpgradeTier3, "rf_upgrade_3");
+
 		
 		
 		registerItem(ModItems.circuitBoard, "circuit_board");
@@ -102,13 +100,18 @@ public class ModItems
 		registerItem(ModItems.chickenmachine, "chicken_machine");
 		
 		
-//		registerItem(ModItems.speedUpgradeTier1, "speed_upgrade_1");
-//		registerItem(ModItems.speedUpgradeTier2, "speed_upgrade_2");
-//		registerItem(ModItems.speedUpgradeTier3, "speed_upgrade_3");
-//		
-//		registerItem(ModItems.tankUpgradeTier1, "tank_upgrade_1");
-//		registerItem(ModItems.tankUpgradeTier2, "tank_upgrade_2");
-//		registerItem(ModItems.tankUpgradeTier3, "tank_upgrade_3");
+		// Upgradess
+		
+		//TODO LEGACY 
+		registerItem(ModItems.rfUpgradeTier1, "rf_upgrade_1");
+		registerItem(ModItems.rfUpgradeTier2, "rf_upgrade_2");
+		registerItem(ModItems.rfUpgradeTier3, "rf_upgrade_3");
+		
+		
+		registerItem(ModItems.speedUpgradeTier, "speed_upgrade");
+		registerItem(ModItems.tankUpgradeTier1, "tank_upgrade");
+		registerItem(ModItems.rfCapacityUpgradeTier1, "rf_capacity");
+		//registerItem(ModItems.rfEfficiencyUpgradeTier1, "rf_efficiency_upgrade");
 		
 		//registerItem(ModItems.pump, "fluidpump");
 		

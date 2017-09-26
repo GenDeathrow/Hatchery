@@ -1,6 +1,8 @@
 package com.gendeathrow.hatchery.core.proxies;
 
 
+import java.util.ArrayList;
+
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.block.eggmachine.EggMachineEntityRenderer;
 import com.gendeathrow.hatchery.block.eggmachine.EggMachineTileEntity;
@@ -113,7 +115,19 @@ public class ClientProxy extends CommonProxy
 		//Register Items
 		for(Item item : ModItems.ITEMS)
 		{
-			registerItemModel(item);
+			ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+			item.getSubItems(item, Hatchery.hatcheryTabs, list);
+			
+			if(list.size() > 1)
+			{
+
+				
+				for(ItemStack metaitem : list)
+				{
+					registerItemModel(metaitem.getItem(), metaitem.getMetadata() , item.getRegistryName().toString() +"_"+ metaitem.getMetadata());
+				}
+			}else
+				registerItemModel(item);
 		}
 
 		registerItemColorHandler(ModItems.hatcheryEgg);

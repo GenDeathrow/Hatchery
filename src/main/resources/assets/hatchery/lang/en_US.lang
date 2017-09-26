@@ -39,9 +39,23 @@ item.hatchery.feather_meal.name=Feather Meal
 item.hatchery.plastic.name=Plastic
 item.hatchery.chicken_feed.name=Chicken Feed
 item.hatchery.circuit_board.name=Circuit Board
-item.hatchery.rf_upgrade_1.name=RF Upgrade Tier 1
-item.hatchery.rf_upgrade_2.name=RF Upgrade Tier 2
-item.hatchery.rf_upgrade_3.name=RF Upgrade Tier 3
+
+item.hatchery.rf_upgrade_1.name=RF Efficiency Upgrade Tier 1
+item.hatchery.rf_upgrade_2.name=RF Efficiency Upgrade Tier 2
+item.hatchery.rf_upgrade_3.name=RF Efficiency Upgrade Tier 3
+
+item.hatchery.speed_upgrade_1.name=Speed Upgrade Tier 1 (Place Holder)
+item.hatchery.speed_upgrade_2.name=Speed Upgrade Tier 2 (Place Holder)
+item.hatchery.speed_upgrade_3.name=Speed Upgrade Tier 3 (Place Holder))
+
+item.hatchery.tank_upgrade_1.name=Tank Upgrade Tier 1  (Place Holder)
+item.hatchery.tank_upgrade_2.name=Tank Upgrade Tier 2  (Place Holder)
+item.hatchery.tank_upgrade_3.name=Tank Upgrade Tier 3  (Place Holder)
+
+item.hatchery.rf_capacity_1.name=RF Capacity Tier 1 (Place Holder)
+item.hatchery.rf_capacity_2.name=RF Capacity Tier 2 (Place Holder)
+item.hatchery.rf_capacity_3.name=RF Capacity Tier 3 (Place Holder)
+
 item.hatchery.prize_egg.name=Lucky Egg
 item.hatchery.fiber_pad.name=Fiber Pad
 item.hatchery.feather_pulp.name=Feather Pulp
@@ -87,6 +101,6 @@ jei.item.hatchery.chicken_machine=Giving the Chicken Machine power, eggs, and pl
 
 jei.gui.nesting_pen_drop=Nesting Pen Chicken Drops
 
-jei.item.hatchery.prize_egg=Lucky eggs are created by adding eggs, and plastic in lucky egg coin operated machine. Lucky Egg's contain a range of prizes when you open them. 
+jei.item.hatchery.prize_egg=Lucky eggs are created by adding many eggs, and plastic in lucky egg coin operated machine. Lucky Egg's contain a range of prizes when you open them. 
 jei.item.hatchery.fiber_pad=Fiber Pad can be used to craft items like wool. 
 jei.item.hatchery.feather_pulp=Feather Pulp can be cooked into paper.
