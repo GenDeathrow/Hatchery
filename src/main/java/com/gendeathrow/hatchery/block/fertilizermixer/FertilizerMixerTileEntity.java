@@ -6,17 +6,15 @@ import com.gendeathrow.hatchery.block.TileUpgradable;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.inventory.InventoryStorage;
 import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
 import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 import com.gendeathrow.hatchery.storage.EnergyStorageRF;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import cofh.api.energy.IEnergyReceiver;
-import net.minecraft.entity.player.EntityPlayer;
+import mezz.jei.plugins.vanilla.ingredients.FluidStackHelper;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,6 +23,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -35,9 +34,8 @@ import net.minecraftforge.fluids.capability.templates.FluidHandlerFluidMap;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 
-public class FertilizerMixerTileEntity extends TileUpgradable implements IInventory, ITickable, IEnergyReceiver
+public class FertilizerMixerTileEntity extends TileUpgradable implements ITickable, IEnergyReceiver
 {
 	int baseTankSize = 12000;
 	int baseRFStorage = 20000;
@@ -65,7 +63,38 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 	  
 	private FluidHandlerFluidMap fluidMap = new FluidHandlerFluidMap().addHandler(ModFluids.liquidfertilizer, fertilizerTank).addHandler(FluidRegistry.WATER, waterTank);
 	
-	protected InventoryStorage inventory = new InventoryStorage(this, 5);
+	
+	protected InventoryStroageModifiable inputInventory = new InventoryStroageModifiable("inputItems", 3) {
+		@Override
+		public boolean canInsertSlot(int slot, ItemStack stack)	{
+			if(slot == 0 && (stack.getItem() == ModItems.manure || stack.getItem() == Item.getItemFromBlock(ModBlocks.manureBlock)))
+				return true;
+			else if(slot == 1 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN))
+			{
+				if(FluidUtil.getFluidContained(stack) != null && FluidUtil.getFluidContained(stack).getFluid() == FluidRegistry.WATER){
+					return true;
+				}
+			}
+			else if(slot == 2 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN))
+			{
+				if(FluidUtil.getFluidContained(stack) == null || FluidUtil.getFluidContained(stack).getFluid() == ModFluids.liquidfertilizer){
+					return true;
+				}
+			}
+
+			return false; 
+
+		}
+	};
+	
+	protected InventoryStroageModifiable outputInventory = new InventoryStroageModifiable("outputItems", 2) {
+		@Override
+		public boolean canInsertSlot(int slot, ItemStack stack)	{
+			return false;
+		}
+	};
+	
+	//protected InventoryStorage inventory = new InventoryStorage(this, 5);
 	
 	protected EnergyStorageRF energy = new EnergyStorageRF(20000).setMaxReceive(100);
 	
@@ -85,10 +114,10 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 		return fertilizerTank;
 	}
 	
-	public ItemStack[] getItemInventory()
-	{
-		return inventory.getInventory();
-	}
+//	public ItemStack[] getItemInventory()
+//	{
+//		return inventory.getInventory();
+//	}
 
     public boolean isMixing()
     {
@@ -130,7 +159,31 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
     private int totalMixTime;
 
     
+    private ItemStack getManureInSlot()
+    {
+    	return this.inputInventory.getStackInSlot(0);
+    }
     
+    private ItemStack getWaterInSlot()
+    {
+    	return this.inputInventory.getStackInSlot(1);
+    }
+
+    private ItemStack getBucketOutWaterSlot()
+    {
+    	return this.outputInventory.getStackInSlot(0);
+    }
+    
+    private ItemStack getBucketInFertilizerrSlot()
+    {
+    	return this.inputInventory.getStackInSlot(2);
+    }
+  
+    private ItemStack getBucketOutFertilizerSlot()
+    {
+    	return this.outputInventory.getStackInSlot(1);
+    }
+
 	@Override
 	public void update() 
 	{
@@ -148,23 +201,23 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 			updateUpgrades();
 			
 			
-			if (this.isMixing() || this.inventory.getStackInSlot(0) != null)
+			if (this.isMixing() || this.getManureInSlot() != null)
 			{
                 if (!this.isMixing() && this.canMix())
                 {
-                	this.fertlizerMixTime = getItemMixTime(this.inventory.getStackInSlot(0));
+                	this.fertlizerMixTime = getItemMixTime(this.getManureInSlot());
                 	this.currentItemMixTime = this.fertlizerMixTime;
                 			
                 	if(this.isMixing())
                 	{
                 		flag1 = true;
-                		 if(this.inventory.getStackInSlot(0) != null)
+                		 if(this.getManureInSlot() != null)
                 		 {
-                			 --this.inventory.getStackInSlot(0).stackSize;
+                			 --this.getManureInSlot().stackSize;
                     		 
-                             if (this.inventory.getStackInSlot(0).stackSize <= 0)
+                             if (this.getManureInSlot().stackSize <= 0)
                              {
-                                 this.inventory.setInventorySlotContents(0,null);
+                                 this.inputInventory.setStackInSlot(0,null);
                              }
                 		 }
 
@@ -180,9 +233,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
     				
     					this.fertilizerTank.fillInternal(new FluidStack(ModFluids.liquidfertilizer,(int)(5 * this.upgradeSpeedMulipyler)), true);
     					this.waterTank.drainInternal((int)(5 * this.upgradeSpeedMulipyler), true);
-    					
-    					
-    					System.out.println("remove/add tank:"+ (5 * this.upgradeSpeedMulipyler) +" rfneeded:"+  rfNeeded);
+   					
     					flag1 = true;
     			}
     			else if(this.isMixing() && this.canMix() && fertlizerMixTime >= 1)
@@ -205,34 +256,36 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 			}
 			
 
-			if(this.getStackInSlot(1) != null && this.waterTank.getFluidAmount() < this.waterTank.getCapacity())
+			if(this.getWaterInSlot() != null && this.waterTank.getFluidAmount() < this.waterTank.getCapacity())
 			{
-				ItemStack stack = this.getStackInSlot(1);
-				
-				ItemStack newStack = this.getStackInSlot(1).copy();
+				ItemStack stack = this.getWaterInSlot();
+				ItemStack newStack = this.getWaterInSlot().copy();
+
 				newStack.stackSize = 1;
 				
 				IFluidHandler handler = FluidUtil.getFluidHandler(newStack);
 
 				if(handler != null)
 				{
-		            if (this.getStackInSlot(2) == null)
+					
+		            if (this.getBucketOutWaterSlot() == null)
 		            {
+		            	
 		            	if(FluidUtil.tryFluidTransfer(this.waterTank, handler, this.waterTank.getCapacity(), true) != null)
 		            	{
 		            		if(newStack.stackSize > 0)
-		            			this.inventory.setInventorySlotContents(2, newStack);
+		            			this.outputInventory.setStackInSlot(0, newStack);
 						
-		            		this.decrStackSize(1, 1);
+		            		this.inputInventory.extractItem(1, 1, false);
 		            	}
 		            }
 				}
 			}
 			
-			if(this.inventory.getStackInSlot(3) != null && this.inventory.getStackInSlot(4) == null && this.fertilizerTank.getFluidAmount() > 0)
+			if(this.getBucketInFertilizerrSlot() != null && this.getBucketOutFertilizerSlot() == null && this.fertilizerTank.getFluidAmount() > 0)
 			{
-				ItemStack oldStack = this.inventory.getStackInSlot(3);
-				ItemStack newStack = this.inventory.getStackInSlot(3).copy();
+				ItemStack oldStack = this.getBucketInFertilizerrSlot();
+				ItemStack newStack = this.getBucketInFertilizerrSlot().copy();
 				
 				if(newStack.stackSize > 1)
 					newStack.stackSize = 1;
@@ -241,15 +294,15 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 				
 				if(handler != null)
 				{
-
+					
 					if(FluidUtil.tryFluidTransfer(handler, this.fertilizerTank, this.fertilizerTank.getCapacity(), true) != null)
 					{
-						this.setInventorySlotContents(4, newStack);
+						this.outputInventory.setStackInSlot(1, newStack);
 						
 						if(oldStack.stackSize > 1)
-							this.decrStackSize(3, 1);
+							this.inputInventory.extractItem(2, 1, false);
 						else
-							this.setInventorySlotContents(3, null);
+							this.inputInventory.setStackInSlot(2, null);
 					}
 				}
 			}
@@ -385,72 +438,72 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 		return 200;
 	}
 	
-	/// INVENTORY
-	@Override
-	public String getName() { return null; }
+//	/// INVENTORY
+//	@Override
+//	public String getName() { return null; }
+//
+//	@Override
+//	public boolean hasCustomName() { return false; }
+//
+//	@Override
+//	public int getSizeInventory() 
+//	{
+//		return 5;
+//	}
+//
+//	@Override
+//	public ItemStack getStackInSlot(int slot) 
+//	{
+//		return this.inventory.getStackInSlot(slot);
+//	}
+//
+//	@Override
+//	public ItemStack decrStackSize(int slot, int count) 
+//	{
+//		return this.inventory.decrStackSize(slot, count);
+//	}
+//
+//	@Override
+//	public ItemStack removeStackFromSlot(int slot) 
+//	{
+//		return this.inventory.removeStackFromSlot(slot);
+//	}
+//
+//	@Override
+//	public void setInventorySlotContents(int slot, ItemStack stack) 
+//	{
+//		this.inventory.setInventorySlotContents(slot, stack);
+//	}
+//
+//	@Override
+//	public int getInventoryStackLimit() 
+//	{
+//		return 64;
+//	}
+//
+//	@Override
+//	public boolean isUseableByPlayer(EntityPlayer player) { return true; }
+//
+//	@Override
+//	public void openInventory(EntityPlayer player) { this.inventory.openInventory(player); }
+//
+//	@Override
+//	public void closeInventory(EntityPlayer player) { this.inventory.closeInventory(player); }
+//
+//	@Override
+//	public boolean isItemValidForSlot(int index, ItemStack stack) 
+//	{
+//		if(index == 0 && (stack.getItem() == ModItems.manure || stack.getItem() == Item.getItemFromBlock(ModBlocks.manureBlock)))
+//				return true;
+//		else if(index == 1 && stack.getItem() == Items.WATER_BUCKET)
+//			return true;
+//		else if(index == 3 && stack.getItem() == ModFluids.getFertilizerBucket().getItem())
+//			return true;
+//
+//		return false; 
+//	}
 
-	@Override
-	public boolean hasCustomName() { return false; }
-
-	@Override
-	public int getSizeInventory() 
-	{
-		return 5;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot) 
-	{
-		return this.inventory.getStackInSlot(slot);
-	}
-
-	@Override
-	public ItemStack decrStackSize(int slot, int count) 
-	{
-		return this.inventory.decrStackSize(slot, count);
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int slot) 
-	{
-		return this.inventory.removeStackFromSlot(slot);
-	}
-
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) 
-	{
-		this.inventory.setInventorySlotContents(slot, stack);
-	}
-
-	@Override
-	public int getInventoryStackLimit() 
-	{
-		return 64;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) { return true; }
-
-	@Override
-	public void openInventory(EntityPlayer player) { this.inventory.openInventory(player); }
-
-	@Override
-	public void closeInventory(EntityPlayer player) { this.inventory.closeInventory(player); }
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) 
-	{
-		if(index == 0 && (stack.getItem() == ModItems.manure || stack.getItem() == Item.getItemFromBlock(ModBlocks.manureBlock)))
-				return true;
-		else if(index == 1 && stack.getItem() == Items.WATER_BUCKET)
-			return true;
-		else if(index == 3 && stack.getItem() == ModFluids.getFertilizerBucket().getItem())
-			return true;
-
-		return false; 
-	}
-
-	@Override
+//	@Override
 	public int getField(int id) 
 	{ 
         switch (id)
@@ -478,7 +531,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
 	public int waterLevel = 0;
 	public int fertilizerLevel = 0;
 	public int storedEnergyLevel = 0;
-	@Override
+//	@Override
 	public void setField(int id, int value) 
 	{ 
 		
@@ -509,14 +562,14 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
         }
 	}
 
-	@Override
-	public int getFieldCount() { return 4; }
-
-	@Override
-	public void clear() { 
-		this.inventory.clear();
-	}
-	
+//	@Override
+//	public int getFieldCount() { return 4; }
+//
+//	@Override
+//	public void clear() { 
+//		this.inventory.clear();
+//	}
+//	
 	
 
     @Override
@@ -528,7 +581,8 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
         
         this.energy.readFromNBT(tag);
         
-        this.inventory.readFromNBT(tag);
+        this.inputInventory.readFromNBT(tag);
+        this.outputInventory.readFromNBT(tag);
     }
 
     @Override
@@ -543,7 +597,8 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
         tag.setTag("waterTank", waterTTag);
         tag.setTag("fertilizerTank", fertTTag);
         
-        this.inventory.writeToNBT(tag);
+        this.inputInventory.writeToNBT(tag);
+        this.outputInventory.writeToNBT(tag);
         
         this.energy.writeToNBT(tag);
         return tag;
@@ -561,8 +616,10 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements IInvent
     {
     	if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
     		return (T) this.fluidMap;
+        else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing == EnumFacing.DOWN) 
+            return (T) this.outputInventory;
         else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
-            return (T) new InvWrapper(this);
+            return (T) this.inputInventory;
 		else if (capability == CapabilityEnergy.ENERGY) 
 			return (T) this.energy;
         return super.getCapability(capability, facing);

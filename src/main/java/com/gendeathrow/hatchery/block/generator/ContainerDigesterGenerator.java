@@ -2,6 +2,12 @@ package com.gendeathrow.hatchery.block.generator;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.core.init.ModFluids;
+import com.gendeathrow.hatchery.inventory.SlotFluidContainer;
+import com.gendeathrow.hatchery.inventory.SlotUpgrade;
+import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -11,37 +17,24 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.gendeathrow.hatchery.core.init.ModFluids;
-import com.gendeathrow.hatchery.inventory.SlotFluidContainer;
-import com.gendeathrow.hatchery.inventory.SlotUpgrade;
-import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerDigesterGenerator extends Container 
 {
 
-	private final int HOTBAR_SLOT_COUNT = 9;
-	private final int PLAYER_INVENTORY_ROW_COUNT = 3;
-	private final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
-	private final int PLAYER_INVENTORY_SLOT_COUNT = PLAYER_INVENTORY_COLUMN_COUNT * PLAYER_INVENTORY_ROW_COUNT;
-	private final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
-
-	private final int VANILLA_FIRST_SLOT_INDEX = 0;
-	private final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
-	private final int TE_INVENTORY_SLOT_COUNT = 9;
-	
-	private final IInventory inventory;
+	private final DigesterGeneratorTileEntity tile;
+	private final InventoryStroageModifiable inputInventory;
+	private final InventoryStroageModifiable outputInventory;
 	
 	private final IInventory upgrades;
 
-	//private int fertilizerTank;
-	//private int rfEnergy;
-	//private int rfPerTick;
-	
-
 	public ContainerDigesterGenerator(InventoryPlayer playerInventory, DigesterGeneratorTileEntity tileEntity) 
 	{
-		inventory = tileEntity;
+		inputInventory = tileEntity.inputInventory;
+		outputInventory = tileEntity.outputInventory;
+		tile = tileEntity;
+		
+		
 		
 		upgrades = tileEntity.getUpgradeStorage();
 		
@@ -49,10 +42,10 @@ public class ContainerDigesterGenerator extends Container
 		
 		int i;  
 
-
-		addSlotToContainer(new SlotFluidContainer(inventory, 0, 72, 16, ModFluids.liquidfertilizer));
+//TODO
+		addSlotToContainer(new SlotFluidContainer(inputInventory, 0, 72, 16, ModFluids.liquidfertilizer));
 	
-		addSlotToContainer(new Slot(inventory, 1, 72, 52)
+		addSlotToContainer(new SlotItemHandler(outputInventory, 0, 72, 52)
 		{
 			@Override
 			public boolean isItemValid(@Nullable ItemStack stack){
@@ -89,14 +82,14 @@ public class ContainerDigesterGenerator extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (slotIndex < (this.inventory.getSizeInventory() + this.upgrades.getSizeInventory()))
+            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSizeInventory()))
             {
-                if (!this.mergeItemStack(itemstack1, this.inventory.getSizeInventory(), this.inventorySlots.size(), true))
+                if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(),  this.inventorySlots.size(), true))
                 {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 0, this.inventory.getSizeInventory(), false))
+            else if (!this.mergeItemStack(itemstack1, 0, this.inputInventory.getSlots(), false))
             {
                 return null;
             }
@@ -109,10 +102,18 @@ public class ContainerDigesterGenerator extends Container
             {
                 slot.onSlotChanged();
             }
+
+            if (itemstack1.stackSize == itemstack.stackSize)
+            {
+                return null;
+            }
+
+            slot.onPickupFromSlot(player, itemstack1);
         }
         
-		return  itemstack;
+		return itemstack;
 	}
+
 
 	@Override
 	public void addListener(IContainerListener listener) {
@@ -133,8 +134,7 @@ public class ContainerDigesterGenerator extends Container
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void updateProgressBar(int id, int value) {
-		this.inventory.setField(id, value);
-		System.out.println(id +":"+ value);
+		this.tile.setField(id, value);
 	}
 
 	@Override
@@ -145,21 +145,15 @@ public class ContainerDigesterGenerator extends Container
 		for (IContainerListener listener : this.listeners) 
 		 {
 					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
-					listener.sendProgressBarUpdate(this, 4, this.inventory.getField(4));
-					listener.sendProgressBarUpdate(this, 1, this.inventory.getField(1));
+					listener.sendProgressBarUpdate(this, 4, this.tile.getField(4));
+					listener.sendProgressBarUpdate(this, 1, this.tile.getField(1));
 					
-					listener.sendProgressBarUpdate(this, 2, this.inventory.getField(2));
+					listener.sendProgressBarUpdate(this, 2, this.tile.getField(2));
 					
-					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 3, this.inventory.getField(3));
-					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 0, this.inventory.getField(0));
+					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 3, this.tile.getField(3));
+					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 0, this.tile.getField(0));
 		 }
 
     }
 
-	@Override
-	public void onContainerClosed(EntityPlayer player) {
-		super.onContainerClosed(player);
-		inventory.closeInventory(player);
-	}
-	
 }

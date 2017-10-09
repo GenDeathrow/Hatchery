@@ -1,6 +1,6 @@
 package com.gendeathrow.hatchery.inventory;
 
-import javax.annotation.Nullable;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,25 +23,16 @@ public class SlotModifiable extends SlotItemHandler{
     @Override
     public boolean canTakeStack(EntityPlayer playerIn)
     {
-    	if(this.getItemHandler() instanceof InventoryStorageModifiable)
-    		return ((InventoryStorageModifiable)this.getItemHandler()).extractItemIternal(indexSlot, 1, true) != null;
-    				
-    	return this.getItemHandler().extractItem(indexSlot, 1, true) != null;
+   		return true;
     }
     
     @Override
     public ItemStack decrStackSize(int amount)
-    {
+    {  
     	if(this.getItemHandler() instanceof InventoryStorageModifiable)
-    		return ((InventoryStorageModifiable)this.getItemHandler()).extractItemIternal(indexSlot, amount, false);
+    		return ((InventoryStroageModifiable)this.getItemHandler()).extractItem(indexSlot, amount, false);
     	
         return this.getItemHandler().extractItem(indexSlot, amount, false);
     }
     
-    
-    @Nullable
-    public ItemStack getStack()
-    {
-        return this.inventory.getStackInSlot(this.indexSlot);
-    }
 }

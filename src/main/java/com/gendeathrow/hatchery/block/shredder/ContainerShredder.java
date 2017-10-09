@@ -2,8 +2,10 @@ package com.gendeathrow.hatchery.block.shredder;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.inventory.SlotUpgrade;
+import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
+
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
@@ -17,22 +19,11 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.inventory.SlotUpgrade;
-import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
-
 public class ContainerShredder extends Container 
 {
-
-	private final int HOTBAR_SLOT_COUNT = 9;
-	private final int PLAYER_INVENTORY_ROW_COUNT = 3;
-	private final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
-	private final int PLAYER_INVENTORY_SLOT_COUNT = PLAYER_INVENTORY_COLUMN_COUNT * PLAYER_INVENTORY_ROW_COUNT;
-	private final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
-
-	private final int VANILLA_FIRST_SLOT_INDEX = 0;
 	
-	private final IItemHandler inventory;
+	private final IItemHandler inputInventory;
+	private final IItemHandler outputInventory;
 	
 	private final IInventory upgrades;
 	
@@ -40,7 +31,9 @@ public class ContainerShredder extends Container
 	
 	public ContainerShredder(InventoryPlayer playerInventory,	ShredderTileEntity tile, EntityPlayer player) 
 	{
-		inventory = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
+		inputInventory = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
+		
+		outputInventory = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
 
 		upgrades = tile.getUpgradeStorage();
 		
@@ -48,28 +41,23 @@ public class ContainerShredder extends Container
 		
 		int i;  
 
-		addSlotToContainer(new SlotItemHandler(inventory, 0, 65, 16){
-//		    @Override
-//		    public boolean canTakeStack(EntityPlayer playerIn){
-//		    	return true;
-//		    }
-		});
+		addSlotToContainer(new SlotItemHandler(inputInventory, 0, 65, 16));
 		
-		addSlotToContainer(new SlotItemHandler(inventory, 1, 55, 54){
+		addSlotToContainer(new SlotItemHandler(outputInventory, 0, 55, 54){
 			@Override
 			public boolean isItemValid(@Nullable ItemStack stack){
 				return false;
 		    }
 		});
 		
-		addSlotToContainer(new SlotItemHandler(inventory, 2, 76, 54){
+		addSlotToContainer(new SlotItemHandler(outputInventory, 1, 76, 54){
 			@Override
 			public boolean isItemValid(@Nullable ItemStack stack){
 				return false;
 		    }
 		});
 		     
-		addSlotToContainer(new SlotUpgrade(upgrades, 0, 121, 55) {
+		addSlotToContainer(new SlotUpgrade(upgrades, 0, 121, 54) {
 			public boolean isItemValid(@Nullable ItemStack stack)
 		    {
 				boolean value = super.isItemValid(stack);
@@ -108,14 +96,14 @@ public class ContainerShredder extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (slotIndex < (this.inventory.getSlots() + this.upgrades.getSizeInventory()))
+            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSizeInventory()))
             {
-                if (!this.mergeItemStack(itemstack1, this.inventory.getSlots(), this.inventorySlots.size(), true))
+                if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(), this.inventorySlots.size(), true))
                 {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 0, this.inventory.getSlots(), false))
+            else if (!this.mergeItemStack(itemstack1, 0, this.inputInventory.getSlots(), false))
             {
                 return null;
             }

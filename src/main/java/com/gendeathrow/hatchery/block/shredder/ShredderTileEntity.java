@@ -6,13 +6,22 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.api.tileentities.IContainerUpdate;
+import com.gendeathrow.hatchery.block.TileUpgradable;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
+import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
+import com.gendeathrow.hatchery.storage.EnergyStorageRF;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
+
+import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -24,16 +33,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
-import cofh.api.energy.IEnergyReceiver;
-
-import com.gendeathrow.hatchery.api.tileentities.IContainerUpdate;
-import com.gendeathrow.hatchery.block.TileUpgradable;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
-import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
-import com.gendeathrow.hatchery.storage.EnergyStorageRF;
-import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 public class ShredderTileEntity extends TileUpgradable implements ITickable, IContainerUpdate, IEnergyReceiver
 {
@@ -46,18 +45,20 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	double rfEffencyMultpyler = 1;
 	double upgradeSpeedMulipyler = 1;
 	
-	protected InventoryStroageModifiable inventory = new InventoryStroageModifiable(3)
+	
+	protected InventoryStroageModifiable inputInventory = new InventoryStroageModifiable("inputItems", 1)
 	{
 		@Override
-		public boolean canExtractSlot(int slot)	{
-			if(slot > 0) 
-				return true;
-			return false;
+		public boolean canInsertSlot(int slot, ItemStack stack)	{
+			return isShreddableItem(stack);
 		}
-		
+	};
+	
+	
+	protected InventoryStroageModifiable outputInventory = new InventoryStroageModifiable("outputItems", 2)
+	{
 		@Override
 		public boolean canInsertSlot(int slot, ItemStack stack)	{
-			if(slot == 0 && isShreddableItem(stack)) return true;
 			return false;
 		}
 	};
@@ -121,12 +122,12 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
                
    			if (!this.isShredding() && this.canShred() && hasPower())
    			{
-   	           	this.shreddingTime = setShredTime(this.inventory.getStackInSlot(0));
+   	           	this.shreddingTime = setShredTime(this.inputInventory.getStackInSlot(0));
                	this.currentItemShreddingTime = this.shreddingTime;
               	
                	if(this.isShredding())
                	{
-               		shreddedItem = this.inventory.extractItemInternal(0, 1, false);
+               		shreddedItem = this.inputInventory.extractItemInternal(0, 1, false);
                	}
    			}
    			
@@ -245,7 +246,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	
 	public void shredItem()
 	{
-		ItemStack stack = this.inventory.getStackInSlot(0);
+		ItemStack stack = this.inputInventory.getStackInSlot(0);
 		boolean flag = false;		
 		
 		if(shreddedItem != null && isShreddableItem(shreddedItem))
@@ -255,13 +256,13 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 			{
 				if(recipe.hasOutput())
 				{
-					this.inventory.insertItemInternal(1, recipe.getOutputItem(), false);
+					this.outputInventory.insertItemInternal(0, recipe.getOutputItem(), false);
 					
 					if(recipe.hasExtraOutput())
 					{
 						ItemStack extra = recipe.getExtraItem();
 						if(extra != null)
-							this.inventory.insertItemInternal(2, extra, false);
+							this.outputInventory.insertItemInternal(1, extra, false);
 					}
 					flag = true;
 				}
@@ -273,22 +274,22 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	
 	private boolean canShred()
 	{
-        if (this.inventory.getStackInSlot(0) == null)
+        if (this.inputInventory.getStackInSlot(0) == null)
         {
             return false;
         }
         else
         {
-            ShredderRecipe recipe = this.getRecipe(this.inventory.getStackInSlot(0));
+            ShredderRecipe recipe = this.getRecipe(this.inputInventory.getStackInSlot(0));
             
             if (recipe == null) return false;
             
             ItemStack itemstack = recipe.itemOut;
             if( itemstack == null) return false;
-            if (this.inventory.getStackInSlot(1) == null) return true;
-            if (!this.inventory.getStackInSlot(1).isItemEqual(itemstack)) return false;
-            int result = inventory.getStackInSlot(1).stackSize + itemstack.stackSize;
-            return result <= 64 && result <= this.inventory.getStackInSlot(1).getMaxStackSize(); //Forge BugFix: Make it respect stack sizes properly.
+            if (this.outputInventory.getStackInSlot(0) == null) return true;
+            if (!this.outputInventory.getStackInSlot(0).isItemEqual(itemstack)) return false;
+            int result = outputInventory.getStackInSlot(0).stackSize + itemstack.stackSize;
+            return result <= 64 && result <= this.outputInventory.getStackInSlot(0).getMaxStackSize(); //Forge BugFix: Make it respect stack sizes properly.
         }
 	}
 	
@@ -357,7 +358,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
         	{
                 ItemStack itemstack = entityitem.getEntityItem().copy();
         		//ItemStack itemstack1 = insertStack(this, itemstack, 0, enumfacing);
-                ItemStack itemstack1 = this.inventory.insertItemInternal(0, itemstack, false);
+                ItemStack itemstack1 = this.inputInventory.insertItemInternal(0, itemstack, false);
                 
                 if (itemstack1 != null && itemstack1.stackSize != 0)
                 {
@@ -453,7 +454,8 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	{
 		super.readFromNBT(tag);
 		this.energy.readFromNBT(tag);
-		this.inventory.deserializeNBT(tag.getCompoundTag("inventory"));
+		this.outputInventory.deserializeNBT(tag.getCompoundTag("inventory"));
+		this.inputInventory.deserializeNBT(tag.getCompoundTag("inputinventory"));
 	        
 	}
 
@@ -462,7 +464,8 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	{
 		tag = super.writeToNBT(tag);
 
-		tag.setTag("inventory",this.inventory.serializeNBT());
+		tag.setTag("inventory",this.outputInventory.serializeNBT());
+		tag.setTag("inputinventory",this.inputInventory.serializeNBT());
 		this.energy.writeToNBT(tag);
 		return tag;
 	}
@@ -508,8 +511,10 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
-			return (T) this.inventory;
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing == EnumFacing.DOWN) 
+			return (T) this.outputInventory;
+		else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
+			return (T) this.inputInventory;
 		else if (capability == CapabilityEnergy.ENERGY) 
 			return (T) this.energy;
 		

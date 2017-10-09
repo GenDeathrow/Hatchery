@@ -4,10 +4,9 @@ import com.gendeathrow.hatchery.block.TileUpgradable;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.inventory.InventoryStorage;
-import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
 import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 import com.gendeathrow.hatchery.storage.EnergyStorageRF;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
@@ -31,7 +30,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-public class DigesterGeneratorTileEntity extends TileUpgradable implements IInventory, IEnergyProvider, ITickable
+public class DigesterGeneratorTileEntity extends TileUpgradable implements IEnergyProvider, ITickable
 {
 	public int time = 0;
 	
@@ -39,7 +38,20 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 	protected int baseTankStorage = 5000;
 	
 	protected EnergyStorageRF energy = new EnergyStorageRF(200000);
-	protected InventoryStorage inventory = new InventoryStorage(this, 2);
+	protected InventoryStroageModifiable inputInventory =  new InventoryStroageModifiable("inputItems", 2) {
+		@Override
+		public boolean canInsertSlot(int slot, ItemStack stack)	{
+			if(slot == 0 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN))
+			{
+				if(FluidUtil.getFluidContained(stack) != null && FluidUtil.getFluidContained(stack).getFluid() == ModFluids.liquidfertilizer){
+					return true;
+				}
+			}
+
+			return false; 
+		}
+	};
+	protected InventoryStroageModifiable outputInventory = new InventoryStroageModifiable("outputItems", 2);
   
 	private int rfPerTick = 20;
 	private int baseRfPerTick = 20;
@@ -145,9 +157,9 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 				}
 			}
 			
-			if(this.inventory.getStackInSlot(0) != null && this.inventory.getStackInSlot(1) == null && this.fertlizerTank.getFluidAmount() < this.fertlizerTank.getCapacity())
+			if(this.inputInventory.getStackInSlot(0) != null && this.outputInventory.getStackInSlot(0) == null && this.fertlizerTank.getFluidAmount() < this.fertlizerTank.getCapacity())
 			{
-				ItemStack stack = this.inventory.getStackInSlot(0);
+				ItemStack stack = this.inputInventory.getStackInSlot(0);
 				
 				IFluidHandler handler = FluidUtil.getFluidHandler(stack);
 				
@@ -155,8 +167,8 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 				{
 					if(FluidUtil.tryFluidTransfer(this.fertlizerTank, handler, this.fertlizerTank.getCapacity(), true) != null)
 					{
-						this.inventory.setInventorySlotContents(1, stack);
-						this.inventory.setInventorySlotContents(0, null);
+						this.outputInventory.setStackInSlot(0, stack);
+						this.inputInventory.setStackInSlot(0, null);
 					}
 				}
 			}
@@ -180,7 +192,8 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 
-		this.inventory.readFromNBT(nbt);
+		this.inputInventory.readFromNBT(nbt);
+		this.outputInventory.readFromNBT(nbt);
 		this.energy.readFromNBT(nbt);
 		this.fertlizerTank.readFromNBT(nbt);
 		super.readFromNBT(nbt);
@@ -188,7 +201,8 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		nbt = this.inventory.writeToNBT(nbt);
+		nbt = this.inputInventory.writeToNBT(nbt);
+		nbt = this.outputInventory.writeToNBT(nbt);
 		nbt = this.energy.writeToNBT(nbt);
 		nbt = this.fertlizerTank.writeToNBT(nbt);
 		return super.writeToNBT(nbt);
@@ -207,82 +221,84 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
     {
     	if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return (T) this.fertlizerTank;
+        else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing == EnumFacing.DOWN) 
+            return (T) this.outputInventory;
         else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
-            return (T) new InvWrapper(this);
+            return (T) this.inputInventory;
         else if (capability == CapabilityEnergy.ENERGY)
         	return (T) this.energy;
     	
         return super.getCapability(capability, facing);
     }
     
-    // INVENTORY
-	@Override
-	public ItemStack removeStackFromSlot(int index){
-		return this.inventory.removeStackFromSlot(index);
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		return true;
-	}
-
-	@Override
-	public String getName() {
-		return null;
-	}
-
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
-
-	@Override
-	public int getSizeInventory() {
-		return this.inventory.getSizeInventory();
-	}
-
-
-	@Override
-	public ItemStack getStackInSlot(int index) {
-		return inventory.getStackInSlot(index);
-	}
-
-
-	@Override
-	public ItemStack decrStackSize(int index, int count) {
-		return this.inventory.decrStackSize(index, count);
-	}
-
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		this.inventory.setInventorySlotContents(index, stack);
-	}
-
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 64;
-	}
-
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return true;
-	}
-
-
-	@Override
-	public void openInventory(EntityPlayer player) {}
-
-	@Override
-	public void closeInventory(EntityPlayer player) {}
-
+//    // INVENTORY
+//	@Override
+//	public ItemStack removeStackFromSlot(int index){
+//		return this.inventory.removeStackFromSlot(index);
+//	}
+//
+//	@Override
+//	public boolean isItemValidForSlot(int index, ItemStack stack) {
+//		return true;
+//	}
+//
+//	@Override
+//	public String getName() {
+//		return null;
+//	}
+//
+//
+//	@Override
+//	public boolean hasCustomName() {
+//		return false;
+//	}
+//
+//
+//	@Override
+//	public int getSizeInventory() {
+//		return this.inventory.getSizeInventory();
+//	}
+//
+//
+//	@Override
+//	public ItemStack getStackInSlot(int index) {
+//		return inventory.getStackInSlot(index);
+//	}
+//
+//
+//	@Override
+//	public ItemStack decrStackSize(int index, int count) {
+//		return this.inventory.decrStackSize(index, count);
+//	}
+//
+//
+//	@Override
+//	public void setInventorySlotContents(int index, ItemStack stack) {
+//		this.inventory.setInventorySlotContents(index, stack);
+//	}
+//
+//
+//	@Override
+//	public int getInventoryStackLimit() {
+//		return 64;
+//	}
+//
+//
+//	@Override
+//	public boolean isUseableByPlayer(EntityPlayer player) {
+//		return true;
+//	}
+//
+//
+//	@Override
+//	public void openInventory(EntityPlayer player) {}
+//
+//	@Override
+//	public void closeInventory(EntityPlayer player) {}
+//
 	public float tankLevel;
-
-	@Override
+//
+//	@Override
 	public int getField(int id) 
 	{
         switch (id)
@@ -303,7 +319,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 	}
 
 
-	@Override
+//	@Override
 	public void setField(int id, int value) 
 	{
         switch (id)
@@ -321,7 +337,6 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
             	this.energy.setCapacity(value);
                 break;
             case 4:
-            	System.out.println("TANK IN:"+ value);
             	this.getTank().setCapacity(value);
                 break;
             default:
@@ -330,16 +345,16 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 	}
 
 
-	@Override
-	public int getFieldCount() {
-		return 3;
-	}
-
-
-	@Override
-	public void clear() {
-		this.inventory.clear();
-	}
+//	@Override
+//	public int getFieldCount() {
+//		return 3;
+//	}
+//
+//
+//	@Override
+//	public void clear() {
+//		this.inventory.clear();
+//	}
 	
 	
 	public int getRFPerTick() 
@@ -389,8 +404,6 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IInve
 				if(newTank != this.fertlizerTank.getCapacity())
 				{
 					this.fertlizerTank.setCapacity(newTank);
-					
-					System.out.println("tank level"+ this.fertlizerTank.getCapacity());
 				}
 				
 			}

@@ -2,21 +2,21 @@ package com.gendeathrow.hatchery.inventory;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
-public class SlotFluidContainer extends Slot
+public class SlotFluidContainer extends SlotItemHandler
 {
 	Fluid fluid;
-	public SlotFluidContainer(IInventory inventoryIn, int index,int xPosition, int yPosition, Fluid fluid) 
+	public SlotFluidContainer(IItemHandler inventory, int index,int xPosition, int yPosition, Fluid fluid) 
 	{
-		super(inventoryIn, index, xPosition, yPosition);
+		super(inventory, index, xPosition, yPosition);
 		this.fluid = fluid;
 	}
 
