@@ -57,7 +57,7 @@ public class ContainerShredder extends Container
 		    }
 		});
 		     
-		addSlotToContainer(new SlotUpgrade(upgrades, 0, 121, 54) {
+		addSlotToContainer(new SlotUpgrade(shredder, upgrades, 0, 121, 54) {
 			public boolean isItemValid(@Nullable ItemStack stack)
 		    {
 				boolean value = super.isItemValid(stack);
@@ -66,7 +66,7 @@ public class ContainerShredder extends Container
 				return value;
 		    }
 		});
-		addSlotToContainer(new SlotUpgrade(upgrades, 1, 141, 54) {
+		addSlotToContainer(new SlotUpgrade(shredder, upgrades, 1, 141, 54) {
 			public boolean isItemValid(@Nullable ItemStack stack)
 		    {
 				boolean value = super.isItemValid(stack);

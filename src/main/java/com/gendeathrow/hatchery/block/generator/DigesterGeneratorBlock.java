@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 
 import net.minecraft.block.BlockHorizontal;
@@ -32,6 +33,9 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -78,13 +82,30 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
         }
         else
         {
-        	playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_DIGESTER_GEN, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        	if(heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side))
+        	{
+        		DigesterGeneratorTileEntity tileentity = (DigesterGeneratorTileEntity) worldIn.getTileEntity(pos);
+        		
+				IFluidHandler handler = FluidUtil.getFluidHandler(heldItem);
+				
+				boolean hasFluid =FluidUtil.getFluidContained(heldItem) != null && FluidUtil.getFluidContained(heldItem).getFluid() == ModFluids.liquidfertilizer;
+	
+				if(tileentity != null && handler != null  && hasFluid && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side))
+				{
+					FluidUtil.tryFluidTransfer(tileentity.getFertilizerTank(), handler, tileentity.getFertilizerTank().getCapacity(), true);
+				}
+	        	else
+	        		playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_DIGESTER_GEN, worldIn, pos.getX(), pos.getY(), pos.getZ());
+
+        	}
+        	else
+        		playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_DIGESTER_GEN, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        	
         }
         
 		return true;
     }
 	
-
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());

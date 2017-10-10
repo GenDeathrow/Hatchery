@@ -33,12 +33,8 @@ public class ContainerDigesterGenerator extends Container
 		inputInventory = tileEntity.inputInventory;
 		outputInventory = tileEntity.outputInventory;
 		tile = tileEntity;
-		
-		
-		
+
 		upgrades = tileEntity.getUpgradeStorage();
-		
-		//fertilizerTank = tileEntity.getTank().getFluidAmount();
 		
 		int i;  
 
@@ -53,8 +49,8 @@ public class ContainerDigesterGenerator extends Container
 		    }
 		});
         
-		addSlotToContainer(new SlotUpgrade(upgrades, 0, 107, 59));
-		addSlotToContainer(new SlotUpgrade(upgrades, 1, 134, 59));
+		addSlotToContainer(new SlotUpgrade(tile, upgrades, 0, 107, 59));
+		addSlotToContainer(new SlotUpgrade(tile, upgrades, 1, 134, 59));
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)

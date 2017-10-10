@@ -6,10 +6,8 @@ import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -21,8 +19,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class FertilizerMixer extends BlockContainer implements ITileEntityProvider
 {
@@ -45,7 +48,32 @@ public class FertilizerMixer extends BlockContainer implements ITileEntityProvid
         }
         else
         {
-        	playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_FERTLIZERMIXER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        	if(heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side))
+        	{
+        		FertilizerMixerTileEntity tileentity = (FertilizerMixerTileEntity) worldIn.getTileEntity(pos);
+        		
+				IFluidHandler handler = FluidUtil.getFluidHandler(heldItem);
+				
+				boolean hasFluid = FluidUtil.getFluidContained(heldItem) != null && FluidUtil.getFluidContained(heldItem).getFluid() == FluidRegistry.WATER;
+				boolean notnull = tileentity != null && handler != null;
+				
+				if( notnull && hasFluid && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)){
+					FluidUtil.tryFluidTransfer(tileentity.getWaterTank(), handler, tileentity.getWaterTank().getCapacity(), true);
+				}
+				else if(notnull) {
+					FluidUtil.tryFillContainerAndStow(heldItem, tileentity.getFertilizerTank(), new InvWrapper(playerIn.inventory), tileentity.getFertilizerTank().getCapacity(), playerIn);
+					
+					//.tryFillContainer(heldItem,  tileentity.getFertilizerTank(), tileentity.getFertilizerTank().getCapacity(), playerIn, true);
+				}
+	        	else
+	        		playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_FERTLIZERMIXER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+
+        	}
+        	else
+        		playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_FERTLIZERMIXER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        	
+        	
+        	
         }
         
 		return true;

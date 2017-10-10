@@ -3,6 +3,7 @@ package com.gendeathrow.hatchery.block.eggmachine;
 import com.gendeathrow.hatchery.block.TileUpgradable;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.inventory.InventoryStorage;
+import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 
 import cofh.api.energy.IEnergyReceiver;
@@ -155,6 +156,13 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 			eggStack.stackSize++;
 		}
 	}
+
+	@Override
+	public boolean canUseUpgrade(ItemStack item)
+	{
+		return item.getItem() instanceof RFEfficiencyUpgrade || item.getItem() == ModItems.speedUpgradeTier || item.getItem() == ModItems.rfCapacityUpgradeTier1;
+	}
+	
 	
     public void readFromNBT(NBTTagCompound compound)
     {

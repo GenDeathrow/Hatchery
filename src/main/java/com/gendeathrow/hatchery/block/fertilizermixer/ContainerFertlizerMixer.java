@@ -92,8 +92,8 @@ public class ContainerFertlizerMixer extends Container
 		});
 		addSlotToContainer(new SlotFluidContainer(outputInventory, 1, 104, 52, ModFluids.liquidfertilizer));
 		
-		addSlotToContainer(new SlotUpgrade(upgrades, 0, 8, 52));
-		addSlotToContainer(new SlotUpgrade(upgrades, 1, 31, 52));
+		addSlotToContainer(new SlotUpgrade(tileEntity, upgrades, 0, 8, 52));
+		addSlotToContainer(new SlotUpgrade(tileEntity, upgrades, 1, 31, 52));
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)

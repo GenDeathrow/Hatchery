@@ -326,6 +326,11 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 	
 	
 	
+	@Override
+	public boolean canUseUpgrade(ItemStack item)
+	{
+		return item.getItem() instanceof RFEfficiencyUpgrade || item.getItem() == ModItems.speedUpgradeTier  || item.getItem() == ModItems.tankUpgradeTier1 || item.getItem() == ModItems.rfCapacityUpgradeTier1;
+	}
 	
 	protected void updateUpgrades()
 	{

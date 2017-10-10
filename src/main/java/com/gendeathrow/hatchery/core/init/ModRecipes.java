@@ -29,10 +29,12 @@ public class ModRecipes
 	public static void RegisterOreDic()
 	{
 		OreDictionary.registerOre("dirt", ModBlocks.fertlizedDirt);
+		OreDictionary.registerOre("fertilizedDirt", ModBlocks.fertlizedDirt);
 		OreDictionary.registerOre("manure", ModItems.manure);
 		OreDictionary.registerOre("manureBlock", ModBlocks.manureBlock);
 		OreDictionary.registerOre("egg", ModItems.hatcheryEgg);
 		OreDictionary.registerOre("listAllegg", ModItems.hatcheryEgg);
+		OreDictionary.registerOre("plasticEgg", ModItems.prizeEgg);
 	}
 	
 	public static void RegisterRecipes()
@@ -154,6 +156,9 @@ public class ModRecipes
 				'P', Blocks.PISTON, 
 				'B', Items.BUCKET);
 		
+		
+		// UPGRADES
+		
 		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier1), 
 				"TRT",
 				"RGR",
@@ -182,6 +187,94 @@ public class ModRecipes
 				'X', ModItems.circuitBoard,
 				'G', Blocks.GOLD_BLOCK);
 		
+		//RF CAPACITY UPGRADE
+		GameRegistry.addRecipe(new ItemStack(ModItems.rfCapacityUpgradeTier1), 
+				"XRX",
+				"XGX",
+				"XTX",
+				'T', Blocks.REDSTONE_TORCH,
+				'R', Items.REDSTONE,
+				'X', Blocks.HARDENED_CLAY,
+				'G', ModItems.circuitBoard);
+		
+		GameRegistry.addRecipe(new ItemStack(ModItems.rfCapacityUpgradeTier1, 1, 1), 
+				"BTB",
+				"RGR",
+				"TCT",
+				'T', Items.ENDER_PEARL,
+				'R', Blocks.REDSTONE_BLOCK,
+				'C', Blocks.HARDENED_CLAY,
+				'B', ModItems.circuitBoard,
+				'G', new ItemStack(ModItems.rfCapacityUpgradeTier1));
+		
+		GameRegistry.addRecipe(new ItemStack(ModItems.rfCapacityUpgradeTier1, 1, 2), 
+				"TBT",
+				"RGR",
+				"TCT",
+				'T', Items.CHORUS_FRUIT,
+				'R', Blocks.REDSTONE_BLOCK,
+				'C', Blocks.PRISMARINE,
+				'B', ModItems.circuitBoard,
+				'G', new ItemStack(ModItems.rfCapacityUpgradeTier1, 1, 1));
+		
+		//Tank CAPACITY UPGRADE
+		GameRegistry.addRecipe(new ItemStack(ModItems.tankUpgradeTier1), 
+				"BBB",
+				"BGB",
+				"BBB",
+				'B', Items.BUCKET,
+				'G', ModItems.circuitBoard);
+		
+		GameRegistry.addRecipe(new ItemStack(ModItems.tankUpgradeTier1, 1, 1), 
+				"IBI",
+				"OGO",
+				"CCC",
+				'C', Blocks.IRON_BLOCK,
+				'B', Items.BUCKET,
+				'I', Items.IRON_INGOT,
+				'O', ModItems.circuitBoard,
+				'G', new ItemStack(ModItems.tankUpgradeTier1, 1, 0));
+		
+		GameRegistry.addRecipe(new ItemStack(ModItems.tankUpgradeTier1, 1, 2), 
+				"BCB",
+				"BGB",
+				"OCO",
+				'B', Blocks.IRON_BLOCK,
+				'C', Items.CAULDRON,
+				'O', ModItems.circuitBoard,
+				'G', new ItemStack(ModItems.tankUpgradeTier1,1,1));
+		
+		
+		//Speed UPGRADE
+		GameRegistry.addRecipe(new ItemStack(ModItems.speedUpgradeTier), 
+				"FRF",
+				"NGN",
+				"FRF",
+				'F', Items.FEATHER,
+				'N', Items.GOLD_NUGGET,
+				'R', Items.REDSTONE,
+				'G', ModItems.circuitBoard);
+		
+		GameRegistry.addRecipe(new ItemStack(ModItems.speedUpgradeTier,1,1), 
+				"OCO",
+				"GRG",
+				"QCQ",
+				'Q', Items.QUARTZ,
+				'R', Blocks.REDSTONE_BLOCK,
+				'C', Items.REDSTONE,
+				'O', ModItems.circuitBoard,
+				'G', new ItemStack(ModItems.speedUpgradeTier));
+		
+		GameRegistry.addRecipe(new ItemStack(ModItems.speedUpgradeTier, 1, 2), 
+				"OFO",
+				"GRG",
+				"QOQ",
+				'Q', Blocks.QUARTZ_BLOCK,
+				'R', Items.REPEATER,
+				'F', Items.RABBIT_FOOT,
+				'O', ModItems.circuitBoard,
+				'G', new ItemStack(ModItems.speedUpgradeTier,1,1));
+		
 		GameRegistry.addRecipe(new ItemStack(ModItems.circuitBoard), 
 				"GGG",
 				"PDP",
@@ -189,6 +282,9 @@ public class ModRecipes
 				'D', new ItemStack(Items.DYE, 1, 2),
 				'P', ModItems.plastic,
 				'G', Items.GOLD_NUGGET);
+		
+		
+		
 		
 		
 		////SEEDS
@@ -224,15 +320,15 @@ public class ModRecipes
 				'S', Items.DIAMOND_SWORD, 
 				'B', Items.BUCKET);
 		
-		GameRegistry.addRecipe(
-				new ItemStack(ModBlocks.shredder),
-				"IxI",
-				"ISI",
-				"IRI", 
-				'I', Items.IRON_INGOT,
-				'R', Blocks.REDSTONE_BLOCK,
-				'S', Items.DIAMOND_SWORD, 
-				'B', Items.BUCKET);
+//		GameRegistry.addRecipe(
+//				new ItemStack(ModBlocks.shredder),
+//				"IxI",
+//				"ISI",
+//				"IRI", 
+//				'I', Items.IRON_INGOT,
+//				'R', Blocks.REDSTONE_BLOCK,
+//				'S', Items.DIAMOND_SWORD, 
+//				'B', Items.BUCKET);
 		
 		GameRegistry.addRecipe(
 				new ItemStack(ModItems.fiberPad),

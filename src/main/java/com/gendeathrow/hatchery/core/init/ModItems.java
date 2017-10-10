@@ -48,18 +48,10 @@ public class ModItems
 	public static RFEfficiencyUpgrade rfUpgradeTier3 = new RFEfficiencyUpgrade(3);
 	
 	public static BaseUpgrade speedUpgradeTier = new BaseUpgrade(3, "speed_upgrade");
-	//public static BaseUpgrade speedUpgradeTier2 = new BaseUpgrade(2, "speed_upgrade");
-	//public static BaseUpgrade speedUpgradeTier3 = new BaseUpgrade(3, "speed_upgrade");
 
 	public static BaseUpgrade tankUpgradeTier1 = new BaseUpgrade(3, "tank_upgrade");
-	//public static BaseUpgrade tankUpgradeTier2 = new BaseUpgrade(2, "tank_upgrade");
-	//public static BaseUpgrade tankUpgradeTier3 = new BaseUpgrade(3, "tank_upgrade");
-	
-	// Capacity upgrades (increase RF, Tank Capacitys) RF 100,000 x tier, fluid (1-x2, 2-x3, 2-x4)
 	
 	public static BaseUpgrade rfCapacityUpgradeTier1 = new BaseUpgrade(3, "rf_capacity_upgrade");
-	//public static BaseUpgrade rfCapacityUpgradeTier2 = new BaseUpgrade(2, "rf_capacity_upgrade");
-	//public static BaseUpgrade rfCapacityUpgradeTier3 = new BaseUpgrade(3, "rf_capacity_upgrade");
 	
 
 	// RF Efficiency upgrade (decrease power usage)  1-0.75, 2-0.65, 3-0.5

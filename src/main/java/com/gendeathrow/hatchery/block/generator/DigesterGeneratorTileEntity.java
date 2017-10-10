@@ -38,6 +38,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IEner
 	protected int baseTankStorage = 5000;
 	
 	protected EnergyStorageRF energy = new EnergyStorageRF(200000);
+	
 	protected InventoryStroageModifiable inputInventory =  new InventoryStroageModifiable("inputItems", 2) {
 		@Override
 		public boolean canInsertSlot(int slot, ItemStack stack)	{
@@ -72,7 +73,10 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IEner
 	}
 	
 	
-	
+	public FluidTank getFertilizerTank()
+	{
+		return this.fertlizerTank;
+	}
 
 	// Currently this handles the old ModBlocks.pn
 	@Override
@@ -362,6 +366,13 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IEner
 		return this.rfPerTick;
 	}
 
+	@Override
+	public boolean canUseUpgrade(ItemStack item)
+	{
+		return item.getItem() instanceof RFEfficiencyUpgrade || item.getItem() == ModItems.tankUpgradeTier1 || item.getItem() == ModItems.rfCapacityUpgradeTier1;
+	}
+	
+	
 	protected void updateUpgrades()
 	{
 		boolean rfupgrade = false;

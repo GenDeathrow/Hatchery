@@ -58,8 +58,8 @@ public class ContainerEggMachine extends Container
 		});
 		
 		
-		addSlotToContainer(new SlotUpgrade(upgrades, 0, 100, 53));
-		addSlotToContainer(new SlotUpgrade(upgrades, 1, 124, 53));
+		addSlotToContainer(new SlotUpgrade(eggstractorInventory, upgrades, 0, 100, 53));
+		addSlotToContainer(new SlotUpgrade(eggstractorInventory, upgrades, 1, 124, 53));
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)

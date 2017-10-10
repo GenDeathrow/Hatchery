@@ -17,7 +17,7 @@ container.generator.generating=Generating: %1$drf/t
 container.generator.rfout=RF Out: %1$drf/t
 container.generator.fertin=Fertilizer In: %1$d mb
 container.hoveramt=%/%
-container.fertilizermixer=Fertilizer Mixer (WIP)
+container.fertilizermixer=Fertilizer Mixer
 container.upgrades=Upgrades
 container.nestingpen=Nesting Pen Inventory
 container.eggstractor=Eggstractor
@@ -44,17 +44,17 @@ item.hatchery.rf_upgrade_1.name=RF Efficiency Upgrade Tier 1
 item.hatchery.rf_upgrade_2.name=RF Efficiency Upgrade Tier 2
 item.hatchery.rf_upgrade_3.name=RF Efficiency Upgrade Tier 3
 
-item.hatchery.speed_upgrade_1.name=Speed Upgrade Tier 1 (Place Holder)
-item.hatchery.speed_upgrade_2.name=Speed Upgrade Tier 2 (Place Holder)
-item.hatchery.speed_upgrade_3.name=Speed Upgrade Tier 3 (Place Holder))
+item.hatchery.speed_upgrade_1.name=Speed Upgrade Tier 1
+item.hatchery.speed_upgrade_2.name=Speed Upgrade Tier 2
+item.hatchery.speed_upgrade_3.name=Speed Upgrade Tier 3 
 
-item.hatchery.tank_upgrade_1.name=Tank Upgrade Tier 1  (Place Holder)
-item.hatchery.tank_upgrade_2.name=Tank Upgrade Tier 2  (Place Holder)
-item.hatchery.tank_upgrade_3.name=Tank Upgrade Tier 3  (Place Holder)
+item.hatchery.tank_upgrade_1.name=Tank Upgrade Tier 1
+item.hatchery.tank_upgrade_2.name=Tank Upgrade Tier 2
+item.hatchery.tank_upgrade_3.name=Tank Upgrade Tier 3
 
-item.hatchery.rf_capacity_1.name=RF Capacity Tier 1 (Place Holder)
-item.hatchery.rf_capacity_2.name=RF Capacity Tier 2 (Place Holder)
-item.hatchery.rf_capacity_3.name=RF Capacity Tier 3 (Place Holder)
+item.hatchery.rf_capacity_1.name=RF Capacity Tier 1
+item.hatchery.rf_capacity_2.name=RF Capacity Tier 2
+item.hatchery.rf_capacity_3.name=RF Capacity Tier 3
 
 item.hatchery.prize_egg.name=Lucky Egg
 item.hatchery.fiber_pad.name=Fiber Pad
