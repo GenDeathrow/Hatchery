@@ -20,6 +20,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EntitySelectors;
@@ -72,9 +73,13 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	{
 		super(2);
 		
+	}
+	
+	
+	public static void registerShredderRecipes() {
 		shredderRecipes.add(new ShredderRecipe(new ItemStack(Items.FEATHER), new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal)));
-		
 		shredderRecipes.add(new ShredderRecipe(new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal)));
+		shredderRecipes.add(new ShredderRecipe(new ItemStack(Items.BONE), new ItemStack(Items.DYE, 4, EnumDyeColor.WHITE.getDyeDamage())));
 	}
 
 	private int shreddingTime;
@@ -522,7 +527,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	}
 
 	    
-	public class ShredderRecipe
+	public static class ShredderRecipe
 	{
 		private ItemStack itemIn;
 		private ItemStack itemOut;
@@ -555,7 +560,11 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 			return this.itemIn.isItemEqual(stack); 
 		}
 	    	
-	    	
+		public ItemStack getInputItem()
+		{
+			return this.itemIn;
+		}
+		
 		public boolean hasOutput()
 		{
 			return itemOut != null;

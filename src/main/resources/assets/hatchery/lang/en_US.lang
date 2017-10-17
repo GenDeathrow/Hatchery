@@ -90,16 +90,26 @@ jei.item.hatchery.animalnet=Use an animal net to pickup any passive animal. Use 
 jei.item.hatchery.hatcheryegg=Hatchery Eggs are dynamically created eggs, Used to be able to breed two parents and create a custom egg. Mainly for Modded Chickens with new breeding mechanics.
 jei.item.hatchery.chickenmanure=Drops from nesting pens. Use manure to make fertilized dirt, Manure Blocks, liquid fertilizer, or use it as bonemeal for plants.
 jei.item.hatchery.sprayer=The fertilizer sprayer is used to turn dirt/farmland into fertilized dirt/farmland, and acts much like a watering can causing block updates. Spray Holds 3000mb. 
-jei.item.hatchery.circuit_board.name=Used for crafting in upgrades
-jei.item.hatchery.rf_upgrade_1=Upgrades RF power generation 40rf/tick
-jei.item.hatchery.rf_upgrade_2=Upgrades RF power generation 60rf/tick
-jei.item.hatchery.rf_upgrade_3=Upgrades RF power generation 80rf/tick
+jei.item.hatchery.circuit_board=Used for crafting in upgrades
+
+jei.item.hatchery.rf_upgrade_1=Upgrades RF power generation in generator 40rf/tick \n\nIn some machines it will reduce RF/tick
+jei.item.hatchery.rf_upgrade_2=Upgrades RF power generation in generator 60rf/tick \n\nIn some machines it will reduce RF/tick
+jei.item.hatchery.rf_upgrade_3=Upgrades RF power generation in generator 80rf/tick \n\nIn some machines it will reduce RF/tick
+
+
+
+jei.item.hatchery.speed_upgrade=Upgrades the speed of machine to increase processing. Increasing speed will also increase the amount of RF/tick.  
+jei.item.hatchery.tank_upgrade=Upgrades the liquid tank storage of a machine.
+jei.item.hatchery.rf_capacity=Upgrades the energy capacity of a machine. 
+ 
 jei.item.hatchery.feather_fiber=Feather fibers are shredded feathers placed in the shredder, that can than be melted into a raw plastic. Used in crafting for various items. 
 jei.item.hatchery.feather_meal=Feather Meal is a by product of using the shredder of feathers. It can be added to seeds to create more food for chickens. 
 jei.item.hatchery.chicken_feed=Add Chicken Feed to feeders as an alternate food source.
 jei.item.hatchery.chicken_machine=Giving the Chicken Machine power, eggs, and plastic allow you to create prize eggs. Prize eggs can give you, well prizes. 
 
 jei.gui.nesting_pen_drop=Nesting Pen Chicken Drops
+jei.gui.shredder_recipes=Shredder Recipes
+
 
 jei.item.hatchery.prize_egg=Lucky eggs are created by adding many eggs, and plastic in lucky egg coin operated machine. Lucky Egg's contain a range of prizes when you open them. 
 jei.item.hatchery.fiber_pad=Fiber Pad can be used to craft items like wool. 

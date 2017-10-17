@@ -3,8 +3,21 @@ package com.gendeathrow.hatchery.core.jei;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
+import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity.ShredderRecipe;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenCategory;
+import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenDropRecipeHandler;
+import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenDropRecipeWrapper;
+import com.gendeathrow.hatchery.core.jei.shredder.ShredderCategory;
+import com.gendeathrow.hatchery.core.jei.shredder.ShredderRecipeHandler;
+import com.gendeathrow.hatchery.core.jei.shredder.ShredderRecipeWrapper;
+import com.setycz.chickens.ChickensMod;
+import com.setycz.chickens.ChickensRegistry;
+import com.setycz.chickens.ChickensRegistryItem;
+
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.IItemBlacklist;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
@@ -23,15 +36,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.oredict.OreDictionary;
-
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenCategory;
-import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenDropRecipeHandler;
-import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenDropRecipeWrapper;
-import com.setycz.chickens.ChickensMod;
-import com.setycz.chickens.ChickensRegistry;
-import com.setycz.chickens.ChickensRegistryItem;
 
 
 @Optional.InterfaceList({
@@ -64,13 +68,22 @@ public class JEIPllugin implements IModPlugin
         registry.addRecipeHandlers(new NestingPenDropRecipeHandler());
         
         List<NestingPenDropRecipeWrapper> recipes = new ArrayList<NestingPenDropRecipeWrapper>();
-        
+
         recipes = getVanillaDropRecipe(recipes);
         
         if(Loader.isModLoaded("chickens"));
         	recipes = getDropRecipes(recipes);
         
         registry.addRecipes(recipes);
+        
+        
+		registry.addRecipeCategories(new ShredderCategory(guiHelper));
+        registry.addRecipeHandlers(new ShredderRecipeHandler());
+        
+        List<ShredderRecipeWrapper> shredderRecipes = new ArrayList<ShredderRecipeWrapper>();
+        	shredderRecipes = this.getShredderRecipes(shredderRecipes);
+        registry.addRecipes(shredderRecipes);
+        
 
         IIngredientBlacklist itemBlacklist = registry.getJeiHelpers().getIngredientBlacklist();
         
@@ -98,6 +111,17 @@ public class JEIPllugin implements IModPlugin
 		
 	}
 	
+	private List<ShredderRecipeWrapper> getShredderRecipes(List<ShredderRecipeWrapper> recipes)
+	{
+		for(ShredderRecipe recipe : ShredderTileEntity.shredderRecipes)
+		{
+			recipes.add(new ShredderRecipeWrapper(recipe));
+			
+			System.out.println("recipe addded"+ recipe.getInputItem().getDisplayName());
+		}
+			
+		return recipes;
+	}
 	
 	private List<NestingPenDropRecipeWrapper> getVanillaDropRecipe(List<NestingPenDropRecipeWrapper> recipes)
 	{

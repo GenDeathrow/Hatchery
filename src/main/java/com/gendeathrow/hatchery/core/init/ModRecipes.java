@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.google.common.collect.Lists;
 
 import net.minecraft.init.Blocks;
@@ -39,6 +40,9 @@ public class ModRecipes
 	
 	public static void RegisterRecipes()
 	{
+		
+		ShredderTileEntity.registerShredderRecipes();
+		
 	    IRecipe animalNetRecipe = new ShapedOreRecipe(new ItemStack(ModItems.animalNet), new Object[] {
             "xSS",
             "SAA",
@@ -335,6 +339,13 @@ public class ModRecipes
 				"fff",
 				"fff",
 				"fff", 
+				'f', ModItems.featherFiber);
+		
+		GameRegistry.addRecipe(
+				new ItemStack(Items.STRING),
+				"XXf",
+				"XfX",
+				"fXX", 
 				'f', ModItems.featherFiber);
 		
 		GameRegistry.addRecipe(
