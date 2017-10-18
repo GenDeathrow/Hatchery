@@ -84,12 +84,5 @@ public class ShredderCategory extends BlankRecipeCategory<ShredderRecipeWrapper>
 	        guiItemStacks.set(ingredients);
 	}
 
-	@Override
-	public IDrawable getIcon() 
-	{
-		return icon;
-	}
-
-	
 	
 }

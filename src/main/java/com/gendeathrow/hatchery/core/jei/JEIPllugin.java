@@ -10,6 +10,9 @@ import com.gendeathrow.hatchery.core.config.ConfigLootHandler;
 import com.gendeathrow.hatchery.core.config.ConfigLootHandler.ItemDrop;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.core.jei.eggmachine.EggMachineCategory;
+import com.gendeathrow.hatchery.core.jei.eggmachine.EggMachineRecipeHandler;
+import com.gendeathrow.hatchery.core.jei.eggmachine.EggMachineWrapper;
 import com.gendeathrow.hatchery.core.jei.eggmachine.LuckyEggCategory;
 import com.gendeathrow.hatchery.core.jei.eggmachine.LuckyEggHandler;
 import com.gendeathrow.hatchery.core.jei.eggmachine.LuckyEggWrapper;
@@ -82,30 +85,39 @@ public class JEIPllugin implements IModPlugin
         
         registry.addRecipes(recipes);
         
-        
+        // Shredder Recipes
 		registry.addRecipeCategories(new ShredderCategory(guiHelper));
         registry.addRecipeHandlers(new ShredderRecipeHandler());
-        
-        List<ShredderRecipeWrapper> shredderRecipes = new ArrayList<ShredderRecipeWrapper>();
+            List<ShredderRecipeWrapper> shredderRecipes = new ArrayList<ShredderRecipeWrapper>();
         	shredderRecipes = this.getShredderRecipes(shredderRecipes);
-        registry.addRecipes(shredderRecipes);
+        		registry.addRecipes(shredderRecipes);
         
-        
+        // Lucky Egg Prizes
         registry.addRecipeCategories(new LuckyEggCategory(guiHelper));
         registry.addRecipeHandlers(new LuckyEggHandler());
+        	List<LuckyEggWrapper> luckyeggsdrops = new ArrayList<LuckyEggWrapper>();
+        	luckyeggsdrops = this.getLuckyEggs(luckyeggsdrops);
+        		registry.addRecipes(luckyeggsdrops);
         
-        List<LuckyEggWrapper> luckyeggs = new ArrayList<LuckyEggWrapper>();
-        luckyeggs = this.getLuckyEggs(luckyeggs);
-        registry.addRecipes(luckyeggs);
+        // EggMachine
+        registry.addRecipeCategories(new EggMachineCategory(guiHelper));
+        registry.addRecipeHandlers(new EggMachineRecipeHandler());
+        	ArrayList<EggMachineWrapper> luckyegg = new ArrayList<EggMachineWrapper>();
+        	luckyegg.add(new EggMachineWrapper());
+        		registry.addRecipes(luckyegg);
         
-        
-        
-
+        	
         IIngredientBlacklist itemBlacklist = registry.getJeiHelpers().getIngredientBlacklist();
         
         itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.pen_chicken));
         itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.digesterGeneratorOn));
         itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.chickenMachine));
+        
+        
+        
+        registry.addRecipeCategoryCraftingItem(new ItemStack(ModItems.chickenmachine), EggMachineCategory.UID);
+        registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.pen), NestingPenCategory.UID);
+        registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.shredder), ShredderCategory.UID);
         
      }
 
