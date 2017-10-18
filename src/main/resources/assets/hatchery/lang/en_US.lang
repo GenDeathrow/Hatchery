@@ -109,7 +109,7 @@ jei.item.hatchery.chicken_machine=Giving the Chicken Machine power, eggs, and pl
 
 jei.gui.nesting_pen_drop=Nesting Pen Chicken Drops
 jei.gui.shredder_recipes=Shredder Recipes
-
+jei.gui.luckyegg_drops=Lucky Egg Drops
 
 jei.item.hatchery.prize_egg=Lucky eggs are created by adding many eggs, and plastic in lucky egg coin operated machine. Lucky Egg's contain a range of prizes when you open them. 
 jei.item.hatchery.fiber_pad=Fiber Pad can be used to craft items like wool. 

@@ -1,12 +1,18 @@
 package com.gendeathrow.hatchery.core.jei;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity.ShredderRecipe;
+import com.gendeathrow.hatchery.core.config.ConfigLootHandler;
+import com.gendeathrow.hatchery.core.config.ConfigLootHandler.ItemDrop;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.core.jei.eggmachine.LuckyEggCategory;
+import com.gendeathrow.hatchery.core.jei.eggmachine.LuckyEggHandler;
+import com.gendeathrow.hatchery.core.jei.eggmachine.LuckyEggWrapper;
 import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenCategory;
 import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenDropRecipeHandler;
 import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenDropRecipeWrapper;
@@ -84,6 +90,16 @@ public class JEIPllugin implements IModPlugin
         	shredderRecipes = this.getShredderRecipes(shredderRecipes);
         registry.addRecipes(shredderRecipes);
         
+        
+        registry.addRecipeCategories(new LuckyEggCategory(guiHelper));
+        registry.addRecipeHandlers(new LuckyEggHandler());
+        
+        List<LuckyEggWrapper> luckyeggs = new ArrayList<LuckyEggWrapper>();
+        luckyeggs = this.getLuckyEggs(luckyeggs);
+        registry.addRecipes(luckyeggs);
+        
+        
+        
 
         IIngredientBlacklist itemBlacklist = registry.getJeiHelpers().getIngredientBlacklist();
         
@@ -109,6 +125,25 @@ public class JEIPllugin implements IModPlugin
 	public void registerItemSubtypes(ISubtypeRegistry arg0) 
 	{
 		
+	}
+	private List<LuckyEggWrapper> getLuckyEggs(List<LuckyEggWrapper> recipes)
+	{
+		List<ItemStack> droplist = new ArrayList<ItemStack>();
+		
+		Iterator<ItemDrop> itr = ConfigLootHandler.drops.iterator();
+		
+		
+		while(itr.hasNext())
+		{
+			ItemDrop item = itr.next();
+			droplist.add(item.getItemStack());
+			if(droplist.size() == 36 || !itr.hasNext()) {
+				recipes.add(new LuckyEggWrapper(droplist));
+				droplist.clear();
+			}
+		}
+			
+		return recipes;
 	}
 	
 	private List<ShredderRecipeWrapper> getShredderRecipes(List<ShredderRecipeWrapper> recipes)
