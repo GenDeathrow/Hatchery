@@ -5,10 +5,9 @@ import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.inventory.InventoryStorage;
 import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 import com.gendeathrow.hatchery.storage.EnergyStorageRF;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import cofh.api.energy.IEnergyReceiver;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,21 +16,44 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 
-public class EggMachineTileEntity extends TileUpgradable implements ITickable, IInventory, IEnergyReceiver
+public class EggMachineTileEntity extends TileUpgradable implements ITickable, IEnergyReceiver
 {
 
 	public int EggInSlot = 0;
 	public int PlasticInSlot = 1;
-	public int PrizeEggSlot = 2;
+	public int PrizeEggSlot = 0;
 	
 	public EggMachineTileEntity() {
 		super(2);
 	}
 	
 	
-	protected InventoryStorage inventory = new InventoryStorage(this, 3)
+	protected InventoryStroageModifiable inputInventory = new InventoryStroageModifiable("inputItems", 2)
+	{
+		@Override
+		public boolean canInsertSlot(int slot, ItemStack stack)	{
+			if(slot == EggInSlot && stack.getItem() instanceof ItemEgg) {
+				return true;
+			}
+			else if(slot == PlasticInSlot && stack.getItem() == ModItems.plastic) {
+				return true;
+			}
+			return false;
+		}
+	};
+	
+	
+	protected InventoryStroageModifiable outputInventory = new InventoryStroageModifiable("outputItems", 1)
+	{
+		@Override
+		public boolean canInsertSlot(int slot, ItemStack stack)	{
+			return false;
+		}
+	};
+	
+	
+	protected InventoryStorage inventorys = new InventoryStorage(this, 3)
 	{
 		@Override
 		public boolean isItemValidForSlot(int index, ItemStack stack) {
@@ -57,7 +79,8 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 	
 	private int eggToPrizeSize = 24;
 	
-	private int eggTime = 0;
+	public int eggTime = 0;
+	public int maxEggTime = 200;
 
 	
 	float zeroedFacing;
@@ -93,21 +116,21 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 		if(this.worldObj.isRemote)
 			this.updateClient();
 		
-		ItemStack eggIn = this.inventory.getStackInSlot(this.EggInSlot);
-		ItemStack plasticIn = this.inventory.getStackInSlot(this.PlasticInSlot);
+		ItemStack eggIn = this.inputInventory.getStackInSlot(this.EggInSlot);
+		ItemStack plasticIn = this.inputInventory.getStackInSlot(this.PlasticInSlot);
 		
 		if(eggIn != null && eggIn.getItem() instanceof ItemEgg) {
 			this.internalEggStorage += eggIn.stackSize;
-			this.inventory.setInventorySlotContents(this.EggInSlot, null);
+			this.inputInventory.setStackInSlot(this.EggInSlot, null);
 		}
 		
 		if(plasticIn != null && plasticIn.getItem() == ModItems.plastic) {
 			this.internalPlasticStorage += plasticIn.stackSize;
-			this.inventory.setInventorySlotContents(this.PlasticInSlot, null);
+			this.inputInventory.setStackInSlot(this.PlasticInSlot, null);
 		}
 
 		if(this.eggTime <= 0 && this.canMakePrizeEgg())	{
-			this.eggTime = 200;
+			this.eggTime = maxEggTime;
 			this.internalEggStorage -= eggToPrizeSize;
 			this.internalPlasticStorage-= 2;
 			
@@ -115,7 +138,7 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 		}
 		
 		boolean hasTimeLeft = this.eggTime > 0;
-		ItemStack prizeSlot = this.inventory.getStackInSlot(this.PrizeEggSlot);
+		ItemStack prizeSlot = this.outputInventory.getStackInSlot(this.PrizeEggSlot);
 		boolean hasRoomForEgg = prizeSlot == null ? true : prizeSlot.stackSize < prizeSlot.getMaxStackSize();
 		
         if (!this.worldObj.isRemote){
@@ -147,10 +170,10 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 	{
 		ItemStack itemstack = new ItemStack(ModItems.prizeEgg);
 		
-		ItemStack eggStack = this.inventory.getStackInSlot(this.PrizeEggSlot);
+		ItemStack eggStack = this.outputInventory.getStackInSlot(this.PrizeEggSlot);
 
 		if(eggStack == null)
-			this.inventory.setInventorySlotContents(this.PrizeEggSlot, itemstack);
+			this.outputInventory.setStackInSlot(this.PrizeEggSlot, itemstack);
 		else if(eggStack.getItem() == ModItems.prizeEgg && eggStack.stackSize < eggStack.getMaxStackSize())
 		{
 			eggStack.stackSize++;
@@ -167,7 +190,8 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
     public void readFromNBT(NBTTagCompound compound)
     {
     	super.readFromNBT(compound);
-    	this.inventory.readFromNBT(compound);
+    	this.inputInventory.readFromNBT(compound);
+    	this.outputInventory.readFromNBT(compound);
     	this.energy.readFromNBT(compound);
     	
     	this.internalEggStorage = compound.getInteger("EggStorage");
@@ -178,7 +202,8 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
     	super.writeToNBT(compound);
-    	this.inventory.writeToNBT(compound);
+    	this.inputInventory.writeToNBT(compound);
+    	this.outputInventory.writeToNBT(compound);
     	this.energy.writeToNBT(compound);
     	compound.setInteger("EggStorage", this.internalEggStorage);
     	compound.setInteger("PlasticStorage", this.internalPlasticStorage);
@@ -195,86 +220,89 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
-            return (T) new InvWrapper(this);
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing == EnumFacing.DOWN)
+        	return (T) this.outputInventory;
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        	return (T) this.inputInventory;
+            //return (T) new InvWrapper(this);
 		else if (capability == CapabilityEnergy.ENERGY) 
 			return (T) this.energy;
         return super.getCapability(capability, facing);
     }
 
 
-	@Override
-	public String getName() {
-		return this.inventory.getName();
-	}
-
-	@Override
-	public boolean hasCustomName() {
-		return this.inventory.hasCustomName();
-	}
-
-
-	@Override
-	public int getSizeInventory() {
-		return this.inventory.getSizeInventory();
-	}
-
-
-	@Override
-	public ItemStack getStackInSlot(int index) {
-		return this.inventory.getStackInSlot(index);
-	}
-
-
-	@Override
-	public ItemStack decrStackSize(int index, int count) {
-		return this.inventory.decrStackSize(index, count);
-	}
-
-
-	@Override
-	public ItemStack removeStackFromSlot(int index) {
-		return this.inventory.removeStackFromSlot(index);
-	}
-
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		this.inventory.setInventorySlotContents(index, stack);
-	}
-
-
-	@Override
-	public int getInventoryStackLimit() {
-		return this.inventory.getInventoryStackLimit();
-	}
-
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return this.inventory.isUseableByPlayer(player);
-	}
-
-
-	@Override
-	public void openInventory(EntityPlayer player) {
-		this.inventory.openInventory(player);
-	}
-
-
-	@Override
-	public void closeInventory(EntityPlayer player) {
-		this.inventory.closeInventory(player);
-	}
-
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		return this.inventory.isItemValidForSlot(index, stack);
-	}
-
-
-	@Override
+//	@Override
+//	public String getName() {
+//		return this.inventory.getName();
+//	}
+//
+//	@Override
+//	public boolean hasCustomName() {
+//		return this.inventory.hasCustomName();
+//	}
+//
+//
+//	@Override
+//	public int getSizeInventory() {
+//		return this.inventory.getSizeInventory();
+//	}
+//
+//
+//	@Override
+//	public ItemStack getStackInSlot(int index) {
+//		return this.inventory.getStackInSlot(index);
+//	}
+//
+//
+//	@Override
+//	public ItemStack decrStackSize(int index, int count) {
+//		return this.inventory.decrStackSize(index, count);
+//	}
+//
+//
+//	@Override
+//	public ItemStack removeStackFromSlot(int index) {
+//		return this.inventory.removeStackFromSlot(index);
+//	}
+//
+//
+//	@Override
+//	public void setInventorySlotContents(int index, ItemStack stack) {
+//		this.inventory.setInventorySlotContents(index, stack);
+//	}
+//
+//
+//	@Override
+//	public int getInventoryStackLimit() {
+//		return this.inventory.getInventoryStackLimit();
+//	}
+//
+//
+//	@Override
+//	public boolean isUseableByPlayer(EntityPlayer player) {
+//		return this.inventory.isUseableByPlayer(player);
+//	}
+//
+//
+//	@Override
+//	public void openInventory(EntityPlayer player) {
+//		this.inventory.openInventory(player);
+//	}
+//
+//
+//	@Override
+//	public void closeInventory(EntityPlayer player) {
+//		this.inventory.closeInventory(player);
+//	}
+//
+//
+//	@Override
+//	public boolean isItemValidForSlot(int index, ItemStack stack) {
+//		return this.inventory.isItemValidForSlot(index, stack);
+//	}
+//
+//
+//	@Override
 	public int getField(int id) {
 		
 		switch(id) {
@@ -291,7 +319,7 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 	}
 
 
-	@Override
+//	@Override
 	public void setField(int id, int value) {
 		
 		switch(id) {
@@ -311,17 +339,17 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 	}
 
 
-	@Override
+//	@Override
 	public int getFieldCount() {
-		return 0;
+		return 4;
 	}
 
 
-	@Override
-	public void clear() {
-		this.inventory.clear();
-	}
-
+//	@Override
+//	public void clear() {
+//		this.inventory.clear();
+//	}
+//
 
 	@Override
 	public int getEnergyStored(EnumFacing from) {

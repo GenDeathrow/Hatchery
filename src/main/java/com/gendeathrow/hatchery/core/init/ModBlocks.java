@@ -3,17 +3,10 @@ package com.gendeathrow.hatchery.core.init;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.block.eggmachine.EggMachineBlock;
 import com.gendeathrow.hatchery.block.eggmachine.EggMachineTileEntity;
+import com.gendeathrow.hatchery.block.eggmachine.EggMachineTopTileEntity;
 import com.gendeathrow.hatchery.block.feeder.FeederBlock;
 import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
 import com.gendeathrow.hatchery.block.fertilizedDirt.FertilizedDirt;
@@ -31,6 +24,14 @@ import com.gendeathrow.hatchery.block.nursery.BlockMobNursery;
 import com.gendeathrow.hatchery.block.nursery.TileEntityMobNursery;
 import com.gendeathrow.hatchery.block.shredder.ShredderBlock;
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModBlocks 
 {
@@ -97,6 +98,7 @@ public class ModBlocks
 		GameRegistry.registerTileEntity(DigesterGeneratorTileEntity.class, "digesterGenerator");
 		
 		GameRegistry.registerTileEntity(EggMachineTileEntity.class, "hatchery.chicken_machine_block");
+		GameRegistry.registerTileEntity(EggMachineTopTileEntity.class, "hatchery.chicken_machine_block_top");
 	}
 	
 	private static void registerItem(Item item, String name)

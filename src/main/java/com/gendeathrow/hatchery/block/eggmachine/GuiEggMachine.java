@@ -88,8 +88,18 @@ public class GuiEggMachine extends GuiContainer
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 			drawTexturedModalRect(xOffSet + 16, yOffSet + 13 + 58 - energyAmt, 221, 58 - energyAmt, 12, energyAmt);
-	
+		int k = getTimeLeftScaled(12);
+			drawTexturedModalRect(guiLeft + 54, guiTop + 36, 197, 74, 9, 12-k);
 
 	}
+	
+	
+    private int getTimeLeftScaled(int pixels)
+    {
+    	int i = this.eggstractor.eggTime;
+    	int j = this.eggstractor.maxEggTime;
+    	
+        return i != 0 && j != 0 ? Math.min((int)(((double)i / j) * pixels), pixels): 0;
+    }
 	
 }

@@ -155,7 +155,7 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
 		if(state.getValue(PART) == EggMachineBlock.EnumPartType.BASE)
 			return new EggMachineTileEntity();
 		else
-			return null;
+			return new EggMachineTopTileEntity();
 	}
 	
 	
