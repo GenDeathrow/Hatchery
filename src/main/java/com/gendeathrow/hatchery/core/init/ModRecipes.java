@@ -324,16 +324,6 @@ public class ModRecipes
 				'S', Items.DIAMOND_SWORD, 
 				'B', Items.BUCKET);
 		
-//		GameRegistry.addRecipe(
-//				new ItemStack(ModBlocks.shredder),
-//				"IxI",
-//				"ISI",
-//				"IRI", 
-//				'I', Items.IRON_INGOT,
-//				'R', Blocks.REDSTONE_BLOCK,
-//				'S', Items.DIAMOND_SWORD, 
-//				'B', Items.BUCKET);
-		
 		GameRegistry.addRecipe(
 				new ItemStack(ModItems.fiberPad),
 				"fff",
@@ -355,15 +345,7 @@ public class ModRecipes
 				"fff", 
 				'f', ModItems.fiberPad);
 		
-		GameRegistry.addRecipe(
-				new ItemStack(ModBlocks.shredder),
-				"IxI",
-				"ISI",
-				"IRI", 
-				'I', Items.IRON_INGOT,
-				'R', Blocks.REDSTONE_BLOCK,
-				'S', Items.DIAMOND_SWORD, 
-				'B', Items.BUCKET);
+
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.mealPulp, 4), ModItems.featherMeal, ModItems.featherMeal, ModItems.featherMeal,ModItems.featherMeal, ModItems.featherMeal, ModItems.featherMeal, ModItems.featherMeal, ModItems.featherMeal, Items.WATER_BUCKET);
 		

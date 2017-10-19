@@ -4,6 +4,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.core.init.ModFluids;
+
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -13,11 +18,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import org.lwjgl.opengl.GL11;
-
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.core.init.ModFluids;
 
 @SideOnly(Side.CLIENT)
 public class GuiFertilizerMixerInventory extends GuiContainer
