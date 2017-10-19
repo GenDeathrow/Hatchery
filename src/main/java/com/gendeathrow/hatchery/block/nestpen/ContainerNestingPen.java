@@ -2,7 +2,6 @@ package com.gendeathrow.hatchery.block.nestpen;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;

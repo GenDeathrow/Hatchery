@@ -6,7 +6,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
-import com.google.common.collect.Lists;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -14,12 +13,10 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;

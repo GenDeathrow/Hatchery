@@ -4,6 +4,14 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.api.tileentities.IChickenNestingPen;
+import com.gendeathrow.hatchery.core.Settings;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.inventory.InventoryStorage;
+import com.gendeathrow.hatchery.item.HatcheryEgg;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
@@ -33,14 +41,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.api.tileentities.IChickenNestingPen;
-import com.gendeathrow.hatchery.core.Settings;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.inventory.InventoryStorage;
-import com.gendeathrow.hatchery.item.HatcheryEgg;
 
 
 public class NestPenTileEntity extends TileEntity  implements ITickable, IInventory

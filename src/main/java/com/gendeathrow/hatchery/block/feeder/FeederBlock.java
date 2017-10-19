@@ -5,6 +5,11 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
+import com.gendeathrow.hatchery.common.capability.IAnimalStats;
+import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
+
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -21,7 +26,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -39,12 +43,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
-import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
-import com.gendeathrow.hatchery.common.capability.IAnimalStats;
-import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
 
 public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoProvider
 {

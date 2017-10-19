@@ -1,5 +1,7 @@
 package com.gendeathrow.hatchery.core.jei.eggmachine;
 
+import com.gendeathrow.hatchery.Hatchery;
+
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableAnimated;
@@ -9,15 +11,7 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-
-import com.gendeathrow.hatchery.Hatchery;
 import net.minecraft.util.text.translation.I18n;
 
 public class EggMachineCategory extends BlankRecipeCategory<EggMachineWrapper>

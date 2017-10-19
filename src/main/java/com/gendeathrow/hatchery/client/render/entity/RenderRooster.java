@@ -1,15 +1,15 @@
 package com.gendeathrow.hatchery.client.render.entity;
 
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.client.model.ModelRooster;
+import com.gendeathrow.hatchery.entities.EntityRooster;
+
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.client.model.ModelRooster;
-import com.gendeathrow.hatchery.entities.EntityRooster;
 
 @SideOnly(Side.CLIENT)
 public class RenderRooster extends RenderLiving<EntityRooster> {

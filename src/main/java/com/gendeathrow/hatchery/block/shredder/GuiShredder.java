@@ -7,14 +7,11 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.generator.DigesterGeneratorTileEntity;
-import com.gendeathrow.hatchery.core.init.ModFluids;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 

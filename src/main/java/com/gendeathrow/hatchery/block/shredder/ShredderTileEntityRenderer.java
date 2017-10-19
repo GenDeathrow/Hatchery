@@ -1,5 +1,9 @@
 package com.gendeathrow.hatchery.block.shredder;
 
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.block.nestpen.NestingPenBlock;
+import com.gendeathrow.hatchery.client.model.ModelShredderBlade;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -7,12 +11,6 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
-import com.gendeathrow.hatchery.block.nestpen.NestingPenBlock;
-import com.gendeathrow.hatchery.client.model.ModelShredderBlade;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
 
 public class ShredderTileEntityRenderer extends TileEntitySpecialRenderer<ShredderTileEntity>
 {

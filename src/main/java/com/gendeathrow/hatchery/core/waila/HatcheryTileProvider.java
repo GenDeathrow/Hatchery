@@ -3,6 +3,10 @@ package com.gendeathrow.hatchery.core.waila;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
+import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
+
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -16,10 +20,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
-import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
-import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 
 public class HatcheryTileProvider implements IWailaDataProvider, IWailaPlugin
 {

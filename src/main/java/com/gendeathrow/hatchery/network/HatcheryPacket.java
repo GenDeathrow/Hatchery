@@ -1,9 +1,12 @@
 package com.gendeathrow.hatchery.network;
 
+import org.apache.logging.log4j.Level;
+
+import com.gendeathrow.hatchery.Hatchery;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IThreadListener;
@@ -13,12 +16,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-import org.apache.logging.log4j.Level;
-
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
-import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 
 public class HatcheryPacket implements IMessage 
 {

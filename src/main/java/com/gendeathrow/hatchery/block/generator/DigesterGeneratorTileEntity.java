@@ -11,8 +11,6 @@ import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -28,7 +26,6 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class DigesterGeneratorTileEntity extends TileUpgradable implements IEnergyProvider, ITickable
 {

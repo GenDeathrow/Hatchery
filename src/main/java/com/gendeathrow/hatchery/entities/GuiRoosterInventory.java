@@ -1,5 +1,9 @@
 package com.gendeathrow.hatchery.entities;
 
+import org.lwjgl.opengl.GL11;
+
+import com.gendeathrow.hatchery.Hatchery;
+
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -9,10 +13,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import org.lwjgl.opengl.GL11;
-
-import com.gendeathrow.hatchery.Hatchery;
 
 @SideOnly(Side.CLIENT)
 public class GuiRoosterInventory extends GuiContainer {

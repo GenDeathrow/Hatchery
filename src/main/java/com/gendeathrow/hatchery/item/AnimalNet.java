@@ -1,9 +1,13 @@
 package com.gendeathrow.hatchery.item;
 
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModItems;
+
 import net.minecraft.block.BlockFence;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -20,11 +24,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModItems;
 
 public class AnimalNet extends Item
 {

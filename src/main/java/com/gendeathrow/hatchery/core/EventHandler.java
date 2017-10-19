@@ -1,5 +1,13 @@
 package com.gendeathrow.hatchery.core;
 
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
+import com.gendeathrow.hatchery.core.config.ConfigHandler;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.entities.EntityRooster;
+import com.gendeathrow.hatchery.entities.ai.ChickenBreeding;
+import com.gendeathrow.hatchery.entities.ai.EntityAIMateWithRooster;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,14 +32,6 @@ import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
-import com.gendeathrow.hatchery.core.config.ConfigHandler;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.entities.EntityRooster;
-import com.gendeathrow.hatchery.entities.ai.ChickenBreeding;
-import com.gendeathrow.hatchery.entities.ai.EntityAIMateWithRooster;
 
 public class EventHandler 
 {

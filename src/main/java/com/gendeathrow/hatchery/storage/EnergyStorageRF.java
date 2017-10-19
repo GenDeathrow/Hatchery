@@ -1,7 +1,6 @@
 package com.gendeathrow.hatchery.storage;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
 /**

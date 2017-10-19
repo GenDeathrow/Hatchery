@@ -1,8 +1,5 @@
 package com.gendeathrow.hatchery.block.eggmachine;
 
-import javax.annotation.Nullable;
-
-import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.inventory.SlotUpgrade;
 import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
 

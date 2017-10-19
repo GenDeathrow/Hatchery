@@ -3,8 +3,11 @@ package com.gendeathrow.hatchery.entities.ai;
 import java.util.List;
 import java.util.Random;
 
+import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.item.HatcheryEgg;
+import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
+
 import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -12,15 +15,10 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
-
-import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.item.HatcheryEgg;
-import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 
 public class ChickenBreeding extends EntityAIBase
 {

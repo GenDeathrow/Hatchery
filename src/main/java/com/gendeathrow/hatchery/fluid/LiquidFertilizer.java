@@ -2,9 +2,7 @@ package com.gendeathrow.hatchery.fluid;
 
 import com.gendeathrow.hatchery.Hatchery;
 
-import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 
 public class LiquidFertilizer extends Fluid

@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity.ShredderRecipe;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 

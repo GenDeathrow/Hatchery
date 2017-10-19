@@ -4,9 +4,10 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
-import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -28,9 +29,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModItems;
 
 public class FertilizedFarmland extends Block
 {

@@ -1,7 +1,5 @@
 package com.gendeathrow.hatchery.common.capability;
 
-import java.util.concurrent.Callable;
-
 import com.gendeathrow.hatchery.Hatchery;
 
 import net.minecraft.nbt.NBTBase;
@@ -11,7 +9,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fluids.FluidTank;
 
 public class CapabilityAnimalStatsHandler implements ICapabilityProvider
 {

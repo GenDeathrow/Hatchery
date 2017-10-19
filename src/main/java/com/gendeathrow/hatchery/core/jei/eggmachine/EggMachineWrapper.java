@@ -3,8 +3,6 @@ package com.gendeathrow.hatchery.core.jei.eggmachine;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity.ShredderRecipe;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 
 import mezz.jei.api.ingredients.IIngredients;

@@ -1,9 +1,6 @@
 package com.gendeathrow.hatchery.api.tileentities;
 
-import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.item.ItemStack;
 
 /**
  * Will Allow Placing custom chickens into Nesting Pen.<br>

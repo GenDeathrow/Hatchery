@@ -2,6 +2,15 @@ package com.gendeathrow.hatchery.block.nest;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.network.HatcheryPacket;
+import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
+import com.setycz.chickens.ChickensRegistry;
+import com.setycz.chickens.ChickensRegistryItem;
+import com.setycz.chickens.chicken.EntityChickensChicken;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -9,11 +18,9 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityEgg;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemStack;
@@ -27,15 +34,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.Optional.Interface;
-
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.network.HatcheryPacket;
-import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
-import com.setycz.chickens.ChickensRegistry;
-import com.setycz.chickens.ChickensRegistryItem;
-import com.setycz.chickens.chicken.EntityChickensChicken;
 
 
 @Optional.InterfaceList(

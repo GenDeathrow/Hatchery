@@ -1,5 +1,7 @@
 package com.gendeathrow.hatchery.core.theoneprobe;
 
+import com.gendeathrow.hatchery.Hatchery;
+
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
@@ -9,8 +11,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
-
-import com.gendeathrow.hatchery.Hatchery;
 
 public class TheOneProbeSupport
 {

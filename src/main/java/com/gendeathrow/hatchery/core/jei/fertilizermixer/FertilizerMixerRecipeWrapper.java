@@ -5,10 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity.ShredderRecipe;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
-import com.gendeathrow.hatchery.core.init.ModItems;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;

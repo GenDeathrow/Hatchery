@@ -2,6 +2,16 @@ package com.gendeathrow.hatchery;
 
 import java.io.IOException;
 
+import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
+import com.gendeathrow.hatchery.core.Settings;
+import com.gendeathrow.hatchery.core.config.ConfigHandler;
+import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.core.proxies.CommonProxy;
+import com.gendeathrow.hatchery.core.theoneprobe.TheOneProbeSupport;
+import com.gendeathrow.hatchery.entities.EntityRooster;
+import com.gendeathrow.hatchery.network.HatcheryPacket;
+import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -27,16 +37,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
-
-import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
-import com.gendeathrow.hatchery.core.Settings;
-import com.gendeathrow.hatchery.core.config.ConfigHandler;
-import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.core.proxies.CommonProxy;
-import com.gendeathrow.hatchery.core.theoneprobe.TheOneProbeSupport;
-import com.gendeathrow.hatchery.entities.EntityRooster;
-import com.gendeathrow.hatchery.network.HatcheryPacket;
-import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
 
 
 

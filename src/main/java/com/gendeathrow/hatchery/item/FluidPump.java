@@ -11,7 +11,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class FluidPump extends Item

@@ -2,6 +2,11 @@ package com.gendeathrow.hatchery.entities;
 
 import java.util.Set;
 
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.core.proxies.CommonProxy;
+import com.gendeathrow.hatchery.entities.ai.EntityAIRoosterMating;
+import com.google.common.collect.Sets;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -31,12 +36,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.core.proxies.CommonProxy;
-import com.gendeathrow.hatchery.entities.ai.EntityAIRoosterMating;
-import com.google.common.collect.Sets;
 
 public class EntityRooster extends EntityChicken implements IInventory {
 	public static final Set<Item> TEMPTATION_ITEMS = Sets.newHashSet(new Item[] { Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS });

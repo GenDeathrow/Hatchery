@@ -2,12 +2,12 @@ package com.gendeathrow.hatchery.core.config;
 
 import java.io.File;
 
+import com.gendeathrow.hatchery.core.Settings;
+
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import com.gendeathrow.hatchery.core.Settings;
 
 public class ConfigHandler 
 {

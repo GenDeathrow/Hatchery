@@ -6,7 +6,11 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
-import mcjty.theoneprobe.api.ElementAlignment;
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.proxies.CommonProxy;
+import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
+
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -19,7 +23,6 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -47,11 +50,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.proxies.CommonProxy;
-import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
 
 public class NestingPenBlock extends Block implements ITileEntityProvider, TOPInfoProvider
 {

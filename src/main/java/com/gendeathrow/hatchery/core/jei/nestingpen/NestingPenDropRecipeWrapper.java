@@ -3,12 +3,12 @@ package com.gendeathrow.hatchery.core.jei.nestingpen;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-
-import com.gendeathrow.hatchery.core.init.ModBlocks;
 
 public class NestingPenDropRecipeWrapper extends BlankRecipeWrapper 
 {

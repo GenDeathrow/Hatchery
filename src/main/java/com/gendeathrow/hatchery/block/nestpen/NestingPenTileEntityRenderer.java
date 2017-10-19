@@ -1,16 +1,13 @@
 package com.gendeathrow.hatchery.block.nestpen;
 
+import com.gendeathrow.hatchery.core.init.ModBlocks;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.util.EnumFacing;
-
-import com.gendeathrow.hatchery.block.nest.EggNestBlock;
-import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
 
 public class NestingPenTileEntityRenderer extends TileEntitySpecialRenderer<NestPenTileEntity>
 {

@@ -1,6 +1,5 @@
 package com.gendeathrow.hatchery.entities.ai;
 
-import java.util.List;
 import java.util.Random;
 
 import com.gendeathrow.hatchery.core.Settings;
@@ -16,7 +15,6 @@ import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.stats.StatList;

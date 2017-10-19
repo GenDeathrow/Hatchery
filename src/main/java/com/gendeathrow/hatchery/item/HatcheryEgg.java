@@ -5,11 +5,15 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
+import com.gendeathrow.hatchery.util.RegisterEggsUtil;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemEgg;
@@ -25,13 +29,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.nestpen.NestingPenBlock;
-import com.gendeathrow.hatchery.core.Settings;
-import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
-import com.gendeathrow.hatchery.util.RegisterEggsUtil;
 
 public class HatcheryEgg extends ItemEgg
 {

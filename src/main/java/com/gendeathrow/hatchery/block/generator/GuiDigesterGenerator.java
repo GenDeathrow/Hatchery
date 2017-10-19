@@ -4,17 +4,16 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
-
 import org.lwjgl.opengl.GL11;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.init.ModFluids;
+
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 
 public class GuiDigesterGenerator extends GuiContainer
 {

@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
+import com.setycz.chickens.ChickensRegistry;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -17,8 +19,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
-
-import com.setycz.chickens.ChickensRegistry;
 
 @Optional.Interface(iface = "com.setycz.chickens.ChickensRegistry", modid = "chickens")
 public class RegisterEggsUtil 

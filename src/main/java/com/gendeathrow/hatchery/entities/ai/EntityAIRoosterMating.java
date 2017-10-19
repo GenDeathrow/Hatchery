@@ -19,21 +19,14 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.AchievementList;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayerFactory;
-import net.minecraftforge.fml.common.Loader;
 
 public class EntityAIRoosterMating extends EntityAIBase {
 	private final EntityRooster roosterEntity;

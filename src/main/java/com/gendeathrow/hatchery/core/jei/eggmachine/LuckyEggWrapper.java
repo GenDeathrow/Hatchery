@@ -5,14 +5,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.gendeathrow.hatchery.core.config.ConfigLootHandler;
 import com.gendeathrow.hatchery.core.init.ModItems;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.WeightedRandom;
 
 public class LuckyEggWrapper extends BlankRecipeWrapper 
 {
