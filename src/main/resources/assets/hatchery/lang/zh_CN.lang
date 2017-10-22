@@ -10,7 +10,7 @@ tile.hatchery.manure_block.name=鸡粪块
 tile.hatchery.nursery_block.name=鸡类繁殖分类器
 tile.hatchery.fertilizer_mixer.name=粪肥搅拌器
 tile.hatchery.digester_generator.name=沼气池
-tile.hatchery.chicken_machine_block.name=幸运扭蛋机
+tile.hatchery.chicken_machine_block.name=幸运蛋生成机
 tile.hatchery.shredder.name=切割机
 
 container.generator.generating=产能：%1$drf/t
