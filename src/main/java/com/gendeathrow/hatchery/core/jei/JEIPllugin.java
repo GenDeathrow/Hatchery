@@ -186,8 +186,6 @@ public class JEIPllugin implements IModPlugin
 		for(ShredderRecipe recipe : ShredderTileEntity.shredderRecipes)
 		{
 			recipes.add(new ShredderRecipeWrapper(recipe));
-			
-			System.out.println("recipe addded"+ recipe.getInputItem().getDisplayName());
 		}
 			
 		return recipes;

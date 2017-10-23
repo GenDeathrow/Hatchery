@@ -150,10 +150,7 @@ public class RegisterEggsUtil
 		
 		if(textureResourceLocation != null)
 		{
-			System.out.println("found "+ textureResourceLocation.getResourcePath().toString());
-			
 			ITextureObject texture = renderer.getRenderManager().renderEngine.getTexture(textureResourceLocation);
-			
 		}
 		
 	}

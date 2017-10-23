@@ -70,7 +70,6 @@ public class ItemChickenMachine extends Item{
                         IBlockState iblockstate2 = iblockstate1.withProperty(EggMachineBlock.PART, EggMachineBlock.EnumPartType.TOP);
                         worldIn.setBlockState(blockpos, iblockstate2, 11);
                     }
-                    System.out.println("");
                     SoundType soundtype = iblockstate1.getBlock().getSoundType(iblockstate1, worldIn, pos, playerIn);
                     worldIn.playSound((EntityPlayer)null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     --stack.stackSize;
