@@ -28,8 +28,8 @@ public class GuiRoosterInventory extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		fontRendererObj.drawString(I18n.format(new TextComponentTranslation("container.roosterInventory").getFormattedText()), xSize / 2 - fontRendererObj.getStringWidth(I18n.format(new TextComponentTranslation("container.roosterInventory").getFormattedText())) / 2, 6, 4210752);
-		fontRendererObj.drawString(I18n.format(new TextComponentTranslation("container.inventory").getFormattedText()), xSize - 170, ySize - 93, 4210752);
+		fontRenderer.drawString(I18n.format(new TextComponentTranslation("container.roosterInventory").getFormattedText()), xSize / 2 - fontRenderer.getStringWidth(I18n.format(new TextComponentTranslation("container.roosterInventory").getFormattedText())) / 2, 6, 4210752);
+		fontRenderer.drawString(I18n.format(new TextComponentTranslation("container.inventory").getFormattedText()), xSize - 170, ySize - 93, 4210752);
 	}
 
 	@Override

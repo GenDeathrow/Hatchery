@@ -84,7 +84,7 @@ public class EntityRooster extends EntityChicken implements IInventory {
 		oFlap = wingRotation;
 		oFlapSpeed = destPos;
 		destPos = (float) ((double) destPos + (double) (onGround ? -1 : 4) * 0.3D);
-		destPos = MathHelper.clamp_float(destPos, 0.0F, 1.0F);
+		destPos = MathHelper.clamp(destPos, 0.0F, 1.0F);
 
 		if (!onGround && wingRotDelta < 1.0F)
 			wingRotDelta = 1.0F;
@@ -96,7 +96,7 @@ public class EntityRooster extends EntityChicken implements IInventory {
 
 		wingRotation += wingRotDelta * 2.0F;
 
-		if(worldObj.getWorldTime()%5 == 0 && !worldObj.isRemote)
+		if(world.getWorldTime()%5 == 0 && !world.isRemote)
 			convertSeeds();
 		
 		
@@ -105,21 +105,23 @@ public class EntityRooster extends EntityChicken implements IInventory {
 	}
 	
 	@Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack) 
+    public boolean processInteract(EntityPlayer player, EnumHand hand) 
 	{
-		if (!worldObj.isRemote) 
+		if (!world.isRemote) 
 		{
-			if(hand == EnumHand.MAIN_HAND && (stack == null || stack.getItem() instanceof ItemSeeds))
+			ItemStack stack = player.getHeldItem(hand);
+			
+			if(hand == EnumHand.MAIN_HAND && (stack.isEmpty() || stack.getItem() instanceof ItemSeeds))
 			{
 				//if(stack !=null) System.out.println(stack.getDisplayName());
-				player.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_ROOSTER, player.worldObj, getEntityId(), 0, 0);
+				player.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_ROOSTER, player.world, getEntityId(), 0, 0);
 				
 				return true;
 			}
 			
 			
 		}
-		return super.processInteract(player, hand, stack);
+		return super.processInteract(player, hand);
 	}
 
 	@Override
@@ -150,15 +152,15 @@ public class EntityRooster extends EntityChicken implements IInventory {
 		if(getHasSeeds() && getSeeds() <= MAX_SEEDS -2) 
 		{
 			setSeeds(getSeeds() + 2);
-			getStackInSlot(SEED_SLOT).stackSize -= 2;
-			if(getStackInSlot(SEED_SLOT).stackSize <= 0)
-				setInventorySlotContents(SEED_SLOT, null);
+			getStackInSlot(SEED_SLOT).shrink(2);
+			if(getStackInSlot(SEED_SLOT).getCount() <= 0)
+				setInventorySlotContents(SEED_SLOT, ItemStack.EMPTY);
 		}
 	}
 
 	public boolean getHasSeeds() 
 	{
-		return getStackInSlot(SEED_SLOT) != null && TEMPTATION_ITEMS.contains(getStackInSlot(SEED_SLOT).getItem()) && getStackInSlot(SEED_SLOT).stackSize >= 2;
+		return getStackInSlot(SEED_SLOT) != null && TEMPTATION_ITEMS.contains(getStackInSlot(SEED_SLOT).getItem()) && getStackInSlot(SEED_SLOT).getCount() >= 2;
 	}
 
 	public void setSeeds(int size) 
@@ -220,19 +222,19 @@ public class EntityRooster extends EntityChicken implements IInventory {
 	@Override
 	public ItemStack decrStackSize(int slot, int size) 
 	{
-		if (inventory[slot] != null) 
+		if (!inventory[slot].isEmpty()) 
 		{
 			ItemStack itemstack;
-			if (inventory[slot].stackSize <= size) 
+			if (inventory[slot].getCount() <= size) 
 			{
 				itemstack = inventory[slot];
-				inventory[slot] = null;
+				inventory[slot] = ItemStack.EMPTY;
 				return itemstack;
 			} else 
 			{
 				itemstack = inventory[slot].splitStack(size);
-				if (inventory[slot].stackSize == 0)
-					inventory[slot] = null;
+				if (inventory[slot].getCount() == 0)
+					inventory[slot] = ItemStack.EMPTY;
 				return itemstack;
 			}
 		} else
@@ -255,8 +257,8 @@ public class EntityRooster extends EntityChicken implements IInventory {
 	{
 		inventory[slot] = stack;
 
-		if (stack != null && stack.stackSize > getInventoryStackLimit())
-			stack.stackSize = getInventoryStackLimit();
+		if (stack != null && stack.getCount() > getInventoryStackLimit())
+			stack.setCount(getInventoryStackLimit());
 	}
 
 	@Override
@@ -264,12 +266,6 @@ public class EntityRooster extends EntityChicken implements IInventory {
 
 	@Override
 	public void markDirty() { }
-
-	@Override
-	public final boolean isUseableByPlayer(EntityPlayer player) 
-	{
-		return true;
-	}
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) 
@@ -301,4 +297,14 @@ public class EntityRooster extends EntityChicken implements IInventory {
 
 	@Override
 	public void clear() {	}
+
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+
+	@Override
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return true;
+	}
 }

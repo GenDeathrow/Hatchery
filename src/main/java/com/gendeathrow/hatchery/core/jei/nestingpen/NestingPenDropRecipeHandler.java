@@ -6,13 +6,6 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 public class NestingPenDropRecipeHandler implements IRecipeHandler<NestingPenDropRecipeWrapper> 
 {
 
-
-	@Override
-	public String getRecipeCategoryUid() 
-	{
-		return  NestingPenCategory.UID;
-	}
-
 	@Override
 	public String getRecipeCategoryUid(NestingPenDropRecipeWrapper arg0) 
 	{

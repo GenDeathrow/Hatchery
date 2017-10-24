@@ -91,7 +91,7 @@ public class EventHandler
 			if(event.getEntity() instanceof EntityChicken)
 			{
 				EntityChicken chicken = (EntityChicken) event.getEntity();
-				World world = chicken.worldObj;
+				World world = chicken.world;
 				if (!world.isRemote) 
 				{
 					chicken.tasks.addTask(2, new EntityAIMateWithRooster((EntityChicken) chicken, 1.0D));
@@ -132,7 +132,7 @@ public class EventHandler
 		
 			if (event.getEntity() instanceof EntityRooster) 
 			{
-				World world = event.getEntity().worldObj;
+				World world = event.getEntity().world;
 				if (!world.isRemote) 
 				{
 					((EntityRooster) entity).tasks.removeTask(new EntityAIMate((EntityRooster) entity, 1.0D));

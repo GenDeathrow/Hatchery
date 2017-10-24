@@ -13,6 +13,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -121,9 +122,9 @@ public class ModRecipes
 	    	IRecipe bucketFert = new ShapelessRecipes(ModFluids.getFertilizerBucket(), bucketFertIngre)
 	    {
 	    	@Override
-	        public ItemStack[] getRemainingItems(InventoryCrafting inv)
+	        public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
 	        {
-				return new ItemStack[inv.getSizeInventory()];
+				return NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
 	    	}
 	    	
 	    };
@@ -456,14 +457,14 @@ public class ModRecipes
 
 
 		@Override
-	    public ItemStack[] getRemainingItems(InventoryCrafting inv)
+	    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
 	    {
-	        ItemStack[] aitemstack = new ItemStack[inv.getSizeInventory()];
+		    NonNullList<ItemStack> aitemstack = NonNullList.<ItemStack>withSize(inv.getSizeInventory(), ItemStack.EMPTY);
 
-	        for (int i = 0; i < aitemstack.length; ++i)
+	        for (int i = 0; i < aitemstack.size(); ++i)
 	        {
 	            ItemStack itemstack = inv.getStackInSlot(i);
-	            aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+	            aitemstack.add(net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack));
 	        }
 
 	        return aitemstack;

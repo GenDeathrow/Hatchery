@@ -108,7 +108,7 @@ public class ContainerShredder extends Container
                 return null;
             }
             
-            if (itemstack1.stackSize == 0)
+            if (itemstack1.getCount() == 0)
             {
                 slot.putStack((ItemStack)null);
             }
@@ -147,8 +147,8 @@ public class ContainerShredder extends Container
 		{
 				HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 3, this.shredder.getField(3));
 				HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 0, this.shredder.getField(0));
-				listener.sendProgressBarUpdate(this, 1, this.shredder.getField(1));
-				listener.sendProgressBarUpdate(this, 2, this.shredder.getField(2));
+				listener.sendWindowProperty(this, 1, this.shredder.getField(1));
+				listener.sendWindowProperty(this, 2, this.shredder.getField(2));
 		}
 
     }

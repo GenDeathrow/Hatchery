@@ -30,6 +30,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -115,7 +116,7 @@ public class ClientProxy extends CommonProxy
 		//Register Items
 		for(Item item : ModItems.ITEMS)
 		{
-			ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+			NonNullList<ItemStack> list = NonNullList.<ItemStack>create();
 			item.getSubItems(item, Hatchery.hatcheryTabs, list);
 			
 			if(list.size() > 1)

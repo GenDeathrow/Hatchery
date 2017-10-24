@@ -6,13 +6,6 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 public class FertilizerMixerRecipeHandler implements IRecipeHandler<FertilizerMixerRecipeWrapper> 
 {
 
-
-	@Override
-	public String getRecipeCategoryUid() 
-	{
-		return  FertilizerMixerCategory.UID;
-	}
-
 	@Override
 	public String getRecipeCategoryUid(FertilizerMixerRecipeWrapper arg0) 
 	{

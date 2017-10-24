@@ -220,4 +220,16 @@ public class InventoryStorage  implements IInventory
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
 		return false;
 	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

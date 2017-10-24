@@ -35,12 +35,7 @@ public class LuckyEggWrapper extends BlankRecipeWrapper
 				
 		//weight = weightIn;
 	}
-	
-	@Override
-	public void drawAnimations(Minecraft arg0, int arg1, int arg2) 
-	{
-		
-	}
+
 
 	@Override
 	public void drawInfo(Minecraft mc, int recipeWidth, int recipeHeight, int mouseX, int mouseY) 

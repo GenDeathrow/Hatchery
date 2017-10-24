@@ -77,7 +77,7 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
     }
     
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {
         if (state.getValue(PART) == EggMachineBlock.EnumPartType.BASE)
         {
@@ -125,7 +125,7 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
     }
 
 	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
         {
@@ -175,12 +175,6 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
     public boolean isFullCube(IBlockState state)
     {
         return false;
-    }
-	
-	@Override
-    public boolean isFullyOpaque(IBlockState state)
-    {
-    	return false;
     }
 	
     @SideOnly(Side.CLIENT)

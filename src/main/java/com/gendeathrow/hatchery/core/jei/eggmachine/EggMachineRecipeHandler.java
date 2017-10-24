@@ -8,12 +8,6 @@ public class EggMachineRecipeHandler implements IRecipeHandler<EggMachineWrapper
 
 
 	@Override
-	public String getRecipeCategoryUid() 
-	{
-		return  EggMachineCategory.UID;
-	}
-
-	@Override
 	public String getRecipeCategoryUid(EggMachineWrapper arg0) 
 	{
 		return EggMachineCategory.UID;

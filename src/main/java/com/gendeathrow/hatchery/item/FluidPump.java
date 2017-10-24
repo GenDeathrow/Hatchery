@@ -24,9 +24,12 @@ public class FluidPump extends Item
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		InventoryPlayer inventory = playerIn.inventory;
+		
+		ItemStack stack = playerIn.getHeldItem(hand);
+		
 		for(int i=0; i < inventory.getSizeInventory(); i++)
 		{
 			stack = inventory.getStackInSlot(i);

@@ -141,10 +141,10 @@ public class ContainerDigesterGenerator extends Container
 		for (IContainerListener listener : this.listeners) 
 		 {
 					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
-					listener.sendProgressBarUpdate(this, 4, this.tile.getField(4));
-					listener.sendProgressBarUpdate(this, 1, this.tile.getField(1));
+					listener.sendWindowProperty(this, 4, this.tile.getField(4));
+					listener.sendWindowProperty(this, 1, this.tile.getField(1));
 					
-					listener.sendProgressBarUpdate(this, 2, this.tile.getField(2));
+					listener.sendWindowProperty(this, 2, this.tile.getField(2));
 					
 					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 3, this.tile.getField(3));
 					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 0, this.tile.getField(0));

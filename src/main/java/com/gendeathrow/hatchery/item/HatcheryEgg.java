@@ -47,7 +47,7 @@ public class HatcheryEgg extends ItemEgg
     {
         if (!playerIn.capabilities.isCreativeMode)
         {
-            --itemStackIn.stackSize;
+            itemStackIn.shrink(1);
         }
 
         worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_EGG_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
@@ -56,7 +56,7 @@ public class HatcheryEgg extends ItemEgg
         {
         	HatcheryEggThrown entityegg = new HatcheryEggThrown(worldIn, playerIn, itemStackIn);
             entityegg.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-            worldIn.spawnEntityInWorld(entityegg);
+            worldIn.spawnEntity(entityegg);
         }
 
         playerIn.addStat(StatList.getObjectUseStats(this));

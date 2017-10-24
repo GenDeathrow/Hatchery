@@ -53,12 +53,12 @@ public class AnimalNet extends Item
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand)
     {
-        if (target.worldObj.isRemote)
+        if (target.world.isRemote)
         {
             return false;
         }
            	
-	    if (target.worldObj.isRemote || !(target instanceof EntityAnimal) || (target instanceof EntityMob) || (hand == EnumHand.OFF_HAND)) 
+	    if (target.world.isRemote || !(target instanceof EntityAnimal) || (target instanceof EntityMob) || (hand == EnumHand.OFF_HAND)) 
 	    {
 	        return false;
 	    }
@@ -73,7 +73,7 @@ public class AnimalNet extends Item
 
 	  		player.setActiveHand(hand);
 	  		
-	  		target.worldObj.removeEntity(target);
+	  		target.world.removeEntity(target);
 	  		return true;
 	    }
 	    
@@ -101,9 +101,9 @@ public class AnimalNet extends Item
     	ItemStack newstack = new ItemStack(ModItems.animalNet);
     	addEntityNBT(newstack, entity);        
 
-        if (--stack.stackSize <= 0 && !player.capabilities.isCreativeMode)
+        if (stack.getCount() - 1 <= 0 && !player.capabilities.isCreativeMode)
         {
-        	stack.stackSize = 1;
+        	stack.setCount(1);
        		return addEntityNBT(stack, entity);     
         }
         else
@@ -144,9 +144,9 @@ public class AnimalNet extends Item
     	    	return EnumActionResult.FAIL;
     	    }
     	    
-    	    if(playerIn.worldObj.getBlockState(pos).getBlock() == ModBlocks.pen || playerIn.worldObj.getBlockState(pos).getBlock() == ModBlocks.pen_chicken)
+    	    if(playerIn.world.getBlockState(pos).getBlock() == ModBlocks.pen || playerIn.world.getBlockState(pos).getBlock() == ModBlocks.pen_chicken)
     		{
-    			NestPenTileEntity pen = (NestPenTileEntity)playerIn.worldObj.getTileEntity(pos);
+    			NestPenTileEntity pen = (NestPenTileEntity)playerIn.world.getTileEntity(pos);
     			
     			if(!hasCapturedAnimal(stack) && pen.storedEntity() != null)
     			{	
@@ -194,14 +194,14 @@ public class AnimalNet extends Item
 
         		BlockPos pos2 = pos.offset(facing);
                 double d0 = 0.0D;
-                if (facing == EnumFacing.UP && playerIn.worldObj.getBlockState(pos2).getBlock() instanceof BlockFence) //Forge: Fix Vanilla bug comparing state instead of block
+                if (facing == EnumFacing.UP && playerIn.world.getBlockState(pos2).getBlock() instanceof BlockFence) //Forge: Fix Vanilla bug comparing state instead of block
                 {
                     d0 = 0.5D;
                 }
    
         		entity.setPositionAndRotation(pos2.getX() + 0.5D, pos2.getY() + d0, pos2.getZ() + 0.5D , Math.abs(playerIn.rotationYaw), 0);
 	  			
-       			worldIn.spawnEntityInWorld(entity);
+       			worldIn.spawnEntity(entity);
        			
        			if(entity instanceof EntityAnimal){
        				if(((EntityAnimal)entity).isAIDisabled())

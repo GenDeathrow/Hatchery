@@ -170,11 +170,11 @@ public class ContainerFertlizerMixer extends Container
 		 {
 					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
 					
-					listener.sendProgressBarUpdate(this, 4, this.tileEntity.getField(4));
-					listener.sendProgressBarUpdate(this, 5, this.tileEntity.getField(5));
+					listener.sendWindowProperty(this, 4, this.tileEntity.getField(4));
+					listener.sendWindowProperty(this, 5, this.tileEntity.getField(5));
 					
-					listener.sendProgressBarUpdate(this, 0, this.tileEntity.getField(0));
-					listener.sendProgressBarUpdate(this, 1, this.tileEntity.getField(1));
+					listener.sendWindowProperty(this, 0, this.tileEntity.getField(0));
+					listener.sendWindowProperty(this, 1, this.tileEntity.getField(1));
 					
 					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 6, this.tileEntity.getField(6));
 					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 3, this.tileEntity.getField(3));

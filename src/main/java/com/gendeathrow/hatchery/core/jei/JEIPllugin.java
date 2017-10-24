@@ -29,10 +29,11 @@ import com.gendeathrow.hatchery.core.jei.shredder.ShredderCategory;
 import com.gendeathrow.hatchery.core.jei.shredder.ShredderRecipeHandler;
 import com.gendeathrow.hatchery.core.jei.shredder.ShredderRecipeWrapper;
 import com.setycz.chickens.ChickensMod;
-import com.setycz.chickens.ChickensRegistry;
-import com.setycz.chickens.ChickensRegistryItem;
+import com.setycz.chickens.registry.ChickensRegistry;
+import com.setycz.chickens.registry.ChickensRegistryItem;
 
 import mezz.jei.api.IGuiHelper;
+import mezz.jei.api.IItemBlacklist;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
@@ -128,11 +129,11 @@ public class JEIPllugin implements IModPlugin
           	mixer.add(new FertilizerMixerRecipeWrapper(new ItemStack(ModBlocks.manureBlock)));
            	registry.addRecipes(mixer);    		
         		
-        IIngredientBlacklist itemBlacklist = registry.getJeiHelpers().getIngredientBlacklist();
+         IItemBlacklist itemBlacklist = registry.getJeiHelpers().getItemBlacklist();
         
-        itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.pen_chicken));
-        itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.digesterGeneratorOn));
-        itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.chickenMachine));
+        itemBlacklist.addItemToBlacklist(new ItemStack(ModBlocks.pen_chicken));
+        itemBlacklist.addItemToBlacklist(new ItemStack(ModBlocks.digesterGeneratorOn));
+        itemBlacklist.addItemToBlacklist(new ItemStack(ModBlocks.chickenMachine));
         
         
         

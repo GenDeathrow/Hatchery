@@ -49,12 +49,6 @@ public class GeneratorCategory extends BlankRecipeCategory<GeneratorRecipeWrappe
     }
     
 	@Override
-	public void drawAnimations(Minecraft arg0) 
-	{
-
-	}
-
-	@Override
 	public void drawExtras(Minecraft minecraft) 
 	{
 		arrow.draw(minecraft, 60, 26);

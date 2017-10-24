@@ -6,13 +6,6 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 public class ShredderRecipeHandler implements IRecipeHandler<ShredderRecipeWrapper> 
 {
 
-
-	@Override
-	public String getRecipeCategoryUid() 
-	{
-		return  ShredderCategory.UID;
-	}
-
 	@Override
 	public String getRecipeCategoryUid(ShredderRecipeWrapper arg0) 
 	{

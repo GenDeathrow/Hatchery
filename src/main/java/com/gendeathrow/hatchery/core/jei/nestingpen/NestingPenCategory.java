@@ -37,12 +37,6 @@ public class NestingPenCategory extends BlankRecipeCategory<NestingPenDropRecipe
 
         icon = guiHelper.createDrawable(location, 91, 17, 16, 16);	
     }
-    
-	@Override
-	public void drawAnimations(Minecraft arg0) 
-	{
-
-	}
 
 	@Override
 	public void drawExtras(Minecraft minecraft) 

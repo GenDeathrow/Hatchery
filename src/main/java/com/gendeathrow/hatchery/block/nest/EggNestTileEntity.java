@@ -7,9 +7,9 @@ import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
-import com.setycz.chickens.ChickensRegistry;
-import com.setycz.chickens.ChickensRegistryItem;
-import com.setycz.chickens.chicken.EntityChickensChicken;
+import com.setycz.chickens.entity.EntityChickensChicken;
+import com.setycz.chickens.registry.ChickensRegistry;
+import com.setycz.chickens.registry.ChickensRegistryItem;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

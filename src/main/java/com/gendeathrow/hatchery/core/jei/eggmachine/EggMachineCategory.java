@@ -38,12 +38,6 @@ public class EggMachineCategory extends BlankRecipeCategory<EggMachineWrapper>
         //icon = guiHelper.createDrawable(iconloc, 117, 0, 44, 65);
     }
     
-    @Override
-	public void drawAnimations(Minecraft arg0) 
-	{
-
-	}
-
 	@Override
 	public void drawExtras(Minecraft minecraft) 
 	{

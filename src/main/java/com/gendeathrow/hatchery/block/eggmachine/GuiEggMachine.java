@@ -38,13 +38,13 @@ public class GuiEggMachine extends GuiContainer
 		
 	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
-		fontRendererObj.drawString(I18n.format(new TextComponentTranslation("container.eggstractor").getFormattedText()), 5 , 3, 4210752);
-		fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 6, 73, 4210752);
+		fontRenderer.drawString(I18n.format(new TextComponentTranslation("container.eggstractor").getFormattedText()), 5 , 3, 4210752);
+		fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 6, 73, 4210752);
 		
-		fontRendererObj.drawString(new TextComponentTranslation("container.upgrades").getFormattedText(), 120 - (this.fontRendererObj.getStringWidth(new TextComponentTranslation("container.upgrades").getUnformattedText())/2), 40, 4210752);
+		fontRenderer.drawString(new TextComponentTranslation("container.upgrades").getFormattedText(), 120 - (this.fontRenderer.getStringWidth(new TextComponentTranslation("container.upgrades").getUnformattedText())/2), 40, 4210752);
 		
-		fontRendererObj.drawString(new TextComponentTranslation("container.eggstractor.eggs", eggstractor.internalEggStorage).getFormattedText(), 89, 14, 4210752);
-		fontRendererObj.drawString(new TextComponentTranslation("container.eggstractor.plastic", eggstractor.internalPlasticStorage).getFormattedText(), 89, 26, 4210752);
+		fontRenderer.drawString(new TextComponentTranslation("container.eggstractor.eggs", eggstractor.internalEggStorage).getFormattedText(), 89, 14, 4210752);
+		fontRenderer.drawString(new TextComponentTranslation("container.eggstractor.plastic", eggstractor.internalPlasticStorage).getFormattedText(), 89, 26, 4210752);
 
 		
 			this.itemRender.zLevel = 200;

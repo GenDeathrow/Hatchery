@@ -83,7 +83,7 @@ public class ContainerEggMachine extends Container
                 return null;
             }
             
-            if (itemstack1.stackSize == 0)
+            if (itemstack1.getCount() == 0)
             {
                 slot.putStack((ItemStack)null);
             }
@@ -156,9 +156,9 @@ public class ContainerEggMachine extends Container
 		 {
 					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
 					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 0, this.te.getField(0));
-					listener.sendProgressBarUpdate(this, 1, this.te.getField(1));
-					listener.sendProgressBarUpdate(this, 2, this.te.getField(2));
-					listener.sendProgressBarUpdate(this, 3, this.te.getField(3));
+					listener.sendWindowProperty(this, 1, this.te.getField(1));
+					listener.sendWindowProperty(this, 2, this.te.getField(2));
+					listener.sendWindowProperty(this, 3, this.te.getField(3));
 					//HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 3, this.inventory.getField(3));
 		 }
 

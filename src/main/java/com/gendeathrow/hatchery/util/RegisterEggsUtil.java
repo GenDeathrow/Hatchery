@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
-import com.setycz.chickens.ChickensRegistry;
+import com.setycz.chickens.registry.ChickensRegistry;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;

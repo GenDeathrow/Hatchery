@@ -39,12 +39,6 @@ public class LuckyEggCategory extends BlankRecipeCategory<LuckyEggWrapper>
     }
     
 	@Override
-	public void drawAnimations(Minecraft arg0) 
-	{
-
-	}
-
-	@Override
 	public void drawExtras(Minecraft minecraft) 
 	{
 		arrow.draw(minecraft, 75, 27);

@@ -8,12 +8,6 @@ public class LuckyEggHandler implements IRecipeHandler<LuckyEggWrapper>
 
 
 	@Override
-	public String getRecipeCategoryUid() 
-	{
-		return  LuckyEggCategory.UID;
-	}
-
-	@Override
 	public String getRecipeCategoryUid(LuckyEggWrapper arg0) 
 	{
 		return LuckyEggCategory.UID;

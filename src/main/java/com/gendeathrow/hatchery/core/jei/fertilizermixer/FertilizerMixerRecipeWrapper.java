@@ -38,12 +38,6 @@ public class FertilizerMixerRecipeWrapper extends BlankRecipeWrapper
 	}
 	
 	@Override
-	public void drawAnimations(Minecraft arg0, int arg1, int arg2) 
-	{
-		
-	}
-
-	@Override
 	public void drawInfo(Minecraft arg0, int arg1, int arg2, int arg3, int arg4) 
 	{
 		

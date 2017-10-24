@@ -16,7 +16,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -64,9 +65,9 @@ public class Hatchery
 		
 	    public static CreativeTabs hatcheryTabs = new CreativeTabs(MODID)
 	    {
-	        @Override public Item getTabIconItem() 
+	        @Override public ItemStack getTabIconItem() 
 	        {
-	            return ModItems.hatcheryEgg;
+	            return new ItemStack(ModItems.hatcheryEgg);
 	        }
 	 
 	    };
@@ -91,12 +92,11 @@ public class Hatchery
 	    	network.registerMessage(HatcheryWindowPacket.ClientHandler.class, HatcheryWindowPacket.class, 2, Side.CLIENT);
 	    	NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, PROXY);
 	    	
-			EntityRegistry.registerModEntity(EntityRooster.class, "Rooster", 1, this, 120, 1, true);
-			registerEntityEgg(EntityRooster.class, 0x592C00, 0xC10000);
+			EntityRegistry.registerModEntity(new ResourceLocation(Hatchery.MODID,"roosterentity"), EntityRooster.class, "Rooster", 1, this, 120, 1, true, 0x592C00, 0xC10000);
 			PROXY.registerRenderers();
 			
 			for (Biome allBiomes : ForgeRegistries.BIOMES.getValues())
-				if(!BiomeDictionary.isBiomeOfType(allBiomes, Type.WASTELAND)  && !BiomeDictionary.isBiomeOfType(allBiomes, Type.COLD) && !BiomeDictionary.isBiomeOfType(allBiomes, Type.NETHER)  && !BiomeDictionary.isBiomeOfType(allBiomes, Type.END)  && !BiomeDictionary.isBiomeOfType(allBiomes, Type.WATER) && !BiomeDictionary.isBiomeOfType(allBiomes, Type.SWAMP))
+				if(!BiomeDictionary.hasType(allBiomes, Type.WASTELAND)  && !BiomeDictionary.hasType(allBiomes, Type.COLD) && !BiomeDictionary.hasType(allBiomes, Type.NETHER)  && !BiomeDictionary.hasType(allBiomes, Type.END)  && !BiomeDictionary.hasType(allBiomes, Type.WATER) && !BiomeDictionary.hasType(allBiomes, Type.SWAMP))
 					EntityRegistry.addSpawn(EntityRooster.class, Settings.ROOSTER_SPAWN_PROBABILITY, Settings.ROOSTER_MIN_SPAWN_SIZE, Settings.ROOSTER_MAX_SPAWN_SIZE, EnumCreatureType.CREATURE, allBiomes);
 			
 	    	PROXY.preInit(event);
@@ -109,13 +109,6 @@ public class Hatchery
 				startEntityId++;
 			while(EntityList.getClassFromID(startEntityId)!= null);
 			return startEntityId;
-		}
-		
-		public static void registerEntityEgg(Class <? extends Entity> entity, int baseColor, int spotColor) 
-		{
-			int id = getUniqueEntityId();
-			EntityList.addMapping(entity, "Rooster", id);
-			EntityList.ENTITY_EGGS.put("Rooster", new EntityList.EntityEggInfo("Rooster", baseColor, spotColor));
 		}
 		
 	    @EventHandler

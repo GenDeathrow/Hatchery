@@ -47,24 +47,24 @@ public class HatcheryEggThrown extends EntityEgg
 	            result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 0.0F);
 	        }
 	        
-	        if (!this.worldObj.isRemote && this.rand.nextInt(8) == 0)
+	        if (!this.world.isRemote && this.rand.nextInt(8) == 0)
 	        {
 	        	Entity entitychicken = null; 
 	        	
     	        if(spawnEntity == null) 
     	        {
-    	        	entitychicken = new EntityChicken(this.worldObj);
+    	        	entitychicken = new EntityChicken(this.world);
     	        	if(entitychicken instanceof EntityAgeable) ((EntityAgeable)entitychicken).setGrowingAge(-24000);
     	        }
     	        else 
     	        {
-    	        	entitychicken = EntityList.createEntityFromNBT(spawnEntity, this.worldObj);
+    	        	entitychicken = EntityList.createEntityFromNBT(spawnEntity, this.world);
     	        }
     	        
     	        if(entitychicken != null)
     	        {
     	        	entitychicken.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, 0.0F);
-    	        	this.worldObj.spawnEntityInWorld(entitychicken);
+    	        	this.world.spawnEntity(entitychicken);
     	        }
 	        }
 
@@ -72,10 +72,10 @@ public class HatcheryEggThrown extends EntityEgg
 
 	        for (int k = 0; k < 8; ++k)
 	        {
-	            this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, this.posX, this.posY, this.posZ, ((double)this.rand.nextFloat() - 0.5D) * 0.08D, ((double)this.rand.nextFloat() - 0.5D) * 0.08D, ((double)this.rand.nextFloat() - 0.5D) * 0.08D, new int[] {Item.getIdFromItem(Items.EGG)});
+	            this.world.spawnParticle(EnumParticleTypes.ITEM_CRACK, this.posX, this.posY, this.posZ, ((double)this.rand.nextFloat() - 0.5D) * 0.08D, ((double)this.rand.nextFloat() - 0.5D) * 0.08D, ((double)this.rand.nextFloat() - 0.5D) * 0.08D, new int[] {Item.getIdFromItem(Items.EGG)});
 	        }
 
-	        if (!this.worldObj.isRemote)
+	        if (!this.world.isRemote)
 	        {
 	            this.setDead();
 	        }
