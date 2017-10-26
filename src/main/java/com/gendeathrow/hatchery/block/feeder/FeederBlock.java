@@ -125,7 +125,9 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
 			
         }
 		
-		ItemStack stack = this.createStackedBlock(state);
+
+		ItemStack stack = this.getPickBlock(state, null, worldIn, pos, null);
+		
 		if(stack != null)
 		{
     		if(worldIn.getTileEntity(pos)  != null && worldIn.getTileEntity(pos) instanceof FeederTileEntity)
@@ -139,7 +141,7 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     			 
     		}
     	
-    		this.spawnAsEntity(worldIn, pos, stack);
+    		spawnAsEntity(worldIn, pos, stack);
 		}
 		
 		super.breakBlock(worldIn, pos, state);
@@ -158,8 +160,9 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     	{
     		
 			FeederTileEntity te = (FeederTileEntity) worldIn.getTileEntity(pos);
+			ItemStack heldItem = playerIn.getHeldItem(hand);
 			
-			if(heldItem != null && te != null && te.isItemValidForSlot(0, heldItem))
+			if(heldItem.isEmpty() && te != null && te.isItemValidForSlot(0, heldItem))
 			{
 				
 				if (playerIn.isSneaking())
@@ -168,7 +171,7 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
 				}
 				else
 				{
-                    	te.setSeeds(heldItem.stackSize, heldItem, playerIn.capabilities.isCreativeMode);
+                    	te.setSeeds(heldItem.getCount(), heldItem, playerIn.capabilities.isCreativeMode);
 				}
     			
     			return true;
@@ -196,11 +199,13 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
 		return new FeederTileEntity();
 	}
 	
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	@Override
+   public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
     {
         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing()).withProperty(LEVEL, 0);    
     }
-    
+	
+	@Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
     	int lvl = 0;
@@ -216,35 +221,36 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     	
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing()).withProperty(LEVEL, state.getValue(LEVEL)), 2);
         
-    	this.setFeederLevel(worldIn, pos, state);
+    	setFeederLevel(worldIn, pos, state);
     }
     
+	@Override
     public EnumBlockRenderType getRenderType(IBlockState state)
     {
         return EnumBlockRenderType.MODEL;
     }
     
+	@Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.CUTOUT_MIPPED;
     }
     
+	@Override
     public boolean isFullCube(IBlockState state)
     {
         return false;
     }
     
+	@Override
     public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }
     
-    public boolean isFullyOpaque(IBlockState state)
-    {
-        return true;
-    }
-    
+   
+	@Override
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
     {
@@ -283,12 +289,12 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
         {
         	FeederTileEntity te = (FeederTileEntity) tileentity;
         	float percentage = ((float)te.getSeedsInv()) / te.getMaxSeedInv();
-        	level = MathHelper.ceiling_float_int(percentage * 3);
+        	level = MathHelper.floor(percentage * 3);
         }
 		
         if(state.getValue(LEVEL).intValue() != level)
         {
-        	worldIn.setBlockState(pos, state.withProperty(FACING, state.getValue(FACING)).withProperty(LEVEL, Integer.valueOf(MathHelper.clamp_int(level, 0, 3))), 2);
+        	worldIn.setBlockState(pos, state.withProperty(FACING, state.getValue(FACING)).withProperty(LEVEL, Integer.valueOf(MathHelper.clamp(level, 0, 3))), 2);
         
         	if (tileentity != null)
         	{

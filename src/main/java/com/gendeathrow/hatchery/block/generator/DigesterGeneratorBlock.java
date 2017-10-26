@@ -73,7 +73,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 	}
 	
 	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
         {
@@ -81,7 +81,9 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
         }
         else
         {
-        	if(heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side))
+        	ItemStack heldItem = playerIn.getHeldItem(hand);
+        	
+        	if(heldItem.isEmpty() && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing))
         	{
         		DigesterGeneratorTileEntity tileentity = (DigesterGeneratorTileEntity) worldIn.getTileEntity(pos);
         		
@@ -89,7 +91,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 				
 				boolean hasFluid =FluidUtil.getFluidContained(heldItem) != null && FluidUtil.getFluidContained(heldItem).getFluid() == ModFluids.liquidfertilizer;
 	
-				if(tileentity != null && handler != null  && hasFluid && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side))
+				if(tileentity != null && handler != null  && hasFluid && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing))
 				{
 					FluidUtil.tryFluidTransfer(tileentity.getFertilizerTank(), handler, tileentity.getFertilizerTank().getCapacity(), true);
 				}

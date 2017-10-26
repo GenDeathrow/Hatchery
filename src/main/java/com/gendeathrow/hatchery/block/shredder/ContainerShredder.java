@@ -127,7 +127,7 @@ public class ContainerShredder extends Container
 			throw new IllegalArgumentException("Listener already listening");
 		} else {
 			this.listeners.add(listener);
-			listener.updateCraftingInventory(this, this.getInventory());
+			listener.sendAllContents(this, this.getInventory());
 			this.detectAndSendChanges();
 		}
 	}

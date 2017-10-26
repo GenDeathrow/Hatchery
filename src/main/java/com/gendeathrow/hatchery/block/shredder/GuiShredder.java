@@ -23,7 +23,7 @@ public class GuiShredder extends GuiContainer
 	
 	public GuiShredder(InventoryPlayer inventory, ShredderTileEntity tile) 
 	{
-		super(new ContainerShredder(inventory, tile, Minecraft.getMinecraft().thePlayer));
+		super(new ContainerShredder(inventory, tile, Minecraft.getMinecraft().player));
 		xSize = 176;
 		ySize = 166;
 		this.SHREDDER = tile;

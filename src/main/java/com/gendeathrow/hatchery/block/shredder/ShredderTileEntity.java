@@ -95,7 +95,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	public void update() 
 	{
 
-		if (worldObj.isRemote && ShredderBlock.isActive(this.worldObj.getBlockState(this.pos))) 
+		if (world.isRemote && ShredderBlock.isActive(this.world.getBlockState(this.pos))) 
 		{
 			prevAnimationTicks = animationTicks;
 			if (animationTicks < 360)
@@ -109,7 +109,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 
 		
 		
-        if (this.worldObj != null && !this.worldObj.isRemote)
+        if (this.world != null && !this.world.isRemote)
         {
         	updateUpgrades();
 
@@ -149,7 +149,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
    			
    			if(flag != (this.isShredding() && hasPower())){
    				flag1 = true;
-   				ShredderBlock.setActive(this.worldObj, this.pos, this.worldObj.getBlockState(this.pos), this.isShredding() && hasPower());			//  BlockFurnace.setState(this.isBurning(), this.worldObj, this.pos);
+   				ShredderBlock.setActive(this.world, this.pos, this.world.getBlockState(this.pos), this.isShredding() && hasPower());			//  BlockFurnace.setState(this.isBurning(), this.worldObj, this.pos);
    			}
    			
    	        if (flag1)
@@ -293,7 +293,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
             if( itemstack == null) return false;
             if (this.outputInventory.getStackInSlot(0) == null) return true;
             if (!this.outputInventory.getStackInSlot(0).isItemEqual(itemstack)) return false;
-            int result = outputInventory.getStackInSlot(0).stackSize + itemstack.stackSize;
+            int result = outputInventory.getStackInSlot(0).getCount() + itemstack.getCount();
             return result <= 64 && result <= this.outputInventory.getStackInSlot(0).getMaxStackSize(); //Forge BugFix: Make it respect stack sizes properly.
         }
 	}
@@ -357,17 +357,17 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 
         boolean flag = false;
 
-        for (EntityItem entityitem : getCaptureItems(this.worldObj, this.getXPos(), this.getYPos(), this.getZPos()))
+        for (EntityItem entityitem : getCaptureItems(this.world, this.getXPos(), this.getYPos(), this.getZPos()))
         {
-        	if(isShreddableItem(entityitem.getEntityItem()))
+        	if(isShreddableItem(entityitem.getItem()))
         	{
-                ItemStack itemstack = entityitem.getEntityItem().copy();
+                ItemStack itemstack = entityitem.getItem().copy();
         		//ItemStack itemstack1 = insertStack(this, itemstack, 0, enumfacing);
                 ItemStack itemstack1 = this.inputInventory.insertItemInternal(0, itemstack, false);
                 
-                if (itemstack1 != null && itemstack1.stackSize != 0)
+                if (!itemstack1.isEmpty() && itemstack1.getCount() != 0)
                 {
-                	entityitem.setEntityItemStack(itemstack1);
+                	entityitem.getItem().setCount(itemstack1.getCount());
                 }
                 else
                 {

@@ -94,7 +94,7 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 		if(firstRun)
 		{
 			firstRun = false;
-			EnumFacing facing = EggMachineBlock.getFacing(this.worldObj.getBlockState(this.pos));
+			EnumFacing facing = EggMachineBlock.getFacing(this.world.getBlockState(this.pos));
 			this.zeroedFacing = facing.getHorizontalAngle();
 			animationTicks = this.zeroedFacing;
 		}
@@ -113,20 +113,20 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 	@Override
 	public void update() {
 		
-		if(this.worldObj.isRemote)
+		if(this.world.isRemote)
 			this.updateClient();
 		
 		ItemStack eggIn = this.inputInventory.getStackInSlot(this.EggInSlot);
 		ItemStack plasticIn = this.inputInventory.getStackInSlot(this.PlasticInSlot);
 		
-		if(eggIn != null && eggIn.getItem() instanceof ItemEgg) {
-			this.internalEggStorage += eggIn.stackSize;
-			this.inputInventory.setStackInSlot(this.EggInSlot, null);
+		if(!eggIn.isEmpty() && eggIn.getItem() instanceof ItemEgg) {
+			this.internalEggStorage += eggIn.getCount();
+			this.inputInventory.setStackInSlot(this.EggInSlot, ItemStack.EMPTY);
 		}
 		
-		if(plasticIn != null && plasticIn.getItem() == ModItems.plastic) {
-			this.internalPlasticStorage += plasticIn.stackSize;
-			this.inputInventory.setStackInSlot(this.PlasticInSlot, null);
+		if(!plasticIn.isEmpty() && plasticIn.getItem() == ModItems.plastic) {
+			this.internalPlasticStorage += plasticIn.getCount();
+			this.inputInventory.setStackInSlot(this.PlasticInSlot, ItemStack.EMPTY);
 		}
 
 		if(this.eggTime <= 0 && this.canMakePrizeEgg())	{
@@ -139,9 +139,9 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 		
 		boolean hasTimeLeft = this.eggTime > 0;
 		ItemStack prizeSlot = this.outputInventory.getStackInSlot(this.PrizeEggSlot);
-		boolean hasRoomForEgg = prizeSlot == null ? true : prizeSlot.stackSize < prizeSlot.getMaxStackSize();
+		boolean hasRoomForEgg = prizeSlot == null ? true : prizeSlot.getCount() < prizeSlot.getMaxStackSize();
 		
-        if (!this.worldObj.isRemote){
+        if (!this.world.isRemote){
     		if(hasTimeLeft && this.energy.getEnergyStored() >= 40 && hasRoomForEgg){
     			--eggTime;
     			this.energy.extractEnergy(40, false);
@@ -174,9 +174,9 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 
 		if(eggStack == null)
 			this.outputInventory.setStackInSlot(this.PrizeEggSlot, itemstack);
-		else if(eggStack.getItem() == ModItems.prizeEgg && eggStack.stackSize < eggStack.getMaxStackSize())
+		else if(eggStack.getItem() == ModItems.prizeEgg && eggStack.getCount() < eggStack.getMaxStackSize())
 		{
-			eggStack.stackSize++;
+			eggStack.grow(1);
 		}
 	}
 
@@ -230,79 +230,6 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
         return super.getCapability(capability, facing);
     }
 
-
-//	@Override
-//	public String getName() {
-//		return this.inventory.getName();
-//	}
-//
-//	@Override
-//	public boolean hasCustomName() {
-//		return this.inventory.hasCustomName();
-//	}
-//
-//
-//	@Override
-//	public int getSizeInventory() {
-//		return this.inventory.getSizeInventory();
-//	}
-//
-//
-//	@Override
-//	public ItemStack getStackInSlot(int index) {
-//		return this.inventory.getStackInSlot(index);
-//	}
-//
-//
-//	@Override
-//	public ItemStack decrStackSize(int index, int count) {
-//		return this.inventory.decrStackSize(index, count);
-//	}
-//
-//
-//	@Override
-//	public ItemStack removeStackFromSlot(int index) {
-//		return this.inventory.removeStackFromSlot(index);
-//	}
-//
-//
-//	@Override
-//	public void setInventorySlotContents(int index, ItemStack stack) {
-//		this.inventory.setInventorySlotContents(index, stack);
-//	}
-//
-//
-//	@Override
-//	public int getInventoryStackLimit() {
-//		return this.inventory.getInventoryStackLimit();
-//	}
-//
-//
-//	@Override
-//	public boolean isUseableByPlayer(EntityPlayer player) {
-//		return this.inventory.isUseableByPlayer(player);
-//	}
-//
-//
-//	@Override
-//	public void openInventory(EntityPlayer player) {
-//		this.inventory.openInventory(player);
-//	}
-//
-//
-//	@Override
-//	public void closeInventory(EntityPlayer player) {
-//		this.inventory.closeInventory(player);
-//	}
-//
-//
-//	@Override
-//	public boolean isItemValidForSlot(int index, ItemStack stack) {
-//		return this.inventory.isItemValidForSlot(index, stack);
-//	}
-//
-//
-//	@Override
 	public int getField(int id) {
 		
 		switch(id) {
@@ -318,8 +245,6 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 		return 0;
 	}
 
-
-//	@Override
 	public void setField(int id, int value) {
 		
 		switch(id) {
@@ -338,18 +263,9 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 		}
 	}
 
-
-//	@Override
 	public int getFieldCount() {
 		return 4;
 	}
-
-
-//	@Override
-//	public void clear() {
-//		this.inventory.clear();
-//	}
-//
 
 	@Override
 	public int getEnergyStored(EnumFacing from) {

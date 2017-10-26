@@ -37,7 +37,7 @@ public class EntityAIRoosterMating extends EntityAIBase {
 
 	public EntityAIRoosterMating(EntityRooster animal, double speedIn) {
 		roosterEntity = animal;
-		theWorld = animal.worldObj;
+		theWorld = animal.world;
 		moveSpeed = speedIn;
 		setMutexBits(3);
 	}
@@ -62,7 +62,7 @@ public class EntityAIRoosterMating extends EntityAIBase {
 	}
 
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		return targetChicken.isEntityAlive() && targetChicken.isInLove() && spawnBabyDelay < 60;
 	}
 
@@ -87,9 +87,9 @@ public class EntityAIRoosterMating extends EntityAIBase {
 		if (theWorld.isRemote || stack == null || stack.getItem() == null)
 			return false;
 		try {
-			return targetChicken.processInteract(player, EnumHand.MAIN_HAND, player.getHeldItemMainhand());
+			return targetChicken.processInteract(player, EnumHand.MAIN_HAND);
 		} finally {
-			roosterEntity.processInteract(player, EnumHand.MAIN_HAND, player.getHeldItemMainhand());
+			roosterEntity.processInteract(player, EnumHand.MAIN_HAND);
 			roosterEntity.setSeeds(roosterEntity.getSeeds() - 2);
 		}
 	}
@@ -144,9 +144,9 @@ public class EntityAIRoosterMating extends EntityAIBase {
 	        	
 	            	EntityItem entityItem = new EntityItem(this.theWorld, this.targetChicken.posX, this.targetChicken.posY, this.targetChicken.posZ, egg);
 	            
-	            	this.theWorld.spawnEntityInWorld(entityItem);
+	            	this.theWorld.spawnEntity(entityItem);
 	            }
-	            else this.theWorld.spawnEntityInWorld(entityageable);
+	            else this.theWorld.spawnEntity(entityageable);
 	            
             	Random random = this.targetChicken.getRNG();
 
@@ -164,7 +164,7 @@ public class EntityAIRoosterMating extends EntityAIBase {
 	            
             	if (this.theWorld.getGameRules().getBoolean("doMobLoot"))
             	{
-            		this.theWorld.spawnEntityInWorld(new EntityXPOrb(this.theWorld, this.roosterEntity.posX, this.roosterEntity.posY, this.roosterEntity.posZ, random.nextInt(7) + 1));
+            		this.theWorld.spawnEntity(new EntityXPOrb(this.theWorld, this.roosterEntity.posX, this.roosterEntity.posY, this.roosterEntity.posZ, random.nextInt(7) + 1));
             	}
 	        }
 	 
@@ -173,7 +173,7 @@ public class EntityAIRoosterMating extends EntityAIBase {
 	
 	private EntityAnimal getNearbyMate() 
 	{
-		List<EntityAnimal> list = theWorld.<EntityAnimal>getEntitiesWithinAABB(EntityChicken.class, roosterEntity.getEntityBoundingBox().expandXyz(8.0D));
+		List<EntityAnimal> list = theWorld.<EntityAnimal>getEntitiesWithinAABB(EntityChicken.class, roosterEntity.getEntityBoundingBox().expand(8.0D,8.0D,8.0D));
 		double d0 = Double.MAX_VALUE;
 		EntityAnimal entityanimal = null;
 

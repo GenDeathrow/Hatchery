@@ -43,7 +43,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 
-public class NestPenTileEntity extends TileEntity  implements ITickable, IInventory
+public class NestPenTileEntity extends TileEntity  implements ITickable
 {
 	private static final AxisAlignedBB EMPTY_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 
@@ -107,7 +107,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 
 			if(!((EntityChicken) entityin).isChild()) ((EntityChicken) entityin).setGrowingAge(6000);
 			
-			NestingPenBlock.setState(true, this.worldObj, this.pos);
+			NestingPenBlock.setState(true, this.world, this.pos);
 			this.markDirty();
 			return true;
 		}else return false;
@@ -134,7 +134,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		entityNBT = new NBTTagCompound();	
 		this.chickenStored = null;
 		
-		NestingPenBlock.setState(false, this.worldObj, this.pos);
+		NestingPenBlock.setState(false, this.world, this.pos);
 		
 		this.markDirty();
 		return returnEntity;
@@ -184,7 +184,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	{
 		ItemStack egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
     	
-		EntityChicken mate  = (EntityChicken) NestingPenBlock.getNearByMate(worldObj, this.worldObj.getBlockState(pos), pos);
+		EntityChicken mate  = (EntityChicken) NestingPenBlock.getNearByMate(world, this.world.getBlockState(pos), pos);
 		EntityAnimal baby = null;
 		if(mate != null)
 		{
@@ -215,7 +215,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
     	
 		chickenStored.setGrowingAge(6000 + this.rand.nextInt(6000));
 
-		return HatcheryEgg.createEggFromEntity(worldObj, baby);
+		return HatcheryEgg.createEggFromEntity(world, baby);
 	}
 
 
@@ -252,7 +252,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		
 		//System.out.println(this.chickenStored.posX +":"+ this.chickenStored.posY +":"+ this.chickenStored.posZ);
 		
-		if(this.worldObj.isRemote) 
+		if(this.world.isRemote) 
 		{
 			if(!Settings.SHOULD_RENDER_CHICKEN_FLAPS) 
 			{
@@ -262,7 +262,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			this.chickenStored.oFlap = this.chickenStored.wingRotation;
 			this.chickenStored.oFlapSpeed = this.chickenStored.destPos;
 			this.chickenStored.destPos = (float)((double)this.chickenStored.destPos + (double)(this.notFlapping ? -1 : 4) * 0.3D);
-			this.chickenStored.destPos = MathHelper.clamp_float(this.chickenStored.destPos, 0.0F, 1.0F);
+			this.chickenStored.destPos = MathHelper.clamp(this.chickenStored.destPos, 0.0F, 1.0F);
 	        
 	        
 			if(notFlapping || this.chickenStored.getRNG().nextFloat() < 0.02F)
@@ -290,7 +290,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 		}
 		
 		
-		if (!this.worldObj.isRemote && !chickenStored.isChild() && !chickenStored.isChickenJockey())
+		if (!this.world.isRemote && !chickenStored.isChild() && !chickenStored.isChickenJockey())
 		{
 			if(wasChild && !(this.chickenStored.isChild())) 
 			{
@@ -336,7 +336,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 			if (!chickenStored.isSilent())
 			{
 				chickenStored.playLivingSound();
-				//this.worldObj.playSound((EntityPlayer)null, this.pos.getX(), this.pos.getY(), this.pos.getZ(), SoundEvents.ENTITY_CHICKEN_AMBIENT, chickenStored.getSoundCategory(), 1, 1);
+				//this.world.playSound((EntityPlayer)null, this.pos.getX(), this.pos.getY(), this.pos.getZ(), SoundEvents.ENTITY_CHICKEN_AMBIENT, chickenStored.getSoundCategory(), 1, 1);
 			}
 		}
 	}
@@ -346,8 +346,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
 	 */
 	public void updateClient()
 	{
-        if(!this.worldObj.isRemote)
-        	worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2); 
+        if(!this.world.isRemote)
+        	world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 2); 
 	}
 	
 	@Override
@@ -415,7 +415,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
         	
         	if(stack != null)
         	{
-        		this.worldObj.spawnEntityInWorld(new EntityItem(worldObj, this.pos.getX(), this.pos.getY()+1, this.pos.getZ(), stack));
+        		this.world.spawnEntity(new EntityItem(world, this.pos.getX(), this.pos.getY()+1, this.pos.getZ(), stack));
         	}
         }
 	}
@@ -441,66 +441,66 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
         return flag;
 	}
 	
-    @Override
-	public String getName() { return null; }
-
-	@Override
-	public boolean hasCustomName() { return false; }
-
-	@Override
-	public int getSizeInventory() {	return this.inventory.getSizeInventory(); }
-
-	@Override
-	public ItemStack getStackInSlot(int index) 
-	{
-		return this.inventory.getStackInSlot(index);
-	}
-
-	@Override
-	public ItemStack decrStackSize(int index, int count) 
-	{
-        return this.inventory.decrStackSize(index, count);
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int index) 
-	{
-		return this.inventory.removeStackFromSlot(index); //ItemStackHelper.getAndRemove(this.inventory, index);
-	}
-
-	@Override
-	public void setInventorySlotContents(int index,@Nullable ItemStack stack) 
-	{
-		this.inventory.setInventorySlotContents(index, stack);
-	}
-
-	@Override
-	public int getInventoryStackLimit() { return 64; }
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {	return true;}
-
-	@Override
-	public void openInventory(EntityPlayer player) { }
-
-	@Override
-	public void closeInventory(EntityPlayer player) { }
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {	return true; }
-
-	@Override
-	public int getField(int id) { return 0; }
-	@Override
-	public void setField(int id, int value) {}
-	@Override
-	public int getFieldCount() {return 0;}
-
-	@Override
-	public void clear() 
-	{
-		this.inventory.clear();
-	}
+//    @Override
+//	public String getName() { return null; }
+//
+//	@Override
+//	public boolean hasCustomName() { return false; }
+//
+//	@Override
+//	public int getSizeInventory() {	return this.inventory.getSizeInventory(); }
+//
+//	@Override
+//	public ItemStack getStackInSlot(int index) 
+//	{
+//		return this.inventory.getStackInSlot(index);
+//	}
+//
+//	@Override
+//	public ItemStack decrStackSize(int index, int count) 
+//	{
+//        return this.inventory.decrStackSize(index, count);
+//	}
+//
+//	@Override
+//	public ItemStack removeStackFromSlot(int index) 
+//	{
+//		return this.inventory.removeStackFromSlot(index); //ItemStackHelper.getAndRemove(this.inventory, index);
+//	}
+//
+//	@Override
+//	public void setInventorySlotContents(int index,@Nullable ItemStack stack) 
+//	{
+//		this.inventory.setInventorySlotContents(index, stack);
+//	}
+//
+//	@Override
+//	public int getInventoryStackLimit() { return 64; }
+//
+//	@Override
+//	public boolean isUseableByPlayer(EntityPlayer player) {	return true;}
+//
+//	@Override
+//	public void openInventory(EntityPlayer player) { }
+//
+//	@Override
+//	public void closeInventory(EntityPlayer player) { }
+//
+//	@Override
+//	public boolean isItemValidForSlot(int index, ItemStack stack) {	return true; }
+//
+//	@Override
+//	public int getField(int id) { return 0; }
+//	@Override
+//	public void setField(int id, int value) {}
+//	@Override
+//	public int getFieldCount() {return 0;}
+//
+//	@Override
+//	public void clear() 
+//	{
+//		this.inventory.clear();
+//	}
 
    public static ItemStack putStackInInventoryAllSlots(IInventory inventoryIn, ItemStack stack, @Nullable EnumFacing side)
    {
@@ -511,7 +511,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
             ISidedInventory isidedinventory = (ISidedInventory)inventoryIn;
             int[] aint = isidedinventory.getSlotsForFace(side);
 
-            for (int k = 0; k < aint.length && stack != null && stack.stackSize > 0; ++k)
+            for (int k = 0; k < aint.length && stack != null && stack.getCount() > 0; ++k)
             {
                 stack = insertStack(inventoryIn, stack, aint[k], side);
             }
@@ -520,13 +520,13 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
         {
             int i = inventoryIn.getSizeInventory();
 
-            for (int j = 0; j < i && stack != null && stack.stackSize > 0; ++j)
+            for (int j = 0; j < i && stack != null && stack.getCount() > 0; ++j)
             {
                 stack = insertStack(inventoryIn, stack, j, side);
             }
         }
 
-        if (stack != null && stack.stackSize == 0)
+        if (stack != null && stack.getCount() == 0)
         {
             stack = null;
         }
@@ -549,7 +549,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
             {
                 //Forge: BUGFIX: Again, make things respect max stack sizes.
                 int max = Math.min(stack.getMaxStackSize(), inventoryIn.getInventoryStackLimit());
-                if (max >= stack.stackSize)
+                if (max >= stack.getCount())
                 {
                 inventoryIn.setInventorySlotContents(index, stack);
                 stack = null;
@@ -564,12 +564,12 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
             {
                 //Forge: BUGFIX: Again, make things respect max stack sizes.
                 int max = Math.min(stack.getMaxStackSize(), inventoryIn.getInventoryStackLimit());
-                if (max > itemstack.stackSize)
+                if (max > itemstack.getCount())
                 {
-                int i = max - itemstack.stackSize;
-                int j = Math.min(stack.stackSize, i);
-                stack.stackSize -= j;
-                itemstack.stackSize += j;
+                int i = max - itemstack.getCount();
+                int j = Math.min(stack.getCount(), i);
+                stack.shrink(j);
+                itemstack.grow(j);
                 flag = j > 0;
                 }
             }
@@ -588,7 +588,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
     
     private static boolean canCombine(ItemStack stack1, ItemStack stack2)
     {
-        return stack1.getItem() != stack2.getItem() ? false : (stack1.getMetadata() != stack2.getMetadata() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
+        return stack1.getItem() != stack2.getItem() ? false : (stack1.getMetadata() != stack2.getMetadata() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
     }
     
     
@@ -608,7 +608,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
                 NBTTagCompound nbttagcompound = new NBTTagCompound();
                 nbttagcompound.setByte("Slot", (byte)i);
                 nbttagcompound.setString("id", te.inventory.getStackInSlot(i).getDisplayName());
-                nbttagcompound.setInteger("cnt", te.inventory.getStackInSlot(i).stackSize);
+                nbttagcompound.setInteger("cnt", te.inventory.getStackInSlot(i).getCount());
                 nbttaglist.appendTag(nbttagcompound);
             }
         }
@@ -647,7 +647,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable, IInvent
     {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
         {
-            return (T) new InvWrapper(this);
+            return (T) this.inventory;
         }
         return super.getCapability(capability, facing);
     }

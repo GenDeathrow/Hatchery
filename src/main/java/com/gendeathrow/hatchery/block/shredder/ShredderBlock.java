@@ -1,7 +1,5 @@
 package com.gendeathrow.hatchery.block.shredder;
 
-import javax.annotation.Nullable;
-
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 
@@ -47,7 +45,7 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
 	}
 
 	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
 		playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_DIGESTER_GEN, worldIn, pos.getX(), pos.getY(), pos.getZ());
 			

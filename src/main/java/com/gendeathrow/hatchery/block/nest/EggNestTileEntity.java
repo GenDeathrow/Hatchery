@@ -66,30 +66,30 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	@Override
 	public void update() 
 	{
-		if(this.worldObj.isRemote) 
+		if(this.world.isRemote) 
 		{
 			
 			updateClient();
 			return;
 		}
 		ticks++;
-		if (this.worldObj.getTotalWorldTime() % 80L == 0L)
+		if (this.world.getTotalWorldTime() % 80L == 0L)
 		{	
 	        boolean flag = this.getWorld() != null;
 	        boolean flag1 = !flag || this.getBlockType() == ModBlocks.nest;
 			
 	        if(flag1)
 	        {
-			if(EggNestBlock.doesHaveEgg(this.worldObj.getBlockState(this.getPos())))
+			if(EggNestBlock.doesHaveEgg(this.world.getBlockState(this.getPos())))
 			{
 				int randint = 2;
 				
-				if(this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(this.pos)).size() > 0)
+				if(this.world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(this.pos)).size() > 0)
 				{
 					randint += 5;
 				}
 				
-				hatchingTick += this.worldObj.rand.nextInt(randint)+ (checkForHeatLamp() ? 2 : 1);
+				hatchingTick += this.world.rand.nextInt(randint)+ (checkForHeatLamp() ? 2 : 1);
       
 				ticks = 0;
 				
@@ -111,7 +111,7 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 						
 							try
 							{
-								entitychicken = EntityList.createEntityFromNBT(entityTag, this.worldObj);
+								entitychicken = EntityList.createEntityFromNBT(entityTag, this.world);
 							}
 							catch (Throwable e)
 							{
@@ -121,8 +121,8 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 							if(entitychicken != null)
 							{
 								entitychicken.setLocationAndAngles(getPos().getX() + .5, getPos().getY() + .5, getPos().getZ() + .5, 0.0F, 0.0F);
-								this.worldObj.spawnEntityInWorld(entitychicken);
-								worldObj.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
+								this.world.spawnEntity(entitychicken);
+								world.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 							}
 							else spawnMCChicken();
 						}
@@ -134,7 +134,7 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 					else
 					{
 						spawnChickensModChicken();
-	    	        	worldObj.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
+						world.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 					}
 				}
 				catch (Throwable e)
@@ -142,7 +142,7 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 					Hatchery.logger.error("Error trying to spawn Egg in the nest ("+this.getPos().toString()+") 'Null NBT' " + e);
 				}
 				
-					EggNestBlock.removeEgg(worldObj, worldObj.getBlockState(getPos()), getPos());
+					EggNestBlock.removeEgg(world, world.getBlockState(getPos()), getPos());
 					
 					markDirty();
 				}
@@ -181,14 +181,14 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	
 	private boolean checkForHeatLamp()
 	{
-		RayTraceResult result = this.worldObj.rayTraceBlocks(new Vec3d(this.pos), new Vec3d(this.pos.up(3)));
+		RayTraceResult result = this.world.rayTraceBlocks(new Vec3d(this.pos), new Vec3d(this.pos.up(3)));
 		
 		if(result != null && result.typeOfHit == RayTraceResult.Type.BLOCK)
 		{
-			IBlockState state = this.worldObj.getBlockState(result.getBlockPos());
+			IBlockState state = this.world.getBlockState(result.getBlockPos());
 			if(state.getBlock() == Blocks.REDSTONE_LAMP);
 			{
-				return this.worldObj.isBlockPowered(result.getBlockPos());
+				return this.world.isBlockPowered(result.getBlockPos());
 			}
 		}
 		return false;
@@ -220,7 +220,7 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
     @Override
     public boolean receiveClientEvent(int id, int type)
     {
-    	this.worldObj.setBlockState(getPos(), this.worldObj.getBlockState(pos));
+    	this.world.setBlockState(getPos(), this.worldObj.getBlockState(pos));
     	
         if (id == 1)
         {
@@ -235,21 +235,21 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 
     private void spawnMCChicken()
     {
-		EntityChicken chicken = new EntityChicken(worldObj);
+		EntityChicken chicken = new EntityChicken(world);
 		chicken.setPosition(getPos().getX(), getPos().getY() + .5, getPos().getZ());
 		chicken.setGrowingAge(-24000);
-		worldObj.spawnEntityInWorld(chicken);
-    	worldObj.playSound((EntityPlayer)null, getPos().getX() + .5, getPos().getY() + 1, getPos().getZ() + .5, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
+		world.spawnEntity(chicken);
+		world.playSound((EntityPlayer)null, getPos().getX() + .5, getPos().getY() + 1, getPos().getZ() + .5, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
     }
     
     @Optional.Method(modid = "chickens")
     public void spawnChickensModChicken()
     {
-        EntityChickensChicken entitychicken = new EntityChickensChicken(this.worldObj);
+        EntityChickensChicken entitychicken = new EntityChickensChicken(this.world);
         entitychicken.setChickenType(getChickenType(this.eggSlot[0]));
         entitychicken.setGrowingAge(-24000);
         entitychicken.setPosition(getPos().getX() + .5 , getPos().getY() + .5, getPos().getZ() + .5);
-        this.worldObj.spawnEntityInWorld(entitychicken);
+        this.world.spawnEntity(entitychicken);
     }
     
     @Optional.Method(modid = "chickens")
@@ -320,9 +320,9 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	{
 		this.eggSlot[index] = stack;
 		
-		if (stack != null && stack.stackSize > this.getInventoryStackLimit())
+		if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit())
         {
-            stack.stackSize = this.getInventoryStackLimit();
+            stack.setCount(this.getInventoryStackLimit());
         }
 		
 		this.markDirty();

@@ -9,13 +9,13 @@ public class EggMachineTopTileEntity extends TileEntity implements IEnergyReceiv
 
 	
 	public EggMachineTileEntity getBaseTE(){
-		EggMachineTileEntity te = (EggMachineTileEntity)this.worldObj.getTileEntity(this.pos.offset(EnumFacing.DOWN));
+		EggMachineTileEntity te = (EggMachineTileEntity)this.world.getTileEntity(this.pos.offset(EnumFacing.DOWN));
 		
 		return te;
 	}
 	
 	public boolean hasBaseTE(){
-		TileEntity te = this.worldObj.getTileEntity(this.pos.offset(EnumFacing.DOWN));
+		TileEntity te = this.world.getTileEntity(this.pos.offset(EnumFacing.DOWN));
 		if(te != null && te instanceof EggMachineTileEntity)
 			return true;
 		

@@ -46,12 +46,12 @@ public class ContainerRoosterInventory extends Container {
 			}
 			else if (!mergeItemStack(stack1, 1, inventorySlots.size(), false))
 				return null;
-			if (stack1.stackSize == 0)
+			if (stack1.getCount() == 0)
 				slot.putStack(null);
 			else
 				slot.onSlotChanged();
-			if (stack1.stackSize != stack.stackSize)
-				slot.onPickupFromSlot(player, stack1);
+			if (stack1.getCount() != stack.getCount())
+				slot.onTake(player, stack1);
 			else
 				return null;
 		}
@@ -64,7 +64,7 @@ public class ContainerRoosterInventory extends Container {
 			throw new IllegalArgumentException("Listener already listening");
 		} else {
 			this.listeners.add(listener);
-			listener.updateCraftingInventory(this, this.getInventory());
+			listener.sendAllContents(this, this.getInventory());
 			this.detectAndSendChanges();
 		}
 	}

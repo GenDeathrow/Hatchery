@@ -2,6 +2,8 @@ package com.gendeathrow.hatchery.block.nestpen;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.inventory.InventoryStorage;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -11,17 +13,17 @@ import net.minecraft.item.ItemStack;
 
 public class ContainerNestingPen extends Container 
 {
-    private final IInventory nestingPenInventory;
-	
-	public ContainerNestingPen(InventoryPlayer playerInventory, IInventory nestingPenIn, EntityPlayer thePlayer) 
+    private InventoryStorage nestingPenInventory;
+
+	public ContainerNestingPen(InventoryPlayer playerInventory, NestPenTileEntity tile, EntityPlayer thePlayer) 
 	{
-        this.nestingPenInventory = nestingPenIn;
-        nestingPenIn.openInventory(thePlayer);
+        this.nestingPenInventory = tile.inventory;
+
         int i = 51;
 
-        for (int j = 0; j < nestingPenIn.getSizeInventory(); ++j)
+        for (int j = 0; j < nestingPenInventory.getSizeInventory(); ++j)
         {
-            this.addSlotToContainer(new Slot(nestingPenIn, j, 44 + j * 18, 20));
+            this.addSlotToContainer(new Slot(nestingPenInventory, j, 44 + j * 18, 20));
         }
 
         for (int l = 0; l < 3; ++l)

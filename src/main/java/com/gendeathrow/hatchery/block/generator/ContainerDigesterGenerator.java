@@ -90,7 +90,7 @@ public class ContainerDigesterGenerator extends Container
                 return null;
             }
             
-            if (itemstack1.stackSize == 0)
+            if (itemstack1.getCount() == 0)
             {
                 slot.putStack((ItemStack)null);
             }
@@ -99,12 +99,12 @@ public class ContainerDigesterGenerator extends Container
                 slot.onSlotChanged();
             }
 
-            if (itemstack1.stackSize == itemstack.stackSize)
+            if (itemstack1.getCount() == itemstack.getCount())
             {
                 return null;
             }
 
-            slot.onPickupFromSlot(player, itemstack1);
+            slot.onTake(player, itemstack1);
         }
         
 		return itemstack;
@@ -117,7 +117,7 @@ public class ContainerDigesterGenerator extends Container
 			throw new IllegalArgumentException("Listener already listening");
 		} else {
 			this.listeners.add(listener);
-			listener.updateCraftingInventory(this, this.getInventory());
+			listener.sendAllContents(this, this.getInventory());
 			this.detectAndSendChanges();
 		}
 	}

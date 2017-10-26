@@ -48,8 +48,8 @@ public class GuiEggMachine extends GuiContainer
 
 		
 			this.itemRender.zLevel = 200;
-				this.itemRender.renderItemAndEffectIntoGUI(mc.thePlayer,egg, 37, 18);
-				this.itemRender.renderItemAndEffectIntoGUI(mc.thePlayer,plastic, 63, 18);
+				this.itemRender.renderItemAndEffectIntoGUI(mc.player,egg, 37, 18);
+				this.itemRender.renderItemAndEffectIntoGUI(mc.player,plastic, 63, 18);
 			this.itemRender.zLevel = 0;
 			
 			

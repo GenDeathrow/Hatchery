@@ -1,7 +1,5 @@
 package com.gendeathrow.hatchery.block.fertilizermixer;
 
-import javax.annotation.Nullable;
-
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 
@@ -40,7 +38,7 @@ public class FertilizerMixer extends BlockContainer implements ITileEntityProvid
 
 
 	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
         {
@@ -48,7 +46,9 @@ public class FertilizerMixer extends BlockContainer implements ITileEntityProvid
         }
         else
         {
-        	if(heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side))
+        	ItemStack heldItem = playerIn.getHeldItem(hand);
+        	
+			if(heldItem.isEmpty() && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing))
         	{
         		FertilizerMixerTileEntity tileentity = (FertilizerMixerTileEntity) worldIn.getTileEntity(pos);
         		
@@ -57,7 +57,7 @@ public class FertilizerMixer extends BlockContainer implements ITileEntityProvid
 				boolean hasFluid = FluidUtil.getFluidContained(heldItem) != null && FluidUtil.getFluidContained(heldItem).getFluid() == FluidRegistry.WATER;
 				boolean notnull = tileentity != null && handler != null;
 				
-				if( notnull && hasFluid && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)){
+				if( notnull && hasFluid && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing)){
 					FluidUtil.tryFluidTransfer(tileentity.getWaterTank(), handler, tileentity.getWaterTank().getCapacity(), true);
 				}
 				else if(notnull) {

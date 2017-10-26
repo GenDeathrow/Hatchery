@@ -13,7 +13,6 @@ import com.gendeathrow.hatchery.network.HatcheryPacket;
 import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.ItemStack;

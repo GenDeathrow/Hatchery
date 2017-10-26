@@ -17,11 +17,11 @@ public class GuiNestingPen extends GuiContainer
 	    /** The hopper inventory bound to this GUI instance */
 	    private final IInventory nestingInventory;
 
-	    public GuiNestingPen(InventoryPlayer playerInv, IInventory nestingPenIn)
+	    public GuiNestingPen(InventoryPlayer playerInv, NestPenTileEntity tile)
 	    {
-	        super(new ContainerNestingPen(playerInv, nestingPenIn, Minecraft.getMinecraft().thePlayer));
+	        super(new ContainerNestingPen(playerInv, tile, Minecraft.getMinecraft().player));
 	        this.playerInventory = playerInv;
-	        this.nestingInventory = nestingPenIn;
+	        this.nestingInventory = tile.inventory;
 	        this.allowUserInput = false;
 	        this.ySize = 133;
 	    }

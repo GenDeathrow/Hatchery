@@ -193,7 +193,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 			this.fertlizerMixTime--;
 		}
 		
-		if(this.worldObj != null && !this.worldObj.isRemote)
+		if(this.world != null && !this.world.isRemote)
 		{
 			updateUpgrades();
 			
@@ -210,11 +210,11 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
                 		flag1 = true;
                 		 if(this.getManureInSlot() != null)
                 		 {
-                			 --this.getManureInSlot().stackSize;
+                			 this.getManureInSlot().shrink(1);
                     		 
-                             if (this.getManureInSlot().stackSize <= 0)
+                             if (this.getManureInSlot().getCount() <= 0)
                              {
-                                 this.inputInventory.setStackInSlot(0,null);
+                                 this.inputInventory.setStackInSlot(0,ItemStack.EMPTY);
                              }
                 		 }
 
@@ -249,7 +249,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 			}
 			else if(!this.isMixing() && this.mixTime > 0)
 			{
-				 this.mixTime = MathHelper.clamp_int(this.mixTime - 2, 0, this.totalMixTime);
+				 this.mixTime = MathHelper.clamp(this.mixTime - 2, 0, this.totalMixTime);
 			}
 			
 
@@ -258,7 +258,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 				ItemStack stack = this.getWaterInSlot();
 				ItemStack newStack = this.getWaterInSlot().copy();
 
-				newStack.stackSize = 1;
+				newStack.setCount(1);
 				
 				IFluidHandler handler = FluidUtil.getFluidHandler(newStack);
 
@@ -270,7 +270,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 		            	
 		            	if(FluidUtil.tryFluidTransfer(this.waterTank, handler, this.waterTank.getCapacity(), true) != null)
 		            	{
-		            		if(newStack.stackSize > 0)
+		            		if(newStack.getCount() > 0)
 		            			this.outputInventory.setStackInSlot(0, newStack);
 						
 		            		this.inputInventory.extractItem(1, 1, false);
@@ -284,8 +284,8 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 				ItemStack oldStack = this.getBucketInFertilizerrSlot();
 				ItemStack newStack = this.getBucketInFertilizerrSlot().copy();
 				
-				if(newStack.stackSize > 1)
-					newStack.stackSize = 1;
+				if(newStack.getCount() > 1)
+					newStack.setCount(1);
 				
 				IFluidHandler handler = FluidUtil.getFluidHandler(newStack);
 				
@@ -296,7 +296,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 					{
 						this.outputInventory.setStackInSlot(1, newStack);
 						
-						if(oldStack.stackSize > 1)
+						if(oldStack.getCount() > 1)
 							this.inputInventory.extractItem(2, 1, false);
 						else
 							this.inputInventory.setStackInSlot(2, null);

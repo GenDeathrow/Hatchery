@@ -1,6 +1,5 @@
 package com.gendeathrow.hatchery.block.nest;
 
-import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Nullable;
@@ -20,7 +19,6 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -29,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
@@ -77,13 +76,8 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     }
 	 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn)
-	{ }
-
-	
-	@Override
     @Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
     {
         return NULL_AABB;
     }
@@ -95,9 +89,9 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     }
     
 	@Override
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List list) 
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) 
 	{
-	    list.add(new ItemStack(itemIn, 1, 0)); //Meta 0
+	    list.add(new ItemStack(itemIn, 1, 0)); 
 	}
 	
 	@Override
@@ -107,8 +101,9 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     }
 	
 	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
+		ItemStack heldItem = playerIn.getHeldItem(hand);
 			
     	if(doesHaveEgg(state))
     	{
@@ -116,13 +111,13 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     			{
     				EggNestTileEntity te = ((EggNestTileEntity)worldIn.getTileEntity(pos));
     				ItemStack egg = te.removeStackFromSlot(0);
-    				worldIn.spawnEntityInWorld(new EntityItem(worldIn, pos.getX(), pos.getY() + .5d, pos.getZ(), egg));
+    				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + .5d, pos.getZ(), egg));
     			}
     			
      			this.removeEgg(worldIn, state, pos);
     		return true;
     	}
-    	else if(heldItem != null && heldItem.getItem() instanceof ItemEgg)
+    	else if(!heldItem.isEmpty() && heldItem.getItem() instanceof ItemEgg)
     	{
     		this.addEgg(worldIn, state, pos);
     		
@@ -130,11 +125,11 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 			{
 		        if (!playerIn.capabilities.isCreativeMode) 
 		        {
-		            --heldItem.stackSize;
+		            heldItem.shrink(1);
 		        }
     			
 		        ItemStack itemstack = heldItem.copy();
-		        itemstack.stackSize = 1;
+		        itemstack.setCount(1);
 				((EggNestTileEntity)worldIn.getTileEntity(pos)).setInventorySlotContents(0,itemstack);
     		}
     		

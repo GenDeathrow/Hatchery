@@ -134,7 +134,7 @@ public class ContainerFertlizerMixer extends Container
                 return null;
             }
             
-            if (itemstack1.stackSize == 0)
+            if (itemstack1.getCount() == 0)
             {
                 slot.putStack((ItemStack)null);
             }
@@ -143,12 +143,12 @@ public class ContainerFertlizerMixer extends Container
                 slot.onSlotChanged();
             }
 
-            if (itemstack1.stackSize == itemstack.stackSize)
+            if (itemstack1.getCount() == itemstack.getCount())
             {
                 return null;
             }
 
-            slot.onPickupFromSlot(player, itemstack1);
+            //slot.onPickupFromSlot(player, itemstack1);
         }
         
 		return itemstack;

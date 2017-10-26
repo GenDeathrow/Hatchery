@@ -1,8 +1,6 @@
 package com.gendeathrow.hatchery.core.proxies;
 
 
-import java.util.ArrayList;
-
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.block.eggmachine.EggMachineEntityRenderer;
 import com.gendeathrow.hatchery.block.eggmachine.EggMachineTileEntity;

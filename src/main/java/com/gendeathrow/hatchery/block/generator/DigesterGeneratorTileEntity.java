@@ -129,7 +129,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IEner
 	{
         boolean flag = this.isGenerating();
         
-		if(!this.worldObj.isRemote)
+		if(!this.world.isRemote)
 		{
 			updateUpgrades();
 			
@@ -149,7 +149,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IEner
 			{
 				for (EnumFacing facing : EnumFacing.VALUES) 
 				{
-						TileEntity tile = worldObj.getTileEntity(pos.offset(facing));
+						TileEntity tile = world.getTileEntity(pos.offset(facing));
 						if (tile != null && tile instanceof IEnergyReceiver) 
 						{
 							int received = ((IEnergyReceiver) tile).receiveEnergy(facing.getOpposite(), energy.getEnergyStored(), false);
@@ -178,7 +178,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IEner
 			if (flag != isGenerating())
 			{
 				//flag1 = true;
-				DigesterGeneratorBlock.setState(this.isGenerating(), this.worldObj, this.pos);
+				DigesterGeneratorBlock.setState(this.isGenerating(), this.world, this.pos);
 			}
 		}
 	}
