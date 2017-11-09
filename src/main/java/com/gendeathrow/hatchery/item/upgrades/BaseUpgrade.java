@@ -1,12 +1,11 @@
 package com.gendeathrow.hatchery.item.upgrades;
 
-import java.util.List;
-
 import com.gendeathrow.hatchery.api.items.IUpgradeItem;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,10 +22,13 @@ public class BaseUpgrade extends Item implements IUpgradeItem
 		this.upgradeTier = tier;
 		this.upgradeType = type;
 		
+		if(tier > 1) this.hasSubtypes = true;
+		
 	}
 
+	@Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
     {
     	for(int i=1; i <= this.upgradeTier; i++)
     	{

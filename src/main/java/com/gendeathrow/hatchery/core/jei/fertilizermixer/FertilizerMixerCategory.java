@@ -100,5 +100,8 @@ public class FertilizerMixerCategory extends BlankRecipeCategory<FertilizerMixer
 	        guiItemStacks.set(ingredients);
 	}
 
-	
+	@Override
+	public String getModName() {
+		return Hatchery.NAME;
+	}
 }

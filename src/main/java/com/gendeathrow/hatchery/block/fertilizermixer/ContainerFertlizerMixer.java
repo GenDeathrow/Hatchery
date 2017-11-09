@@ -6,14 +6,13 @@ import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.inventory.SlotFluidContainer;
-import com.gendeathrow.hatchery.inventory.SlotUpgrade;
 import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,7 +31,7 @@ public class ContainerFertlizerMixer extends Container
 	private final IItemHandler inputInventory;
 	private final IItemHandler outputInventory;
 	
-	private final IInventory upgrades;
+	private final InventoryStroageModifiable upgrades;
 	private final ItemStack[] manure;
 	private final FertilizerMixerTileEntity tileEntity;
 
@@ -92,8 +91,8 @@ public class ContainerFertlizerMixer extends Container
 		});
 		addSlotToContainer(new SlotFluidContainer(outputInventory, 1, 104, 52, ModFluids.liquidfertilizer));
 		
-		addSlotToContainer(new SlotUpgrade(tileEntity, upgrades, 0, 8, 52));
-		addSlotToContainer(new SlotUpgrade(tileEntity, upgrades, 1, 31, 52));
+		addSlotToContainer(new SlotItemHandler(upgrades, 0, 8, 52));
+		addSlotToContainer(new SlotItemHandler(upgrades, 1, 31, 52));
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
@@ -122,7 +121,7 @@ public class ContainerFertlizerMixer extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSizeInventory()))
+            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSlots()))
             {
                 if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(),  this.inventorySlots.size(), true))
                 {

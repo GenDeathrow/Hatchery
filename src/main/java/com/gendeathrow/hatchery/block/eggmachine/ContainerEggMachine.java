@@ -1,13 +1,12 @@
 package com.gendeathrow.hatchery.block.eggmachine;
 
-import com.gendeathrow.hatchery.inventory.SlotUpgrade;
 import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,7 +19,7 @@ public class ContainerEggMachine extends Container
 	private final IItemHandler inputInventory;
 	private final IItemHandler outputInventory;
 	//private final IInventory inventory;
-	private final IInventory upgrades;
+	private final InventoryStroageModifiable upgrades;
 	private final EggMachineTileEntity te;
 
 	
@@ -41,8 +40,8 @@ public class ContainerEggMachine extends Container
 		addSlotToContainer(new SlotItemHandler(eggstractorInventory.outputInventory, eggstractorInventory.PrizeEggSlot, 51, 53));
 		
 		
-		addSlotToContainer(new SlotUpgrade(eggstractorInventory, upgrades, 0, 100, 53));
-		addSlotToContainer(new SlotUpgrade(eggstractorInventory, upgrades, 1, 124, 53));
+		addSlotToContainer(new SlotItemHandler(upgrades, 0, 100, 53));
+		addSlotToContainer(new SlotItemHandler(upgrades, 1, 124, 53));
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
@@ -71,7 +70,7 @@ public class ContainerEggMachine extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSizeInventory()))
+            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSlots()))
             {
                 if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(), this.inventorySlots.size(), true))
                 {

@@ -54,7 +54,7 @@ public class EggNestTileEntityRender extends TileEntitySpecialRenderer<EggNestTi
     
     private void renderItem(EggNestTileEntity te) 
     {
-        ItemStack stack = te.getStackInSlot(0);
+        ItemStack stack = te.getEgg();
  
         if (stack == null)
         {

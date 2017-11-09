@@ -8,7 +8,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,7 +19,7 @@ public class GuiRoosterInventory extends GuiContainer {
 	private static final ResourceLocation GUI_ROOSTER_INVENTORY = new ResourceLocation(Hatchery.MODID, "textures/gui/roosterGui.png");
 	EntityRooster ROOSTER;
 	public GuiRoosterInventory(InventoryPlayer inventory, Entity entityInventory) {
-		super(new ContainerRoosterInventory(inventory, (IInventory) entityInventory));
+		super(new ContainerRoosterInventory(inventory, (EntityRooster) entityInventory));
 		xSize = 174;
 		ySize = 164;
 		ROOSTER = (EntityRooster) entityInventory;

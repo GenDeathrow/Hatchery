@@ -41,6 +41,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -109,7 +110,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     			if(heldItem.getItem() == Items.SPAWN_EGG)
     			{
     				
-    				   String entityID = ItemMonsterPlacer.getEntityIdFromItem(heldItem);
+    				   ResourceLocation entityID = ItemMonsterPlacer.getNamedIdFrom(heldItem);
 
     		           Entity entity = EntityList.createEntityByIDFromName(entityID, worldIn);
 

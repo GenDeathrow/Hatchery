@@ -7,7 +7,6 @@ import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
-import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
@@ -326,7 +325,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 	@Override
 	public boolean canUseUpgrade(ItemStack item)
 	{
-		return item.getItem() instanceof RFEfficiencyUpgrade || item.getItem() == ModItems.speedUpgradeTier  || item.getItem() == ModItems.tankUpgradeTier1 || item.getItem() == ModItems.rfCapacityUpgradeTier1;
+		return item.getItem() == ModItems.rfUpgradeTier  || item.getItem() == ModItems.speedUpgradeTier  || item.getItem() == ModItems.tankUpgradeTier1 || item.getItem() == ModItems.rfCapacityUpgradeTier1;
 	}
 	
 	protected void updateUpgrades()
@@ -336,12 +335,12 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 		boolean tankcapacity = false;
 		boolean speedupgrade = false;
 		
-		for(ItemStack upgrade : this.getUpgrades())
+		for(ItemStack upgrade : this.getAllUpgrades())
 		{
-			if(upgrade == null) continue;
+			if(upgrade.isEmpty()) continue;
 		
 			
-			if(upgrade.getItem() instanceof RFEfficiencyUpgrade)
+			if(upgrade.getItem() == ModItems.rfUpgradeTier )
 			{
 				rfupgrade = true;
 				this.rfEffencyMultpyler = 1 - ((BaseUpgrade)upgrade.getItem()).getUpgradeTier(upgrade, "") * 0.10;

@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.inventory.SlotFluidContainer;
-import com.gendeathrow.hatchery.inventory.SlotUpgrade;
 import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
@@ -26,7 +25,7 @@ public class ContainerDigesterGenerator extends Container
 	private final InventoryStroageModifiable inputInventory;
 	private final InventoryStroageModifiable outputInventory;
 	
-	private final IInventory upgrades;
+	private final InventoryStroageModifiable upgrades;
 
 	public ContainerDigesterGenerator(InventoryPlayer playerInventory, DigesterGeneratorTileEntity tileEntity) 
 	{
@@ -49,8 +48,8 @@ public class ContainerDigesterGenerator extends Container
 		    }
 		});
         
-		addSlotToContainer(new SlotUpgrade(tile, upgrades, 0, 107, 59));
-		addSlotToContainer(new SlotUpgrade(tile, upgrades, 1, 134, 59));
+		addSlotToContainer(new SlotItemHandler(upgrades, 0, 107, 59));
+		addSlotToContainer(new SlotItemHandler(upgrades, 1, 134, 59));
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
@@ -78,7 +77,7 @@ public class ContainerDigesterGenerator extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSizeInventory()))
+            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSlots()))
             {
                 if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(),  this.inventorySlots.size(), true))
                 {

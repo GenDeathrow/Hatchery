@@ -15,7 +15,6 @@ import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 import com.gendeathrow.hatchery.block.shredder.ContainerShredder;
 import com.gendeathrow.hatchery.block.shredder.GuiShredder;
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
-import com.gendeathrow.hatchery.core.EventHandler;
 import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.config.ConfigHandler;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
@@ -73,15 +72,12 @@ public class CommonProxy implements IGuiHandler
 	
 	public void registerEventHandlers()
 	{
-		EventHandler eventhandler = new EventHandler();
-		MinecraftForge.EVENT_BUS.register(eventhandler);
 		MinecraftForge.EVENT_BUS.register(ConfigHandler.INSTANCE);
 	}
 	
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		ModBlocks.preInit(event);
-		ModItems.RegisterItems();
 		ModFluids.registerFluids();	
 		
 		if(Settings.CAN_THROW_EGG)

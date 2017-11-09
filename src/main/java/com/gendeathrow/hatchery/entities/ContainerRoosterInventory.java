@@ -1,5 +1,7 @@
 package com.gendeathrow.hatchery.entities;
 
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -7,16 +9,17 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerRoosterInventory extends Container {
 
-	private final IInventory inventory;
+	private final InventoryStroageModifiable inventory;
 
-	public ContainerRoosterInventory(InventoryPlayer playerInventory, IInventory entityInventory) {
-		inventory = entityInventory;
+	public ContainerRoosterInventory(InventoryPlayer playerInventory, EntityRooster entityInventory) {
+		inventory = entityInventory.inventory;
 		int i;
 
-		addSlotToContainer(new Slot(entityInventory, 0, 25, 36));
+		addSlotToContainer(new SlotItemHandler(inventory, 0, 25, 36));
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
@@ -82,6 +85,5 @@ public class ContainerRoosterInventory extends Container {
 	@Override
 	public void onContainerClosed(EntityPlayer player) {
 		super.onContainerClosed(player);
-		inventory.closeInventory(player);
 	}
 }

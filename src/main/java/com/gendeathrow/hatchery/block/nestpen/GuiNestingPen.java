@@ -14,14 +14,10 @@ public class GuiNestingPen extends GuiContainer
 	 private static final ResourceLocation HOPPER_GUI_TEXTURE = new ResourceLocation("textures/gui/container/hopper.png");
 	    /** The player inventory currently bound to this GUI instance */
 	    private final IInventory playerInventory;
-	    /** The hopper inventory bound to this GUI instance */
-	    private final IInventory nestingInventory;
-
 	    public GuiNestingPen(InventoryPlayer playerInv, NestPenTileEntity tile)
 	    {
 	        super(new ContainerNestingPen(playerInv, tile, Minecraft.getMinecraft().player));
 	        this.playerInventory = playerInv;
-	        this.nestingInventory = tile.inventory;
 	        this.allowUserInput = false;
 	        this.ySize = 133;
 	    }

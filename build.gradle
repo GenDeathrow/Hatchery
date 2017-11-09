@@ -61,7 +61,8 @@ dependencies {
     deobfCompile "chickens:chickens:${chickens_version}"
     deobfCompile "mcp.mobius.waila:Hwyla:${HWYLA_version}_${minecraftversion}"
 	deobfCompile "mcjty.theoneprobe:TheOneProbe:${top_version}"
-    // compile against the JEI API
+	
+	// compile against the JEI API
     deobfCompile "mezz.jei:jei_${mcversion}:${jei_version}:api"
 	
 	 deobfCompile "MineTweaker3:MineTweaker3-API:${minetweaker_version}"

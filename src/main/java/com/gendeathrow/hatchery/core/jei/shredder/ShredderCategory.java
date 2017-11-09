@@ -78,5 +78,8 @@ public class ShredderCategory extends BlankRecipeCategory<ShredderRecipeWrapper>
 	        guiItemStacks.set(ingredients);
 	}
 
-	
+	@Override
+	public String getModName() {
+		return Hatchery.NAME;
+	}
 }

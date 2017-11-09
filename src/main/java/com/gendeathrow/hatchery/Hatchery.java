@@ -49,7 +49,7 @@ public class Hatchery
 	    public static final String NAME = "Hatchery";
 	    private static final String PROXYLOC = "com.gendeathrow.hatchery.core.proxies";
 	    public static final String CHANNELNAME = "genhatchery";
-	    public static final String dependencies =  "after:chickens@[4.1,)";
+	    public static final String dependencies =  "after:chickens@[5,)";
 		   
 	    @Instance(MODID)
 		public static Hatchery INSTANCE;
@@ -126,7 +126,7 @@ public class Hatchery
 	        }
 	    	
 	    	PROXY.registerEventHandlers();
-	    	PROXY.initRenderers();
+
 	     }
 	    
 	    @EventHandler

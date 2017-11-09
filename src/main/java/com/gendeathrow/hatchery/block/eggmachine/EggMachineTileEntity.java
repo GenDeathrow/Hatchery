@@ -2,8 +2,6 @@ package com.gendeathrow.hatchery.block.eggmachine;
 
 import com.gendeathrow.hatchery.block.TileUpgradable;
 import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.inventory.InventoryStorage;
-import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
@@ -48,21 +46,6 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 	{
 		@Override
 		public boolean canInsertSlot(int slot, ItemStack stack)	{
-			return false;
-		}
-	};
-	
-	
-	protected InventoryStorage inventorys = new InventoryStorage(this, 3)
-	{
-		@Override
-		public boolean isItemValidForSlot(int index, ItemStack stack) {
-			if(index == EggInSlot && stack.getItem() instanceof ItemEgg) {
-				return true;
-			}
-			else if(index == PlasticInSlot && stack.getItem() == ModItems.plastic) {
-				return true;
-			}
 			return false;
 		}
 	};
@@ -183,7 +166,7 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 	@Override
 	public boolean canUseUpgrade(ItemStack item)
 	{
-		return item.getItem() instanceof RFEfficiencyUpgrade || item.getItem() == ModItems.speedUpgradeTier || item.getItem() == ModItems.rfCapacityUpgradeTier1;
+		return item.getItem() == ModItems.rfUpgradeTier || item.getItem() == ModItems.speedUpgradeTier || item.getItem() == ModItems.rfCapacityUpgradeTier1;
 	}
 	
 	

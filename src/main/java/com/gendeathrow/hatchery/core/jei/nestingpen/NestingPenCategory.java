@@ -77,6 +77,9 @@ public class NestingPenCategory extends BlankRecipeCategory<NestingPenDropRecipe
 	        guiItemStacks.set(ingredients);
 	}
 
-
+	@Override
+	public String getModName() {
+		return Hatchery.NAME;
+	}
 	
 }

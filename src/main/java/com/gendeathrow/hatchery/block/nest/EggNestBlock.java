@@ -60,11 +60,9 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 	{
 		 if(worldIn.getTileEntity(pos)  != null && worldIn.getTileEntity(pos) instanceof EggNestTileEntity)
 		 {
-			 ItemStack stack = ((EggNestTileEntity)worldIn.getTileEntity(pos)).eggSlot[0];
-			 if(stack != null)
-			 {
-				 this.spawnAsEntity(worldIn, pos, stack);
-			 }
+			 ItemStack stack = ((EggNestTileEntity)worldIn.getTileEntity(pos)).getEgg();
+			 if(!stack.isEmpty())
+				 Block.spawnAsEntity(worldIn, pos, stack);
 		 }
 		 super.breakBlock(worldIn, pos, state);
 	 }
@@ -110,16 +108,16 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     			if(!worldIn.isRemote)
     			{
     				EggNestTileEntity te = ((EggNestTileEntity)worldIn.getTileEntity(pos));
-    				ItemStack egg = te.removeStackFromSlot(0);
+    				ItemStack egg = te.eggSlot.extractItem(0, 1, false);
     				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + .5d, pos.getZ(), egg));
     			}
     			
-     			this.removeEgg(worldIn, state, pos);
+     			EggNestBlock.removeEgg(worldIn, state, pos);
     		return true;
     	}
     	else if(!heldItem.isEmpty() && heldItem.getItem() instanceof ItemEgg)
     	{
-    		this.addEgg(worldIn, state, pos);
+    		EggNestBlock.addEgg(worldIn, state, pos);
     		
 			if(!worldIn.isRemote)
 			{
@@ -128,9 +126,7 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 		            heldItem.shrink(1);
 		        }
     			
-		        ItemStack itemstack = heldItem.copy();
-		        itemstack.setCount(1);
-				((EggNestTileEntity)worldIn.getTileEntity(pos)).setInventorySlotContents(0,itemstack);
+				((EggNestTileEntity)worldIn.getTileEntity(pos)).eggSlot.insertItem(0, heldItem, false);
     		}
     		
     		return true;
@@ -248,11 +244,11 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 		{
 			EggNestTileEntity hte = (EggNestTileEntity) te;
 			
-			if(hte.getStackInSlot(0) != null)
+			if(hte.getEgg() != null)
 			{
 				float percentage = hte.getPercentage();
 				probeInfo.text(TextFormatting.YELLOW + "Hatching: "+ TextFormatting.GREEN + percentage +"%");
-				probeInfo.text(TextFormatting.YELLOW + hte.eggSlot[0].getDisplayName());
+				probeInfo.text(TextFormatting.YELLOW + hte.getEgg().getDisplayName());
 			}
 			else 
 				probeInfo.text(TextFormatting.RED + "Not Hatching");

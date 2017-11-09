@@ -30,14 +30,16 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@EventBusSubscriber
 public class EventHandler 
 {
 
 	@SubscribeEvent
-	public void onPlayerInteract(RightClickItem event) 
+	public static void onPlayerInteract(RightClickItem event) 
 	{
 
 		if(!(Settings.CAN_THROW_EGG) && event.getItemStack().getItem() instanceof ItemEgg && !event.getItemStack().getItem().getRegistryName().toString().equalsIgnoreCase("chickens:liquid_egg"))
@@ -48,7 +50,7 @@ public class EventHandler
 	
 	
 	@SubscribeEvent
-	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
+	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
 	{
 		if(event.getModID().equals(Hatchery.MODID))
 		{
@@ -57,7 +59,7 @@ public class EventHandler
 	}
 
 	@SubscribeEvent
-	public void onHoeEvent(UseHoeEvent event)
+	public static void onHoeEvent(UseHoeEvent event)
 	{
 		IBlockState blockstate = event.getWorld().getBlockState(event.getPos());
 		Block block = blockstate.getBlock();
@@ -81,7 +83,7 @@ public class EventHandler
 	}
 
 	@SubscribeEvent
-	public void onSpawnCheck(EntityJoinWorldEvent event)
+	public static void onSpawnCheck(EntityJoinWorldEvent event)
 	{
 
 		if (event.getEntity() instanceof EntityLivingBase) 
@@ -143,7 +145,7 @@ public class EventHandler
 	}
 	
 	@SubscribeEvent
-	public void AttachCap(AttachCapabilitiesEvent event)
+	public static void AttachCap(AttachCapabilitiesEvent event)
 	{
 
 		if(event.getObject() instanceof EntityChicken)
@@ -158,7 +160,7 @@ public class EventHandler
 
 
 	@SubscribeEvent
-	public void EntityUpdate(LivingUpdateEvent event)
+	public static void EntityUpdate(LivingUpdateEvent event)
 	{
 		if(!(event.getEntity() instanceof EntityAnimal)) return;
 		

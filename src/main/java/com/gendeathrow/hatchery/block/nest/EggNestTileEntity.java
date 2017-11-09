@@ -1,11 +1,13 @@
 package com.gendeathrow.hatchery.block.nest;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 import com.setycz.chickens.entity.EntityChickensChicken;
 import com.setycz.chickens.registry.ChickensRegistry;
@@ -21,8 +23,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -39,9 +39,9 @@ import net.minecraftforge.fml.common.Optional.Interface;
 @Optional.InterfaceList(
 		value = 
 		{
-				@Interface(iface = "com.setycz.chickens.chicken.EntityChickensChicken", modid = "chickens"),
-				@Interface(iface = "com.setycz.chickens.ChickensRegistry", modid = "chickens"),
-				@Interface(iface = "com.setycz.chickens.ChickensRegistryItem", modid = "chickens")
+				@Interface(iface = "com.setycz.chickens.entity.EntityChickensChicken", modid = "chickens"),
+				@Interface(iface = "com.setycz.chickens.registry.ChickensRegistry", modid = "chickens"),
+				@Interface(iface = "com.setycz.chickens.registry.ChickensRegistryItem", modid = "chickens")
 		}
 )
 
@@ -50,7 +50,16 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 
 	boolean hasEgg;
 	
-	ItemStack[] eggSlot = new ItemStack[1];
+	protected InventoryStroageModifiable eggSlot = new InventoryStroageModifiable("Items", 1) {
+	 @Override
+		protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
+	    	return 1;
+	    }
+	 
+		public boolean canInsertSlot(int slot, ItemStack stack){
+			return stack.getItem() == ModItems.hatcheryEgg || stack.getItem() == Items.EGG;
+		}
+	};
 	
 	int hatchingTick= 0;
 	private final int timeToHatch = 300;
@@ -62,6 +71,10 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	
 	int ticks;
 	boolean firstload = true;
+	
+	public ItemStack getEgg(){
+		return this.eggSlot.getStackInSlot(0);
+	}
 	
 	@Override
 	public void update() 
@@ -97,17 +110,17 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 				{
 				try
 				{	
-					if(this.eggSlot[0].getItem() == ModItems.hatcheryEgg)
+					if(this.getEgg().getItem() == ModItems.hatcheryEgg)
 					{
 						Entity entitychicken = null;
 
-						if(this.eggSlot[0].getTagCompound() == null) 
+						if(this.getEgg().getTagCompound() == null) 
 						{
 							spawnMCChicken();
 						}
 						else
 						{
-							NBTTagCompound entityTag = ItemStackEntityNBTHelper.getEntityTagFromStack(this.eggSlot[0]);
+							NBTTagCompound entityTag = ItemStackEntityNBTHelper.getEntityTagFromStack(this.getEgg());
 						
 							try
 							{
@@ -127,7 +140,7 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 							else spawnMCChicken();
 						}
 					}
-					else if(this.eggSlot[0].getItem() == Items.EGG)
+					else if(this.getEgg().getItem() == Items.EGG)
 					{
 						spawnMCChicken();
 					}
@@ -155,7 +168,7 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	private boolean sentRequest = false;
 	public void updateClient()
 	{
-		if(this.eggSlot[0] != null) return;
+		if(this.getEgg().isEmpty()) return;
 		
 		boolean hasEgg = EggNestBlock.doesHaveEgg(this.getWorld().getBlockState(this.getPos()));
     
@@ -198,29 +211,22 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
     {
     	this.hatchingTick = compound.getInteger("hatchTime");
     	
-    	this.eggSlot[0] = ItemStack.loadItemStackFromNBT(compound.getCompoundTag("egg"));
+    	this.eggSlot.readFromNBT(compound);
+    	
     	super.readFromNBT(compound);
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
     	compound.setInteger("hatchTime", hatchingTick);
-  
-        if (this.eggSlot[0] != null)
-        {
-        	NBTTagCompound nbttagcompound = new NBTTagCompound();
-        	this.eggSlot[0].writeToNBT(nbttagcompound);
-        	compound.setTag("egg", nbttagcompound);
-        }
-
-    	
+    	this.eggSlot.writeToNBT(compound);
     	return super.writeToNBT(compound);
     }
     
     @Override
     public boolean receiveClientEvent(int id, int type)
     {
-    	this.world.setBlockState(getPos(), this.worldObj.getBlockState(pos));
+    	this.world.setBlockState(getPos(), this.world.getBlockState(pos));
     	
         if (id == 1)
         {
@@ -239,139 +245,34 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 		chicken.setPosition(getPos().getX(), getPos().getY() + .5, getPos().getZ());
 		chicken.setGrowingAge(-24000);
 		world.spawnEntity(chicken);
-		world.playSound((EntityPlayer)null, getPos().getX() + .5, getPos().getY() + 1, getPos().getZ() + .5, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (worldObj.rand.nextFloat() * 0.4F + 0.8F));
+		world.playSound((EntityPlayer)null, getPos().getX() + .5, getPos().getY() + 1, getPos().getZ() + .5, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
     }
     
     @Optional.Method(modid = "chickens")
     public void spawnChickensModChicken()
     {
         EntityChickensChicken entitychicken = new EntityChickensChicken(this.world);
-        entitychicken.setChickenType(getChickenType(this.eggSlot[0]));
-        entitychicken.setGrowingAge(-24000);
-        entitychicken.setPosition(getPos().getX() + .5 , getPos().getY() + .5, getPos().getZ() + .5);
-        this.world.spawnEntity(entitychicken);
+        String type = getChickenType(this.getEgg());
+        if(type != null)
+        {
+        	entitychicken.setChickenType(type);
+        	entitychicken.setGrowingAge(-24000);
+        	entitychicken.setPosition(getPos().getX() + .5 , getPos().getY() + .5, getPos().getZ() + .5);
+        	this.world.spawnEntity(entitychicken);
+        }
     }
     
+    @Nullable
     @Optional.Method(modid = "chickens")
-    private int getChickenType(ItemStack itemStack) 
+    private String getChickenType(ItemStack itemStack) 
     {
         ChickensRegistryItem chicken = ChickensRegistry.findDyeChicken(itemStack.getMetadata());
         if (chicken == null) {
-            return -1;
+            return null;
         }
-        return chicken.getId();
+        return chicken.getRegistryName().toString();
     }
-    //////////////////////////////////////////////////////////////////////////
-    // INVENTORY 
-    /////////////////////////////////////////////////////////////////////////
-    
-	//@Override
-	public String getName() 
-	{
-		return null;
-	}
-
-	//@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
-	//
-	public int getSizeInventory() {
-		return 1;
-	}
-
-	//@Override
-	public ItemStack getStackInSlot(int index) {
-		return this.eggSlot[index];
-	}
-
-	//@Override
-	public ItemStack decrStackSize(int index, int count) 
-	{
-	    ItemStack itemstack = ItemStackHelper.getAndSplit(this.eggSlot, index, count);
-
-        if (itemstack != null)
-        {
-            this.markDirty();
-            
-        }
-		return itemstack;
-	}
-
-	//@Override
-	public ItemStack removeStackFromSlot(int index) 
-	{
-		
-		ItemStack stack = ItemStackHelper.getAndRemove(this.eggSlot, index);
-		
-		if(stack != null) 
-		{
-			this.markDirty();
-		}
-		
-		
-		
-		return stack;
-	}
-
-	//@Override
-	public void setInventorySlotContents(int index, ItemStack stack) 
-	{
-		this.eggSlot[index] = stack;
-		
-		if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit())
-        {
-            stack.setCount(this.getInventoryStackLimit());
-        }
-		
-		this.markDirty();
-	}
-
-	//@Override
-	public int getInventoryStackLimit() 
-	{
-		return 1;
-	}
-
-	//@Override
-	public boolean isUseableByPlayer(EntityPlayer player) 
-	{
-		return true;
-	}
-
-	//@Override
-	public void openInventory(EntityPlayer player) { }
-
-	//@Override
-	public void closeInventory(EntityPlayer player) { }
-
-	//@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) 
-	{
-		if(stack.getItem() instanceof ItemEgg)
-			return true;
-		
-		return false;
-	}
-
-	//@Override
-	public int getField(int id) {
-		return 0;
-	}
-
-	//@Override
-	public void setField(int id, int value) {}
-
-	//@Override
-	public int getFieldCount() {return 0;}
-
-	//@Override
-	public void clear() 
-	{
-      this.eggSlot[0] = null;
-	}
-
+   
 	////////////////////////////////////////////////////////////
 	// PacketUpdate
 	////////////////////////////////////////////////////////////
@@ -383,7 +284,6 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 		NBTTagCompound sendnbt = new NBTTagCompound();  	
 		sendnbt = this.writeToNBT(sendnbt);
 		NBTTagCompound egg = sendnbt.getCompoundTag("egg");
-		ItemStack test = ItemStack.loadItemStackFromNBT(egg);
        return new SPacketUpdateTileEntity(this.getPos(), this.getBlockMetadata(), sendnbt);
     }
 
@@ -392,7 +292,6 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
     {
     	//System.out.println("[DEBUG]:Client recived tile sync packet");
 		NBTTagCompound egg = pkt.getNbtCompound().getCompoundTag("egg");
-		ItemStack test = ItemStack.loadItemStackFromNBT(egg);
   		this.readFromNBT(pkt.getNbtCompound());
     	this.markDirty();
     }

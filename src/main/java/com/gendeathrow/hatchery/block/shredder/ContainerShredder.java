@@ -2,14 +2,13 @@ package com.gendeathrow.hatchery.block.shredder;
 
 import javax.annotation.Nullable;
 
-import com.gendeathrow.hatchery.inventory.SlotUpgrade;
 import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -25,7 +24,7 @@ public class ContainerShredder extends Container
 	private final IItemHandler inputInventory;
 	private final IItemHandler outputInventory;
 	
-	private final IInventory upgrades;
+	private final InventoryStroageModifiable upgrades;
 	
 	private final ShredderTileEntity shredder;
 	
@@ -57,7 +56,7 @@ public class ContainerShredder extends Container
 		    }
 		});
 		     
-		addSlotToContainer(new SlotUpgrade(shredder, upgrades, 0, 121, 54) {
+		addSlotToContainer(new SlotItemHandler(upgrades, 0, 121, 54) {
 			public boolean isItemValid(@Nullable ItemStack stack)
 		    {
 				boolean value = super.isItemValid(stack);
@@ -66,7 +65,7 @@ public class ContainerShredder extends Container
 				return value;
 		    }
 		});
-		addSlotToContainer(new SlotUpgrade(shredder, upgrades, 1, 141, 54) {
+		addSlotToContainer(new SlotItemHandler(upgrades, 1, 141, 54) {
 			public boolean isItemValid(@Nullable ItemStack stack)
 		    {
 				boolean value = super.isItemValid(stack);
@@ -96,7 +95,7 @@ public class ContainerShredder extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSizeInventory()))
+            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSlots()))
             {
                 if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(), this.inventorySlots.size(), true))
                 {

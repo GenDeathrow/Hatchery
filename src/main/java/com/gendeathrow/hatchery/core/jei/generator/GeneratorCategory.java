@@ -86,5 +86,8 @@ public class GeneratorCategory extends BlankRecipeCategory<GeneratorRecipeWrappe
 	        guiItemStacks.set(ingredients);
 	}
 
-	
+	@Override
+	public String getModName() {
+		return Hatchery.NAME;
+	}
 }

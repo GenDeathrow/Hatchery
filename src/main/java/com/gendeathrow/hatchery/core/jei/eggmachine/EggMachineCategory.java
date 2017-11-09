@@ -78,6 +78,11 @@ public class EggMachineCategory extends BlankRecipeCategory<EggMachineWrapper>
 	        guiItemStacks.set(ingredients);
 	}
 
+	@Override
+	public String getModName() {
+		return Hatchery.NAME;
+	}
+
 //	@Override
 //	public IDrawable getIcon() 
 //	{

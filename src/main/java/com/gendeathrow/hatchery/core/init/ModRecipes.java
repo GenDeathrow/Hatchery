@@ -161,7 +161,7 @@ public class ModRecipes
 		
 		// UPGRADES
 		
-		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier1), 
+		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier), 
 				"TRT",
 				"RGR",
 				"TRT",
@@ -169,23 +169,23 @@ public class ModRecipes
 				'R', Items.REDSTONE,
 				'G', ModItems.circuitBoard);
 		
-		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier2), 
+		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier, 1, 1), 
 				"SXS",
 				"RUR",
 				"GXG",
 				'S', Items.GLOWSTONE_DUST,
-				'U', ModItems.rfUpgradeTier1,
+				'U', ModItems.rfUpgradeTier,
 				'R', Items.REDSTONE,
 				'X', ModItems.circuitBoard,
 				'G', Items.GOLD_INGOT);
 				
-		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier3), 
+		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier, 1, 2), 
 				"EXD",
 				"XUX",
 				"GXG",
 				'E', Items.EMERALD,
 				'D', Items.DIAMOND,
-				'U', ModItems.rfUpgradeTier2,
+				'U', new ItemStack(ModItems.rfUpgradeTier,1,1),
 				'X', ModItems.circuitBoard,
 				'G', Blocks.GOLD_BLOCK);
 		

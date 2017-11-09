@@ -2,15 +2,13 @@ package com.gendeathrow.hatchery.block.nestpen;
 
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.api.tileentities.IChickenNestingPen;
 import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.inventory.InventoryStorage;
 import com.gendeathrow.hatchery.item.HatcheryEgg;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -23,7 +21,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -38,9 +35,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 
 public class NestPenTileEntity extends TileEntity  implements ITickable
@@ -54,7 +48,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 	private Random rand = new Random();  
 	//ItemStack[] inventory = new ItemStack[5];
 	
-	InventoryStorage inventory = new InventoryStorage(this, 5);
+	InventoryStroageModifiable inventory = new InventoryStroageModifiable("Items", 5);
 	
 	private int isMating = 600;
 	private boolean updateEntity = false;
@@ -300,14 +294,14 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 			
 			if(chickenStored.getGrowingAge() == 0 && !(this.chickenStored.getClass() == EntityChicken.class))
 			{
-				putStackInInventoryAllSlots(this, createEgg(), EnumFacing.DOWN);
+				inventory.insertItemFirstAvaliableSlot(createEgg(), false);
 			}
 
 			if(--TimetoNextEgg <= 0)
 			{
 				if(this.rand.nextInt(1) == 0)
-					putStackInInventoryAllSlots(this, new ItemStack(Items.FEATHER, 1), EnumFacing.DOWN);
-				putStackInInventoryAllSlots(this, new ItemStack(ModItems.manure, rand.nextInt(1)+1), EnumFacing.DOWN);
+					inventory.insertItemFirstAvaliableSlot(new ItemStack(Items.FEATHER, 1), false);
+				inventory.insertItemFirstAvaliableSlot(new ItemStack(ModItems.manure, rand.nextInt(2)+1), false);
 				this.TimetoNextEgg = this.rand.nextInt(5000) + 2000;
 			}
 			
@@ -315,9 +309,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 			if(this.chickenStored.capturedDrops != null && this.chickenStored.capturedDrops.size() > 0)
 			{
 				for(EntityItem entity : this.chickenStored.capturedDrops)
-				{
-					putStackInInventoryAllSlots(this, entity.getEntityItem(), EnumFacing.DOWN);
-				}
+					inventory.insertItemFirstAvaliableSlot(entity.getItem(), false);
+
 				this.chickenStored.capturedDrops.clear();
 			}
 		}
@@ -409,12 +402,11 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 	/////////////////////////////////////////////////////////////////
 	public void dropContents()
 	{
-        for (int i = 0; i < this.inventory.getSizeInventory(); ++i)
+        for (int i = 0; i < this.inventory.getSlots(); ++i)
         {
-        	ItemStack stack = ItemStackHelper.getAndRemove(this.inventory.getInventory(), i);
+        	ItemStack stack = inventory.getAndRemoveSlot(i);
         	
-        	if(stack != null)
-        	{
+        	if(!stack.isEmpty()){
         		this.world.spawnEntity(new EntityItem(world, this.pos.getX(), this.pos.getY()+1, this.pos.getZ(), stack));
         	}
         }
@@ -423,116 +415,20 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 	public boolean grabItems(EntityPlayer playerIn)
 	{
 		boolean flag = false;
-        for (int i = 0; i < this.inventory.getSizeInventory(); ++i)
+        for (int i = 0; i < this.inventory.getSlots(); ++i)
         {
-        	ItemStack stack = ItemStackHelper.getAndRemove(this.inventory.getInventory(), i);
+        	ItemStack stack = inventory.getAndRemoveSlot(i);
         	
-    		if(stack != null)
-    		{
+        	if(!stack.isEmpty()){
 	    		if(!playerIn.inventory.addItemStackToInventory(stack))
-	    		{		    			
 	    			ForgeHooks.onPlayerTossEvent(playerIn, stack, false);
-	    		}
-
 	    		flag = true;
     		}
         }
-        
         return flag;
 	}
 	
-//    @Override
-//	public String getName() { return null; }
-//
-//	@Override
-//	public boolean hasCustomName() { return false; }
-//
-//	@Override
-//	public int getSizeInventory() {	return this.inventory.getSizeInventory(); }
-//
-//	@Override
-//	public ItemStack getStackInSlot(int index) 
-//	{
-//		return this.inventory.getStackInSlot(index);
-//	}
-//
-//	@Override
-//	public ItemStack decrStackSize(int index, int count) 
-//	{
-//        return this.inventory.decrStackSize(index, count);
-//	}
-//
-//	@Override
-//	public ItemStack removeStackFromSlot(int index) 
-//	{
-//		return this.inventory.removeStackFromSlot(index); //ItemStackHelper.getAndRemove(this.inventory, index);
-//	}
-//
-//	@Override
-//	public void setInventorySlotContents(int index,@Nullable ItemStack stack) 
-//	{
-//		this.inventory.setInventorySlotContents(index, stack);
-//	}
-//
-//	@Override
-//	public int getInventoryStackLimit() { return 64; }
-//
-//	@Override
-//	public boolean isUseableByPlayer(EntityPlayer player) {	return true;}
-//
-//	@Override
-//	public void openInventory(EntityPlayer player) { }
-//
-//	@Override
-//	public void closeInventory(EntityPlayer player) { }
-//
-//	@Override
-//	public boolean isItemValidForSlot(int index, ItemStack stack) {	return true; }
-//
-//	@Override
-//	public int getField(int id) { return 0; }
-//	@Override
-//	public void setField(int id, int value) {}
-//	@Override
-//	public int getFieldCount() {return 0;}
-//
-//	@Override
-//	public void clear() 
-//	{
-//		this.inventory.clear();
-//	}
-
-   public static ItemStack putStackInInventoryAllSlots(IInventory inventoryIn, ItemStack stack, @Nullable EnumFacing side)
-   {
-	   
-	   
-        if (inventoryIn instanceof ISidedInventory && side != null)
-        {
-            ISidedInventory isidedinventory = (ISidedInventory)inventoryIn;
-            int[] aint = isidedinventory.getSlotsForFace(side);
-
-            for (int k = 0; k < aint.length && stack != null && stack.getCount() > 0; ++k)
-            {
-                stack = insertStack(inventoryIn, stack, aint[k], side);
-            }
-        }
-        else
-        {
-            int i = inventoryIn.getSizeInventory();
-
-            for (int j = 0; j < i && stack != null && stack.getCount() > 0; ++j)
-            {
-                stack = insertStack(inventoryIn, stack, j, side);
-            }
-        }
-
-        if (stack != null && stack.getCount() == 0)
-        {
-            stack = null;
-        }
-
-        return stack;
-    }
+ 
     
     /**
      * Insert the specified stack to the specified inventory and return any leftover items
@@ -601,7 +497,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
     {
     	NBTTagList nbttaglist = new NBTTagList();
     	
-        for (int i = 0; i < te.inventory.getSizeInventory(); ++i)
+        for (int i = 0; i < te.inventory.getSlots(); ++i)
         {
             if (te.inventory.getStackInSlot(i) != null)
             {
@@ -614,26 +510,6 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
         }
     	return nbttaglist;
     }
-   
-    public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) 
-    {
-        if (tile == null) return null;
-   
-        IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
-
-        if (handler == null) 
-        {
-            if (side != null && tile instanceof ISidedInventory) 
-            {
-                handler = new SidedInvWrapper((ISidedInventory) tile, side);
-            } else if (tile instanceof IInventory) 
-            {
-                handler = new InvWrapper((IInventory) tile);
-            }
-        }
-
-        return handler;
-    }
     
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) 
@@ -645,8 +521,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) 
     {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
-        {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return (T) this.inventory;
         }
         return super.getCapability(capability, facing);

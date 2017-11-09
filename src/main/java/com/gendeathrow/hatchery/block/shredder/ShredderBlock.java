@@ -34,6 +34,7 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
 	public ShredderBlock() 
 	{
 		super(Material.IRON);
+		this.setHardness(2);
 		this.setCreativeTab(Hatchery.hatcheryTabs);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ISACTIVE, false));
 	}

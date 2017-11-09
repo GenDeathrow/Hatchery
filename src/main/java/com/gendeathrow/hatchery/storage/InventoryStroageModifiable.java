@@ -32,6 +32,24 @@ public class InventoryStroageModifiable extends ItemStackHandler
     		return stack;
     }
 	
+	public ItemStack insertItemFirstAvaliableSlot(ItemStack stack, boolean simulate) {
+		
+		for(int i = 0; i < this.getSlots(); i++) {
+			return insertItem(i, stack, simulate);
+		}
+		
+		return stack;
+	}
+	
+	public ItemStack getAndRemoveSlot(int slot)	{
+		ItemStack extract = this.getStackInSlot(slot).copy();
+		
+		if(!extract.isEmpty())
+			this.setStackInSlot(0, ItemStack.EMPTY);
+		
+		return extract;
+	}
+	
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate)
     {

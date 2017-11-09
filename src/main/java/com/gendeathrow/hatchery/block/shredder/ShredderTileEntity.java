@@ -11,7 +11,6 @@ import com.gendeathrow.hatchery.block.TileUpgradable;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
-import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
@@ -167,7 +166,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	@Override
 	public boolean canUseUpgrade(ItemStack item)
 	{
-		return item.getItem() == ModItems.rfCapacityUpgradeTier1 || item.getItem() == ModItems.speedUpgradeTier || item.getItem() instanceof RFEfficiencyUpgrade;
+		return item.getItem() == ModItems.rfCapacityUpgradeTier1 || item.getItem() == ModItems.speedUpgradeTier || item.getItem() == ModItems.rfUpgradeTier;
 	}
 	
 	protected void updateUpgrades()
@@ -176,12 +175,11 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 		boolean rfcapacity = false;
 		boolean speedupgrade = false;
 		
-		for(ItemStack upgrade : this.getUpgrades())
+		for(ItemStack upgrade : this.getAllUpgrades())
 		{
-			if(upgrade == null) continue;
+			if(upgrade.isEmpty()) continue;
 		
-			
-			if(upgrade.getItem() instanceof RFEfficiencyUpgrade)
+			if(upgrade.getItem() == ModItems.rfUpgradeTier)
 			{
 				rfupgrade = true;
 				this.rfEffencyMultpyler = 1 - ((BaseUpgrade)upgrade.getItem()).getUpgradeTier(upgrade, "") * 0.10;

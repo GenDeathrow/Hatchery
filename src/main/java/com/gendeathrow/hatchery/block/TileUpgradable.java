@@ -1,26 +1,32 @@
 package com.gendeathrow.hatchery.block;
 
-import com.gendeathrow.hatchery.inventory.InventoryStorage;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 
 public class TileUpgradable extends TileEntity
 {
-	protected InventoryStorage upgradeStorage;
+	protected InventoryStroageModifiable upgradeStorage;
 	
 	public TileUpgradable(int upgradeSize)
 	{
-		this.upgradeStorage = new InventoryStorage(this, upgradeSize).setID("Upgrades");
+		this.upgradeStorage = new InventoryStroageModifiable("Upgrades", upgradeSize);
 	}
 	
-	public ItemStack[] getUpgrades()
+	public NonNullList<ItemStack> getAllUpgrades()
 	{
-		return this.upgradeStorage.getInventory();
+        NonNullList<ItemStack> stacks = NonNullList.withSize(upgradeStorage.getSlots()+1, ItemStack.EMPTY);
+        
+		for(int i = 0; i < upgradeStorage.getSlots(); i++)
+			stacks.set(i, upgradeStorage.getStackInSlot(i));
+		
+		return stacks;
 	}
 	
-	public InventoryStorage getUpgradeStorage()
+	public InventoryStroageModifiable getUpgradeStorage()
 	{
 		return this.upgradeStorage;
 	}

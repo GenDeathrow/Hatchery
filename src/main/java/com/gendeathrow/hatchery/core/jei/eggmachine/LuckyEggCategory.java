@@ -82,6 +82,9 @@ public class LuckyEggCategory extends BlankRecipeCategory<LuckyEggWrapper>
 		return icon;
 	}
 
-	
+	@Override
+	public String getModName() {
+		return Hatchery.NAME;
+	}
 	
 }
