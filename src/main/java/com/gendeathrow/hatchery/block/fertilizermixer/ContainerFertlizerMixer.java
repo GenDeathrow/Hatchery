@@ -81,7 +81,7 @@ public class ContainerFertlizerMixer extends Container
 		addSlotToContainer(new SlotItemHandler(inputInventory, 2, 104, 16)		{
 			@Override
 			public boolean isItemValid(@Nullable ItemStack stack){
-				if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN))
+				if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.DOWN))
 				{
 					return true;
 				}
@@ -113,7 +113,7 @@ public class ContainerFertlizerMixer extends Container
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) 
 	{
-        ItemStack itemstack = null;
+        ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = (Slot)this.inventorySlots.get(slotIndex);
 
         if (slot != null && slot.getHasStack())
@@ -130,12 +130,12 @@ public class ContainerFertlizerMixer extends Container
             }
             else if (!this.mergeItemStack(itemstack1, 0, this.inputInventory.getSlots(), false))
             {
-                return null;
+                return ItemStack.EMPTY;
             }
             
             if (itemstack1.getCount() == 0)
             {
-                slot.putStack((ItemStack)null);
+                slot.putStack(ItemStack.EMPTY);
             }
             else
             {
@@ -144,7 +144,7 @@ public class ContainerFertlizerMixer extends Container
 
             if (itemstack1.getCount() == itemstack.getCount())
             {
-                return null;
+                return ItemStack.EMPTY;
             }
 
             //slot.onPickupFromSlot(player, itemstack1);

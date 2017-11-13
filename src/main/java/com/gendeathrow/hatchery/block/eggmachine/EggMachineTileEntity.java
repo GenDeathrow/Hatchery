@@ -122,7 +122,7 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 		
 		boolean hasTimeLeft = this.eggTime > 0;
 		ItemStack prizeSlot = this.outputInventory.getStackInSlot(this.PrizeEggSlot);
-		boolean hasRoomForEgg = prizeSlot == null ? true : prizeSlot.getCount() < prizeSlot.getMaxStackSize();
+		boolean hasRoomForEgg = prizeSlot.isEmpty() ? true : prizeSlot.getCount() < prizeSlot.getMaxStackSize();
 		
         if (!this.world.isRemote){
     		if(hasTimeLeft && this.energy.getEnergyStored() >= 40 && hasRoomForEgg){
@@ -155,7 +155,7 @@ public class EggMachineTileEntity extends TileUpgradable implements ITickable, I
 		
 		ItemStack eggStack = this.outputInventory.getStackInSlot(this.PrizeEggSlot);
 
-		if(eggStack == null)
+		if(eggStack.isEmpty())
 			this.outputInventory.setStackInSlot(this.PrizeEggSlot, itemstack);
 		else if(eggStack.getItem() == ModItems.prizeEgg && eggStack.getCount() < eggStack.getMaxStackSize())
 		{

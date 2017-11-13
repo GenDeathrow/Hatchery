@@ -397,7 +397,7 @@ public class ModRecipes
 	                    		fertBuckets.add(itemstack);
 	                    		flag = true;
 	                    	}
-	                    	else if(itemstack.getItem() == ModItems.sprayer && this.sprayerIn == null)
+	                    	else if(itemstack.getItem() == ModItems.sprayer && this.sprayerIn.isEmpty())
 	                    	{
 	                    		this.sprayerIn = itemstack;
 	                    		this.sprayerOut = itemstack.copy();

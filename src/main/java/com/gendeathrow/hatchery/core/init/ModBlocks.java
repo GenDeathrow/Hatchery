@@ -94,7 +94,6 @@ public class ModBlocks
     	itemRegistery.register(new ItemBlock(ModBlocks.fertilizerMixer).setRegistryName(ModBlocks.fertilizerMixer.getRegistryName()));
     	itemRegistery.register(new ItemBlock(ModBlocks.digesterGenerator).setRegistryName(ModBlocks.digesterGenerator.getRegistryName()));
     	itemRegistery.register(new ItemBlock(ModBlocks.shredder).setRegistryName(ModBlocks.shredder.getRegistryName()));
-    	itemRegistery.register(new ItemBlock(ModBlocks.chickenMachine).setRegistryName(ModBlocks.chickenMachine.getRegistryName()));
     }
 	
 	public static void registerRenderer() {
@@ -131,6 +130,8 @@ public class ModBlocks
 		GameRegistry.registerTileEntity(DigesterGeneratorTileEntity.class, "hatchery.digesterGenerator");
 		
 		GameRegistry.registerTileEntity(EggMachineTileEntity.class, "hatchery.chicken_machine_block");
+		GameRegistry.registerTileEntity(EggMachineTopTileEntity.class, "hatchery.chicken_machine_block_top");
+		
 		GameRegistry.registerTileEntity(EggMachineTopTileEntity.class, "hatchery.chicken_machine_block_top");
 	}
 }

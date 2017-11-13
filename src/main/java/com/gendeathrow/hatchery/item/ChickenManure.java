@@ -23,15 +23,17 @@ public class ChickenManure extends Item
 		this.setCreativeTab(Hatchery.hatcheryTabs);
 	}
 	
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	@Override
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-        if (!playerIn.canPlayerEdit(pos.offset(facing), facing, stack))
+
+        if (!playerIn.canPlayerEdit(pos.offset(facing), facing, playerIn.getHeldItem(hand)))
         {
             return EnumActionResult.FAIL;
         }
         else
         {
-                if (ItemDye.applyBonemeal(stack, worldIn, pos, playerIn))
+                if (ItemDye.applyBonemeal(playerIn.getHeldItem(hand), worldIn, pos, playerIn))
                 {
                     if (!worldIn.isRemote)
                     {

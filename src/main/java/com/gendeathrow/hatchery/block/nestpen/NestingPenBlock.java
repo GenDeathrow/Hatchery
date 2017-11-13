@@ -198,24 +198,10 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     public static void setState(boolean hasChicken, World worldIn, BlockPos pos)
     {
     	 IBlockState iblockstate = worldIn.getBlockState(pos);
-//         TileEntity tileentity = worldIn.getTileEntity(pos);
-//         keepInventory = true;
          	worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(HASCHICKEN, hasChicken));
-//         keepInventory = false;
-//
-//         if (tileentity != null)
-//         {
-//             tileentity.validate();
-//             worldIn.setTileEntity(pos, tileentity);
              if(!worldIn.isRemote)
-            	 worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 2); 
-//         }
+            	 worldIn.markAndNotifyBlock(pos, worldIn.getChunkFromBlockCoords(pos), iblockstate, worldIn.getBlockState(pos), 2);
     }
-    
-//    public static boolean hasChicken(IBlockState state)
-//    {
-//		return state.getBlock() == ModBlocks.pen_chicken;
-//    }
     
     public static EntityAnimal getNearByMate(World world, IBlockState state, BlockPos pos)
     {

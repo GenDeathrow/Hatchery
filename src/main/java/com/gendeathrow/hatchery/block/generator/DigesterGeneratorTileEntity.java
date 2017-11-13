@@ -23,7 +23,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class DigesterGeneratorTileEntity extends TileUpgradable implements IEnergyProvider, ITickable
@@ -38,7 +38,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IEner
 	protected InventoryStroageModifiable inputInventory =  new InventoryStroageModifiable("inputItems", 2) {
 		@Override
 		public boolean canInsertSlot(int slot, ItemStack stack)	{
-			if(slot == 0 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN))
+			if(slot == 0 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
 			{
 				if(FluidUtil.getFluidContained(stack) != null && FluidUtil.getFluidContained(stack).getFluid() == ModFluids.liquidfertilizer){
 					return true;
@@ -157,18 +157,18 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IEner
 				}
 			}
 			
-			if(this.inputInventory.getStackInSlot(0) != null && this.outputInventory.getStackInSlot(0) == null && this.fertlizerTank.getFluidAmount() < this.fertlizerTank.getCapacity())
+			if(!this.inputInventory.getStackInSlot(0).isEmpty() && this.outputInventory.getStackInSlot(0).isEmpty() && this.fertlizerTank.getFluidAmount() < this.fertlizerTank.getCapacity())
 			{
 				ItemStack stack = this.inputInventory.getStackInSlot(0);
 				
-				IFluidHandler handler = FluidUtil.getFluidHandler(stack);
+				IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
 				
 				if(handler != null)
 				{
 					if(FluidUtil.tryFluidTransfer(this.fertlizerTank, handler, this.fertlizerTank.getCapacity(), true) != null)
 					{
-						this.outputInventory.setStackInSlot(0, stack);
-						this.inputInventory.setStackInSlot(0, null);
+						this.outputInventory.setStackInSlot(0, handler.getContainer());
+						this.inputInventory.setStackInSlot(0, ItemStack.EMPTY);
 					}
 				}
 			}
@@ -230,72 +230,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IEner
     	
         return super.getCapability(capability, facing);
     }
-    
-//    // INVENTORY
-//	@Override
-//	public ItemStack removeStackFromSlot(int index){
-//		return this.inventory.removeStackFromSlot(index);
-//	}
-//
-//	@Override
-//	public boolean isItemValidForSlot(int index, ItemStack stack) {
-//		return true;
-//	}
-//
-//	@Override
-//	public String getName() {
-//		return null;
-//	}
-//
-//
-//	@Override
-//	public boolean hasCustomName() {
-//		return false;
-//	}
-//
-//
-//	@Override
-//	public int getSizeInventory() {
-//		return this.inventory.getSizeInventory();
-//	}
-//
-//
-//	@Override
-//	public ItemStack getStackInSlot(int index) {
-//		return inventory.getStackInSlot(index);
-//	}
-//
-//
-//	@Override
-//	public ItemStack decrStackSize(int index, int count) {
-//		return this.inventory.decrStackSize(index, count);
-//	}
-//
-//
-//	@Override
-//	public void setInventorySlotContents(int index, ItemStack stack) {
-//		this.inventory.setInventorySlotContents(index, stack);
-//	}
-//
-//
-//	@Override
-//	public int getInventoryStackLimit() {
-//		return 64;
-//	}
-//
-//
-//	@Override
-//	public boolean isUseableByPlayer(EntityPlayer player) {
-//		return true;
-//	}
-//
-//
-//	@Override
-//	public void openInventory(EntityPlayer player) {}
-//
-//	@Override
-//	public void closeInventory(EntityPlayer player) {}
-//
+ 
 	public float tankLevel;
 //
 //	@Override

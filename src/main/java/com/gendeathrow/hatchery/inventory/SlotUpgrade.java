@@ -18,9 +18,10 @@ public class SlotUpgrade extends Slot
 		this.tile = tileIn;
 	}
 
+	@Override
 	public boolean isItemValid(@Nullable ItemStack stack)
     {
-		if(stack == null) return false;
+		if(stack.isEmpty()) return false;
 		
 		if(stack.getItem() instanceof IUpgradeItem)
 		{

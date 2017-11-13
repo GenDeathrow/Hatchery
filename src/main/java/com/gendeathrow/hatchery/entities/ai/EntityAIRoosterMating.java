@@ -84,7 +84,7 @@ public class EntityAIRoosterMating extends EntityAIBase {
 
 	public boolean rightClickItemAt(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) 
 	{
-		if (theWorld.isRemote || stack == null || stack.getItem() == null)
+		if (theWorld.isRemote || stack.isEmpty() || stack.getItem() == null)
 			return false;
 		try {
 			return targetChicken.processInteract(player, EnumHand.MAIN_HAND);

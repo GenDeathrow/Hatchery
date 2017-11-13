@@ -28,6 +28,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -94,7 +95,13 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 			this.chickenStored = (EntityChicken) entityin;
 			
 			entityNBT = new NBTTagCompound();
-			((EntityChicken) entityin).writeEntityToNBT(entityNBT);
+
+			
+			entityin.writeToNBT(entityNBT);
+			entityNBT.setString("id", EntityList.getKey(entityin).toString());
+			
+			System.out.println(entityNBT.getString("id") +":::"+ entityNBT.toString());
+					
 			
 			entityin.setPosition(this.pos.getX(),this.pos.getY() , this.pos.getZ());
 			entityin.motionY = 0;
@@ -138,7 +145,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 	@Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
     {
-		if((oldState.getBlock() == ModBlocks.pen || oldState.getBlock() == ModBlocks.pen_chicken) && (newSate.getBlock() == ModBlocks.pen || newSate.getBlock() == ModBlocks.pen_chicken))
+		if(oldState.getBlock() == ModBlocks.pen && newSate.getBlock() == ModBlocks.pen )
 		{
 			return false;
 		}
@@ -155,7 +162,10 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 			chickenStored = null;
 		} else {
 			try {
-				chickenStored = (EntityChicken) EntityList.createEntityFromNBT(this.entityNBT, this.getWorld());
+				System.out.println(entityNBT.getString("id") +":::"+ entityNBT.toString());
+				
+				this.chickenStored = (EntityChicken) EntityList.createEntityFromNBT(this.entityNBT, this.getWorld());
+				System.out.println(chickenStored.getName()+"--");
 			} catch (Throwable e) {
 				chickenStored = null;
 				this.entityNBT = new NBTTagCompound();
@@ -176,8 +186,6 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 	 */
 	private ItemStack createEgg()
 	{
-		ItemStack egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
-    	
 		EntityChicken mate  = (EntityChicken) NestingPenBlock.getNearByMate(world, this.world.getBlockState(pos), pos);
 		EntityAnimal baby = null;
 		if(mate != null)
@@ -196,14 +204,15 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 		else if(this.rand.nextInt(99)+1 < Settings.EGG_NESTINGPEN_DROP_RATE)
 			baby = this.chickenStored.createChild((EntityAgeable) this.storedEntity());
 		else 
-			return null;
+			return ItemStack.EMPTY;
 		
-		if(baby == null) return null;
+		if(baby == null) return ItemStack.EMPTY;
 		
     	baby.resetInLove();
     	baby.setHealth(baby.getMaxHealth());
     	baby.setGrowingAge(-24000);
     	baby.resetInLove();
+    	
     	if(baby instanceof EntityChicken)
     		((EntityChicken)baby).timeUntilNextEgg = 6000;
     	
@@ -221,9 +230,10 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 		{
 			this.createEntity();
 			this.updateEntity = false;
+			System.out.println("Tried to create:" + (this.chickenStored == null));
 		}
 		
-		if(chickenStored == null) return;
+		if(this.chickenStored == null) return;
 		
 		if(this.chickenStored.isChild()) wasChild = true;
 	
@@ -231,11 +241,12 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 		this.chickenStored.onGround = true;
 		this.chickenStored.setNoGravity(true);
 		this.chickenStored.setNoAI(true);
+		this.chickenStored.rotationYaw = 0;
+		
 			this.chickenStored.onLivingUpdate();
-
-		this.chickenStored.motionY = 0;
-		this.chickenStored.motionX = 0;
-		this.chickenStored.motionZ = 0;
+			
+		this.chickenStored.setPosition(this.pos.getX(), this.pos.getY(), this.pos.getZ());
+		this.chickenStored.motionY = 0; this.chickenStored.motionX = 0;	this.chickenStored.motionZ = 0;
 		this.chickenStored.noClip = false;
 		this.chickenStored.setNoGravity(false);
 		this.chickenStored.setNoAI(false);		
@@ -244,14 +255,10 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 
 		this.playChickenSound();
 		
-		//System.out.println(this.chickenStored.posX +":"+ this.chickenStored.posY +":"+ this.chickenStored.posZ);
-		
 		if(this.world.isRemote) 
 		{
 			if(!Settings.SHOULD_RENDER_CHICKEN_FLAPS) 
-			{
 				return;
-			}
 			
 			this.chickenStored.oFlap = this.chickenStored.wingRotation;
 			this.chickenStored.oFlapSpeed = this.chickenStored.destPos;
@@ -301,10 +308,10 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 			{
 				if(this.rand.nextInt(1) == 0)
 					inventory.insertItemFirstAvaliableSlot(new ItemStack(Items.FEATHER, 1), false);
+				
 				inventory.insertItemFirstAvaliableSlot(new ItemStack(ModItems.manure, rand.nextInt(2)+1), false);
 				this.TimetoNextEgg = this.rand.nextInt(5000) + 2000;
 			}
-			
 			
 			if(this.chickenStored.capturedDrops != null && this.chickenStored.capturedDrops.size() > 0)
 			{
@@ -362,8 +369,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 		
 		if(this.chickenStored != null)
 		{
-			storedEntity.setString("id", EntityList.getEntityString(chickenStored));
-			chickenStored.writeEntityToNBT(storedEntity);
+			storedEntity.setString("id", EntityList.getKey(chickenStored).toString());
+			chickenStored.writeToNBT(storedEntity);
 		}
 		else if(!this.entityNBT.hasNoTags())
 		{
@@ -441,7 +448,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
         {
             boolean flag = false;
 
-            if (itemstack == null)
+            if (itemstack.isEmpty())
             {
                 //Forge: BUGFIX: Again, make things respect max stack sizes.
                 int max = Math.min(stack.getMaxStackSize(), inventoryIn.getInventoryStackLimit());

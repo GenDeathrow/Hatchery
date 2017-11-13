@@ -41,17 +41,17 @@ public class ContainerNestingPen extends Container
 
             if (slotIndex < this.nestingPenInventory.getSlots())
                 if (!this.mergeItemStack(itemstack1, this.nestingPenInventory.getSlots(),  this.inventorySlots.size(), true))
-                    return null;
+                    return ItemStack.EMPTY;
             else if (!this.mergeItemStack(itemstack1, 0, this.nestingPenInventory.getSlots(), false))
-                return null;
+                return ItemStack.EMPTY;
             
             if (itemstack1.getCount() == 0)
-                slot.putStack((ItemStack)null);
+                slot.putStack(ItemStack.EMPTY);
             else
                 slot.onSlotChanged();
 
             if (itemstack1.getCount() == itemstack.getCount())
-                return null;
+                return ItemStack.EMPTY;
 
             slot.onTake(player, itemstack1);
         }

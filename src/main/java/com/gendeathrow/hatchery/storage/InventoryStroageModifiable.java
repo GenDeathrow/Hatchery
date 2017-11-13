@@ -35,7 +35,9 @@ public class InventoryStroageModifiable extends ItemStackHandler
 	public ItemStack insertItemFirstAvaliableSlot(ItemStack stack, boolean simulate) {
 		
 		for(int i = 0; i < this.getSlots(); i++) {
-			return insertItem(i, stack, simulate);
+			
+			if(insertItem(i, stack, true) != stack) 
+				return insertItem(i, stack, false);
 		}
 		
 		return stack;

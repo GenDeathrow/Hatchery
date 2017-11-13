@@ -51,7 +51,7 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
 		 this.setDefaultState(this.blockState.getBaseState().withProperty(PART, EggMachineBlock.EnumPartType.TOP));
 	}
 
-
+	@Override
     @Nullable
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
@@ -203,12 +203,6 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
     {
-//        if (state.getValue(PART) == Eggstractor.EnumPartType.TOP)
-//        {
-//            state = worldIn.getBlockState(pos.offset(EnumFacing.DOWN));
-//    
-//        }
-
         return state;
     }
     

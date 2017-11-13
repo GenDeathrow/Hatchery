@@ -277,7 +277,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	
 	private boolean canShred()
 	{
-        if (this.inputInventory.getStackInSlot(0) == null)
+        if (this.inputInventory.getStackInSlot(0).isEmpty())
         {
             return false;
         }
@@ -288,8 +288,8 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
             if (recipe == null) return false;
             
             ItemStack itemstack = recipe.itemOut;
-            if( itemstack == null) return false;
-            if (this.outputInventory.getStackInSlot(0) == null) return true;
+            if( itemstack.isEmpty()) return false;
+            if (this.outputInventory.getStackInSlot(0).isEmpty()) return true;
             if (!this.outputInventory.getStackInSlot(0).isItemEqual(itemstack)) return false;
             int result = outputInventory.getStackInSlot(0).getCount() + itemstack.getCount();
             return result <= 64 && result <= this.outputInventory.getStackInSlot(0).getMaxStackSize(); //Forge BugFix: Make it respect stack sizes properly.
@@ -327,7 +327,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 
 	public static boolean isShreddableItem(ItemStack stack)
 	{
-		if(stack == null) return false;
+		if(stack.isEmpty()) return false;
 		
 		for(ShredderRecipe recipe : shredderRecipes)
 		{

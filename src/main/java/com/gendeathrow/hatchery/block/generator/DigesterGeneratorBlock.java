@@ -54,11 +54,13 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 	}
 
     @Nullable
+    @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Item.getItemFromBlock(ModBlocks.digesterGenerator);
     }
-    
+
+    @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
     {
         return new ItemStack(this.getItemDropped(state, world.rand, 0), 1, this.damageDropped(state));
@@ -83,7 +85,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
         {
         	ItemStack heldItem = playerIn.getHeldItem(hand);
         	
-        	if(heldItem.isEmpty() && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing))
+        	if(!heldItem.isEmpty() && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing))
         	{
         		DigesterGeneratorTileEntity tileentity = (DigesterGeneratorTileEntity) worldIn.getTileEntity(pos);
         		
@@ -107,18 +109,15 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 		return true;
     }
 	
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-    {
-        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
-    }
-
     /**
      * Called by ItemBlocks after a block is set in the world, to allow post-place logic
      */
+    @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
     }
+    
     
     private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state)
     {
@@ -153,6 +152,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
     
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("incomplete-switch")
+    @Override
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
     {
         if (this.isGenerating)
@@ -211,6 +211,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
         }
     }
 	 
+    @Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
@@ -222,6 +223,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 		return false;
 	}
 	
+    @Override
     public boolean isFullCube(IBlockState state)
     {
         return false;
@@ -238,6 +240,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
         return BlockRenderLayer.CUTOUT_MIPPED;
     }
     
+    @Override
     public EnumBlockRenderType getRenderType(IBlockState state)
     {
         return EnumBlockRenderType.MODEL;
@@ -248,6 +251,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 		return (EnumFacing)blockStateContainer.getValue(FACING);
 	}
 	
+    @Override
 	 public IBlockState getStateFromMeta(int meta)
 	    {
 	        EnumFacing enumfacing = EnumFacing.getFront(meta);
@@ -263,6 +267,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 	    /**
 	     * Convert the BlockState into the correct metadata value
 	     */
+    @Override
 	    public int getMetaFromState(IBlockState state)
 	    {
 	        return ((EnumFacing)state.getValue(FACING)).getIndex();
@@ -273,6 +278,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 	     * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
 	     * blockstate.
 	     */
+    @Override
 	    public IBlockState withRotation(IBlockState state, Rotation rot)
 	    {
 	        return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
@@ -282,11 +288,13 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 	     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
 	     * blockstate.
 	     */
+    @Override
 	    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
 	    {
 	        return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
 	    }
 
+    @Override
 	    protected BlockStateContainer createBlockState()
 	    {
 	        return new BlockStateContainer(this, new IProperty[] {FACING});

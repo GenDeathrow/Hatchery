@@ -26,6 +26,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerFluidMap;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -65,19 +66,18 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 		public boolean canInsertSlot(int slot, ItemStack stack)	{
 			if(slot == 0 && (stack.getItem() == ModItems.manure || stack.getItem() == Item.getItemFromBlock(ModBlocks.manureBlock)))
 				return true;
-			else if(slot == 1 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN))
+			else if(slot == 1 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
 			{
 				if(FluidUtil.getFluidContained(stack) != null && FluidUtil.getFluidContained(stack).getFluid() == FluidRegistry.WATER){
 					return true;
 				}
 			}
-			else if(slot == 2 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN))
+			else if(slot == 2 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
 			{
 				if(FluidUtil.getFluidContained(stack) == null || FluidUtil.getFluidContained(stack).getFluid() == ModFluids.liquidfertilizer){
 					return true;
 				}
 			}
-
 			return false; 
 
 		}
@@ -133,7 +133,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
     
     public static int getItemMixTime(ItemStack stack)
     {
-    	if(stack == null)
+    	if(stack.isEmpty())
     	{
     		return 0;
     	}
@@ -252,25 +252,25 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 			}
 			
 
-			if(this.getWaterInSlot() != null && this.waterTank.getFluidAmount() < this.waterTank.getCapacity())
+			if(!this.getWaterInSlot().isEmpty() && this.waterTank.getFluidAmount() < this.waterTank.getCapacity())
 			{
 				ItemStack stack = this.getWaterInSlot();
 				ItemStack newStack = this.getWaterInSlot().copy();
 
 				newStack.setCount(1);
 				
-				IFluidHandler handler = FluidUtil.getFluidHandler(newStack);
+				IFluidHandlerItem handler = FluidUtil.getFluidHandler(newStack);
 
 				if(handler != null)
 				{
 					
-		            if (this.getBucketOutWaterSlot() == null)
+		            if (this.getBucketOutWaterSlot().isEmpty())
 		            {
 		            	
 		            	if(FluidUtil.tryFluidTransfer(this.waterTank, handler, this.waterTank.getCapacity(), true) != null)
 		            	{
 		            		if(newStack.getCount() > 0)
-		            			this.outputInventory.setStackInSlot(0, newStack);
+		            			this.outputInventory.setStackInSlot(0, handler.getContainer());
 						
 		            		this.inputInventory.extractItem(1, 1, false);
 		            	}
@@ -278,7 +278,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 				}
 			}
 			
-			if(this.getBucketInFertilizerrSlot() != null && this.getBucketOutFertilizerSlot() == null && this.fertilizerTank.getFluidAmount() > 0)
+			if(!this.getBucketInFertilizerrSlot().isEmpty() && this.getBucketOutFertilizerSlot().isEmpty() && this.fertilizerTank.getFluidAmount() > 0)
 			{
 				ItemStack oldStack = this.getBucketInFertilizerrSlot();
 				ItemStack newStack = this.getBucketInFertilizerrSlot().copy();
@@ -286,19 +286,19 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 				if(newStack.getCount() > 1)
 					newStack.setCount(1);
 				
-				IFluidHandler handler = FluidUtil.getFluidHandler(newStack);
+				IFluidHandlerItem handler = FluidUtil.getFluidHandler(newStack);
 				
 				if(handler != null)
 				{
 					
 					if(FluidUtil.tryFluidTransfer(handler, this.fertilizerTank, this.fertilizerTank.getCapacity(), true) != null)
 					{
-						this.outputInventory.setStackInSlot(1, newStack);
+						this.outputInventory.setStackInSlot(1, handler.getContainer());
 						
 						if(oldStack.getCount() > 1)
 							this.inputInventory.extractItem(2, 1, false);
 						else
-							this.inputInventory.setStackInSlot(2, null);
+							this.inputInventory.setStackInSlot(2, ItemStack.EMPTY);
 					}
 				}
 			}
