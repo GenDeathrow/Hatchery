@@ -5,6 +5,7 @@ import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
 import com.gendeathrow.hatchery.core.config.ConfigHandler;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.entities.EntityRooster;
+import com.gendeathrow.hatchery.entities.ai.AIChickenCallForHelp;
 import com.gendeathrow.hatchery.entities.ai.ChickenBreeding;
 import com.gendeathrow.hatchery.entities.ai.EntityAIMateWithRooster;
 
@@ -90,13 +91,14 @@ public class EventHandler
 		{
 			EntityLivingBase entity = (EntityLivingBase) event.getEntity();
 			
-			if(event.getEntity() instanceof EntityChicken)
+			if(event.getEntity() instanceof EntityChicken && !(event.getEntity() instanceof EntityRooster))
 			{
 				EntityChicken chicken = (EntityChicken) event.getEntity();
 				World world = chicken.world;
 				if (!world.isRemote) 
 				{
 					chicken.tasks.addTask(2, new EntityAIMateWithRooster((EntityChicken) chicken, 1.0D));
+					chicken.targetTasks.addTask(1, new AIChickenCallForHelp((EntityChicken) chicken));
 					
 					// rooster breeding only or is egg breeding remove vanilla AI
 					if(Settings.ROOSTER_BREED_ONLY || Settings.IS_EGG_BREEDING)

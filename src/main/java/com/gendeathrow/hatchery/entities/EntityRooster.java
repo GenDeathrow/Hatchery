@@ -3,6 +3,7 @@ package com.gendeathrow.hatchery.entities;
 import java.util.Set;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 import com.gendeathrow.hatchery.entities.ai.EntityAIRoosterMating;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
@@ -10,6 +11,8 @@ import com.google.common.collect.Sets;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIFollowParent;
@@ -22,6 +25,8 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.entity.passive.EntityOcelot;
+import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -40,7 +45,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class EntityRooster extends EntityChicken {
-	public static final Set<Item> TEMPTATION_ITEMS = Sets.newHashSet(new Item[] { Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS });
+	public static final Set<Item> TEMPTATION_ITEMS = Sets.newHashSet(new Item[] { ModItems.chickenFeed, Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS });
 	InventoryStroageModifiable inventory = new InventoryStroageModifiable("Items", 1);
 	public static final int SEED_SLOT = 0;
 	public static final int MAX_SEEDS = 20;
@@ -59,24 +64,37 @@ public class EntityRooster extends EntityChicken {
 	@Override
 	protected void initEntityAI() {
 		tasks.addTask(0, new EntityAISwimming(this));
-		tasks.addTask(1, new EntityAIAttackMelee(this, 1D, false));
+		tasks.addTask(1, new EntityAIAttackMelee(this, 1.5D, false));
 		tasks.addTask(2, new EntityAIRoosterMating(this, 1.0D));
 		tasks.addTask(3, new EntityAITempt(this, 1.0D, false, TEMPTATION_ITEMS));
 		tasks.addTask(4, new EntityAIFollowParent(this, 1.1D));
 		tasks.addTask(5, new EntityAIWander(this, 1.0D));
 		tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		tasks.addTask(7, new EntityAILookIdle(this));
+		
 		targetTasks.addTask(0, new EntityAIHurtByTarget(this, false));
-		targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityRooster.class, false));
+		targetTasks.addTask(1, new EntityAINearestAttackableTarget<EntityRooster>(this, EntityRooster.class, false));
+		targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityOcelot>(this, EntityOcelot.class, false));
 	}
 
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(4.0D);
+		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10.0D);
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
-		getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1D);
+		getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2D);
 		getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(8.0D);
+	}
+	
+	
+	private int angryTimer = 0;
+	
+	public void setAngryTarget(EntityLivingBase entityIn) {
+		this.setRevengeTarget(entityIn);
+	}
+	
+	public boolean isAngry() {
+		return this.getRevengeTimer() > 0;
 	}
 	
 	@Override
@@ -97,12 +115,16 @@ public class EntityRooster extends EntityChicken {
 
 		wingRotation += wingRotDelta * 2.0F;
 
-		if(world.getWorldTime()%5 == 0 && !world.isRemote)
+		if(this.ticksExisted%5 == 0 && !world.isRemote)
 			convertSeeds();
 		
 		
 		//Never drop eggs
 		this.timeUntilNextEgg = 500;
+		
+		if(isAngry())
+			this.angryTimer--;
+
 	}
 	
 	@Override
@@ -114,9 +136,7 @@ public class EntityRooster extends EntityChicken {
 			
 			if(hand == EnumHand.MAIN_HAND && (stack.isEmpty() || stack.getItem() instanceof ItemSeeds))
 			{
-				//if(stack !=null) System.out.println(stack.getDisplayName());
 				player.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_ROOSTER, player.world, getEntityId(), 0, 0);
-				
 				return true;
 			}
 			
@@ -154,14 +174,12 @@ public class EntityRooster extends EntityChicken {
 		{
 			setSeeds(getSeeds() + 2);
 			inventory.getStackInSlot(SEED_SLOT).shrink(2);
-			if(inventory.getStackInSlot(SEED_SLOT).getCount() <= 0)
-				inventory.setStackInSlot(SEED_SLOT, ItemStack.EMPTY);
 		}
 	}
 
 	public boolean getHasSeeds() 
 	{
-		return inventory.getStackInSlot(SEED_SLOT) != null && TEMPTATION_ITEMS.contains(inventory.getStackInSlot(SEED_SLOT).getItem()) && inventory.getStackInSlot(SEED_SLOT).getCount() >= 2;
+		return !inventory.getStackInSlot(SEED_SLOT).isEmpty() && TEMPTATION_ITEMS.contains(inventory.getStackInSlot(SEED_SLOT).getItem()) && inventory.getStackInSlot(SEED_SLOT).getCount() >= 2;
 	}
 
 	public void setSeeds(int size) 
@@ -194,103 +212,6 @@ public class EntityRooster extends EntityChicken {
 		setSeeds(nbt.getInteger("Seeds"));
 		inventory.readFromNBT(nbt);
 	}
-
-//	// Inventory
-//	
-//	@Override
-//	public int getSizeInventory()  { return inventory.length; }
-//
-//	@Override
-//	public ItemStack getStackInSlot(int slot) {	return inventory[slot]; }
-//
-//	@Override
-//	public ItemStack decrStackSize(int slot, int size) 
-//	{
-//		if (!inventory[slot].isEmpty()) 
-//		{
-//			ItemStack itemstack;
-//			if (inventory[slot].getCount() <= size) 
-//			{
-//				itemstack = inventory[slot];
-//				inventory[slot] = ItemStack.EMPTY;
-//				return itemstack;
-//			} else 
-//			{
-//				itemstack = inventory[slot].splitStack(size);
-//				if (inventory[slot].getCount() == 0)
-//					inventory[slot] = ItemStack.EMPTY;
-//				return itemstack;
-//			}
-//		} else
-//			return null;
-//	}
-//
-//	public ItemStack getStackInSlotOnClosing(int slot) 
-//	{
-//		if (inventory[slot] != null) 
-//		{
-//			ItemStack itemstack = inventory[slot];
-//			inventory[slot] = null;
-//			return itemstack;
-//		} else
-//			return null;
-//	}
-//
-//	@Override
-//	public void setInventorySlotContents(int slot, ItemStack stack) 
-//	{
-//		inventory[slot] = stack;
-//
-//		if (stack != null && stack.getCount() > getInventoryStackLimit())
-//			stack.setCount(getInventoryStackLimit());
-//	}
-//
-//	@Override
-//	public int getInventoryStackLimit() { return 64; }
-//
-//	@Override
-//	public void markDirty() { }
-//
-//	@Override
-//	public boolean isItemValidForSlot(int slot, ItemStack stack) 
-//	{
-//		return false;
-//	}
-//
-//	@Override
-//	public ItemStack removeStackFromSlot(int index) 
-//	{
-//		return null;
-//	}
-//
-//	@Override
-//	public void openInventory(EntityPlayer player) { }
-//
-//	@Override
-//	public void closeInventory(EntityPlayer player) { }
-//
-//	@Override
-//	public int getField(int id) { return 0; }
-//
-//	@Override
-//	public void setField(int id, int value) {	
-//	}
-//
-//	@Override
-//	public int getFieldCount() { return 0; }
-//
-//	@Override
-//	public void clear() {	}
-//
-//	@Override
-//	public boolean isEmpty() {
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean isUsableByPlayer(EntityPlayer player) {
-//		return true;
-//	}
 	
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) 
@@ -306,5 +227,22 @@ public class EntityRooster extends EntityChicken {
             return (T) this.inventory;
         }
         return super.getCapability(capability, facing);
+    }
+    
+    
+    static class AITargetAggressor extends EntityAINearestAttackableTarget<EntityLiving>
+    {
+        public AITargetAggressor(EntityRooster rooster)
+        {
+            super(rooster, EntityLiving.class, true);
+        }
+
+        /**
+         * Returns whether the EntityAIBase should begin execution.
+         */
+        public boolean shouldExecute()
+        {
+            return ((EntityRooster)this.taskOwner).isAngry() && super.shouldExecute();
+        }
     }
 }

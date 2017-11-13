@@ -79,7 +79,7 @@ public class ModItems
 	public static void itemRegistry(RegistryEvent.Register<Item> event) {
 		itemRegistry = event.getRegistry();
 		
-		registerItems(
+		registerAllItems(
 				ModItems.hatcheryEgg,
 				ModItems.animalNet, 
 				ModItems.manure,
@@ -98,13 +98,12 @@ public class ModItems
 				ModItems.tankUpgradeTier1,
 				ModItems.rfCapacityUpgradeTier1);
 		
-
+		ModBlocks.registerItems(event);
 	}
 	
-	private static void registerItems(Item... items){
+	public static void registerAllItems(Item... items){
 		for(Item item : items) {
 			itemRegistry.register(item);
-			System.out.println(">>"+item.getRegistryName());
 			ModItems.ITEMS.add(item);
 		}
 	}

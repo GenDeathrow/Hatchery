@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiRoosterInventory extends GuiContainer {
 
-	private static final ResourceLocation GUI_ROOSTER_INVENTORY = new ResourceLocation(Hatchery.MODID, "textures/gui/roosterGui.png");
+	private static final ResourceLocation GUI_ROOSTER_INVENTORY = new ResourceLocation(Hatchery.MODID, "textures/gui/roostergui.png");
 	EntityRooster ROOSTER;
 	public GuiRoosterInventory(InventoryPlayer inventory, Entity entityInventory) {
 		super(new ContainerRoosterInventory(inventory, (EntityRooster) entityInventory));

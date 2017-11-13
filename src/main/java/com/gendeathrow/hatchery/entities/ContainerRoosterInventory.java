@@ -35,32 +35,41 @@ public class ContainerRoosterInventory extends Container {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
-		ItemStack stack = null;
-		Slot slot = (Slot) inventorySlots.get(slotIndex);
-		if (slot != null && slot.getHasStack()) {
-			ItemStack stack1 = slot.getStack();
-			stack = stack1.copy();
+	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) 
+	{
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = (Slot)this.inventorySlots.get(slotIndex);
 
-			if (slotIndex > 0) {
-				if (EntityRooster.TEMPTATION_ITEMS.contains(stack.getItem()))
-					if (!mergeItemStack(stack1, 0, 1, false))
-						return null;
-			}
-			else if (!mergeItemStack(stack1, 1, inventorySlots.size(), false))
-				return null;
-			if (stack1.getCount() == 0)
-				slot.putStack(null);
-			else
-				slot.onSlotChanged();
-			if (stack1.getCount() != stack.getCount())
-				slot.onTake(player, stack1);
-			else
-				return null;
-		}
-		return stack;
+        if (slot != null && slot.getHasStack())
+        {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+
+            if (slotIndex < (this.inventory.getSlots()))
+            {
+                if (!this.mergeItemStack(itemstack1, this.inventory.getSlots(), this.inventorySlots.size(), true))
+                {
+                    return ItemStack.EMPTY;
+                }
+            }
+            else if (!this.mergeItemStack(itemstack1, 0, this.inventory.getSlots(), false))
+            {
+                return ItemStack.EMPTY;
+            }
+            
+            if (itemstack1.getCount() == 0)
+            {
+                slot.putStack(ItemStack.EMPTY);
+            }
+            else
+            {
+                slot.onSlotChanged();
+            }
+        }
+        
+		return  itemstack;
 	}
-
+	
 	@Override
 	public void addListener(IContainerListener listener) {
 		if (this.listeners.contains(listener)) {

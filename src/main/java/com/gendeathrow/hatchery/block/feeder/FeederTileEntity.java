@@ -4,6 +4,7 @@ import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,7 +14,7 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class FeederTileEntity extends TileEntity implements ITickable
+public class FeederTileEntity extends TileEntity
 {
 
 	private int seedInventory = 0;
@@ -24,20 +25,20 @@ public class FeederTileEntity extends TileEntity implements ITickable
 		public boolean canInsertSlot(int slot, ItemStack stack)	{ return isItemValidForSlot(slot, stack); }
 		@Override
 		public boolean canExtractSlot(int slot)	{ return false; }
+		@Override
+	    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
+	    {
+			ItemStack stackReturn = super.insertItem(slot, stack, simulate);
+			
+			updateTile();
+			
+			return stackReturn;
+	    }
 		
 	};
 	
-	
-	int ticksExisted = 0;
-	
-	@Override
-	public void update() {
-		System.out.println("update");
-
-		if(ticksExisted++%5 == 0 && !world.isRemote) {
+	public void updateTile() {
 			convertSeeds();
-			ticksExisted = 0;
-		}
 	}
 	
 	@Override
@@ -49,9 +50,9 @@ public class FeederTileEntity extends TileEntity implements ITickable
 	}
 	
 	public void convertSeeds() {
-		if(this.hasSeeds() && getSeedsSlot().getCount() >= 2 && this.seedInventory + 2 <= this.maxSeedInventory) {
-			this.seedInventory += 2;
-			this.getSeedsSlot().shrink(2);
+		
+		if(this.hasSeeds() && this.seedInventory < this.maxSeedInventory) {
+			this.addSeeds(getSeedsSlot().getCount(), getSeedsSlot(), false);
 			FeederBlock.setFeederLevel(this.world, pos, world.getBlockState(pos));
 		}
 	}
@@ -80,7 +81,9 @@ public class FeederTileEntity extends TileEntity implements ITickable
 	
 	public void decrSeedsInv()
 	{
-		this.seedInventory--;
+		if(this.seedInventory-- < 0)
+			this.seedInventory = 0;
+		FeederBlock.setFeederLevel(this.world, pos, world.getBlockState(pos));
 	}
 	
 	public int getMaxSeedInv()
@@ -115,7 +118,7 @@ public class FeederTileEntity extends TileEntity implements ITickable
 		return this.seedInventory < this.maxSeedInventory ? (stack.getItem() instanceof ItemSeeds || stack.getItem() == ModItems.chickenFeed) : false;
 	}
 	
-	public void setSeeds(int qty, ItemStack stack, boolean creative)
+	public void addSeeds(int qty, ItemStack stack, boolean creative)
 	{
 		if(isItemValidForSlot(0, stack))
 		{

@@ -96,12 +96,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 			
 			entityNBT = new NBTTagCompound();
 
-			
 			entityin.writeToNBT(entityNBT);
 			entityNBT.setString("id", EntityList.getKey(entityin).toString());
-			
-			System.out.println(entityNBT.getString("id") +":::"+ entityNBT.toString());
-					
 			
 			entityin.setPosition(this.pos.getX(),this.pos.getY() , this.pos.getZ());
 			entityin.motionY = 0;
@@ -162,10 +158,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 			chickenStored = null;
 		} else {
 			try {
-				System.out.println(entityNBT.getString("id") +":::"+ entityNBT.toString());
-				
 				this.chickenStored = (EntityChicken) EntityList.createEntityFromNBT(this.entityNBT, this.getWorld());
-				System.out.println(chickenStored.getName()+"--");
 			} catch (Throwable e) {
 				chickenStored = null;
 				this.entityNBT = new NBTTagCompound();
@@ -230,7 +223,6 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 		{
 			this.createEntity();
 			this.updateEntity = false;
-			System.out.println("Tried to create:" + (this.chickenStored == null));
 		}
 		
 		if(this.chickenStored == null) return;
@@ -245,7 +237,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 		
 			this.chickenStored.onLivingUpdate();
 			
-		this.chickenStored.setPosition(this.pos.getX(), this.pos.getY(), this.pos.getZ());
+		this.chickenStored.setPositionAndRotation(this.pos.getX(), this.pos.getY(), this.pos.getZ(), 0, 0);
 		this.chickenStored.motionY = 0; this.chickenStored.motionX = 0;	this.chickenStored.motionZ = 0;
 		this.chickenStored.noClip = false;
 		this.chickenStored.setNoGravity(false);

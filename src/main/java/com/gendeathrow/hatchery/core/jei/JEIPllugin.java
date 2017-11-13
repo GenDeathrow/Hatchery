@@ -8,6 +8,7 @@ import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity.ShredderRecipe;
 import com.gendeathrow.hatchery.core.config.ConfigLootHandler;
 import com.gendeathrow.hatchery.core.config.ConfigLootHandler.ItemDrop;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.jei.eggmachine.LuckyEggWrapper;
 import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenDropRecipeWrapper;
@@ -23,12 +24,15 @@ import mezz.jei.api.ISubtypeRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.oredict.OreDictionary;
 
 
 @Optional.InterfaceList({
@@ -42,14 +46,21 @@ import net.minecraftforge.fml.common.Optional;
 @JEIPlugin
 public class JEIPllugin implements IModPlugin 
 {
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void register (IModRegistry registry) 
     {
 //        for (final Block block : ModBlocks.BLOCKS)
-//            registry.addDescription(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE), "jei." + block.getUnlocalizedName());
-//        
-//        for (final Item item : ModItems.ITEMS)
-//            registry.addDescription(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), "jei." + item.getUnlocalizedName());
+//            registry.addIngredientInfo(block, block.getClass(), "jei." + block.getUnlocalizedName());
+        
+        //.addDescription(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE), "jei." + block.getUnlocalizedName());
+        
+        for (final Item item : ModItems.ITEMS) {
+             registry.addDescription(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), "jei." + item.getUnlocalizedName());
+             //.addIngredientInfo(item, item.getClass(),  "jei." + item.getUnlocalizedName());
+        }
+            
+//            
 //    
 //		IJeiHelpers jeiHelpers = registry.getJeiHelpers();
 //		IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
@@ -119,6 +130,12 @@ public class JEIPllugin implements IModPlugin
 //        registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.fertilizerMixer), FertilizerMixerCategory.UID);
 //        
      }
+    
+	@Override
+	public void registerCategories(IRecipeCategoryRegistration registry) {
+		
+	}
+
 
 	@Override
 	public void onRuntimeAvailable(IJeiRuntime arg0) 
@@ -208,10 +225,5 @@ public class JEIPllugin implements IModPlugin
         return recipes;
     }
 
-	@Override
-	public void registerCategories(IRecipeCategoryRegistration registry) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

@@ -72,7 +72,7 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     	if(!worldIn.isRemote)
     	{
     		FeederTileEntity te = (FeederTileEntity) worldIn.getTileEntity(pos);
-    		
+
     		if(te.getSeedsInv() > 0)
     		{
     			AxisAlignedBB RANGE_AABB = new AxisAlignedBB(pos.getX() - 4, pos.getY(), pos.getZ() - 4, pos.getX() + 4, pos.getY() + 1, pos.getZ() + 4);
@@ -92,7 +92,6 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
 								if(entity.isChild())
 								{
 									te.decrSeedsInv();
-    								
     	    						entity.ageUp((int)((float)(-entity.getGrowingAge() / 10) * 0.35F), true);
 								}
 								else
@@ -110,18 +109,10 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     		}
     	}
 	}
-	
-    boolean keepInventory;
-    
+
 	@Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
     {
-		if (!keepInventory)
-        {
-			
-        }
-		
-
 		ItemStack stack = this.getPickBlock(state, null, worldIn, pos, null);
 		
 		if(stack != null)
@@ -132,14 +123,10 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     			{
     				stack.setTagCompound(new NBTTagCompound());
     			}
-    		 
     			stack.getTagCompound().setInteger("seedInv", ((FeederTileEntity)worldIn.getTileEntity(pos)).getSeedsInv());
-    			 
     		}
-    	
     		spawnAsEntity(worldIn, pos, stack);
 		}
-		
 		super.breakBlock(worldIn, pos, state);
     }
     
@@ -161,10 +148,10 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
 			{
 				
 				if (playerIn.isSneaking()){
-                    	te.setSeeds(1, heldItem, playerIn.capabilities.isCreativeMode);
+                    	te.addSeeds(1, heldItem, playerIn.capabilities.isCreativeMode);
 				}
 				else{
-                    	te.setSeeds(heldItem.getCount(), heldItem, playerIn.capabilities.isCreativeMode);
+                    	te.addSeeds(heldItem.getCount(), heldItem, playerIn.capabilities.isCreativeMode);
 				}
     			
     			return true;

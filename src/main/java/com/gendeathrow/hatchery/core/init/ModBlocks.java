@@ -66,7 +66,7 @@ public class ModBlocks
 	public static void blockRegistry(RegistryEvent.Register<Block> event) {
 		blockRegistry = event.getRegistry();
 
-		blockRegistry.registerAll(nest,
+		registerAllBlock(nest,
 				pen, 
 				pen_chicken, 
 				feeder, 
@@ -82,18 +82,33 @@ public class ModBlocks
 		
 	}
 	
-    @SubscribeEvent
+	private static void registerAllBlock(Block...blocks) {
+		for(Block block : blocks) {
+			BLOCKS.add(block);
+			blockRegistry.register(block);
+		}
+	}
+	
     public static void registerItems(RegistryEvent.Register<Item> event) {
-    	IForgeRegistry<Item> itemRegistery = event.getRegistry();
-    	itemRegistery.register(new ItemBlock(ModBlocks.pen).setRegistryName(ModBlocks.pen.getRegistryName()));
-    	itemRegistery.register(new ItemBlock(ModBlocks.feeder).setRegistryName(ModBlocks.feeder.getRegistryName()));
-    	itemRegistery.register(new ItemBlock(ModBlocks.fertlizedDirt).setRegistryName(ModBlocks.fertlizedDirt.getRegistryName()));
-    	itemRegistery.register(new ItemBlock(ModBlocks.fertilzedFarmland).setRegistryName(ModBlocks.fertilzedFarmland.getRegistryName()));
-    	itemRegistery.register(new ItemBlock(ModBlocks.manureBlock).setRegistryName(ModBlocks.manureBlock.getRegistryName()));
-    	itemRegistery.register(new ItemBlock(ModBlocks.nuseryBlock).setRegistryName(ModBlocks.nuseryBlock.getRegistryName()));
-    	itemRegistery.register(new ItemBlock(ModBlocks.fertilizerMixer).setRegistryName(ModBlocks.fertilizerMixer.getRegistryName()));
-    	itemRegistery.register(new ItemBlock(ModBlocks.digesterGenerator).setRegistryName(ModBlocks.digesterGenerator.getRegistryName()));
-    	itemRegistery.register(new ItemBlock(ModBlocks.shredder).setRegistryName(ModBlocks.shredder.getRegistryName()));
+    	
+    	ModItems.registerAllItems( new ItemBlock(ModBlocks.pen).setRegistryName(ModBlocks.pen.getRegistryName()),
+    			new ItemBlock(ModBlocks.feeder).setRegistryName(ModBlocks.feeder.getRegistryName()),
+    			new ItemBlock(ModBlocks.fertlizedDirt).setRegistryName(ModBlocks.fertlizedDirt.getRegistryName()),
+    			new ItemBlock(ModBlocks.fertilzedFarmland).setRegistryName(ModBlocks.fertilzedFarmland.getRegistryName()),
+    			new ItemBlock(ModBlocks.manureBlock).setRegistryName(ModBlocks.manureBlock.getRegistryName()),
+    			new ItemBlock(ModBlocks.nuseryBlock).setRegistryName(ModBlocks.nuseryBlock.getRegistryName()),
+    			new ItemBlock(ModBlocks.fertilizerMixer).setRegistryName(ModBlocks.fertilizerMixer.getRegistryName()),
+    			new ItemBlock(ModBlocks.digesterGenerator).setRegistryName(ModBlocks.digesterGenerator.getRegistryName()),
+    			new ItemBlock(ModBlocks.shredder).setRegistryName(ModBlocks.shredder.getRegistryName())	);
+    	
+//    	itemRegistery.register();
+//    	itemRegistery.register();
+//    	itemRegistery.register());
+//    	itemRegistery.register();
+//    	itemRegistery.register);
+//    	itemRegistery.register();
+//    	itemRegistery.register();
+//    	itemRegistery.register(new ItemBlock(ModBlocks.shredder).setRegistryName(ModBlocks.shredder.getRegistryName()));
     }
 	
 	public static void registerRenderer() {
