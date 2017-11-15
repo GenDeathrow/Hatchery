@@ -47,7 +47,6 @@ public class ModBlocks
 
 	public static Block nest = new EggNestBlock().setRegistryName(new ResourceLocation(Hatchery.MODID, "nest")).setUnlocalizedName(Hatchery.MODID + ".nest" ).setCreativeTab(Hatchery.hatcheryTabs);
 	public static Block pen = new NestingPenBlock().setCreativeTab(Hatchery.hatcheryTabs).setRegistryName(new ResourceLocation(Hatchery.MODID, "pen")).setUnlocalizedName(Hatchery.MODID + ".pen" ).setCreativeTab(Hatchery.hatcheryTabs);
-	public static Block pen_chicken = new NestingPenBlock().setRegistryName(new ResourceLocation(Hatchery.MODID, "pen_chicken")).setUnlocalizedName(Hatchery.MODID + ".pen_chicken" ).setCreativeTab(Hatchery.hatcheryTabs);
 	public static Block feeder = new FeederBlock().setRegistryName(new ResourceLocation(Hatchery.MODID, "feeder")).setUnlocalizedName(Hatchery.MODID + ".feeder" ).setCreativeTab(Hatchery.hatcheryTabs);
 	public static Block fertlizedDirt = new FertilizedDirt().setCreativeTab(Hatchery.hatcheryTabs).setRegistryName(new ResourceLocation(Hatchery.MODID, "fertilized_dirt")).setUnlocalizedName(Hatchery.MODID + ".fertilized_dirt" ).setCreativeTab(Hatchery.hatcheryTabs);
 	public static Block fertilzedFarmland = new FertilizedFarmland().setRegistryName(new ResourceLocation(Hatchery.MODID, "fertilized_farmland")).setUnlocalizedName(Hatchery.MODID + ".fertilized_farmland" ).setCreativeTab(Hatchery.hatcheryTabs);
@@ -68,7 +67,6 @@ public class ModBlocks
 
 		registerAllBlock(nest,
 				pen, 
-				pen_chicken, 
 				feeder, 
 				fertlizedDirt, 
 				fertilzedFarmland, 
@@ -91,7 +89,9 @@ public class ModBlocks
 	
     public static void registerItems(RegistryEvent.Register<Item> event) {
     	
-    	ModItems.registerAllItems( new ItemBlock(ModBlocks.pen).setRegistryName(ModBlocks.pen.getRegistryName()),
+    	ModItems.registerAllItems( 
+    			new ItemBlock(ModBlocks.nest).setRegistryName(ModBlocks.nest.getRegistryName()),
+    			new ItemBlock(ModBlocks.pen).setRegistryName(ModBlocks.pen.getRegistryName()),
     			new ItemBlock(ModBlocks.feeder).setRegistryName(ModBlocks.feeder.getRegistryName()),
     			new ItemBlock(ModBlocks.fertlizedDirt).setRegistryName(ModBlocks.fertlizedDirt.getRegistryName()),
     			new ItemBlock(ModBlocks.fertilzedFarmland).setRegistryName(ModBlocks.fertilzedFarmland.getRegistryName()),
@@ -100,19 +100,12 @@ public class ModBlocks
     			new ItemBlock(ModBlocks.fertilizerMixer).setRegistryName(ModBlocks.fertilizerMixer.getRegistryName()),
     			new ItemBlock(ModBlocks.digesterGenerator).setRegistryName(ModBlocks.digesterGenerator.getRegistryName()),
     			new ItemBlock(ModBlocks.shredder).setRegistryName(ModBlocks.shredder.getRegistryName())	);
-    	
-//    	itemRegistery.register();
-//    	itemRegistery.register();
-//    	itemRegistery.register());
-//    	itemRegistery.register();
-//    	itemRegistery.register);
-//    	itemRegistery.register();
-//    	itemRegistery.register();
-//    	itemRegistery.register(new ItemBlock(ModBlocks.shredder).setRegistryName(ModBlocks.shredder.getRegistryName()));
+
     }
 	
 	public static void registerRenderer() {
 		
+		registerModel(nest);
 		registerModel(pen);
 		registerModel(feeder);
 		registerModel(fertlizedDirt);
@@ -141,12 +134,8 @@ public class ModBlocks
 		GameRegistry.registerTileEntity(NestPenTileEntity.class, "hatchery.nestingpen");
 		GameRegistry.registerTileEntity(FeederTileEntity.class, "hatchery.feeder");
 		GameRegistry.registerTileEntity(FertilizerMixerTileEntity.class, "hatchery.mixer");
-		
 		GameRegistry.registerTileEntity(DigesterGeneratorTileEntity.class, "hatchery.digesterGenerator");
-		
 		GameRegistry.registerTileEntity(EggMachineTileEntity.class, "hatchery.chicken_machine_block");
-		GameRegistry.registerTileEntity(EggMachineTopTileEntity.class, "hatchery.chicken_machine_block_top");
-		
 		GameRegistry.registerTileEntity(EggMachineTopTileEntity.class, "hatchery.chicken_machine_block_top");
 	}
 }

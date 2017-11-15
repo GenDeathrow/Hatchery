@@ -22,7 +22,7 @@ public class ItemStackEntityNBTHelper
 			if(saveAll)
 				entityIn.writeToNBT(eTag);
 			
-			eTag.setString("id", EntityList.getEntityString(entityIn));
+			eTag.setString("id", EntityList.getKey(entityIn).toString());
 			nbt.setTag("storedEntity", eTag);
 		stackIn.setTagCompound(nbt);
 		

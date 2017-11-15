@@ -19,8 +19,6 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -28,7 +26,6 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -51,7 +48,6 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 	
 	InventoryStroageModifiable inventory = new InventoryStroageModifiable("Items", 5);
 	
-	private int isMating = 600;
 	private boolean updateEntity = false;
 	
     private boolean wasChild = false;
@@ -371,8 +367,6 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 		
 		compound.setTag("storedEntity", storedEntity);
 		
-        NBTTagList nbttaglist = new NBTTagList();
-
         this.inventory.writeToNBT(compound);
 
 		return super.writeToNBT(compound);
@@ -426,67 +420,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
         }
         return flag;
 	}
-	
- 
-    
-    /**
-     * Insert the specified stack to the specified inventory and return any leftover items
-     */
-    private static ItemStack insertStack(IInventory inventoryIn, ItemStack stack, int index, EnumFacing side)
-    {
-        ItemStack itemstack = inventoryIn.getStackInSlot(index);
-
-        if (canInsertItemInSlot(inventoryIn, stack, index, side))
-        {
-            boolean flag = false;
-
-            if (itemstack.isEmpty())
-            {
-                //Forge: BUGFIX: Again, make things respect max stack sizes.
-                int max = Math.min(stack.getMaxStackSize(), inventoryIn.getInventoryStackLimit());
-                if (max >= stack.getCount())
-                {
-                inventoryIn.setInventorySlotContents(index, stack);
-                stack = null;
-                }
-                else
-                {
-                    inventoryIn.setInventorySlotContents(index, stack.splitStack(max));
-                }
-                flag = true;
-            }
-            else if (canCombine(itemstack, stack))
-            {
-                //Forge: BUGFIX: Again, make things respect max stack sizes.
-                int max = Math.min(stack.getMaxStackSize(), inventoryIn.getInventoryStackLimit());
-                if (max > itemstack.getCount())
-                {
-                int i = max - itemstack.getCount();
-                int j = Math.min(stack.getCount(), i);
-                stack.shrink(j);
-                itemstack.grow(j);
-                flag = j > 0;
-                }
-            }
-        }
-
-        return stack;
-    }
-    
-    /**
-     * Can this hopper insert the specified item from the specified slot on the specified side?
-     */
-    private static boolean canInsertItemInSlot(IInventory inventoryIn, ItemStack stack, int index, EnumFacing side)
-    {
-        return !inventoryIn.isItemValidForSlot(index, stack) ? false : !(inventoryIn instanceof ISidedInventory) || ((ISidedInventory)inventoryIn).canInsertItem(index, stack, side);
-    }
-    
-    private static boolean canCombine(ItemStack stack1, ItemStack stack2)
-    {
-        return stack1.getItem() != stack2.getItem() ? false : (stack1.getMetadata() != stack2.getMetadata() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
-    }
-    
-    
+  
     /**
      * Used for sending Waila Infomation
      * @param te

@@ -138,7 +138,7 @@ public class EntityAIRoosterMating extends EntityAIBase {
 	            
 	            	ItemStackEntityNBTHelper.addEntitytoItemStack(egg, entityageable);
 
-	            	egg.setStackDisplayName(entityageable.getDisplayName().getFormattedText() +" Egg");
+	            	egg.setStackDisplayName(entityageable.getDisplayName().getFormattedText() +" egg");
 	            
 	            	HatcheryEgg.setColor(egg, entityageable);
 	        	

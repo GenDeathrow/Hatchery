@@ -47,7 +47,7 @@ public class InventoryStroageModifiable extends ItemStackHandler
 		ItemStack extract = this.getStackInSlot(slot).copy();
 		
 		if(!extract.isEmpty())
-			this.setStackInSlot(0, ItemStack.EMPTY);
+			this.setStackInSlot(slot, ItemStack.EMPTY);
 		
 		return extract;
 	}

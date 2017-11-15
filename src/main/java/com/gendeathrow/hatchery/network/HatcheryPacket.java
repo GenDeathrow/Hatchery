@@ -103,31 +103,6 @@ public class HatcheryPacket implements IMessage
 								requestNBT.setDouble("bposZ", te.getPos().getZ());
 									
 							Hatchery.network.sendTo(new HatcheryPacket(requestNBT), sender);
-								
-								
-									//System.out.println("Sent Message");
-//							}
-//							else if(te instanceof NestPenTileEntity)
-//							{
-//								NestPenTileEntity hte = (NestPenTileEntity) te;
-//								
-//								ItemStack itemstack = hte.getStackInSlot(0);
-//								
-//								if(itemstack != null)
-//								{
-//									NBTTagCompound requestNBT = new NBTTagCompound();
-//									
-//									requestNBT = hte.writeToNBT(requestNBT);
-//									
-//									requestNBT.setDouble("bposX", hte.getPos().getX());
-//									requestNBT.setDouble("bposY", hte.getPos().getY());
-//									requestNBT.setDouble("bposZ", hte.getPos().getZ());
-//									
-//									Hatchery.network.sendTo(new HatcheryPacket(requestNBT), sender);
-//									
-//									//System.out.println("Sent Message");
-//								}
-//							}
 						}				
 						
 	                }
@@ -162,20 +137,13 @@ public class HatcheryPacket implements IMessage
                 @Override
                 public void run() 
                 {
-
-
         			NBTTagCompound nbt = message.tags;
         			
         			if(message.requestID == 0) 
         			{
-            			//System.out.println("Client Recieved"+ nbt.getDouble("bposX")+","+ nbt.getDouble("bposY")+","+ nbt.getDouble("bposZ"));
-
         				TileEntity te = Minecraft.getMinecraft().world.getTileEntity(new BlockPos(nbt.getDouble("bposX"), nbt.getDouble("bposY"), nbt.getDouble("bposZ")));
-        				
         				te.readFromNBT(nbt);
-        				
         			}
-
                 }
             });
             

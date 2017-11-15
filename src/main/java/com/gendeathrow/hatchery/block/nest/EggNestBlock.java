@@ -108,7 +108,8 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     			if(!worldIn.isRemote)
     			{
     				EggNestTileEntity te = ((EggNestTileEntity)worldIn.getTileEntity(pos));
-    				ItemStack egg = te.eggSlot.extractItem(0, 1, false);
+    				ItemStack egg = te.eggSlot.getStackInSlot(0).copy();
+    				te.eggSlot.setStackInSlot(0, ItemStack.EMPTY);
     				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + .5d, pos.getZ(), egg));
     			}
     			
@@ -127,6 +128,7 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 		        }
     			
 				((EggNestTileEntity)worldIn.getTileEntity(pos)).eggSlot.insertItem(0, heldItem, false);
+				EggNestBlock.addEgg(worldIn, state, pos);
     		}
     		
     		return true;
@@ -135,24 +137,8 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 		return false;
     }
 	
-//	public boolean placeEgg(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem)
-//	{
-//    	
-////    	if(heldItem != null && heldItem.getItem() instanceof ItemEgg)
-////    	{
-////    		System.out.println("noegg");
-////    		
-////    		this.addEgg(worldIn, state, pos);
-////    		
-////    		return true;
-////    	}
-//    	
-//        return false;
-//	}
-    
 	@Override
-    public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
+    public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos) {
     	return false;
     }
     

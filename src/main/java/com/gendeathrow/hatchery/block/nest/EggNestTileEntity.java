@@ -6,12 +6,10 @@ import javax.annotation.Nullable;
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.modaddons.ChickensHelper;
 import com.gendeathrow.hatchery.network.HatcheryPacket;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
-import com.setycz.chickens.entity.EntityChickensChicken;
-import com.setycz.chickens.registry.ChickensRegistry;
-import com.setycz.chickens.registry.ChickensRegistryItem;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -32,18 +30,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.Optional.Interface;
 
 
-@Optional.InterfaceList(
-		value = 
-		{
-				@Interface(iface = "com.setycz.chickens.entity.EntityChickensChicken", modid = "chickens"),
-				@Interface(iface = "com.setycz.chickens.registry.ChickensRegistry", modid = "chickens"),
-				@Interface(iface = "com.setycz.chickens.registry.ChickensRegistryItem", modid = "chickens")
-		}
-)
 
 public class EggNestTileEntity extends TileEntity implements ITickable//, IInventory
 {
@@ -62,12 +50,11 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	};
 	
 	int hatchingTick= 0;
+	//private final int timeToHatch = 300;
 	private final int timeToHatch = 300;
 	
 	boolean bonusLight = false;
 	boolean bonusPlayer = false;
-	
-	private float prevPercentage = 0;
 	
 	int ticks;
 	boolean firstload = true;
@@ -79,9 +66,8 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	@Override
 	public void update() 
 	{
-		if(this.world.isRemote) 
+		if(this.world.isRemote)
 		{
-			
 			updateClient();
 			return;
 		}
@@ -117,18 +103,17 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 						if(this.getEgg().getTagCompound() == null) 
 						{
 							spawnMCChicken();
+							Hatchery.logger.error("Error trying to spawn Hatchery Egg 'Null NBT' ");
 						}
 						else
 						{
 							NBTTagCompound entityTag = ItemStackEntityNBTHelper.getEntityTagFromStack(this.getEgg());
 						
-							try
-							{
+							try	{
 								entitychicken = EntityList.createEntityFromNBT(entityTag, this.world);
 							}
-							catch (Throwable e)
-							{
-								Hatchery.logger.error("Error trying to spawn Hatchery Egg 'Null NBT' " + e);
+							catch (Throwable e)	{
+								Hatchery.logger.error("Error trying to spawn Hatchery Egg from NBT ' " + e);
 							}
 						
 							if(entitychicken != null)
@@ -137,16 +122,18 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 								this.world.spawnEntity(entitychicken);
 								world.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 							}
-							else spawnMCChicken();
+							else {
+								spawnMCChicken();
+							}
 						}
 					}
 					else if(this.getEgg().getItem() == Items.EGG)
 					{
 						spawnMCChicken();
 					}
-					else
+					else if(ChickensHelper.isLoaded())
 					{
-						spawnChickensModChicken();
+						ChickensHelper.spawnChickenType(getWorld(), getPos(), ChickensHelper.getDyeChickenfromItemStack(getEgg()));	
 						world.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 					}
 				}
@@ -168,21 +155,18 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	private boolean sentRequest = false;
 	public void updateClient()
 	{
-		if(this.getEgg().isEmpty()) return;
+//		if(this.getEgg().isEmpty()) return;
 		
 		boolean hasEgg = EggNestBlock.doesHaveEgg(this.getWorld().getBlockState(this.getPos()));
     
 		if(!sentRequest && hasEgg)
 		{
 			Hatchery.network.sendToServer(HatcheryPacket.requestItemstackTE(this.getPos()));
-    			
-			//System.out.println("Requesting Packet");
 			sentRequest = true;
 		}
 		else if ( Minecraft.getSystemTime() % 80 == 0 && sentRequest && hasEgg)
 		{
 			sentRequest = false;
-			//System.out.println("Resending Packet");
 		}
 	}
 	
@@ -248,31 +232,6 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 		world.playSound((EntityPlayer)null, getPos().getX() + .5, getPos().getY() + 1, getPos().getZ() + .5, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
     }
     
-    @Optional.Method(modid = "chickens")
-    public void spawnChickensModChicken()
-    {
-        EntityChickensChicken entitychicken = new EntityChickensChicken(this.world);
-        String type = getChickenType(this.getEgg());
-        if(type != null)
-        {
-        	entitychicken.setChickenType(type);
-        	entitychicken.setGrowingAge(-24000);
-        	entitychicken.setPosition(getPos().getX() + .5 , getPos().getY() + .5, getPos().getZ() + .5);
-        	this.world.spawnEntity(entitychicken);
-        }
-    }
-    
-    @Nullable
-    @Optional.Method(modid = "chickens")
-    private String getChickenType(ItemStack itemStack) 
-    {
-        ChickensRegistryItem chicken = ChickensRegistry.findDyeChicken(itemStack.getMetadata());
-        if (chicken == null) {
-            return null;
-        }
-        return chicken.getRegistryName().toString();
-    }
-   
 	////////////////////////////////////////////////////////////
 	// PacketUpdate
 	////////////////////////////////////////////////////////////
@@ -283,7 +242,6 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
     	//System.out.println("[DEBUG]:Server sent tile sync packet");
 		NBTTagCompound sendnbt = new NBTTagCompound();  	
 		sendnbt = this.writeToNBT(sendnbt);
-		NBTTagCompound egg = sendnbt.getCompoundTag("egg");
        return new SPacketUpdateTileEntity(this.getPos(), this.getBlockMetadata(), sendnbt);
     }
 
@@ -291,7 +249,6 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
     public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SPacketUpdateTileEntity pkt)
     {
     	//System.out.println("[DEBUG]:Client recived tile sync packet");
-		NBTTagCompound egg = pkt.getNbtCompound().getCompoundTag("egg");
   		this.readFromNBT(pkt.getNbtCompound());
     	this.markDirty();
     }

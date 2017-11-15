@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.init.ModItems;
@@ -100,7 +99,7 @@ public class HatcheryEgg extends ItemEgg
 		if(entity == null) return ItemStack.EMPTY;
 
 		ItemStack egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
-		egg.setStackDisplayName(entity.getDisplayName().getFormattedText() +" Egg");
+		egg.setStackDisplayName(entity.getDisplayName().getFormattedText() +" egg");
 	  	HatcheryEgg.setColor(egg, entity);
     	ItemStackEntityNBTHelper.addEntitytoItemStack(egg, (EntityLiving)entity);
     	
