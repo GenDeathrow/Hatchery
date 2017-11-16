@@ -38,15 +38,30 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 
 	boolean hasEgg;
 	
-	protected InventoryStroageModifiable eggSlot = new InventoryStroageModifiable("Items", 1) {
-	 @Override
-		protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
-	    	return 1;
+	public final InventoryStroageModifiable inventory = new InventoryStroageModifiable("egg", 1) {
+		
+	    @Override
+	    public void setStackInSlot(int slot, @Nonnull ItemStack stack)
+	    {
+			System.out.println("item added + "+ stack.getDisplayName());
+			super.setStackInSlot(slot, stack);
+			
+			
 	    }
-	 
-		public boolean canInsertSlot(int slot, ItemStack stack){
-			return stack.getItem() == ModItems.hatcheryEgg || stack.getItem() == Items.EGG;
-		}
+	    
+	    @Override
+	    protected void onContentsChanged(int slot)
+	    {
+	    	System.out.println("Changed + "+ this.stacks.get(0).getDisplayName());
+	    }
+//	 @Override
+//		protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
+//	    	return 1;
+//	    }
+//	 
+//		public boolean canInsertSlot(int slot, ItemStack stack){
+//			return stack.getItem() == ModItems.hatcheryEgg || stack.getItem() == Items.EGG;
+//		}
 	};
 	
 	int hatchingTick= 0;
@@ -60,15 +75,28 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	boolean firstload = true;
 	
 	public ItemStack getEgg(){
-		return this.eggSlot.getStackInSlot(0);
+		return this.inventory.getStackInSlot(0);
+	}
+	
+	public void insertEgg(ItemStack eggIn){
+		if(!eggIn.isEmpty() && this.inventory.getStackInSlot(0).isEmpty())
+		this.inventory.setStackInSlot(0, eggIn);
+		this.markDirty();
+	}
+	
+	public ItemStack removeEgg(){
+		ItemStack stack = this.inventory.getAndRemoveSlot(0);
+		this.markDirty();
+		return stack;
 	}
 	
 	@Override
 	public void update() 
 	{
-		if(this.world.isRemote)
+		
+/*		if(this.world.isRemote)
 		{
-			updateClient();
+		//	updateClient();
 			return;
 		}
 		ticks++;
@@ -79,96 +107,97 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 			
 	        if(flag1)
 	        {
-			if(EggNestBlock.doesHaveEgg(this.world.getBlockState(this.getPos())))
-			{
-				int randint = 2;
+	        	System.out.println(getEgg().getDisplayName()+"--");
+	        	
+	        	if(EggNestBlock.doesHaveEgg(this.world.getBlockState(this.getPos())))
+	        	{
+	        		int randint = 2;
 				
-				if(this.world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(this.pos)).size() > 0)
-				{
-					randint += 5;
-				}
+	        		if(this.world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(this.pos)).size() > 0) {
+	        			randint += 5;
+	        		}
 				
-				hatchingTick += this.world.rand.nextInt(randint)+ (checkForHeatLamp() ? 2 : 1);
+	        		hatchingTick += this.world.rand.nextInt(randint)+ (checkForHeatLamp() ? 2 : 1);
       
-				ticks = 0;
+	        		ticks = 0;
 				
-				if(hatchingTick > timeToHatch)
-				{
-				try
-				{	
-					if(this.getEgg().getItem() == ModItems.hatcheryEgg)
-					{
-						Entity entitychicken = null;
-
-						if(this.getEgg().getTagCompound() == null) 
-						{
-							spawnMCChicken();
-							Hatchery.logger.error("Error trying to spawn Hatchery Egg 'Null NBT' ");
-						}
-						else
-						{
-							NBTTagCompound entityTag = ItemStackEntityNBTHelper.getEntityTagFromStack(this.getEgg());
+	        		if(hatchingTick > timeToHatch)
+	        		{
+	        			try
+	        			{	
+	        				if(this.getEgg().getItem() == ModItems.hatcheryEgg)
+	        				{
+	        					Entity entitychicken = null;
+	        					
+	        					if(this.getEgg().getTagCompound() == null) 
+	        					{
+	        						spawnMCChicken();
+	        						Hatchery.logger.error("Error trying to spawn Hatchery Egg 'Null NBT' ");
+	        					}
+	        					else
+	        					{
+	        						NBTTagCompound entityTag = ItemStackEntityNBTHelper.getEntityTagFromStack(this.getEgg());
 						
-							try	{
-								entitychicken = EntityList.createEntityFromNBT(entityTag, this.world);
-							}
-							catch (Throwable e)	{
-								Hatchery.logger.error("Error trying to spawn Hatchery Egg from NBT ' " + e);
-							}
+	        						try	{
+	        							entitychicken = EntityList.createEntityFromNBT(entityTag, this.world);
+	        						}
+	        						catch (Throwable e)	{
+	        							Hatchery.logger.error("Error trying to spawn Hatchery Egg from NBT ' " + e);
+	        						}
 						
-							if(entitychicken != null)
-							{
-								entitychicken.setLocationAndAngles(getPos().getX() + .5, getPos().getY() + .5, getPos().getZ() + .5, 0.0F, 0.0F);
-								this.world.spawnEntity(entitychicken);
-								world.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
-							}
-							else {
-								spawnMCChicken();
-							}
-						}
-					}
-					else if(this.getEgg().getItem() == Items.EGG)
-					{
-						spawnMCChicken();
-					}
-					else if(ChickensHelper.isLoaded())
-					{
-						ChickensHelper.spawnChickenType(getWorld(), getPos(), ChickensHelper.getDyeChickenfromItemStack(getEgg()));	
-						world.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
-					}
-				}
-				catch (Throwable e)
-				{
-					Hatchery.logger.error("Error trying to spawn Egg in the nest ("+this.getPos().toString()+") 'Null NBT' " + e);
-				}
+	        						if(entitychicken != null)
+	        						{
+	        							entitychicken.setLocationAndAngles(getPos().getX() + .5, getPos().getY() + .5, getPos().getZ() + .5, 0.0F, 0.0F);
+	        							this.world.spawnEntity(entitychicken);
+	        							world.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
+	        						}
+	        						else {
+	        							spawnMCChicken();
+	        						}
+	        					}
+	        				}
+	        				else if(this.getEgg().getItem() == Items.EGG)
+	        				{
+	        					spawnMCChicken();
+	        				}
+	        				else if(ChickensHelper.isLoaded())
+	        				{
+	        					ChickensHelper.spawnChickenType(getWorld(), getPos(), ChickensHelper.getDyeChickenfromItemStack(getEgg()));	
+	        					world.playSound((EntityPlayer)null, getPos().getX(), getPos().getY() + 1, getPos().getZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.AMBIENT, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
+	        				}
+	        			}
+	        			catch (Throwable e)
+	        			{
+	        				Hatchery.logger.error("Error trying to spawn Egg in the nest ("+this.getPos().toString()+") 'Null NBT' " + e);
+	        			}
 				
-					EggNestBlock.removeEgg(world, world.getBlockState(getPos()), getPos());
-					
-					markDirty();
-				}
-			}
-	        }//flag1
+	        			EggNestBlock.removeEgg(world, world.getBlockState(getPos()), getPos());
+	        		}
+	        	}
+        	}//flag1
 		}
 		else if(hatchingTick > timeToHatch) {hatchingTick = 0; ticks = 0;}
+		
+		*/
 	}
 	
-	private boolean sentRequest = false;
-	public void updateClient()
-	{
-//		if(this.getEgg().isEmpty()) return;
-		
-		boolean hasEgg = EggNestBlock.doesHaveEgg(this.getWorld().getBlockState(this.getPos()));
-    
-		if(!sentRequest && hasEgg)
-		{
-			Hatchery.network.sendToServer(HatcheryPacket.requestItemstackTE(this.getPos()));
-			sentRequest = true;
-		}
-		else if ( Minecraft.getSystemTime() % 80 == 0 && sentRequest && hasEgg)
-		{
-			sentRequest = false;
-		}
-	}
+//	private boolean sentRequest = false;
+//	public void updateClient()
+//	{
+////		if(this.getEgg().isEmpty()) return;
+//		
+//		boolean hasEgg = EggNestBlock.doesHaveEgg(this.getWorld().getBlockState(this.getPos()));
+//    
+//		if(!sentRequest && hasEgg)
+//		{
+//			Hatchery.network.sendToServer(HatcheryPacket.requestItemstackTE(this.getPos()));
+//			sentRequest = true;
+//		}
+//		else if ( Minecraft.getSystemTime() % 80 == 0 && sentRequest && hasEgg)
+//		{
+//			sentRequest = false;
+//		}
+//	}
 	
 	public float getPercentage()
 	{
@@ -191,37 +220,44 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 		return false;
 	}
 	
+	@Override
     public void readFromNBT(NBTTagCompound compound)
     {
     	this.hatchingTick = compound.getInteger("hatchTime");
     	
-    	this.eggSlot.readFromNBT(compound);
+    	this.inventory.readFromNBT(compound);
+    	
+    System.out.println("read -- "+ compound.toString());
     	
     	super.readFromNBT(compound);
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound compound)
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
     	compound.setInteger("hatchTime", hatchingTick);
-    	this.eggSlot.writeToNBT(compound);
+    	
+    	this.inventory.writeToNBT(compound);
+    	
+    	System.out.println("write -- "+ compound.toString());
     	return super.writeToNBT(compound);
     }
-    
-    @Override
-    public boolean receiveClientEvent(int id, int type)
-    {
-    	this.world.setBlockState(getPos(), this.world.getBlockState(pos));
-    	
-        if (id == 1)
-        {
-        	
-            return true;
-        }
-        else
-        {
-            return super.receiveClientEvent(id, type);
-        }
-    }
+//    
+//    @Override
+//    public boolean receiveClientEvent(int id, int type)
+//    {
+//    	this.world.setBlockState(getPos(), this.world.getBlockState(pos));
+//    	
+//        if (id == 1)
+//        {
+//        	
+//            return true;
+//        }
+//        else
+//        {
+//            return super.receiveClientEvent(id, type);
+//        }
+//    }
 
     private void spawnMCChicken()
     {
@@ -236,22 +272,25 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	// PacketUpdate
 	////////////////////////////////////////////////////////////
     
-	@Nullable
-    public SPacketUpdateTileEntity getUpdatePacket()
-    {
-    	//System.out.println("[DEBUG]:Server sent tile sync packet");
-		NBTTagCompound sendnbt = new NBTTagCompound();  	
-		sendnbt = this.writeToNBT(sendnbt);
-       return new SPacketUpdateTileEntity(this.getPos(), this.getBlockMetadata(), sendnbt);
-    }
-
-	
-    public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SPacketUpdateTileEntity pkt)
-    {
-    	//System.out.println("[DEBUG]:Client recived tile sync packet");
-  		this.readFromNBT(pkt.getNbtCompound());
-    	this.markDirty();
-    }
+//    @Override
+//	@Nullable
+//    public SPacketUpdateTileEntity getUpdatePacket()
+//    {
+//
+//		NBTTagCompound sendnbt = new NBTTagCompound();  	
+//		sendnbt = this.writeToNBT(sendnbt);
+//		
+//    	System.out.println("[DEBUG]:Server sent tile sync packet: "+ sendnbt);
+//       return new SPacketUpdateTileEntity(this.getPos(), this.getBlockMetadata(), sendnbt);
+//    }
+//
+//	@Override
+//    public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SPacketUpdateTileEntity pkt)
+//    {
+//    	System.out.println("[DEBUG]:Client recived tile sync packet: "+ pkt.getNbtCompound());
+//  		this.readFromNBT(pkt.getNbtCompound());
+//    	this.markDirty();
+//    }
          
    ////////////////////////////////////////////////////////////////
     //Wailia Intergration

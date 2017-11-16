@@ -78,7 +78,7 @@ public class ModItems
 	@SubscribeEvent
 	public static void itemRegistry(RegistryEvent.Register<Item> event) {
 		itemRegistry = event.getRegistry();
-		
+
 		registerAllItems(
 				ModItems.hatcheryEgg,
 				ModItems.animalNet, 

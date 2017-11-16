@@ -347,6 +347,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 		}
 	
 		this.inventory.readFromNBT(compound);
+		
         this.updateEntity = true;
         super.readFromNBT(compound);
 	}

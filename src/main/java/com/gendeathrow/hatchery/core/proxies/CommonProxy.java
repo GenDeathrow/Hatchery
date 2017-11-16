@@ -18,6 +18,7 @@ import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.config.ConfigHandler;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModEntities;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.init.ModRecipes;
@@ -79,12 +80,17 @@ public class CommonProxy implements IGuiHandler
 	{
 		ModBlocks.preInit(event);
 		ModFluids.registerFluids();	
+		ModEntities.register();
+		
 		
 		if(Settings.CAN_THROW_EGG)
 			BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.hatcheryEgg, new DispenseHatcheryEgg());
 	}
 	
-	public void init(FMLInitializationEvent event) { }
+	public void init(FMLInitializationEvent event) 
+	{
+		ModEntities.registerSpawns();
+	}
 	
 	public void postInit(FMLPostInitializationEvent event)
 	{
