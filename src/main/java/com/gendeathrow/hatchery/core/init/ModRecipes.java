@@ -128,7 +128,7 @@ public class ModRecipes
 	    	}
 	    	
 	    };
-	    GameRegistry.addRecipe(bucketFert);
+	    //GameRegistry.addRecipe(bucketFert);
 	    
 	    
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.nest), "xxx", "AxA", "xAx",'A', Blocks.HAY_BLOCK);
@@ -136,7 +136,7 @@ public class ModRecipes
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.manureBlock), "XXX", "XXX", "XXX",'X', ModItems.manure);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.manure,9), ModBlocks.manureBlock);
 		
-		GameRegistry.addRecipe(new RefillSprayer());
+		//GameRegistry.addRecipe(new RefillSprayer());
 		
 		GameRegistry.addRecipe(
 				new ItemStack(ModBlocks.digesterGenerator),
@@ -358,7 +358,7 @@ public class ModRecipes
 	public static class RefillSprayer implements IRecipe
 	{
 		
-		private ItemStack sprayerIn;
+		private ItemStack sprayerIn =  ItemStack.EMPTY;
 		
 		private ItemStack sprayerOut = new ItemStack(ModItems.sprayer);
 		
@@ -378,8 +378,8 @@ public class ModRecipes
 	    public boolean matches(InventoryCrafting inv, World worldIn)
 	    {
 			fertBuckets = new ArrayList<ItemStack>();
-			this.sprayerIn = null;
-			this.sprayerOut = null;
+			this.sprayerIn = ItemStack.EMPTY;
+			this.sprayerOut = ItemStack.EMPTY;
 			
 	 	    for (int i = 0; i < inv.getHeight(); ++i)
 	        {
@@ -387,7 +387,7 @@ public class ModRecipes
 	            {
 	                ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
 
-	                if (itemstack != null)
+	                if (!itemstack.isEmpty())
 	                {
 	                    boolean flag = false;
 
@@ -421,7 +421,7 @@ public class ModRecipes
 	    @Nullable
 	    public ItemStack getRecipeOutput()
 	    {
-			if(sprayerOut != null)
+			if(!sprayerOut.isEmpty())
 			{
 				FluidStack fluid = FluidUtil.getFluidContained(this.sprayerOut);
 				
@@ -433,7 +433,8 @@ public class ModRecipes
 	        return this.sprayerOut;
 	    }
 		
-	    @Nullable
+
+	    @Override
 	    public ItemStack getCraftingResult(InventoryCrafting inv)
 	    {
 	    	ItemStack out = this.sprayerOut.copy();

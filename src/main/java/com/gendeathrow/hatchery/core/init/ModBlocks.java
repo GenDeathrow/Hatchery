@@ -128,9 +128,9 @@ public class ModBlocks
 	
 	public static void preInit(FMLPreInitializationEvent event) 
 	{
+		GameRegistry.registerTileEntity(EggNestTileEntity.class, "hatchery.eggnest");
 		GameRegistry.registerTileEntity(TileEntityMobNursery.class, "hatchery.nursery");
 		GameRegistry.registerTileEntity(ShredderTileEntity.class, "hatchery.shredder");
-		GameRegistry.registerTileEntity(EggNestTileEntity.class, "hatchery.eggnest");
 		GameRegistry.registerTileEntity(NestPenTileEntity.class, "hatchery.nestingpen");
 		GameRegistry.registerTileEntity(FeederTileEntity.class, "hatchery.feeder");
 		GameRegistry.registerTileEntity(FertilizerMixerTileEntity.class, "hatchery.mixer");
