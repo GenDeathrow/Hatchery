@@ -28,40 +28,25 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
-
-
-public class EggNestTileEntity extends TileEntity implements ITickable//, IInventory
+public class EggNestTileEntity extends TileEntity implements ITickable
 {
 
 	boolean hasEgg;
 	
-	public final InventoryStroageModifiable inventory = new InventoryStroageModifiable("egg", 1) {
-		
-	    @Override
-	    public void setStackInSlot(int slot, @Nonnull ItemStack stack)
-	    {
-			System.out.println("item added + "+ stack.getDisplayName());
-			super.setStackInSlot(slot, stack);
-			
-			
+	InventoryStroageModifiable inventory = new InventoryStroageModifiable("egg", 1) {
+	 @Override
+		protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
+	    	return 1;
 	    }
-	    
-	    @Override
-	    protected void onContentsChanged(int slot)
-	    {
-	    	System.out.println("Changed + "+ this.stacks.get(0).getDisplayName());
-	    }
-//	 @Override
-//		protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
-//	    	return 1;
-//	    }
-//	 
-//		public boolean canInsertSlot(int slot, ItemStack stack){
-//			return stack.getItem() == ModItems.hatcheryEgg || stack.getItem() == Items.EGG;
-//		}
+	 
+		public boolean canInsertSlot(int slot, ItemStack stack){
+			return stack.getItem() == ModItems.hatcheryEgg || stack.getItem() == Items.EGG;
+		}
 	};
 	
 	int hatchingTick= 0;
@@ -80,7 +65,7 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	
 	public void insertEgg(ItemStack eggIn){
 		if(!eggIn.isEmpty() && this.inventory.getStackInSlot(0).isEmpty())
-		this.inventory.setStackInSlot(0, eggIn);
+		this.inventory.setStackInSlot(0, eggIn.copy());
 		this.markDirty();
 	}
 	
@@ -91,12 +76,23 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	}
 	
 	@Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    {
+		if(oldState.getBlock() == ModBlocks.nest && newSate.getBlock() == ModBlocks.nest )
+		{
+			return false;
+		}
+		else 
+		  return oldState != newSate;
+    }
+	
+	@Override
 	public void update() 
 	{
 		
-/*		if(this.world.isRemote)
+		if(this.world.isRemote)
 		{
-		//	updateClient();
+			updateClient();
 			return;
 		}
 		ticks++;
@@ -107,8 +103,6 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 			
 	        if(flag1)
 	        {
-	        	System.out.println(getEgg().getDisplayName()+"--");
-	        	
 	        	if(EggNestBlock.doesHaveEgg(this.world.getBlockState(this.getPos())))
 	        	{
 	        		int randint = 2;
@@ -171,6 +165,7 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	        				Hatchery.logger.error("Error trying to spawn Egg in the nest ("+this.getPos().toString()+") 'Null NBT' " + e);
 	        			}
 				
+	        			this.removeEgg();
 	        			EggNestBlock.removeEgg(world, world.getBlockState(getPos()), getPos());
 	        		}
 	        	}
@@ -178,26 +173,28 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 		}
 		else if(hatchingTick > timeToHatch) {hatchingTick = 0; ticks = 0;}
 		
-		*/
+		
 	}
 	
-//	private boolean sentRequest = false;
-//	public void updateClient()
-//	{
-////		if(this.getEgg().isEmpty()) return;
-//		
-//		boolean hasEgg = EggNestBlock.doesHaveEgg(this.getWorld().getBlockState(this.getPos()));
-//    
-//		if(!sentRequest && hasEgg)
-//		{
-//			Hatchery.network.sendToServer(HatcheryPacket.requestItemstackTE(this.getPos()));
-//			sentRequest = true;
-//		}
-//		else if ( Minecraft.getSystemTime() % 80 == 0 && sentRequest && hasEgg)
-//		{
-//			sentRequest = false;
-//		}
-//	}
+	private boolean sentRequest = false;
+	public void updateClient()
+	{
+		if(!this.getEgg().isEmpty()) return;
+		
+		boolean hasEgg = EggNestBlock.doesHaveEgg(this.getWorld().getBlockState(this.getPos()));
+    
+		if(!sentRequest && hasEgg)
+		{
+			Hatchery.network.sendToServer(HatcheryPacket.requestItemstackTE(this.getPos()));
+			//System.out.println("Requesting Packet");
+			sentRequest = true;
+		}
+		else if ( Minecraft.getSystemTime() % 80 == 0 && sentRequest && hasEgg)
+		{  
+			sentRequest = false;
+//			System.out.println("Resending Packet");
+		}
+	}
 	
 	public float getPercentage()
 	{
@@ -224,11 +221,7 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
     public void readFromNBT(NBTTagCompound compound)
     {
     	this.hatchingTick = compound.getInteger("hatchTime");
-    	
     	this.inventory.readFromNBT(compound);
-    	
-    System.out.println("read -- "+ compound.toString());
-    	
     	super.readFromNBT(compound);
     }
 
@@ -236,28 +229,9 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
     	compound.setInteger("hatchTime", hatchingTick);
-    	
-    	this.inventory.writeToNBT(compound);
-    	
-    	System.out.println("write -- "+ compound.toString());
+    	compound = this.inventory.writeToNBT(compound);
     	return super.writeToNBT(compound);
     }
-//    
-//    @Override
-//    public boolean receiveClientEvent(int id, int type)
-//    {
-//    	this.world.setBlockState(getPos(), this.world.getBlockState(pos));
-//    	
-//        if (id == 1)
-//        {
-//        	
-//            return true;
-//        }
-//        else
-//        {
-//            return super.receiveClientEvent(id, type);
-//        }
-//    }
 
     private void spawnMCChicken()
     {
@@ -272,25 +246,23 @@ public class EggNestTileEntity extends TileEntity implements ITickable//, IInven
 	// PacketUpdate
 	////////////////////////////////////////////////////////////
     
-//    @Override
-//	@Nullable
-//    public SPacketUpdateTileEntity getUpdatePacket()
-//    {
-//
-//		NBTTagCompound sendnbt = new NBTTagCompound();  	
-//		sendnbt = this.writeToNBT(sendnbt);
-//		
+    @Override
+	@Nullable
+    public SPacketUpdateTileEntity getUpdatePacket()
+    {
+		NBTTagCompound sendnbt = new NBTTagCompound();  	
+		sendnbt = this.writeToNBT(sendnbt);
 //    	System.out.println("[DEBUG]:Server sent tile sync packet: "+ sendnbt);
-//       return new SPacketUpdateTileEntity(this.getPos(), this.getBlockMetadata(), sendnbt);
-//    }
-//
-//	@Override
-//    public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SPacketUpdateTileEntity pkt)
-//    {
+       return new SPacketUpdateTileEntity(this.getPos(), this.getBlockMetadata(), sendnbt);
+    }
+
+	@Override
+    public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SPacketUpdateTileEntity pkt)
+    {
 //    	System.out.println("[DEBUG]:Client recived tile sync packet: "+ pkt.getNbtCompound());
-//  		this.readFromNBT(pkt.getNbtCompound());
-//    	this.markDirty();
-//    }
+  		this.readFromNBT(pkt.getNbtCompound());
+    	this.markDirty();
+    }
          
    ////////////////////////////////////////////////////////////////
     //Wailia Intergration

@@ -24,7 +24,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -50,7 +49,6 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 		super(Material.LEAVES);
 		this.name = "nest";
 		this.setUnlocalizedName("nest"); 
-		//this.setRegistryName(Hatchery.MODID,"nest");
 		this.setCreativeTab(Hatchery.hatcheryTabs);	
 		this.setHardness(.2f);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(hasEgg, false));
@@ -105,37 +103,25 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 		EggNestTileEntity te = ((EggNestTileEntity)worldIn.getTileEntity(pos));
 		
-		System.out.println("held - " + heldItem.getDisplayName());
-		
-    	if(doesHaveEgg(state))
-    	{
-    			if(!worldIn.isRemote)
-    			{
-    				
+		if(!worldIn.isRemote)
+		{
+			if(doesHaveEgg(state))
+			{
     				ItemStack egg = te.removeEgg();
     				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + .5d, pos.getZ(), egg));
-    				System.out.println("remove egg - " + egg.getDisplayName());
          			EggNestBlock.removeEgg(worldIn, state, pos);
-
-    			}
-    		return true;
-    	}
-    	else if(!heldItem.isEmpty() && heldItem.getItem() instanceof ItemEgg)
-    	{
-			if(!worldIn.isRemote)
+         			return true;
+			}
+			else if(!heldItem.isEmpty() && heldItem.getItem() instanceof ItemEgg)
 			{
 				te.insertEgg(heldItem.copy());
-		        System.out.println("add egg - " +  te.inventory.getStackInSlot(0).getDisplayName() + te.writeToNBT(new NBTTagCompound()).toString());
 				EggNestBlock.addEgg(worldIn, state, pos);
-				
-		        if (!playerIn.capabilities.isCreativeMode) 
-		        {
+		        if (!playerIn.capabilities.isCreativeMode) {
 		            heldItem.shrink(1);
 		        }
-    		}
-    		
-    		return true;
-    	}
+		        return true;
+			}
+		}
 
 		return true;
     }
@@ -152,20 +138,18 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     	return state.getValue(hasEgg);
     }
     
+    public static void setEggState(World worldIn, IBlockState state, BlockPos pos, boolean egg) {
+    	worldIn.setBlockState(pos,state.withProperty(hasEgg, egg));
+    }
+    
     public static void addEgg(World worldIn, IBlockState state, BlockPos pos)
     {
     	worldIn.setBlockState(pos,state.withProperty(hasEgg, true));
-//        if(!worldIn.isRemote)
-//        	worldIn.markAndNotifyBlock(pos, worldIn.getChunkFromBlockCoords(pos), state, worldIn.getBlockState(pos), 2);
-
     }
     
     public static void removeEgg(World worldIn, IBlockState state, BlockPos pos)
     {
     	worldIn.setBlockState(pos, state.withProperty(hasEgg, false));
-//        if(!worldIn.isRemote)
-//        	worldIn.markAndNotifyBlock(pos, worldIn.getChunkFromBlockCoords(pos), state, worldIn.getBlockState(pos), 2);
-
     }
 	
 	@Override
@@ -173,13 +157,6 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 	{
 		return new EggNestTileEntity();
 	}
-	
-	
-//	public static EggNestBlock create() 
-//	{
-//		EggNestBlock res = new EggNestBlock();
-//		return res;
-//	}
 	
 	public boolean isOpaqueCube(IBlockState state)
 	{
