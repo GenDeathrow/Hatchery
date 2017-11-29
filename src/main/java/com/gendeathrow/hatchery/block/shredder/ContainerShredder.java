@@ -2,12 +2,11 @@ package com.gendeathrow.hatchery.block.shredder;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.block.BasicHatcheryContainer;
 import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
-import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -18,13 +17,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerShredder extends Container 
+public class ContainerShredder extends BasicHatcheryContainer 
 {
 	
 	private final IItemHandler inputInventory;
 	private final IItemHandler outputInventory;
 	
-	private final InventoryStroageModifiable upgrades;
+	private final IItemHandler upgrades;
 	
 	private final ShredderTileEntity shredder;
 	
@@ -35,6 +34,8 @@ public class ContainerShredder extends Container
 		outputInventory = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
 
 		upgrades = tile.getUpgradeStorage();
+
+		addInventories(inputInventory, upgrades);  
 		
 		shredder = tile;
 		
@@ -42,20 +43,7 @@ public class ContainerShredder extends Container
 
 		addSlotToContainer(new SlotItemHandler(inputInventory, 0, 65, 16));
 		
-		addSlotToContainer(new SlotItemHandler(outputInventory, 0, 55, 54){
-			@Override
-			public boolean isItemValid(@Nullable ItemStack stack){
-				return false;
-		    }
-		});
 		
-		addSlotToContainer(new SlotItemHandler(outputInventory, 1, 76, 54){
-			@Override
-			public boolean isItemValid(@Nullable ItemStack stack){
-				return false;
-		    }
-		});
-		     
 		addSlotToContainer(new SlotItemHandler(upgrades, 0, 121, 54) {
 			public boolean isItemValid(@Nullable ItemStack stack)
 		    {
@@ -74,6 +62,25 @@ public class ContainerShredder extends Container
 				return value;
 		    }
 		});
+		
+		
+		addSlotToContainer(new SlotItemHandler(outputInventory, 0, 55, 54){
+			@Override
+			public boolean isItemValid(@Nullable ItemStack stack){
+				return false;
+		    }
+		});
+		
+
+		
+		addSlotToContainer(new SlotItemHandler(outputInventory, 1, 76, 54){
+			@Override
+			public boolean isItemValid(@Nullable ItemStack stack){
+				return false;
+		    }
+		});
+		     
+
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
@@ -83,43 +90,7 @@ public class ContainerShredder extends Container
             addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 142));	          
 	}
 	
-	
-	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) 
-	{
-        ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.inventorySlots.get(slotIndex);
 
-        if (slot != null && slot.getHasStack())
-        {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-
-            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSlots()))
-            {
-                if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(), this.inventorySlots.size(), true))
-                {
-                    return ItemStack.EMPTY;
-                }
-            }
-            else if (!this.mergeItemStack(itemstack1, 0, this.inputInventory.getSlots(), false))
-            {
-                return ItemStack.EMPTY;
-            }
-            
-            if (itemstack1.getCount() == 0)
-            {
-                slot.putStack(ItemStack.EMPTY);
-            }
-            else
-            {
-                slot.onSlotChanged();
-            }
-        }
-        
-		return  itemstack;
-	}
-	
 	@Override
 	public void addListener(IContainerListener listener) {
 		if (this.listeners.contains(listener)) {

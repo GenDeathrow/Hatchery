@@ -5,6 +5,7 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.block.fertilizermixer.FertilizerMixerTileEntity;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
@@ -56,6 +57,18 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return state.getValue(PART) == EggMachineBlock.EnumPartType.BASE ? null : ModItems.chickenmachine;
+    }
+	
+	@Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+    		TileEntity te = worldIn.getTileEntity(pos);
+    		if(te instanceof EggMachineTileEntity) {
+    			((EggMachineTileEntity) te).inputInventory.dropInventory(worldIn, pos);
+    			((EggMachineTileEntity) te).outputInventory.dropInventory(worldIn, pos);
+    			((EggMachineTileEntity) te).upgradeStorage.dropInventory(worldIn, pos);
+    		}
+    		super.breakBlock(worldIn, pos, state);
     }
 
     @Override

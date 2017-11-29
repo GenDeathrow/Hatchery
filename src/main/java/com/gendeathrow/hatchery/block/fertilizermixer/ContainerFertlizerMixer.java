@@ -2,6 +2,7 @@ package com.gendeathrow.hatchery.block.fertilizermixer;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.block.BasicHatcheryContainer;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
@@ -11,7 +12,6 @@ import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
@@ -25,7 +25,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerFertlizerMixer extends Container 
+public class ContainerFertlizerMixer extends BasicHatcheryContainer 
 {
 	
 	private final IItemHandler inputInventory;
@@ -48,6 +48,8 @@ public class ContainerFertlizerMixer extends Container
 		manure = null;
 		upgrades = fertilizerInventory.getUpgradeStorage();
 		
+		addInventories(inputInventory, upgrades);  
+		
 		waterTank = fertilizerInventory.getWaterTank().getFluidAmount();
 		fertilizerTank = fertilizerInventory.getFertilizerTank().getFluidAmount();
 
@@ -65,19 +67,7 @@ public class ContainerFertlizerMixer extends Container
              }
 			 
 		});
-		
 		addSlotToContainer(new SlotFluidContainer(inputInventory, 1, 72, 16, FluidRegistry.WATER));
-		
-		addSlotToContainer(new SlotItemHandler(outputInventory, 0, 72, 52)
-		{
-			@Override
-			public boolean isItemValid(@Nullable ItemStack stack){
-				return false;
-		    }
-			
-		});
-		
-		
 		addSlotToContainer(new SlotItemHandler(inputInventory, 2, 104, 16)		{
 			@Override
 			public boolean isItemValid(@Nullable ItemStack stack){
@@ -89,17 +79,28 @@ public class ContainerFertlizerMixer extends Container
 		    }
 			
 		});
-		addSlotToContainer(new SlotFluidContainer(outputInventory, 1, 104, 52, ModFluids.liquidfertilizer));
+		
 		
 		addSlotToContainer(new SlotItemHandler(upgrades, 0, 8, 52));
 		addSlotToContainer(new SlotItemHandler(upgrades, 1, 31, 52));
+		
+		addSlotToContainer(new SlotItemHandler(outputInventory, 0, 72, 52)
+		{
+			@Override
+			public boolean isItemValid(@Nullable ItemStack stack){
+				return false;
+		    }
+			
+		});
+		
+		addSlotToContainer(new SlotFluidContainer(outputInventory, 1, 104, 52, ModFluids.liquidfertilizer));
 
-	     for (i = 0; i < 3; ++i)
-	            for (int j = 0; j < 9; ++j)
-	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+		for (i = 0; i < 3; ++i)
+			for (int j = 0; j < 9; ++j)
+				addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 
-	        for (i = 0; i < 9; ++i)
-	            addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 142));
+		for (i = 0; i < 9; ++i)
+			addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 142));
 
 	}
 	
@@ -110,48 +111,48 @@ public class ContainerFertlizerMixer extends Container
 	}
 	
 
-	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) 
-	{
-        ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.inventorySlots.get(slotIndex);
-
-        if (slot != null && slot.getHasStack())
-        {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-
-            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSlots()))
-            {
-                if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(),  this.inventorySlots.size(), true))
-                {
-                    return null;
-                }
-            }
-            else if (!this.mergeItemStack(itemstack1, 0, this.inputInventory.getSlots(), false))
-            {
-                return ItemStack.EMPTY;
-            }
-            
-            if (itemstack1.getCount() == 0)
-            {
-                slot.putStack(ItemStack.EMPTY);
-            }
-            else
-            {
-                slot.onSlotChanged();
-            }
-
-            if (itemstack1.getCount() == itemstack.getCount())
-            {
-                return ItemStack.EMPTY;
-            }
-
-            //slot.onPickupFromSlot(player, itemstack1);
-        }
-        
-		return itemstack;
-	}
+//	@Override
+//	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) 
+//	{
+//        ItemStack itemstack = ItemStack.EMPTY;
+//        Slot slot = (Slot)this.inventorySlots.get(slotIndex);
+//
+//        if (slot != null && slot.getHasStack())
+//        {
+//            ItemStack itemstack1 = slot.getStack();
+//            itemstack = itemstack1.copy();
+//
+//            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSlots()))
+//            {
+//                if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(),  this.inventorySlots.size(), true))
+//                {
+//                    return null;
+//                }
+//            }
+//            else if (!this.mergeItemStack(itemstack1, 0, this.inputInventory.getSlots(), false))
+//            {
+//                return ItemStack.EMPTY;
+//            }
+//            
+//            if (itemstack1.getCount() == 0)
+//            {
+//                slot.putStack(ItemStack.EMPTY);
+//            }
+//            else
+//            {
+//                slot.onSlotChanged();
+//            }
+//
+//            if (itemstack1.getCount() == itemstack.getCount())
+//            {
+//                return ItemStack.EMPTY;
+//            }
+//
+//            //slot.onPickupFromSlot(player, itemstack1);
+//        }
+//        
+//		return itemstack;
+//	}
 
 	
 	@SideOnly(Side.CLIENT)

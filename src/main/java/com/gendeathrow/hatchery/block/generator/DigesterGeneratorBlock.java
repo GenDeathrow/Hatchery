@@ -5,6 +5,7 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
@@ -66,7 +67,17 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
         return new ItemStack(this.getItemDropped(state, world.rand, 0), 1, this.damageDropped(state));
     }
     
-    
+	@Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+    		TileEntity te = worldIn.getTileEntity(pos);
+    		if(te instanceof DigesterGeneratorTileEntity) {
+    			((DigesterGeneratorTileEntity) te).inputInventory.dropInventory(worldIn, pos);
+    			((DigesterGeneratorTileEntity) te).outputInventory.dropInventory(worldIn, pos);
+    			((DigesterGeneratorTileEntity) te).upgradeStorage.dropInventory(worldIn, pos);
+    		}
+    		super.breakBlock(worldIn, pos, state);
+    }
     
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) 

@@ -53,6 +53,18 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
 		return true;
     }
 	
+	@Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+    		TileEntity te = worldIn.getTileEntity(pos);
+    		if(te instanceof ShredderTileEntity) {
+    			((ShredderTileEntity) te).inputInventory.dropInventory(worldIn, pos);
+    			((ShredderTileEntity) te).outputInventory.dropInventory(worldIn, pos);
+    			((ShredderTileEntity) te).upgradeStorage.dropInventory(worldIn, pos);
+    		}
+    		super.breakBlock(worldIn, pos, state);
+    }
+	
 
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {

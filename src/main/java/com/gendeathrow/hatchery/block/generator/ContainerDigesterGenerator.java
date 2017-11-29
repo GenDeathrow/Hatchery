@@ -2,6 +2,7 @@ package com.gendeathrow.hatchery.block.generator;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.block.BasicHatcheryContainer;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.inventory.SlotFluidContainer;
 import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
@@ -9,7 +10,6 @@ import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerDigesterGenerator extends Container 
+public class ContainerDigesterGenerator extends BasicHatcheryContainer 
 {
 
 	private final DigesterGeneratorTileEntity tile;
@@ -38,6 +38,11 @@ public class ContainerDigesterGenerator extends Container
 		int i;  
 
 		addSlotToContainer(new SlotFluidContainer(inputInventory, 0, 72, 16, ModFluids.liquidfertilizer));
+        
+		addSlotToContainer(new SlotItemHandler(upgrades, 0, 107, 59));
+		addSlotToContainer(new SlotItemHandler(upgrades, 1, 134, 59));
+		
+		addInventories(inputInventory, upgrades);  
 	
 		addSlotToContainer(new SlotItemHandler(outputInventory, 0, 72, 52)
 		{
@@ -46,9 +51,7 @@ public class ContainerDigesterGenerator extends Container
 				return false;
 		    }
 		});
-        
-		addSlotToContainer(new SlotItemHandler(upgrades, 0, 107, 59));
-		addSlotToContainer(new SlotItemHandler(upgrades, 1, 134, 59));
+
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
@@ -65,48 +68,48 @@ public class ContainerDigesterGenerator extends Container
 		return true;
 	}
 
-	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) 
-	{
-        ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.inventorySlots.get(slotIndex);
-
-        if (slot != null && slot.getHasStack())
-        {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-
-            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSlots()))
-            {
-                if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(),  this.inventorySlots.size(), true))
-                {
-                    return ItemStack.EMPTY;
-                }
-            }
-            else if (!this.mergeItemStack(itemstack1, 0, this.inputInventory.getSlots(), false))
-            {
-                return ItemStack.EMPTY;
-            }
-            
-            if (itemstack1.getCount() == 0)
-            {
-                slot.putStack(ItemStack.EMPTY);
-            }
-            else
-            {
-                slot.onSlotChanged();
-            }
-
-            if (itemstack1.getCount() == itemstack.getCount())
-            {
-                return ItemStack.EMPTY;
-            }
-
-            slot.onTake(player, itemstack1);
-        }
-        
-		return itemstack;
-	}
+//	@Override
+//	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) 
+//	{
+//        ItemStack itemstack = ItemStack.EMPTY;
+//        Slot slot = (Slot)this.inventorySlots.get(slotIndex);
+//
+//        if (slot != null && slot.getHasStack())
+//        {
+//            ItemStack itemstack1 = slot.getStack();
+//            itemstack = itemstack1.copy();
+//
+//            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSlots()))
+//            {
+//                if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(),  this.inventorySlots.size(), true))
+//                {
+//                    return ItemStack.EMPTY;
+//                }
+//            }
+//            else if (!this.mergeItemStack(itemstack1, 0, this.inputInventory.getSlots(), false))
+//            {
+//                return ItemStack.EMPTY;
+//            }
+//            
+//            if (itemstack1.getCount() == 0)
+//            {
+//                slot.putStack(ItemStack.EMPTY);
+//            }
+//            else
+//            {
+//                slot.onSlotChanged();
+//            }
+//
+//            if (itemstack1.getCount() == itemstack.getCount())
+//            {
+//                return ItemStack.EMPTY;
+//            }
+//
+//            slot.onTake(player, itemstack1);
+//        }
+//        
+//		return itemstack;
+//	}
 
 
 	@Override

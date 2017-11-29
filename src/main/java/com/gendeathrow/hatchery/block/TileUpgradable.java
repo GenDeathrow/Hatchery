@@ -9,7 +9,7 @@ import net.minecraft.util.NonNullList;
 
 public class TileUpgradable extends TileEntity
 {
-	protected InventoryStroageModifiable upgradeStorage;
+	public InventoryStroageModifiable upgradeStorage;
 	
 	public TileUpgradable(int upgradeSize)
 	{

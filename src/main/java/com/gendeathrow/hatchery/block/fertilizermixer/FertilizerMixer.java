@@ -79,6 +79,18 @@ public class FertilizerMixer extends BlockContainer implements ITileEntityProvid
 		return true;
     }
 	
+	@Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+    		TileEntity te = worldIn.getTileEntity(pos);
+    		if(te instanceof FertilizerMixerTileEntity) {
+    			((FertilizerMixerTileEntity) te).inputInventory.dropInventory(worldIn, pos);
+    			((FertilizerMixerTileEntity) te).outputInventory.dropInventory(worldIn, pos);
+    			((FertilizerMixerTileEntity) te).upgradeStorage.dropInventory(worldIn, pos);
+    		}
+    		super.breakBlock(worldIn, pos, state);
+    }
+    
 	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) 
