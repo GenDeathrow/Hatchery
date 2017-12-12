@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.core.jei.generator;
+package com.gendeathrow.hatchery.core.jei.old.eggmachine;
 
 import com.gendeathrow.hatchery.Hatchery;
 
@@ -10,50 +10,40 @@ import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
+import mezz.jei.api.recipe.IRecipeWrapper;
+import mezz.jei.api.recipe.IRecipeWrapperFactory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
-public class GeneratorCategory extends BlankRecipeCategory<GeneratorRecipeWrapper>
+public class EggMachineCategory extends BlankRecipeCategory<EggMachineWrapper> implements IRecipeWrapperFactory<EggMachineWrapper>
 {
 	
-    public static final String UID = "hatchery.generator.recipe";
+    public static final String UID = "hatchery.eggmachine.egg";
     private final String title;
     private final IDrawableStatic background;
     private final IDrawableAnimated arrow;
-    private final IDrawableAnimated rf;
-    private final IDrawableAnimated poop;
     private final IDrawableStatic icon;
 
 
-    public GeneratorCategory(IGuiHelper guiHelper) 
+    public EggMachineCategory(IGuiHelper guiHelper) 
     {
-        title = I18n.translateToLocal("jei.gui.generator_recipes");
+        title = I18n.translateToLocal("jei.gui.eggmachine_egg");
 
-        ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/generator_jei.png");
+        ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/eggmachine_recipe.png");
+        ResourceLocation iconloc = new ResourceLocation(Hatchery.MODID, "textures/gui/eggmachine_recipe.png");
         background = guiHelper.createDrawable(location, 0, 0, 91, 78);
 
-        IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 94, 0, 15, 17);
+        IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 91, 0, 15, 17);
         arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.TOP, false);
-
-
-        IDrawableStatic poopDrawable = guiHelper.createDrawable(location, 110, 0, 13, 58);
-        poop = guiHelper.createAnimatedDrawable(poopDrawable, 200, IDrawableAnimated.StartDirection.TOP, true);
-
-        
-        IDrawableStatic rfDrawable = guiHelper.createDrawable(location, 123, 0, 15, 58);
-        rf = guiHelper.createAnimatedDrawable(rfDrawable, 200, IDrawableAnimated.StartDirection.BOTTOM, false);
-
-        
         icon = guiHelper.createDrawable(location, 91, 17, 16, 16);	
+        //icon = guiHelper.createDrawable(iconloc, 117, 0, 44, 65);
     }
     
 	@Override
 	public void drawExtras(Minecraft minecraft) 
 	{
-		arrow.draw(minecraft, 60, 26);
-		poop.draw(minecraft, 42, 6);
-		rf.draw(minecraft, 5, 6);
+		arrow.draw(minecraft, 29, 28);
 	}
 
 	@Override
@@ -75,14 +65,18 @@ public class GeneratorCategory extends BlankRecipeCategory<GeneratorRecipeWrappe
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, GeneratorRecipeWrapper recipeWrapper, IIngredients ingredients) 
+	public void setRecipe(IRecipeLayout recipeLayout, EggMachineWrapper recipeWrapper, IIngredients ingredients) 
 	{
 	        IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 	        
-	    	guiItemStacks.init(0, true, 60, 8);
+	    	guiItemStacks.init(0, true, 17, 9);
 	    	
-	       //guiItemStacks.init(1, false, 18, 47);
+	        guiItemStacks.init(1, true, 38, 9);
+	        guiItemStacks.init(2, false, 28, 48);
 
+	        guiItemStacks.init(3, true, 68, 27);
+	        
+	        
 	        guiItemStacks.set(ingredients);
 	}
 
@@ -90,4 +84,11 @@ public class GeneratorCategory extends BlankRecipeCategory<GeneratorRecipeWrappe
 	public String getModName() {
 		return Hatchery.NAME;
 	}
+
+	@Override
+	public IRecipeWrapper getRecipeWrapper(EggMachineWrapper recipe) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }

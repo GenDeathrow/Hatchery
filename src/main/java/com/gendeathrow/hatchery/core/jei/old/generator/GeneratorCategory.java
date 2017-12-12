@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.core.jei.nestingpen;
+package com.gendeathrow.hatchery.core.jei.old.generator;
 
 import com.gendeathrow.hatchery.Hatchery;
 
@@ -14,34 +14,46 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
-public class NestingPenCategory extends BlankRecipeCategory<NestingPenDropRecipeWrapper>
+public class GeneratorCategory extends BlankRecipeCategory<GeneratorRecipeWrapper>
 {
 	
-    public static final String UID = "hatchery.nesting_pen.drops";
+    public static final String UID = "hatchery.generator.recipe";
     private final String title;
     private final IDrawableStatic background;
     private final IDrawableAnimated arrow;
+    private final IDrawableAnimated rf;
+    private final IDrawableAnimated poop;
     private final IDrawableStatic icon;
 
 
-    public NestingPenCategory(IGuiHelper guiHelper) 
+    public GeneratorCategory(IGuiHelper guiHelper) 
     {
-        title = I18n.translateToLocal("jei.gui.nesting_pen_drop");
+        title = I18n.translateToLocal("jei.gui.generator_recipes");
 
-        ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/nestingpen_drops.png");
+        ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/generator_jei.png");
         background = guiHelper.createDrawable(location, 0, 0, 91, 78);
 
-        IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 91, 0, 15, 17);
+        IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 94, 0, 15, 17);
         arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.TOP, false);
 
 
+        IDrawableStatic poopDrawable = guiHelper.createDrawable(location, 110, 0, 13, 58);
+        poop = guiHelper.createAnimatedDrawable(poopDrawable, 200, IDrawableAnimated.StartDirection.TOP, true);
+
+        
+        IDrawableStatic rfDrawable = guiHelper.createDrawable(location, 123, 0, 15, 58);
+        rf = guiHelper.createAnimatedDrawable(rfDrawable, 200, IDrawableAnimated.StartDirection.BOTTOM, false);
+
+        
         icon = guiHelper.createDrawable(location, 91, 17, 16, 16);	
     }
-
+    
 	@Override
 	public void drawExtras(Minecraft minecraft) 
 	{
-		arrow.draw(minecraft, 38, 35);
+		arrow.draw(minecraft, 60, 26);
+		poop.draw(minecraft, 42, 6);
+		rf.draw(minecraft, 5, 6);
 	}
 
 	@Override
@@ -63,17 +75,14 @@ public class NestingPenCategory extends BlankRecipeCategory<NestingPenDropRecipe
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, NestingPenDropRecipeWrapper recipeWrapper, IIngredients ingredients) 
+	public void setRecipe(IRecipeLayout recipeLayout, GeneratorRecipeWrapper recipeWrapper, IIngredients ingredients) 
 	{
 	        IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 	        
-	    	guiItemStacks.init(0, true, 7, 7);
-	    	guiItemStacks.init(1, true, 35, 12);
-	        guiItemStacks.init(2, false, 12, 55);
-	        guiItemStacks.init(3, false, 32, 55);
-	        guiItemStacks.init(4, false, 47, 55);
-	        guiItemStacks.init(5, false, 62, 55);
-	        
+	    	guiItemStacks.init(0, true, 60, 8);
+	    	
+	       //guiItemStacks.init(1, false, 18, 47);
+
 	        guiItemStacks.set(ingredients);
 	}
 
@@ -81,5 +90,4 @@ public class NestingPenCategory extends BlankRecipeCategory<NestingPenDropRecipe
 	public String getModName() {
 		return Hatchery.NAME;
 	}
-	
 }

@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.core.jei.eggmachine;
+package com.gendeathrow.hatchery.core.jei.old.eggmachine;
 
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;

@@ -2,27 +2,35 @@ package com.gendeathrow.hatchery.core.jei;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity.ShredderRecipe;
 import com.gendeathrow.hatchery.core.config.ConfigLootHandler;
 import com.gendeathrow.hatchery.core.config.ConfigLootHandler.ItemDrop;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
-import com.gendeathrow.hatchery.core.jei.eggmachine.LuckyEggWrapper;
-import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenDropRecipeWrapper;
-import com.gendeathrow.hatchery.core.jei.shredder.ShredderRecipeWrapper;
+import com.gendeathrow.hatchery.core.jei.old.eggmachine.LuckyEggWrapper;
+import com.gendeathrow.hatchery.core.jei.old.nestingpen.NestingPenDropRecipeWrapper;
+import com.gendeathrow.hatchery.core.jei.old.shredder.ShredderRecipeWrapper;
+import com.gendeathrow.hatchery.core.jei.shredder.ShredderCategory;
 import com.setycz.chickens.ChickensMod;
 import com.setycz.chickens.registry.ChickensRegistry;
 import com.setycz.chickens.registry.ChickensRegistryItem;
 
+import mezz.jei.api.IGuiHelper;
+import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.ISubtypeRegistry;
 import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.ingredients.IIngredientRegistry;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.init.Items;
@@ -44,33 +52,43 @@ import net.minecraftforge.oredict.OreDictionary;
 @JEIPlugin
 public class JEIPllugin implements IModPlugin 
 {
-    @SuppressWarnings("deprecation")
+	
+    
+		IJeiHelpers jeiHelpers;
+		IGuiHelper guiHelper;
+		IIngredientRegistry ingredientRegistry;
+	
+	
+    
 	@Override
     public void register (IModRegistry registry) 
     {
-//        for (final Block block : ModBlocks.BLOCKS)
-//            registry.addIngredientInfo(block, block.getClass(), "jei." + block.getUnlocalizedName());
+		System.out.println("REGISTER JEI");
+		System.out.println("REGISTER JEI");
+		System.out.println("REGISTER JEI");
+		System.out.println("REGISTER JEI");
+		System.out.println("REGISTER JEI");
+		System.out.println("REGISTER JEI");
+    	jeiHelpers = registry.getJeiHelpers();
+    	guiHelper = jeiHelpers.getGuiHelper();
+    	ingredientRegistry = registry.getIngredientRegistry();
+    		
+        for (Block block : ModBlocks.BLOCKS) {
+            //registry.addIngredientInfo(block, block.getClass(), "jei." + block.getUnlocalizedName());
+        	ItemStack stack =  new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE);
+        	if(!stack.isEmpty()) registry.addDescription(stack, "jei." + block.getUnlocalizedName());
+        }
         
-        //.addDescription(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE), "jei." + block.getUnlocalizedName());
-        
-        for (final Item item : ModItems.ITEMS) {
-             registry.addDescription(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), "jei." + item.getUnlocalizedName());
-             //.addIngredientInfo(item, item.getClass(),  "jei." + item.getUnlocalizedName());
+        for (Item item : ModItems.ITEMS) {
+        	ItemStack stack = new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE);
+        	if(!stack.isEmpty()) registry.addDescription(stack, "jei." + item.getUnlocalizedName());
         }
             
-//            
-//    
-//		IJeiHelpers jeiHelpers = registry.getJeiHelpers();
-//		IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
-//		IIngredientRegistry ingredientRegistry = registry.getIngredientRegistry();
-//
-//		registry.addRecipeCategories(new NestingPenCategory(guiHelper));
+        registry.handleRecipes(ShredderCategory.class, new ShredderCategory(guiHelper), ShredderCategory.UID);
 //        registry.addRecipeHandlers(new NestingPenDropRecipeHandler());
-//        
 //        List<NestingPenDropRecipeWrapper> recipes = new ArrayList<NestingPenDropRecipeWrapper>();
-//
 //        recipes = getVanillaDropRecipe(recipes);
-//        
+//     
 //        if(Loader.isModLoaded("chickens"));
 //        	recipes = getDropRecipes(recipes);
 //        
@@ -129,9 +147,20 @@ public class JEIPllugin implements IModPlugin
 //        
      }
     
+    
+	Map<Class, HRecipeCategory> categories = new LinkedHashMap<>();
+	
+	
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry) {
-		
+//		
+//		registry.addRecipeCategories(new NestingPenCategory(guiHelper));
+//		registry.addRecipeCategories(new ShredderCategory(guiHelper));
+//		registry.addRecipeCategories(new LuckyEggCategory(guiHelper));
+//		registry.addRecipeCategories(new EggMachineCategory(guiHelper));
+//		registry.addRecipeCategories(new EggMachineCategory(guiHelper));
+//		registry.addRecipeCategories(new GeneratorCategory(guiHelper));
+//		registry.addRecipeCategories(new FertilizerMixerCategory(guiHelper));
 	}
 
 
@@ -152,6 +181,7 @@ public class JEIPllugin implements IModPlugin
 	{
 		
 	}
+	
 	private List<LuckyEggWrapper> getLuckyEggs(List<LuckyEggWrapper> recipes)
 	{
 		List<ItemStack> droplist = new ArrayList<ItemStack>();

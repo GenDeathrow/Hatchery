@@ -53,8 +53,8 @@ public class ModBlocks
 	public static Block manureBlock = new ManureBlock().setRegistryName(new ResourceLocation(Hatchery.MODID, "manure_block")).setUnlocalizedName(Hatchery.MODID + ".manure_block" ).setCreativeTab(Hatchery.hatcheryTabs);
 	public static Block nuseryBlock = new BlockMobNursery().setRegistryName(new ResourceLocation(Hatchery.MODID, "nursery_block")).setUnlocalizedName(Hatchery.MODID + ".nursery_block" ).setCreativeTab(Hatchery.hatcheryTabs);
 	public static Block fertilizerMixer = new FertilizerMixer().setCreativeTab(Hatchery.hatcheryTabs).setRegistryName(new ResourceLocation(Hatchery.MODID, "fertilizer_mixer")).setUnlocalizedName(Hatchery.MODID + ".fertilizer_mixer" ).setCreativeTab(Hatchery.hatcheryTabs);
-	public static Block digesterGenerator = new DigesterGeneratorBlock(false).setCreativeTab(Hatchery.hatcheryTabs).setRegistryName(new ResourceLocation(Hatchery.MODID, "digester_generator")).setUnlocalizedName(Hatchery.MODID + ".digester_generator" ).setCreativeTab(Hatchery.hatcheryTabs);
-	public static Block digesterGeneratorOn = new DigesterGeneratorBlock(true).setTickRandomly(true).setRegistryName(new ResourceLocation(Hatchery.MODID, "digester_generator_on")).setUnlocalizedName(Hatchery.MODID + ".digester_generator_on" ).setCreativeTab(Hatchery.hatcheryTabs);
+	public static Block digesterGenerator = new DigesterGeneratorBlock().setCreativeTab(Hatchery.hatcheryTabs).setRegistryName(new ResourceLocation(Hatchery.MODID, "digester_generator")).setUnlocalizedName(Hatchery.MODID + ".digester_generator" ).setCreativeTab(Hatchery.hatcheryTabs);
+	//public static Block digesterGeneratorOn = new DigesterGeneratorBlock(true).setTickRandomly(true).setRegistryName(new ResourceLocation(Hatchery.MODID, "digester_generator_on")).setUnlocalizedName(Hatchery.MODID + ".digester_generator_on" ).setCreativeTab(Hatchery.hatcheryTabs);
 	public static Block shredder = new ShredderBlock().setRegistryName(new ResourceLocation(Hatchery.MODID, "shredder")).setUnlocalizedName(Hatchery.MODID + ".shredder" ).setCreativeTab(Hatchery.hatcheryTabs);
 	public static Block chickenMachine = new EggMachineBlock(Material.GLASS).setRegistryName(new ResourceLocation(Hatchery.MODID, "chicken_machine_block")).setUnlocalizedName(Hatchery.MODID + ".chicken_machine_block" ).setCreativeTab(Hatchery.hatcheryTabs);
 
@@ -74,7 +74,6 @@ public class ModBlocks
 				nuseryBlock,
 				fertilizerMixer,
 				digesterGenerator,
-				digesterGeneratorOn,
 				shredder,
 				chickenMachine);
 		

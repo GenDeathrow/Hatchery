@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.core.jei.eggmachine;
+package com.gendeathrow.hatchery.core.jei.old.eggmachine;
 
 import java.util.ArrayList;
 import java.util.List;

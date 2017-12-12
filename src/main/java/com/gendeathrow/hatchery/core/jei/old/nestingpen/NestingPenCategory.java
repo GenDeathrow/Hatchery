@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.core.jei.eggmachine;
+package com.gendeathrow.hatchery.core.jei.old.nestingpen;
 
 import com.gendeathrow.hatchery.Hatchery;
 
@@ -14,34 +14,34 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
-public class EggMachineCategory extends BlankRecipeCategory<EggMachineWrapper>
+public class NestingPenCategory extends BlankRecipeCategory<NestingPenDropRecipeWrapper>
 {
 	
-    public static final String UID = "hatchery.eggmachine.egg";
+    public static final String UID = "hatchery.nesting_pen.drops";
     private final String title;
     private final IDrawableStatic background;
     private final IDrawableAnimated arrow;
     private final IDrawableStatic icon;
 
 
-    public EggMachineCategory(IGuiHelper guiHelper) 
+    public NestingPenCategory(IGuiHelper guiHelper) 
     {
-        title = I18n.translateToLocal("jei.gui.eggmachine_egg");
+        title = I18n.translateToLocal("jei.gui.nesting_pen_drop");
 
-        ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/eggmachine_recipe.png");
-        ResourceLocation iconloc = new ResourceLocation(Hatchery.MODID, "textures/gui/eggmachine_recipe.png");
+        ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/nestingpen_drops.png");
         background = guiHelper.createDrawable(location, 0, 0, 91, 78);
 
         IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 91, 0, 15, 17);
         arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.TOP, false);
+
+
         icon = guiHelper.createDrawable(location, 91, 17, 16, 16);	
-        //icon = guiHelper.createDrawable(iconloc, 117, 0, 44, 65);
     }
-    
+
 	@Override
 	public void drawExtras(Minecraft minecraft) 
 	{
-		arrow.draw(minecraft, 29, 28);
+		arrow.draw(minecraft, 38, 35);
 	}
 
 	@Override
@@ -63,17 +63,16 @@ public class EggMachineCategory extends BlankRecipeCategory<EggMachineWrapper>
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, EggMachineWrapper recipeWrapper, IIngredients ingredients) 
+	public void setRecipe(IRecipeLayout recipeLayout, NestingPenDropRecipeWrapper recipeWrapper, IIngredients ingredients) 
 	{
 	        IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 	        
-	    	guiItemStacks.init(0, true, 17, 9);
-	    	
-	        guiItemStacks.init(1, true, 38, 9);
-	        guiItemStacks.init(2, false, 28, 48);
-
-	        guiItemStacks.init(3, true, 68, 27);
-	        
+	    	guiItemStacks.init(0, true, 7, 7);
+	    	guiItemStacks.init(1, true, 35, 12);
+	        guiItemStacks.init(2, false, 12, 55);
+	        guiItemStacks.init(3, false, 32, 55);
+	        guiItemStacks.init(4, false, 47, 55);
+	        guiItemStacks.init(5, false, 62, 55);
 	        
 	        guiItemStacks.set(ingredients);
 	}
@@ -82,13 +81,5 @@ public class EggMachineCategory extends BlankRecipeCategory<EggMachineWrapper>
 	public String getModName() {
 		return Hatchery.NAME;
 	}
-
-//	@Override
-//	public IDrawable getIcon() 
-//	{
-//		return icon;
-//	}
-
-	
 	
 }

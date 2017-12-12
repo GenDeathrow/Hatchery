@@ -5,7 +5,6 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
@@ -14,6 +13,7 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -41,19 +41,34 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEntityProvider
 {
-	boolean isGenerating;
-	
-	public DigesterGeneratorBlock(boolean isGenerating) 
+    public static final PropertyBool ISGENERATING = PropertyBool.create("isgenerating");
+    
+    
+	public DigesterGeneratorBlock() 
 	{
 		super(Material.IRON);
 		this.setHardness(2);
 		this.setHarvestLevel("pickaxe", 0);
 		this.setUnlocalizedName("digester_generator");
 		this.isBlockContainer = true;
-		this.isGenerating = isGenerating;
+		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ISGENERATING, false));
 		
 	}
 
+	
+	/** Is the Generator turned on? */
+	public static boolean isGenerating(IBlockState blockStateContainer)
+	{
+		return blockStateContainer.getValue(ISGENERATING);
+	}
+	
+	/** Update Generator */
+	public static void setGenerating(World worldIn, BlockPos pos, IBlockState state, boolean isActiveIn)
+	{
+		worldIn.setBlockState(pos, state.withProperty(FACING, getFacing(state)).withProperty(ISGENERATING, isActiveIn), 3);
+	}
+	
+	
     @Nullable
     @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
@@ -127,6 +142,8 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+        if(!worldIn.isRemote)
+          	 worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 2); 
     }
     
     
@@ -166,7 +183,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
     @Override
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
     {
-        if (this.isGenerating)
+        if (DigesterGeneratorBlock.isGenerating(stateIn))
         {
             EnumFacing enumfacing = (EnumFacing)stateIn.getValue(FACING);
             double d0 = (double)pos.getX() + 0.5D;
@@ -204,17 +221,8 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
         IBlockState iblockstate = worldIn.getBlockState(pos);
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
-        if (active)
-        {
-            worldIn.setBlockState(pos, ModBlocks.digesterGeneratorOn.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-            worldIn.setBlockState(pos, ModBlocks.digesterGeneratorOn.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-        }
-        else
-        {
-            worldIn.setBlockState(pos, ModBlocks.digesterGenerator.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-            worldIn.setBlockState(pos, ModBlocks.digesterGenerator.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-        }
-
+        setGenerating(worldIn, pos, iblockstate, active);
+   
         if (tileentity != null)
         {
             tileentity.validate();
@@ -263,26 +271,23 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 	}
 	
     @Override
-	 public IBlockState getStateFromMeta(int meta)
-	    {
-	        EnumFacing enumfacing = EnumFacing.getFront(meta);
-
-	        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-	        {
-	            enumfacing = EnumFacing.NORTH;
-	        }
-
-	        return this.getDefaultState().withProperty(FACING, enumfacing);
-	    }
+	public IBlockState getStateFromMeta(int meta)
+	{
+		 return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(ISGENERATING, (meta >> 2) == 1 ? true : false);
+	}
 
 	    /**
 	     * Convert the BlockState into the correct metadata value
 	     */
     @Override
-	    public int getMetaFromState(IBlockState state)
-	    {
-	        return ((EnumFacing)state.getValue(FACING)).getIndex();
-	    }
+	public int getMetaFromState(IBlockState state)
+	{
+		int i = 0;
+		i |= ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
+		i |= (state.getValue(ISGENERATING) ? 1 : 0 ) << 2;
+	    	
+		return i  ;
+	}
 
 
 	    /**
@@ -290,26 +295,26 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 	     * blockstate.
 	     */
     @Override
-	    public IBlockState withRotation(IBlockState state, Rotation rot)
-	    {
-	        return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
-	    }
+    public IBlockState withRotation(IBlockState state, Rotation rot)
+    {
+    	return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
+    }
 
-	    /**
-	     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-	     * blockstate.
-	     */
+    /**
+     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
+     * blockstate.
+     */
     @Override
-	    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
-	    {
-	        return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
-	    }
+    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
+    {
+    	return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
+    }
 
     @Override
-	    protected BlockStateContainer createBlockState()
-	    {
-	        return new BlockStateContainer(this, new IProperty[] {FACING});
-	    }
+    protected BlockStateContainer createBlockState()
+    {
+    	return new BlockStateContainer(this, new IProperty[] {FACING, ISGENERATING});
+    }
 	    
     
 }

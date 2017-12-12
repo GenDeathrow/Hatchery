@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.core.jei.nestingpen;
+package com.gendeathrow.hatchery.core.jei.old.nestingpen;
 
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;

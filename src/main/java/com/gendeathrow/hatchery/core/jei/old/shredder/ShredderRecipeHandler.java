@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.core.jei.shredder;
+package com.gendeathrow.hatchery.core.jei.old.shredder;
 
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;

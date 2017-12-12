@@ -1,33 +1,34 @@
-package com.gendeathrow.hatchery.core.jei.eggmachine;
+package com.gendeathrow.hatchery.core.jei.old.shredder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.api.crafting.ShredderRecipe;
+import com.gendeathrow.hatchery.core.init.ModBlocks;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 
-public class EggMachineWrapper extends BlankRecipeWrapper 
+public class ShredderRecipeWrapper extends BlankRecipeWrapper 
 {
 	private final List<ItemStack> outputs;
 	private final List<ItemStack>  inputs;
 	
 	
-	public EggMachineWrapper() 
+	public ShredderRecipeWrapper(ShredderRecipe recipe) 
 	{
 		this.outputs = new ArrayList<ItemStack>();
 		this.inputs = new ArrayList<ItemStack>();
 		
-		this.inputs.add(new ItemStack(ModItems.hatcheryEgg, 24));
-		this.inputs.add(new ItemStack(ModItems.plastic, 2));
-		this.inputs.add(new ItemStack(ModItems.chickenmachine));
+		this.inputs.add(recipe.getInputItem());
+		this.inputs.add(new ItemStack(ModBlocks.shredder));
 		
 		
-		this.outputs.add(new ItemStack(ModItems.prizeEgg));
-
+		this.outputs.add(recipe.getOutputItem());
+		if(recipe.hasExtraOutput())
+			this.outputs.add(recipe.getExtraItem());
 		
 	}
 

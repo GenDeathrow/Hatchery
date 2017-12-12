@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.core.jei.fertilizermixer;
+package com.gendeathrow.hatchery.core.jei.old.fertilizermixer;
 
 import com.gendeathrow.hatchery.Hatchery;
 

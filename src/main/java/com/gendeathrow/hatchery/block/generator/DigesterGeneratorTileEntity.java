@@ -78,7 +78,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IEner
 	@Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
     {
-		if((oldState.getBlock() == ModBlocks.digesterGenerator || oldState.getBlock() == ModBlocks.digesterGeneratorOn) && (newSate.getBlock() == ModBlocks.digesterGenerator || newSate.getBlock() == ModBlocks.digesterGeneratorOn))
+		if(oldState.getBlock() == ModBlocks.digesterGenerator && newSate.getBlock() == ModBlocks.digesterGenerator)
 		{
 			return false;
 		}
@@ -176,7 +176,6 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IEner
 			
 			if (flag != isGenerating())
 			{
-				//flag1 = true;
 				DigesterGeneratorBlock.setState(this.isGenerating(), this.world, this.pos);
 			}
 		}

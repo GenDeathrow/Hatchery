@@ -1,10 +1,22 @@
 {
+	"forge_marker": 1,
+	"defaults": {
+    	"model": "hatchery:generator"
+  	},
     "variants": {
-        "facing=down":  { "model": "hatchery:generator", "x": 180 },
-        "facing=up":    { "model": "hatchery:generator" },
-        "facing=north": { "model": "hatchery:generator" },
-        "facing=south": { "model": "hatchery:generator", "y": 180 },
-        "facing=west":  { "model": "hatchery:generator", "y": 270 },
-        "facing=east":  { "model": "hatchery:generator", "y": 90 }
+    	"normal": [{}],
+    	"inventory": [{}],
+    	"facing":{
+    		"down": {"x": 180 },
+    		"up": {},
+    		"north": {},
+    		"south": {"y": 180 },
+    		"west": {"y": 270 },
+    		"east": {"y": 90}
+    	},
+    	"isgenerating": {
+    		"true": {"model": "hatchery:generator_on"},
+    		"false": {"model": "hatchery:generator"}
+    	}
 	}
 }
