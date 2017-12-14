@@ -8,16 +8,16 @@ import net.minecraft.item.ItemStack;
 
 public class ShredderRecipe {
 	
-	private ItemStack itemIn;
-	public ItemStack itemOut;
-	private ItemStack itemExtra;
+	private ItemStack itemIn = ItemStack.EMPTY;
+	public ItemStack itemOut = ItemStack.EMPTY;
+	private ItemStack itemExtra = ItemStack.EMPTY;
 	private int chance;
 	public int shredTime;
 	private Random rand = new Random();
     	
 	public ShredderRecipe(ItemStack itemIn, ItemStack itemOut)
 	{
-		this(itemIn, itemOut, (ItemStack)null);
+		this(itemIn, itemOut, ItemStack.EMPTY);
 	}
     	
 	public ShredderRecipe(ItemStack itemIn, ItemStack itemOut, ItemStack itemExtra)
@@ -67,4 +67,13 @@ public class ShredderRecipe {
 		else return null;
 	}
     	
+	@Override
+	public String toString()
+	{
+		return "Shredder Recipe>>" + 
+			   "  ItemIn:"+ (!this.itemIn.isEmpty() ? this.itemIn.getDisplayName() : "null") +
+			   "  ItemOut:"+ (!this.itemOut.isEmpty() ? this.itemOut.getDisplayName() : "null") +
+			   "  ItemExtra:"+ (!this.itemExtra.isEmpty() ? this.itemExtra.getDisplayName() : "null");
+		
+	}
 }

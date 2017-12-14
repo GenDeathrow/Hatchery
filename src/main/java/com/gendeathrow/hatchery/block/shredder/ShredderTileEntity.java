@@ -37,6 +37,11 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 public class ShredderTileEntity extends TileUpgradable implements ITickable, IContainerUpdate, IEnergyReceiver
 {
+	
+	
+	public static ArrayList<ShredderRecipe> shredderRecipes = new ArrayList<ShredderRecipe>();
+	
+	
 	public EnergyStorageRF energy= new EnergyStorageRF(100000).setMaxReceive(100);
 	   
 	public int animationTicks;  
@@ -63,8 +68,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 			return false;
 		}
 	};
-	
-	public static ArrayList<ShredderRecipe> shredderRecipes = new ArrayList<ShredderRecipe>();
+
 	
     private int transferCooldown = -1;
 	int slotIn = 0;

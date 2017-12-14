@@ -6,19 +6,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gendeathrow.hatchery.api.crafting.NestingPenDropRecipe;
+import com.gendeathrow.hatchery.api.crafting.ShredderRecipe;
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
-import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity.ShredderRecipe;
 import com.gendeathrow.hatchery.core.config.ConfigLootHandler;
 import com.gendeathrow.hatchery.core.config.ConfigLootHandler.ItemDrop;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenCategory;
 import com.gendeathrow.hatchery.core.jei.old.eggmachine.LuckyEggWrapper;
-import com.gendeathrow.hatchery.core.jei.old.nestingpen.NestingPenDropRecipeWrapper;
-import com.gendeathrow.hatchery.core.jei.old.shredder.ShredderRecipeWrapper;
 import com.gendeathrow.hatchery.core.jei.shredder.ShredderCategory;
-import com.setycz.chickens.ChickensMod;
-import com.setycz.chickens.registry.ChickensRegistry;
-import com.setycz.chickens.registry.ChickensRegistryItem;
+import com.gendeathrow.hatchery.modaddons.ChickensHelper;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.IJeiHelpers;
@@ -30,6 +28,7 @@ import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.ingredients.IIngredientRegistry;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.passive.EntityChicken;
@@ -37,39 +36,24 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.oredict.OreDictionary;
-
-
-@Optional.InterfaceList({
-	@Optional.Interface(iface = "com.setycz.chickens.ChickensMod", modid = "chickens"),
-	@Optional.Interface(iface = "com.setycz.chickens.registry.ChickensRegistry", modid = "chickens"),
-	@Optional.Interface(iface = "com.setycz.chickens.registry.ChickensRegistryItem", modid = "chickens")
-
-})
 
 
 @JEIPlugin
 public class JEIPllugin implements IModPlugin 
 {
+	IJeiHelpers jeiHelpers;
+	IGuiHelper guiHelper;
+	IIngredientRegistry ingredientRegistry;
 	
-    
-		IJeiHelpers jeiHelpers;
-		IGuiHelper guiHelper;
-		IIngredientRegistry ingredientRegistry;
-	
-	
-    
-	@Override
+	private ShredderCategory shredderCat;
+	private NestingPenCategory nestingCat;
+
+		@Override
     public void register (IModRegistry registry) 
     {
-		System.out.println("REGISTER JEI");
-		System.out.println("REGISTER JEI");
-		System.out.println("REGISTER JEI");
-		System.out.println("REGISTER JEI");
-		System.out.println("REGISTER JEI");
-		System.out.println("REGISTER JEI");
-    	jeiHelpers = registry.getJeiHelpers();
+
+		jeiHelpers = registry.getJeiHelpers();
     	guiHelper = jeiHelpers.getGuiHelper();
     	ingredientRegistry = registry.getIngredientRegistry();
     		
@@ -83,8 +67,17 @@ public class JEIPllugin implements IModPlugin
         	ItemStack stack = new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE);
         	if(!stack.isEmpty()) registry.addDescription(stack, "jei." + item.getUnlocalizedName());
         }
-            
-        registry.handleRecipes(ShredderCategory.class, new ShredderCategory(guiHelper), ShredderCategory.UID);
+         
+        registry.handleRecipes(ShredderRecipe.class, shredderCat, ShredderCategory.UID);
+        registry.addRecipes(getShredderRecipes(), ShredderCategory.UID);
+        
+        registry.handleRecipes(NestingPenDropRecipe.class, nestingCat, NestingPenCategory.UID);
+        
+        if(ChickensHelper.isLoaded())
+        	registry.addRecipes(ChickensHelper.getChickensModDropRecipes(nestingCat), NestingPenCategory.UID);
+
+        registry.addRecipes(getVanillaDropRecipe(), NestingPenCategory.UID);
+        
 //        registry.addRecipeHandlers(new NestingPenDropRecipeHandler());
 //        List<NestingPenDropRecipeWrapper> recipes = new ArrayList<NestingPenDropRecipeWrapper>();
 //        recipes = getVanillaDropRecipe(recipes);
@@ -153,9 +146,11 @@ public class JEIPllugin implements IModPlugin
 	
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry) {
-//		
-//		registry.addRecipeCategories(new NestingPenCategory(guiHelper));
-//		registry.addRecipeCategories(new ShredderCategory(guiHelper));
+		guiHelper = registry.getJeiHelpers().getGuiHelper();
+		
+		//		
+		registry.addRecipeCategories(nestingCat = new NestingPenCategory(guiHelper));
+		registry.addRecipeCategories(shredderCat = new ShredderCategory(guiHelper));
 //		registry.addRecipeCategories(new LuckyEggCategory(guiHelper));
 //		registry.addRecipeCategories(new EggMachineCategory(guiHelper));
 //		registry.addRecipeCategories(new EggMachineCategory(guiHelper));
@@ -202,20 +197,20 @@ public class JEIPllugin implements IModPlugin
 		return recipes;
 	}
 	
-	private List<ShredderRecipeWrapper> getShredderRecipes(List<ShredderRecipeWrapper> recipes)
+	private List<IRecipeWrapper> getShredderRecipes()
 	{
+		List<IRecipeWrapper > recipes = new ArrayList<IRecipeWrapper>();
+		
 		for(ShredderRecipe recipe : ShredderTileEntity.shredderRecipes)
-		{
-			recipes.add(new ShredderRecipeWrapper(recipe));
-		}
+			recipes.add(shredderCat.getRecipeWrapper(recipe));
 			
 		return recipes;
 	}
 	
-	private List<NestingPenDropRecipeWrapper> getVanillaDropRecipe(List<NestingPenDropRecipeWrapper> recipes)
+	private List<IRecipeWrapper> getVanillaDropRecipe()
 	{
         ResourceLocation name = EntityList.getKey(EntityChicken.class);
-        
+        List<IRecipeWrapper> recipes = new ArrayList<IRecipeWrapper>();
         if (EntityList.ENTITY_EGGS.containsKey(name))
         {
             ItemStack chicken = new ItemStack(net.minecraft.init.Items.SPAWN_EGG);
@@ -227,31 +222,11 @@ public class JEIPllugin implements IModPlugin
             output.add(new ItemStack(ModItems.manure));
             output.add(new ItemStack(Items.FEATHER));
             
-            recipes.add(new NestingPenDropRecipeWrapper(chicken, output));
+            recipes.add(nestingCat.getRecipeWrapper(new NestingPenDropRecipe(chicken, output)));
             
         }
         return recipes;
 	}
 	
-	@Optional.Method(modid = "chickens")
-    private List<NestingPenDropRecipeWrapper> getDropRecipes(List<NestingPenDropRecipeWrapper> recipes) 
-    {
-
-        for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) 
-        {
-         	List<ItemStack> output = new ArrayList();
-        	output.add(chicken.createLayItem());
-        	output.add(new ItemStack(ModItems.manure));
-        	output.add(new ItemStack(Items.FEATHER));
-        	output.add(new ItemStack(ModItems.hatcheryEgg));
-
-        	ItemStack spawnEgg = new ItemStack(ChickensMod.spawnEgg, 1);
-        	
-            recipes.add(new NestingPenDropRecipeWrapper(spawnEgg, output));
-        }
-        
-        return recipes;
-    }
-
 
 }

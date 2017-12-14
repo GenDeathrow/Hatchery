@@ -1,11 +1,21 @@
 package com.gendeathrow.hatchery.modaddons;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.api.crafting.NestingPenDropRecipe;
+import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenCategory;
+import com.setycz.chickens.ChickensMod;
 import com.setycz.chickens.entity.EntityChickensChicken;
+import com.setycz.chickens.item.ItemSpawnEgg;
 import com.setycz.chickens.registry.ChickensRegistry;
 import com.setycz.chickens.registry.ChickensRegistryItem;
 
+import mezz.jei.api.recipe.IRecipeWrapper;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -16,11 +26,13 @@ import net.minecraftforge.fml.common.Optional.Interface;
 @Optional.InterfaceList(
 		value = 
 		{
+				@Interface(iface = "com.setycz.chickens.ChickensMod", modid = "chickens"),
 				@Interface(iface = "com.setycz.chickens.entity.EntityChickensChicken", modid = "chickens"),
 				@Interface(iface = "com.setycz.chickens.registry.ChickensRegistry", modid = "chickens"),
 				@Interface(iface = "com.setycz.chickens.registry.ChickensRegistryItem", modid = "chickens")
 		}
 )
+
 public class ChickensHelper {
 
 	public static final String ChickensModID = "chickens";
@@ -47,8 +59,7 @@ public class ChickensHelper {
        	world.spawnEntity(entitychicken);
     }
     
-    
-    
+
     /**
      * Gets a chicken of a certain dye type from an itemStack 
      * @param itemStack
@@ -65,4 +76,36 @@ public class ChickensHelper {
     }
    
     
+    
+    
+    public static List<IRecipeWrapper> getChickensModDropRecipes(NestingPenCategory nestingCat) {
+    	if(ChickensHelper.isLoaded())
+    		return getDropRecipes(nestingCat);
+    	
+    	return null;
+    }
+    
+    
+	@Optional.Method(modid = "chickens")
+    private static List<IRecipeWrapper> getDropRecipes(NestingPenCategory nestingCat) 
+    {
+     	List<IRecipeWrapper> recipes = new ArrayList<IRecipeWrapper>();
+        for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) 
+        {
+         	List<ItemStack> output = new ArrayList();
+        	output.add(chicken.createLayItem());
+        	output.add(new ItemStack(ModItems.manure));
+        	output.add(new ItemStack(Items.FEATHER));
+        	output.add(new ItemStack(ModItems.hatcheryEgg));
+
+        	ItemStack spawnEgg = new ItemStack(ChickensMod.spawnEgg, 1);
+        	ItemSpawnEgg.applyEntityIdToItemStack(spawnEgg, chicken.getRegistryName());
+        	
+        	
+            recipes.add(nestingCat.getRecipeWrapper(new NestingPenDropRecipe(spawnEgg, output)));
+        }
+        
+        return recipes;
+    }
+
 }

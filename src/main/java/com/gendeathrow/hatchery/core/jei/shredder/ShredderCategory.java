@@ -1,10 +1,10 @@
 package com.gendeathrow.hatchery.core.jei.shredder;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.api.crafting.ShredderRecipe;
-import com.gendeathrow.hatchery.core.jei.old.shredder.ShredderRecipeWrapper;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -17,12 +17,14 @@ import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.IRecipeWrapperFactory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
+
 
 public class ShredderCategory  implements IRecipeCategory<ShredderRecipeWrapper>, IRecipeWrapperFactory<ShredderRecipe>{
 
     public static final String UID = "hatchery.shredder.recipe";
+    private final ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/shredder_recipes.png");
     private final String title;
     private final IDrawableStatic background;
     private final IDrawableAnimated arrow;
@@ -31,15 +33,11 @@ public class ShredderCategory  implements IRecipeCategory<ShredderRecipeWrapper>
 
     public ShredderCategory(IGuiHelper guiHelper) 
     {
-        title = I18n.translateToLocal("jei.gui.shredder_recipes");
 
-        ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/shredder_recipes.png");
+        title = I18n.format("jei.gui.shredder_recipes");
         background = guiHelper.createDrawable(location, 0, 0, 91, 78);
-
         IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 91, 0, 15, 17);
         arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.TOP, false);
-
-
         icon = guiHelper.createDrawable(location, 91, 17, 16, 16);	
     }
     
@@ -90,7 +88,7 @@ public class ShredderCategory  implements IRecipeCategory<ShredderRecipeWrapper>
 
 	@Override
 	public List<String> getTooltipStrings(int mouseX, int mouseY) {
-		return null;
+		return  Collections.emptyList();
 	}
 
 	@Override
