@@ -2,8 +2,6 @@ package com.gendeathrow.hatchery.api.crafting;
 
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.item.ItemStack;
 
 public class ShredderRecipe {

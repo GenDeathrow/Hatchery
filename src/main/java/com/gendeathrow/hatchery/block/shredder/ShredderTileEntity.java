@@ -2,9 +2,6 @@ package com.gendeathrow.hatchery.block.shredder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.api.crafting.ShredderRecipe;
 import com.gendeathrow.hatchery.api.tileentities.IContainerUpdate;

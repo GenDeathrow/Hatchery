@@ -3,7 +3,6 @@ package com.gendeathrow.hatchery.core.jei.eggmachine;
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.api.crafting.EggMachineRecipe;
 
-
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableAnimated;
