@@ -2,13 +2,10 @@ package com.gendeathrow.hatchery.api.crafting;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
 public class NestingPenDropRecipe {
@@ -17,16 +14,16 @@ public class NestingPenDropRecipe {
 	private final List<ItemStack> output;
 	private final List<ItemStack> inputs;
 	
-	private final Entity chickenEnityIn;
+	private final EntityLivingBase chickenEnityIn;
 	
 	
-	public NestingPenDropRecipe(ItemStack chickenIn, List<ItemStack> dropped) 
+	public NestingPenDropRecipe(EntityLivingBase entityChicken, ItemStack chickenIn, List<ItemStack> dropped) 
 	{
 		chicken = chickenIn;
 		this.inputs = new ArrayList<ItemStack>();
 		this.inputs.add(chickenIn);
 		this.inputs.add(new ItemStack(ModBlocks.pen));
-		chickenEnityIn = null;
+		chickenEnityIn = entityChicken;
 		output = dropped;
 	}
     	
@@ -38,6 +35,10 @@ public class NestingPenDropRecipe {
 	public boolean hasOutput()
 	{
 		return output != null;
+	}
+	
+	public EntityLivingBase getEntity() {
+		return chickenEnityIn;
 	}
     	
 	public List<ItemStack> getOutputItems()

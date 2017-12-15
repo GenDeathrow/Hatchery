@@ -49,22 +49,25 @@ public class ShredderRecipe {
 		return itemOut != null;
 	}
     	
-	public boolean hasExtraOutput()
-	{
-		return itemExtra != null;
-	}
-	
 	public ItemStack getOutputItem()
 	{
 		return itemOut.copy();
 	}
     	
-	@Nullable
-	public ItemStack getExtraItem()
+	public ItemStack getExtraItemByChance()
 	{
 		if(rand.nextInt(chance) == 1)
 			return itemExtra.copy();
-		else return null;
+		else return ItemStack.EMPTY;
+	}
+	
+	public int getChance() {
+		return (int) (((double)1 / (this.chance+1))*100);
+	}
+	
+	public ItemStack getExtraItem()
+	{
+		return itemExtra;
 	}
     	
 	@Override

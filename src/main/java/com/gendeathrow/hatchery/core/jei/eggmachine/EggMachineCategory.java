@@ -1,20 +1,17 @@
-package com.gendeathrow.hatchery.core.jei.nestingpen;
-
-import java.util.Collections;
-import java.util.List;
+package com.gendeathrow.hatchery.core.jei.eggmachine;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.api.crafting.NestingPenDropRecipe;
+import com.gendeathrow.hatchery.api.crafting.EggMachineRecipe;
+
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableAnimated;
 import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiFluidStackGroup;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.BlankRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.IRecipeWrapperFactory;
 import net.minecraft.client.Minecraft;
@@ -22,30 +19,33 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 
-public class NestingPenCategory  implements IRecipeCategory<NestingPenDropRecipeWrapper>, IRecipeWrapperFactory<NestingPenDropRecipe>{
-
-    public static final String UID = "hatchery.nesting_pen.drops";
+public class EggMachineCategory extends BlankRecipeCategory<EggMachineWrapper> implements IRecipeWrapperFactory<EggMachineRecipe>
+{
+	
+    public static final String UID = "hatchery.eggmachine.egg";
     private final String title;
     private final IDrawableStatic background;
     private final IDrawableAnimated arrow;
     private final IDrawableStatic icon;
+    ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/eggmachine_recipe.png");
 
-    private final ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/nestingpen_drops.png");
-    
-
-    public NestingPenCategory(IGuiHelper guiHelper) 
+    public EggMachineCategory(IGuiHelper guiHelper) 
     {
-        title = I18n.format("jei.gui.nesting_pen_drop");
+        title = I18n.format("jei.gui.eggmachine_egg");
+
         background = guiHelper.createDrawable(location, 0, 0, 91, 78);
+
         IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 91, 0, 15, 17);
         arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.TOP, false);
         icon = guiHelper.createDrawable(location, 91, 17, 16, 16);	
-   }
+        
+
+    }
     
-    @Override
+	@Override
 	public void drawExtras(Minecraft minecraft) 
 	{
-		arrow.draw(minecraft, 38, 35);
+		arrow.draw(minecraft, 29, 28);
 	}
 
 	@Override
@@ -67,39 +67,30 @@ public class NestingPenCategory  implements IRecipeCategory<NestingPenDropRecipe
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, NestingPenDropRecipeWrapper recipeWrapper, IIngredients ingredients) 
+	public void setRecipe(IRecipeLayout recipeLayout, EggMachineWrapper recipeWrapper, IIngredients ingredients) 
 	{
 	        IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 	        
-	    	guiItemStacks.init(0, true, 7, 7);
-	    	guiItemStacks.init(1, true, 35, 12);
-	        guiItemStacks.init(2, false, 12, 55);
-	        guiItemStacks.init(3, false, 32, 55);
-	        guiItemStacks.init(4, false, 47, 55);
+	    	guiItemStacks.init(0, true, 17, 9);
 
-	        guiItemStacks.init(5, false, 62, 55);
+	        guiItemStacks.init(1, true, 38, 9);
+	        guiItemStacks.init(2, false, 28, 48);
+
+	        guiItemStacks.init(3, true, 68, 27);
+	        
 	        
 	        guiItemStacks.set(ingredients);
+	    	guiItemStacks.set(0, recipeWrapper.getAllEggs());
 	}
 
 	@Override
 	public String getModName() {
 		return Hatchery.NAME;
 	}
+
+	@Override
+	public IRecipeWrapper getRecipeWrapper(EggMachineRecipe recipe) {
+		return new EggMachineWrapper(recipe);
+	}
 	
-	@Override
-	public List<String> getTooltipStrings(int mouseX, int mouseY) {
-		return  Collections.emptyList();
-	}
-
-	@Override
-	public IRecipeWrapper getRecipeWrapper(NestingPenDropRecipe recipe) {
-		return new NestingPenDropRecipeWrapper(recipe);
-	}
-
-	@Override
-	public IDrawable getIcon() {
-		return null;
-	}
-
 }

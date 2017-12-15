@@ -16,8 +16,11 @@ import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import cofh.api.energy.IEnergyReceiver;
+import net.minecraft.block.BlockDoublePlant;
+import net.minecraft.block.BlockFlower;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.EnumDyeColor;
@@ -81,9 +84,37 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	
 	
 	public static void registerShredderRecipes() {
-		shredderRecipes.add(new ShredderRecipe(new ItemStack(Items.FEATHER), new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal)));
-		shredderRecipes.add(new ShredderRecipe(new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal)));
-		shredderRecipes.add(new ShredderRecipe(new ItemStack(Items.BONE), new ItemStack(Items.DYE, 4, EnumDyeColor.WHITE.getDyeDamage())));
+		
+		addRecipe(new ItemStack(Items.FEATHER), new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal));
+		addRecipe(new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal));
+
+		//All the Dyes
+		addRecipe(new ItemStack(Items.BONE), new ItemStack(Items.DYE, 4, EnumDyeColor.WHITE.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.YELLOW_FLOWER, 1, BlockFlower.EnumFlowerType.DANDELION.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.YELLOW.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.POPPY.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.RED.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.BLUE_ORCHID.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.LIGHT_BLUE.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.ALLIUM.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.MAGENTA.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.HOUSTONIA.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.SILVER.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.RED_TULIP.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.RED.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.ORANGE_TULIP.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.ORANGE.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.WHITE_TULIP.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.SILVER.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.PINK_TULIP.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.PINK.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.OXEYE_DAISY.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.SILVER.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.SUNFLOWER.getMeta()), new ItemStack(Items.DYE, 3, EnumDyeColor.YELLOW.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.SYRINGA.getMeta()), new ItemStack(Items.DYE, 3, EnumDyeColor.MAGENTA.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.ROSE.getMeta()), new ItemStack(Items.DYE, 3, EnumDyeColor.RED.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.PAEONIA.getMeta()), new ItemStack(Items.DYE, 3, EnumDyeColor.PINK.getDyeDamage()));
+		addRecipe(new ItemStack(Items.BEETROOT, 1), new ItemStack(Items.DYE, 2, EnumDyeColor.RED.getDyeDamage()));
+    
+	}
+	
+	
+	private static void addRecipe(ItemStack input, ItemStack output) {
+		addRecipe(input, output, ItemStack.EMPTY);
+	}
+	
+	private static void addRecipe(ItemStack input, ItemStack output, ItemStack extra) {
+		shredderRecipes.add(new ShredderRecipe(input, output, extra));
 	}
 
 	private int shreddingTime;
@@ -266,9 +297,9 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 				{
 					this.outputInventory.insertItemInternal(0, recipe.getOutputItem(), false);
 					
-					if(recipe.hasExtraOutput())
+					if(!recipe.getExtraItemByChance().isEmpty())
 					{
-						ItemStack extra = recipe.getExtraItem();
+						ItemStack extra = recipe.getExtraItemByChance();
 						if(extra != null)
 							this.outputInventory.insertItemInternal(1, extra, false);
 					}

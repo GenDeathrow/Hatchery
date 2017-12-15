@@ -14,7 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
-public class LuckyEggCategory extends BlankRecipeCategory<LuckyEggWrapper>
+public class oldLuckyEggCategory extends BlankRecipeCategory<oldLuckyEggWrapper>
 {
 	
     public static final String UID = "hatchery.luckyeggs.drop";
@@ -24,7 +24,7 @@ public class LuckyEggCategory extends BlankRecipeCategory<LuckyEggWrapper>
     private final IDrawableStatic icon;
 
 
-    public LuckyEggCategory(IGuiHelper guiHelper) 
+    public oldLuckyEggCategory(IGuiHelper guiHelper) 
     {
         title = I18n.translateToLocal("jei.gui.luckyegg_drops");
 
@@ -63,7 +63,7 @@ public class LuckyEggCategory extends BlankRecipeCategory<LuckyEggWrapper>
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, LuckyEggWrapper recipeWrapper, IIngredients ingredients) 
+	public void setRecipe(IRecipeLayout recipeLayout, oldLuckyEggWrapper recipeWrapper, IIngredients ingredients) 
 	{
 	        IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 	        

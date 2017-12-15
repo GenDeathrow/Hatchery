@@ -1,5 +1,6 @@
 package com.gendeathrow.hatchery.core.jei.shredder;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,9 @@ public class ShredderRecipeWrapper extends BlankRecipeWrapper{
 	private final List<ItemStack> outputs;
 	private final List<ItemStack>  inputs;
 	
+	private final int chance;
+	private boolean hasExtraItem = false;
+	
 	
 	public ShredderRecipeWrapper(ShredderRecipe recipe) 
 	{
@@ -25,19 +29,23 @@ public class ShredderRecipeWrapper extends BlankRecipeWrapper{
 		this.inputs.add(recipe.getInputItem());
 		this.inputs.add(new ItemStack(ModBlocks.shredder));
 		
-		
 		this.outputs.add(recipe.getOutputItem());
-		if(recipe.hasExtraOutput())
-			this.outputs.add(recipe.getExtraItem());
+		this.outputs.add(recipe.getExtraItem());
+		
+		chance = recipe.getChance();
+		
+		hasExtraItem = !recipe.getExtraItem().isEmpty();
 		
 	}
 
+	boolean isOver = false;
 	@Override
-	public void drawInfo(Minecraft arg0, int arg1, int arg2, int arg3, int arg4) 
+	public void drawInfo(Minecraft minecraft, int x, int y, int mx, int my) 
 	{
-		
+		if(this.hasExtraItem)
+			minecraft.fontRenderer.drawString(this.chance+"%", x-25, y-25, Color.black.getRGB());
 	}
-
+	
 	@Override
 	public void getIngredients(IIngredients ingredients) 
 	{

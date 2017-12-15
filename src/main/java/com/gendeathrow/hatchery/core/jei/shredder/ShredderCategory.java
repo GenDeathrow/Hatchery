@@ -83,7 +83,7 @@ public class ShredderCategory  implements IRecipeCategory<ShredderRecipeWrapper>
 
 	@Override
 	public IDrawable getIcon() {
-		return icon;
+		return null;
 	}
 
 	@Override

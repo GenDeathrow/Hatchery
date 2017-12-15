@@ -98,11 +98,14 @@ public class ChickensHelper {
         	output.add(new ItemStack(Items.FEATHER));
         	output.add(new ItemStack(ModItems.hatcheryEgg));
 
+        	EntityChickensChicken entity = new EntityChickensChicken(null);
+        	entity.setChickenType(chicken.getRegistryName().toString());
+        	
         	ItemStack spawnEgg = new ItemStack(ChickensMod.spawnEgg, 1);
         	ItemSpawnEgg.applyEntityIdToItemStack(spawnEgg, chicken.getRegistryName());
         	
         	
-            recipes.add(nestingCat.getRecipeWrapper(new NestingPenDropRecipe(spawnEgg, output)));
+            recipes.add(nestingCat.getRecipeWrapper(new NestingPenDropRecipe(entity, spawnEgg, output)));
         }
         
         return recipes;

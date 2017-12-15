@@ -16,7 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
-public class EggMachineCategory extends BlankRecipeCategory<EggMachineWrapper> implements IRecipeWrapperFactory<EggMachineWrapper>
+public class oldEggMachineCategory extends BlankRecipeCategory<oldEggMachineWrapper> implements IRecipeWrapperFactory<oldEggMachineWrapper>
 {
 	
     public static final String UID = "hatchery.eggmachine.egg";
@@ -26,7 +26,7 @@ public class EggMachineCategory extends BlankRecipeCategory<EggMachineWrapper> i
     private final IDrawableStatic icon;
 
 
-    public EggMachineCategory(IGuiHelper guiHelper) 
+    public oldEggMachineCategory(IGuiHelper guiHelper) 
     {
         title = I18n.translateToLocal("jei.gui.eggmachine_egg");
 
@@ -65,7 +65,7 @@ public class EggMachineCategory extends BlankRecipeCategory<EggMachineWrapper> i
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, EggMachineWrapper recipeWrapper, IIngredients ingredients) 
+	public void setRecipe(IRecipeLayout recipeLayout, oldEggMachineWrapper recipeWrapper, IIngredients ingredients) 
 	{
 	        IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 	        
@@ -86,7 +86,7 @@ public class EggMachineCategory extends BlankRecipeCategory<EggMachineWrapper> i
 	}
 
 	@Override
-	public IRecipeWrapper getRecipeWrapper(EggMachineWrapper recipe) {
+	public IRecipeWrapper getRecipeWrapper(oldEggMachineWrapper recipe) {
 		// TODO Auto-generated method stub
 		return null;
 	}
