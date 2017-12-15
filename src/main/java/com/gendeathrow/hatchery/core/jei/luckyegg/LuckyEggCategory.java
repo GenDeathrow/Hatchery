@@ -10,6 +10,8 @@ import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
+import mezz.jei.api.recipe.IRecipeWrapper;
+import mezz.jei.api.recipe.IRecipeWrapperFactory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -23,19 +25,14 @@ public class LuckyEggCategory extends BlankRecipeCategory<LuckyEggWrapper>
     private final IDrawableStatic background;
     private final IDrawableAnimated arrow;
     private final IDrawableStatic icon;
-
+    ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/luckyeggs.png");
 
     public LuckyEggCategory(IGuiHelper guiHelper) 
     {
         title = I18n.format("jei.gui.luckyegg_drops");
-
-        ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/luckyeggs.png");
         background = guiHelper.createDrawable(location, 0, 0, 169, 119);
-
         IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 169, 0, 15, 17);
         arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.TOP, false);
-
-
         icon = guiHelper.createDrawable(location, 169, 17, 16, 16);	
     }
     
@@ -87,5 +84,5 @@ public class LuckyEggCategory extends BlankRecipeCategory<LuckyEggWrapper>
 	public String getModName() {
 		return Hatchery.NAME;
 	}
-	
+
 }

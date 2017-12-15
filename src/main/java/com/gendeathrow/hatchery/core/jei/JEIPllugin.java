@@ -16,8 +16,9 @@ import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.jei.eggmachine.EggMachineCategory;
 import com.gendeathrow.hatchery.core.jei.eggmachine.EggMachineWrapper;
+import com.gendeathrow.hatchery.core.jei.luckyegg.LuckyEggCategory;
+import com.gendeathrow.hatchery.core.jei.luckyegg.LuckyEggWrapper;
 import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenCategory;
-import com.gendeathrow.hatchery.core.jei.old.eggmachine.oldLuckyEggWrapper;
 import com.gendeathrow.hatchery.core.jei.shredder.ShredderCategory;
 import com.gendeathrow.hatchery.modaddons.ChickensHelper;
 
@@ -38,7 +39,6 @@ import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -53,6 +53,7 @@ public class JEIPllugin implements IModPlugin
 	private ShredderCategory shredderCat;
 	private NestingPenCategory nestingCat;
 	private EggMachineCategory eggmachineCat;
+	private LuckyEggCategory luckyEggCat;
 
 		@Override
     public void register (IModRegistry registry) 
@@ -91,6 +92,9 @@ public class JEIPllugin implements IModPlugin
         	ArrayList<IRecipeWrapper> wrap = new ArrayList<IRecipeWrapper>();
         	wrap.add(new EggMachineWrapper(new EggMachineRecipe()));
         registry.addRecipes(wrap, EggMachineCategory.UID);
+        
+        registry.addRecipes(getLuckyEggs(), LuckyEggCategory.UID);
+        
         
 //        registry.addRecipeHandlers(new NestingPenDropRecipeHandler());
 //        List<NestingPenDropRecipeWrapper> recipes = new ArrayList<NestingPenDropRecipeWrapper>();
@@ -165,7 +169,7 @@ public class JEIPllugin implements IModPlugin
 		//		
 		registry.addRecipeCategories(nestingCat = new NestingPenCategory(guiHelper));
 		registry.addRecipeCategories(shredderCat = new ShredderCategory(guiHelper));
-//		registry.addRecipeCategories(new LuckyEggCategory(guiHelper));
+		registry.addRecipeCategories(luckyEggCat = new LuckyEggCategory(guiHelper));
 		registry.addRecipeCategories(eggmachineCat = new EggMachineCategory(guiHelper));
 //		registry.addRecipeCategories(new EggMachineCategory(guiHelper));
 //		registry.addRecipeCategories(new GeneratorCategory(guiHelper));
@@ -191,8 +195,10 @@ public class JEIPllugin implements IModPlugin
 		
 	}
 	
-	private List<oldLuckyEggWrapper> getLuckyEggs(List<oldLuckyEggWrapper> recipes)
+	private List<LuckyEggWrapper> getLuckyEggs()
 	{
+		List<LuckyEggWrapper> recipes = new ArrayList<LuckyEggWrapper>();
+		
 		List<ItemStack> droplist = new ArrayList<ItemStack>();
 		
 		Iterator<ItemDrop> itr = ConfigLootHandler.drops.iterator();
@@ -203,7 +209,7 @@ public class JEIPllugin implements IModPlugin
 			ItemDrop item = itr.next();
 			droplist.add(item.getItemStack());
 			if(droplist.size() == 36 || !itr.hasNext()) {
-				recipes.add(new oldLuckyEggWrapper(droplist));
+				recipes.add(new LuckyEggWrapper(droplist));
 				droplist.clear();
 			}
 		}
