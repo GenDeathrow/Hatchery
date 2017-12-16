@@ -24,9 +24,9 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod.EventBusSubscriber
 public class ModItems 
@@ -121,7 +121,7 @@ public class ModItems
 					
 					NonNullList<ItemStack> list = NonNullList.<ItemStack>create();
 			
-					item.getSubItems(item, Hatchery.hatcheryTabs, list);
+					item.getSubItems(Hatchery.hatcheryTabs, list);
 			
 					if(list.size() > 1)
 						for(ItemStack metaitem : list)

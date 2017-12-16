@@ -34,7 +34,7 @@ public class RegisterEggsUtil
 		if(ChickensRegistry.getByRegistryName(type) == null) return 0xdfce9b;
 		if(ChickensRegistry.getByRegistryName(type).isDye())
 		{
-			return EnumDyeColor.byDyeDamage(ChickensRegistry.getByRegistryName(type).getDyeMetadata()).getMapColor().colorValue;
+			return EnumDyeColor.byDyeDamage(ChickensRegistry.getByRegistryName(type).getDyeMetadata()).getColorValue();
 		}
 		else return ChickensRegistry.getByRegistryName(type).getBgColor();
 	}

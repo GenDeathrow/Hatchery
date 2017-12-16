@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
 
 import mcjty.theoneprobe.api.IProbeHitData;
@@ -86,9 +87,9 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     }
     
 	@Override
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) 
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) 
 	{
-	    list.add(new ItemStack(itemIn, 1, 0)); 
+	    list.add(new ItemStack(ModBlocks.nest, 1, 0)); 
 	}
 	
 	@Override

@@ -58,7 +58,7 @@ public class GuiFertilizerMixerInventory extends GuiContainer
 		
 		int fertilizerTankAmt = (int) (((float)MIXER.fertilizerLevel / MIXER.getFertilizerTank().getCapacity()) * 58);
 		int waterTankAmt = (int) (((float)MIXER.waterLevel / MIXER.getWaterTank().getCapacity()) * 58);
-		int energyAmt = (int) (((float)MIXER.getEnergyStored(EnumFacing.DOWN) / MIXER.getMaxEnergyStored(EnumFacing.DOWN)) * 58);
+		int energyAmt = (int) (((float)MIXER.energy.getEnergyStored() / MIXER.energy.getMaxEnergyStored()) * 58);
 		
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

@@ -32,7 +32,7 @@ public class ChickenManure extends Item
         }
         else
         {
-                if (ItemDye.applyBonemeal(playerIn.getHeldItem(hand), worldIn, pos, playerIn))
+                if (ItemDye.applyBonemeal(playerIn.getHeldItem(hand), worldIn, pos))
                 {
                     if (!worldIn.isRemote)
                     {

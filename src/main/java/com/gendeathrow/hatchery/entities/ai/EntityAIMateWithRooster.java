@@ -9,12 +9,10 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.AchievementList;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
@@ -57,7 +55,7 @@ public class EntityAIMateWithRooster extends EntityAIBase {
 		theAnimal.getLookHelper().setLookPositionWithEntity(targetMate, 10.0F, (float) theAnimal.getVerticalFaceSpeed());
 		theAnimal.getNavigator().tryMoveToEntityLiving(targetMate, moveSpeed);
 		++spawnBabyDelay;
-		if (spawnBabyDelay >= 60 && theAnimal.getDistanceSqToEntity(targetMate) < 9.0D) {
+		if (spawnBabyDelay >= 60 && theAnimal.getDistanceSq(targetMate) < 9.0D) {
 			NBTTagCompound nbt = new NBTTagCompound();
 			theAnimal.writeEntityToNBT(nbt);
 			if (Loader.isModLoaded("chickens") && nbt.hasKey("Type")) {
@@ -85,9 +83,9 @@ public class EntityAIMateWithRooster extends EntityAIBase {
 		EntityAnimal entityanimal = null;
 
 		for (EntityAnimal entityanimal1 : list) {
-			if (theAnimal.getDistanceSqToEntity(entityanimal1) < d0 && entityanimal1.isInLove()) {
+			if (theAnimal.getDistanceSq(entityanimal1) < d0 && entityanimal1.isInLove()) {
 				entityanimal = entityanimal1;
-				d0 = theAnimal.getDistanceSqToEntity(entityanimal1);
+				d0 = theAnimal.getDistanceSq(entityanimal1);
 			}
 		}
 
@@ -110,18 +108,14 @@ public class EntityAIMateWithRooster extends EntityAIBase {
 		}
 
 		if (entityageable != null) {
-			EntityPlayer entityplayer = theAnimal.getPlayerInLove();
+			EntityPlayer entityplayer = theAnimal.getLoveCause();
 
-			if (entityplayer == null && targetMate.getPlayerInLove() != null) {
-				entityplayer = targetMate.getPlayerInLove();
+			if (entityplayer == null && targetMate.getLoveCause() != null) {
+				entityplayer = targetMate.getLoveCause();
 			}
 
 			if (entityplayer != null) {
 				entityplayer.addStat(StatList.ANIMALS_BRED);
-
-				if (theAnimal instanceof EntityCow) {
-					entityplayer.addStat(AchievementList.BREED_COW);
-				}
 			}
 
 			theAnimal.setGrowingAge(6000);

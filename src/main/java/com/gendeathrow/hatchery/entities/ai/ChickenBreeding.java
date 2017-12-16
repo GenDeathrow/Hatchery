@@ -15,7 +15,6 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.AchievementList;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
@@ -92,7 +91,7 @@ public class ChickenBreeding extends EntityAIBase
         this.theAnimal.getNavigator().tryMoveToEntityLiving(this.targetMate, this.moveSpeed);
         ++this.spawnBabyDelay;
 
-        if (this.spawnBabyDelay >= 60 && this.theAnimal.getDistanceSqToEntity(this.targetMate) < 9.0D)
+        if (this.spawnBabyDelay >= 60 && this.theAnimal.getDistanceSq(this.targetMate) < 9.0D)
         {
             this.spawnEgg();
         }
@@ -110,10 +109,10 @@ public class ChickenBreeding extends EntityAIBase
 
         for (EntityAnimal entityanimal1 : list)
         {
-            if (this.theAnimal.canMateWith(entityanimal1) && this.theAnimal.getDistanceSqToEntity(entityanimal1) < d0)
+            if (this.theAnimal.canMateWith(entityanimal1) && this.theAnimal.getDistanceSq(entityanimal1) < d0)
             {
                 entityanimal = entityanimal1;
-                d0 = this.theAnimal.getDistanceSqToEntity(entityanimal1);
+                d0 = this.theAnimal.getDistanceSq(entityanimal1);
             }
         }
 
@@ -126,21 +125,17 @@ public class ChickenBreeding extends EntityAIBase
 
         if (entityageable != null)
         {
-            EntityPlayer entityplayer = this.theAnimal.getPlayerInLove();
+            EntityPlayer entityplayer = this.theAnimal.getLoveCause();
 
-            if (entityplayer == null && this.targetMate.getPlayerInLove() != null)
+            if (entityplayer == null && this.targetMate.getLoveCause() != null)
             {
-                entityplayer = this.targetMate.getPlayerInLove();
+                entityplayer = this.targetMate.getLoveCause();
             }
 
             if (entityplayer != null)
             {
                 entityplayer.addStat(StatList.ANIMALS_BRED);
 
-                if (this.theAnimal instanceof EntityCow)
-                {
-                    entityplayer.addStat(AchievementList.BREED_COW);
-                }
             }
 
             this.theAnimal.setGrowingAge(6000);

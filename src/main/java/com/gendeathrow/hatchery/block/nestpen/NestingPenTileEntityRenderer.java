@@ -19,7 +19,8 @@ public class NestingPenTileEntityRenderer extends TileEntitySpecialRenderer<Nest
 		renderManager = Minecraft.getMinecraft().getRenderManager();
 	}
 	
-	public void renderTileEntityAt(NestPenTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
+	@Override
+	public void render(NestPenTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
 		try
 		{
@@ -29,7 +30,7 @@ public class NestingPenTileEntityRenderer extends TileEntitySpecialRenderer<Nest
 	        if (flag1)
 	        {
 	        	renderAModelAt(te, x, y, z, partialTicks, destroyStage);   
-	        	super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
+	        	super.render(te, x, y, z, partialTicks, destroyStage, alpha);
 	        }
 		}catch(IllegalArgumentException e) { }
     }
@@ -51,7 +52,7 @@ public class NestingPenTileEntityRenderer extends TileEntitySpecialRenderer<Nest
         GlStateManager.translate(x + .5, y + .1, z + .5);
         GlStateManager.rotate(facing.getHorizontalAngle(), 0, 1, 0);
         GlStateManager.enableLighting();
-        Minecraft.getMinecraft().getRenderManager().doRenderEntity(te.storedEntity(), 0, 0, 0, 0, partialTicks, true);
+        Minecraft.getMinecraft().getRenderManager().renderEntity(te.storedEntity(), 0, 0, 0, 0, partialTicks, true);
     	GlStateManager.disableLighting();
     	GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.popMatrix();

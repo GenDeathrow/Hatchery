@@ -28,7 +28,8 @@ public class EggMachineEntityRenderer extends TileEntitySpecialRenderer<EggMachi
 		renderManager = Minecraft.getMinecraft().getRenderManager();
 	}
 	
-	public void renderTileEntityAt(EggMachineTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
+	@Override
+	public void render(EggMachineTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
 		try
 		{
@@ -36,7 +37,7 @@ public class EggMachineEntityRenderer extends TileEntitySpecialRenderer<EggMachi
 	        if (flag)
 	        {
 	        	renderAModelAt(te, x, y, z, partialTicks, destroyStage);   
-	        	super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
+	        	super.render(te, x, y, z, partialTicks, destroyStage, alpha);
 	        }
 		}catch(IllegalArgumentException e) { }
     }

@@ -15,8 +15,8 @@ public class EggNestTileEntityRender extends TileEntitySpecialRenderer<EggNestTi
 {
 	EntityItem renderitem = new EntityItem(Minecraft.getMinecraft().world, 0D, 0D, 0D, new ItemStack(Items.EGG));
 	
-		
-	public void renderTileEntityAt(EggNestTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
+	@Override
+	public void render(EggNestTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
 		try
 		{
@@ -31,7 +31,7 @@ public class EggNestTileEntityRender extends TileEntitySpecialRenderer<EggNestTi
 	        	}
 	        }
 		}catch(IllegalArgumentException e) { }
-        super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
+        super.render(te, x, y, z, partialTicks, destroyStage, alpha);
     }
    
     

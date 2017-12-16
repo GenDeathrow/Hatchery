@@ -25,12 +25,13 @@ public class ShredderTileEntityRenderer extends TileEntitySpecialRenderer<Shredd
 			
 		}
 		
-		public void renderTileEntityAt(ShredderTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
+		@Override
+		public void render(ShredderTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	    {
 			try
 			{
 		        	renderAModelAt(te, x, y, z, partialTicks, destroyStage);   
-		        	super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
+		        	super.render(te, x, y, z, partialTicks, destroyStage, alpha);
 			}catch(IllegalArgumentException e) { }
 	    }
 	   

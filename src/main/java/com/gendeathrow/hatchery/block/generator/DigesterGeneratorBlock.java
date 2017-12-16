@@ -50,9 +50,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 		this.setHardness(2);
 		this.setHarvestLevel("pickaxe", 0);
 		this.setUnlocalizedName("digester_generator");
-		this.isBlockContainer = true;
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ISGENERATING, false));
-		
 	}
 
 	

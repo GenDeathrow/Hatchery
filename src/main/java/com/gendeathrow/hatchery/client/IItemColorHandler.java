@@ -9,10 +9,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class IItemColorHandler implements IItemColor
 {
 
-    @Override
-    public int getColorFromItemstack(ItemStack stack, int tintIndex) 
-    { 	
+	@Override
+	public int colorMultiplier(ItemStack stack, int tintIndex) {
     	if(!stack.hasTagCompound()) {return 0xdfce9b;}
     	return stack.getTagCompound().getInteger("eggColor"); 
-    }
+	}
 }

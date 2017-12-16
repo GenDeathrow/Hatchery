@@ -7,8 +7,6 @@ import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -26,7 +25,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class DigesterGeneratorTileEntity extends TileUpgradable implements IEnergyProvider, ITickable
+public class DigesterGeneratorTileEntity extends TileUpgradable implements ITickable
 {
 	public int time = 0;
 	
@@ -95,29 +94,6 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IEner
         return this.fuelRF > 0;
     }
 	
-	@Override
-	public boolean canConnectEnergy(EnumFacing from) {
-		return true;
-	}
-
-	/* IEnergyProvider */
-	@Override
-	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-		return energy.extractEnergy(maxExtract, simulate);
-	}
-
-	/* IEnergyHandler */
-	@Override
-	public int getEnergyStored(EnumFacing from) {
-		return energy.getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored(EnumFacing from) {
-		return energy.getMaxEnergyStored();
-	}
-	
-	
 	int rfEnergyFuel = 15000;
 	int fuelRF;
 	boolean isActive = true;
@@ -149,10 +125,12 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements IEner
 				for (EnumFacing facing : EnumFacing.VALUES) 
 				{
 						TileEntity tile = world.getTileEntity(pos.offset(facing));
-						if (tile != null && tile instanceof IEnergyReceiver) 
+						
+						if (tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing)) 
 						{
-							int received = ((IEnergyReceiver) tile).receiveEnergy(facing.getOpposite(), energy.getEnergyStored(), false);
-							extractEnergy(facing, received, false);
+							IEnergyStorage tileEnergy = tile.getCapability(CapabilityEnergy.ENERGY, facing);
+							int received = tileEnergy.receiveEnergy(energy.getEnergyStored(), false);
+							energy.extractEnergy(received, false);
 						}
 				}
 			}

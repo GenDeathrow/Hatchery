@@ -13,10 +13,8 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.AchievementList;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
@@ -42,9 +40,9 @@ public class AutoBreeding extends EntityAIBase
 
     public boolean shouldExecute()
     {
-    	if(theAnimal.getLeashed() && theAnimal.getLeashedToEntity() != null && theAnimal.getLeashedToEntity() instanceof EntityAnimal && this.theAnimal.canMateWith((EntityAnimal) theAnimal.getLeashedToEntity()))
+    	if(theAnimal.getLeashed() && theAnimal.getLeashHolder() != null && theAnimal.getLeashHolder() instanceof EntityAnimal && this.theAnimal.canMateWith((EntityAnimal) theAnimal.getLeashHolder()))
     	{
-            this.targetMate = (EntityAnimal) theAnimal.getLeashedToEntity();
+            this.targetMate = (EntityAnimal) theAnimal.getLeashHolder();
             return this.targetMate != null;
     	}
     	
@@ -79,7 +77,7 @@ public class AutoBreeding extends EntityAIBase
         this.theAnimal.getNavigator().tryMoveToEntityLiving(this.targetMate, this.moveSpeed);
         ++this.spawnBabyDelay;
 
-        if (this.spawnBabyDelay >= 60 && this.theAnimal.getDistanceSqToEntity(this.targetMate) < 9.0D)
+        if (this.spawnBabyDelay >= 60 && this.theAnimal.getDistanceSq(this.targetMate) < 9.0D)
         {
           //  this.spawnEgg();
         }
@@ -93,21 +91,17 @@ public class AutoBreeding extends EntityAIBase
 
         if (entityageable != null)
         {
-            EntityPlayer entityplayer = this.theAnimal.getPlayerInLove();
+            EntityPlayer entityplayer = this.theAnimal.getLoveCause();
 
-            if (entityplayer == null && this.targetMate.getPlayerInLove() != null)
+            if (entityplayer == null && this.targetMate.getLoveCause() != null)
             {
-                entityplayer = this.targetMate.getPlayerInLove();
+                entityplayer = this.targetMate.getLoveCause();
             }
 
             if (entityplayer != null)
             {
                 entityplayer.addStat(StatList.ANIMALS_BRED);
 
-                if (this.theAnimal instanceof EntityCow)
-                {
-                    entityplayer.addStat(AchievementList.BREED_COW);
-                }
             }
 
             this.theAnimal.setGrowingAge(6000);

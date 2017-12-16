@@ -12,7 +12,6 @@ import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
 import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
-import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.state.IBlockState;
@@ -35,7 +34,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class ShredderTileEntity extends TileUpgradable implements ITickable, IContainerUpdate, IEnergyReceiver
+public class ShredderTileEntity extends TileUpgradable implements ITickable, IContainerUpdate
 {
 	
 	
@@ -504,27 +503,6 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 		tag.setTag("inputinventory",this.inputInventory.serializeNBT());
 		this.energy.writeToNBT(tag);
 		return tag;
-	}
-	    
-	    //RF ENERGY
-	@Override
-	public int getEnergyStored(EnumFacing from) {
-		return energy.getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored(EnumFacing from) {
-		return energy.getMaxEnergyStored();
-	}
-
-	@Override
-	public boolean canConnectEnergy(EnumFacing from) {
-		return true;
-	}
-
-	@Override
-	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		return energy.receiveEnergy(maxReceive, simulate);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -231,7 +232,7 @@ public class Sprayer extends Item
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isAdvanced) 
+    public void addInformation(ItemStack stack,  World worldIn, List<String> tooltip, ITooltipFlag flagIn) 
     {
 			FluidStack fstack = FluidUtil.getFluidContained(stack);
 			if(fstack != null)
@@ -240,24 +241,5 @@ public class Sprayer extends Item
 			}
 			else tooltip.add(I18n.format("tooltip.hatchery.sprayer.desc",I18n.format("fluid.liquid_fertilizer"), 0, this.getMaxDamage()));
     }
-	
-//	@Override
-//	public boolean hasCapability(Capability<?> capability, EnumFacing facing) 
-//	{
-//		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
-//	}
-//
-//	@Override
-//	public <T> T getCapability(Capability<T> capability, EnumFacing facing) 
-//	{
-//        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-//        {
-//            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this);
-//        }
-//        return null;
-//	}
-
-	
-	
 	
 }

@@ -27,10 +27,10 @@ public class ModFluids
 			blockLiquidFertilizer = new BlockLiquidFertilizer(liquidfertilizer);
 			blockLiquidFertilizer.setCreativeTab(Hatchery.hatcheryTabs);
 			liquidfertilizer.setBlock(blockLiquidFertilizer);
-		GameRegistry.register(blockLiquidFertilizer);
+		//GameRegistry.register(blockLiquidFertilizer);
 		
 		ItemBlock itemLiquidFertilizer = new ItemBlock(blockLiquidFertilizer);
-		GameRegistry.register(itemLiquidFertilizer.setRegistryName(blockLiquidFertilizer.getRegistryName()));
+		//GameRegistry.register(itemLiquidFertilizer.setRegistryName(blockLiquidFertilizer.getRegistryName()));
 
 		FluidRegistry.addBucketForFluid(liquidfertilizer);
 		

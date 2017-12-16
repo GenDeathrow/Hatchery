@@ -76,7 +76,7 @@ public class EntityAIRoosterMating extends EntityAIBase {
 		roosterEntity.getLookHelper().setLookPositionWithEntity(targetChicken, 10.0F, (float) roosterEntity.getVerticalFaceSpeed());
 		roosterEntity.getNavigator().tryMoveToEntityLiving(targetChicken, moveSpeed);
 		++spawnBabyDelay;
-		if (spawnBabyDelay >= 60 && roosterEntity.getDistanceSqToEntity(targetChicken) < 9.0D) 
+		if (spawnBabyDelay >= 60 && roosterEntity.getDistanceSq(targetChicken) < 9.0D) 
 		{
 			spawnChild();
 		}
@@ -106,7 +106,7 @@ public class EntityAIRoosterMating extends EntityAIBase {
 
 	        if (entityageable != null)
 	        {
-	            EntityPlayer entityplayer = this.targetChicken.getPlayerInLove();
+	            EntityPlayer entityplayer = this.targetChicken.getLoveCause();
 
 
 	            this.roosterEntity.setGrowingAge(100);
@@ -179,10 +179,10 @@ public class EntityAIRoosterMating extends EntityAIBase {
 
 		for (EntityAnimal entityanimal1 : list) 
 		{
-			if (roosterEntity.canEntityBeSeen(entityanimal1) && roosterEntity.getDistanceSqToEntity(entityanimal1) < d0 && !(entityanimal1 instanceof EntityRooster) && (entityanimal1.isInLove() || entityanimal1.getGrowingAge() == 0)) 
+			if (roosterEntity.canEntityBeSeen(entityanimal1) && roosterEntity.getDistanceSq(entityanimal1) < d0 && !(entityanimal1 instanceof EntityRooster) && (entityanimal1.isInLove() || entityanimal1.getGrowingAge() == 0)) 
 			{
 				entityanimal = entityanimal1;
-				d0 = roosterEntity.getDistanceSqToEntity(entityanimal1);
+				d0 = roosterEntity.getDistanceSq(entityanimal1);
 			}
 		}
 		return entityanimal;
