@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.core.jei.old.fertilizermixer;
+package com.gendeathrow.hatchery.core.jei.fertilizermixer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +13,18 @@ import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
 public class FertilizerMixerRecipeWrapper extends BlankRecipeWrapper 
 {
 	private final List<ItemStack> outputs;
 	private final List<ItemStack>  inputs;
+	
+	private final List<ItemStack> solidItemsInputs;
+	
+	private final List<FluidStack> inputsFluid;
+	private final List<FluidStack> outputsFluid;
 	
 	
 	public FertilizerMixerRecipeWrapper(ItemStack itemIn) 
@@ -25,16 +32,22 @@ public class FertilizerMixerRecipeWrapper extends BlankRecipeWrapper
 		this.outputs = new ArrayList<ItemStack>();
 		this.inputs = new ArrayList<ItemStack>();
 		
+		this.outputsFluid = new ArrayList<FluidStack>();
+		this.inputsFluid = new ArrayList<FluidStack>();
+		this.solidItemsInputs = new ArrayList<ItemStack>();
+		
 		this.inputs.add(itemIn);
-		//this.inputs.add(new ItemStack(ModBlocks.manureBlock));
 		this.inputs.add(new ItemStack(Items.WATER_BUCKET));
 		this.inputs.add(new ItemStack(ModBlocks.fertilizerMixer));
+		this.inputs.add(new ItemStack(ModBlocks.manureBlock));
 		
+		this.outputsFluid.add(new FluidStack(ModFluids.liquidfertilizer, 0));
+		this.inputsFluid.add(new FluidStack(FluidRegistry.WATER, 0));
 		
 		this.outputs.add(ModFluids.getFertilizerBucket());
-		//if(recipe.hasExtraOutput())
-		//	this.outputs.add(recipe.getExtraItem());
 		
+		this.solidItemsInputs.add(itemIn);
+		this.solidItemsInputs.add(new ItemStack(ModBlocks.manureBlock));
 	}
 	
 	@Override
@@ -49,12 +62,9 @@ public class FertilizerMixerRecipeWrapper extends BlankRecipeWrapper
 	public List<String> getTooltipStrings(int mouseX, int mouseY) {
 		List<String> list = new ArrayList<String>();
 		
-		if(mouseX > 121 && mouseX < 134 && mouseY > 7 && mouseY < 63)
-			list.add(ModFluids.liquidfertilizer.getName());
-		else if(mouseX > 143 && mouseX < 156 && mouseY > 7 && mouseY < 63)
+		if(mouseX > 143 && mouseX < 156 && mouseY > 7 && mouseY < 63)
 			list.add("RF Energy");	
-		else if(mouseX > 48 && mouseX < 61 && mouseY > 7 && mouseY < 63)
-			list.add("Water In");	
+
 		return list.size() > 0 ? list : null;
 	}
 
@@ -63,6 +73,9 @@ public class FertilizerMixerRecipeWrapper extends BlankRecipeWrapper
 	{
         ingredients.setInputs(ItemStack.class, inputs);
         ingredients.setOutputs(ItemStack.class, outputs);
+        
+        ingredients.setInputs(FluidStack.class, inputsFluid);
+        ingredients.setOutputs(FluidStack.class, outputsFluid);
 	}
 
 	public List<ItemStack> getInput() {
@@ -71,5 +84,17 @@ public class FertilizerMixerRecipeWrapper extends BlankRecipeWrapper
 
 	public List<ItemStack> getOutput() {
 		return outputs;
+	}
+	
+	public List<FluidStack> getFluidInput() {
+		return inputsFluid;
+	}
+
+	public List<FluidStack> getFluidOutput() {
+		return outputsFluid;
+	}
+	
+	public List<ItemStack> getSolidInputs() {
+		return this.solidItemsInputs;
 	}
 }

@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.core.jei.old.generator;
+package com.gendeathrow.hatchery.core.jei.generator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,18 +12,23 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 public class GeneratorRecipeWrapper extends BlankRecipeWrapper 
 {
 	private final List<ItemStack>  inputs;
-
+	private final List<FluidStack>  fluidInputs;
+	
 	public GeneratorRecipeWrapper() 
 	{
 		this.inputs = new ArrayList<ItemStack>();
+		this.fluidInputs = new ArrayList<FluidStack>();
 		
 		this.inputs.add(ModFluids.getFertilizerBucket());
-		this.inputs.add(new ItemStack(ModFluids.blockLiquidFertilizer));
+
 		this.inputs.add(new ItemStack(ModBlocks.digesterGenerator));
+		
+		this.fluidInputs.add(new FluidStack(ModFluids.liquidfertilizer, 0));		
 	}
 	
 	@Override
@@ -39,9 +44,8 @@ public class GeneratorRecipeWrapper extends BlankRecipeWrapper
 	
 		List<String> list = new ArrayList<String>();
 		
-		if(mouseX > 42 && mouseX < 55 && mouseY > 6 && mouseY < 62)
-			list.add(ModFluids.liquidfertilizer.getName());
-		else if(mouseX > 5 && mouseX < 18 && mouseY > 6 && mouseY < 62)
+
+		if(mouseX > 5 && mouseX < 18 && mouseY > 6 && mouseY < 62)
 			list.add("RF Energy");		
 		return list.size() > 0 ? list : null;
 	}
@@ -50,6 +54,7 @@ public class GeneratorRecipeWrapper extends BlankRecipeWrapper
 	public void getIngredients(IIngredients ingredients) 
 	{
         ingredients.setInputs(ItemStack.class, inputs);
+        ingredients.setInputs(FluidStack.class, fluidInputs);
 	}
 
 	public List<ItemStack> getInput() {
