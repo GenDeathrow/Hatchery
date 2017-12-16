@@ -13,7 +13,6 @@ import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -41,8 +40,7 @@ public class ContainerFertlizerMixer extends BasicHatcheryContainer
 	public ContainerFertlizerMixer(InventoryPlayer playerInventory, FertilizerMixerTileEntity fertilizerInventory) 
 	{
 		inputInventory = fertilizerInventory.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
-		
-		outputInventory = fertilizerInventory.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
+    	outputInventory = fertilizerInventory.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
 		
 		tileEntity = fertilizerInventory;
 		manure = null;
@@ -68,6 +66,7 @@ public class ContainerFertlizerMixer extends BasicHatcheryContainer
 			 
 		});
 		addSlotToContainer(new SlotFluidContainer(inputInventory, 1, 72, 16, FluidRegistry.WATER));
+		
 		addSlotToContainer(new SlotItemHandler(inputInventory, 2, 104, 16)		{
 			@Override
 			public boolean isItemValid(@Nullable ItemStack stack){
@@ -95,13 +94,7 @@ public class ContainerFertlizerMixer extends BasicHatcheryContainer
 		
 		addSlotToContainer(new SlotFluidContainer(outputInventory, 1, 104, 52, ModFluids.liquidfertilizer));
 
-		for (i = 0; i < 3; ++i)
-			for (int j = 0; j < 9; ++j)
-				addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-
-		for (i = 0; i < 9; ++i)
-			addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 142));
-
+		this.bindPlayerInventory(playerInventory);
 	}
 	
 	@Override
@@ -111,48 +104,6 @@ public class ContainerFertlizerMixer extends BasicHatcheryContainer
 	}
 	
 
-//	@Override
-//	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) 
-//	{
-//        ItemStack itemstack = ItemStack.EMPTY;
-//        Slot slot = (Slot)this.inventorySlots.get(slotIndex);
-//
-//        if (slot != null && slot.getHasStack())
-//        {
-//            ItemStack itemstack1 = slot.getStack();
-//            itemstack = itemstack1.copy();
-//
-//            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSlots()))
-//            {
-//                if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(),  this.inventorySlots.size(), true))
-//                {
-//                    return null;
-//                }
-//            }
-//            else if (!this.mergeItemStack(itemstack1, 0, this.inputInventory.getSlots(), false))
-//            {
-//                return ItemStack.EMPTY;
-//            }
-//            
-//            if (itemstack1.getCount() == 0)
-//            {
-//                slot.putStack(ItemStack.EMPTY);
-//            }
-//            else
-//            {
-//                slot.onSlotChanged();
-//            }
-//
-//            if (itemstack1.getCount() == itemstack.getCount())
-//            {
-//                return ItemStack.EMPTY;
-//            }
-//
-//            //slot.onPickupFromSlot(player, itemstack1);
-//        }
-//        
-//		return itemstack;
-//	}
 
 	
 	@SideOnly(Side.CLIENT)

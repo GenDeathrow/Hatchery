@@ -33,7 +33,7 @@ public class Hatchery
 {
 
 		public static final String MODID = "hatchery";
-	    public static final String VERSION = "1.0.4";
+	    public static final String VERSION = "1.1.0";
 	    public static final String NAME = "Hatchery";
 	    private static final String PROXYLOC = "com.gendeathrow.hatchery.core.proxies";
 	    public static final String CHANNELNAME = "genhatchery";
@@ -81,6 +81,7 @@ public class Hatchery
 	    @EventHandler
 	    public void init(FMLInitializationEvent event) throws IOException
 	    {
+	    	
 	    	PROXY.init(event);
 	    	ConfigHandler.loadConfig();
 	    	

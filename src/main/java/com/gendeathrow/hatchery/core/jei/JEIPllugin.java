@@ -2,9 +2,7 @@ package com.gendeathrow.hatchery.core.jei;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.gendeathrow.hatchery.api.crafting.EggMachineRecipe;
 import com.gendeathrow.hatchery.api.crafting.NestingPenDropRecipe;
