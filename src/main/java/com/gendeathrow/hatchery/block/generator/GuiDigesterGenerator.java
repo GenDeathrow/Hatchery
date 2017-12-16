@@ -51,10 +51,10 @@ public class GuiDigesterGenerator extends GuiContainer
 		GlStateManager.pushMatrix();
 			GlStateManager.translate(95, 15, 0);
 				GlStateManager.scale(0.75, 0.75, 0);
-					fontRendererObj.drawString(generatingRFString, 0 , 0, 4210752);
+					fontRenderer.drawString(generatingRFString, 0 , 0, 4210752);
 		GlStateManager.popMatrix();
 
-		fontRendererObj.drawString(new TextComponentTranslation("container.upgrades").getFormattedText(), xSize - 80, 40, 4210752);
+		fontRenderer.drawString(new TextComponentTranslation("container.upgrades").getFormattedText(), xSize - 80, 40, 4210752);
 
 		
 		GlStateManager.pushMatrix();

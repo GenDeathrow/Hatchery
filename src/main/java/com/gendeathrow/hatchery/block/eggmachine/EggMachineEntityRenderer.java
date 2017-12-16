@@ -20,7 +20,7 @@ public class EggMachineEntityRenderer extends TileEntitySpecialRenderer<EggMachi
 	ModelBase chicken = new ModelChicken();
 	
 	private static final ResourceLocation CHICKEN_TEXTURES = new ResourceLocation("textures/entity/chicken.png");
-	private final Entity entity = EntityList.createEntityByName("chicken", (World)null);
+	private final Entity entity = EntityList.createEntityByIDFromName(new ResourceLocation("chicken"), (World)null);
 	
 	
 	public EggMachineEntityRenderer()

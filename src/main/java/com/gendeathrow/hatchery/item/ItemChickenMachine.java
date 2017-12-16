@@ -30,7 +30,7 @@ public class ItemChickenMachine extends Item{
      * Called when a Block is right-clicked with this Item
      */
 	@Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
         {
@@ -45,13 +45,15 @@ public class ItemChickenMachine extends Item{
             IBlockState iblockstate = worldIn.getBlockState(pos);
             Block block = iblockstate.getBlock();
             boolean flag = block.isReplaceable(worldIn, pos);
+            
+            ItemStack stack = playerIn.getHeldItem(hand);
 
             if (!flag)
             {
                 pos = pos.up();
             }
 
-            int i = MathHelper.floor_double((double)(playerIn.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+            int i = MathHelper.floor((double)(playerIn.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
             EnumFacing enumfacing = EnumFacing.getHorizontal(i);
             BlockPos blockpos = pos.offset(EnumFacing.UP);
 
@@ -61,7 +63,7 @@ public class ItemChickenMachine extends Item{
                 boolean flag2 = flag || worldIn.isAirBlock(pos);
                 boolean flag3 = flag1 || worldIn.isAirBlock(blockpos);
 
-                if (flag2 && flag3 && worldIn.getBlockState(pos.down()).isFullyOpaque())
+                if (flag2 && flag3 && worldIn.getBlockState(pos.down()).isOpaqueCube())
                 {
                     IBlockState iblockstate1 = ModBlocks.chickenMachine.getDefaultState().withProperty(BlockBed.FACING, enumfacing).withProperty(EggMachineBlock.PART, EggMachineBlock.EnumPartType.BASE);
 
@@ -70,10 +72,9 @@ public class ItemChickenMachine extends Item{
                         IBlockState iblockstate2 = iblockstate1.withProperty(EggMachineBlock.PART, EggMachineBlock.EnumPartType.TOP);
                         worldIn.setBlockState(blockpos, iblockstate2, 11);
                     }
-                    System.out.println("");
                     SoundType soundtype = iblockstate1.getBlock().getSoundType(iblockstate1, worldIn, pos, playerIn);
                     worldIn.playSound((EntityPlayer)null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                    --stack.stackSize;
+                    stack.shrink(1);
                     return EnumActionResult.SUCCESS;
                 }
                 else

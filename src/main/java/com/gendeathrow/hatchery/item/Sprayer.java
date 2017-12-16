@@ -27,6 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.relauncher.Side;
@@ -62,10 +63,12 @@ public class Sprayer extends Item
     }
     
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
 
         RayTraceResult raytraceresult = this.rayTrace(worldIn, playerIn, true);
+        
+        ItemStack itemStackIn = playerIn.getHeldItem(handIn);
 
         if (raytraceresult == null)
         {
@@ -94,7 +97,7 @@ public class Sprayer extends Item
             		{
             			if(worldIn.getBlockState(blockpos).getBlock() == ModFluids.liquidfertilizer.getBlock())
             			{
-            				ItemStack newStack = FluidUtil.tryFillContainer(itemStackIn ,FluidUtil.getFluidHandler(worldIn, blockpos, raytraceresult.sideHit), 1000, playerIn, true);
+            				FluidActionResult newStack = FluidUtil.tryFillContainer(itemStackIn ,FluidUtil.getFluidHandler(worldIn, blockpos, raytraceresult.sideHit), 1000, playerIn, true);
             				
             				if(newStack == null) return new ActionResult(EnumActionResult.FAIL, itemStackIn);
             				else return new ActionResult(EnumActionResult.SUCCESS, newStack);
@@ -119,8 +122,10 @@ public class Sprayer extends Item
     }
 	
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
+		
+		ItemStack stack = playerIn.getHeldItem(hand);
 		
 	    if (!playerIn.canPlayerEdit(pos.offset(facing), facing, stack)) 
 	    {

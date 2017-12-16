@@ -149,17 +149,13 @@ public class HatcheryTileProvider implements IWailaDataProvider, IWailaPlugin
 		{
 			EggNestTileEntity hte = (EggNestTileEntity) te;
 			
-			float hatchPercentage = 0;
-			String eggName = "";
-			float hasEgg = 0;
-			
-			if(hte.getStackInSlot(0) != null)
+			if(!hte.getEgg().isEmpty())
 			{
 				tag.setFloat("hatchPercentage", hte.getPercentage());
-				tag.setString("eggName", hte.getStackInSlot(0).getDisplayName());
+				tag.setString("eggName", hte.getEgg().getDisplayName());
 			}
 			
-			tag.setBoolean("hasEgg", hte.getStackInSlot(0) != null);
+			tag.setBoolean("hasEgg", !hte.getEgg().isEmpty());
 
 		}
 		else if(te instanceof NestPenTileEntity)

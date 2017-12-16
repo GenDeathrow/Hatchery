@@ -1,8 +1,6 @@
 package com.gendeathrow.hatchery.core.proxies;
 
 
-import java.util.ArrayList;
-
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.block.eggmachine.EggMachineEntityRenderer;
 import com.gendeathrow.hatchery.block.eggmachine.EggMachineTileEntity;
@@ -12,7 +10,6 @@ import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 import com.gendeathrow.hatchery.block.nestpen.NestingPenTileEntityRenderer;
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntityRenderer;
-import com.gendeathrow.hatchery.client.IItemColorHandler;
 import com.gendeathrow.hatchery.client.render.entity.RenderRooster;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
@@ -31,7 +28,6 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -75,6 +71,7 @@ public class ClientProxy extends CommonProxy
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void registerRenderers() 
 	{
@@ -93,12 +90,15 @@ public class ClientProxy extends CommonProxy
 	{
 		super.preInit(event);
 		registerFluidModel(ModFluids.blockLiquidFertilizer,  "fertilizer");
+    	initRenderers();
 	}
 	
 	@Override
 	public void init(FMLInitializationEvent event)
 	{
 		super.init(event);
+		
+		ModItems.registerItemColorHandler(null);
 	}
 	
 	
@@ -107,43 +107,17 @@ public class ClientProxy extends CommonProxy
 	{
 		
 		//Register Blocks
-		for(Block block : ModBlocks.BLOCKS)
-		{
-			registerBlockModel(block, 0, block.getRegistryName().toString());
-		}
+
+		ModItems.registerRenderer();
+		ModBlocks.registerRenderer();
 		
-		//Register Items
-		for(Item item : ModItems.ITEMS)
-		{
-			ArrayList<ItemStack> list = new ArrayList<ItemStack>();
-			item.getSubItems(item, Hatchery.hatcheryTabs, list);
-			
-			if(list.size() > 1)
-			{
-
-				
-				for(ItemStack metaitem : list)
-				{
-					registerItemModel(metaitem.getItem(), metaitem.getMetadata() , item.getRegistryName().toString() +"_"+ metaitem.getMetadata());
-				}
-			}else
-				registerItemModel(item);
-		}
-
-		registerItemColorHandler(ModItems.hatcheryEgg);
-
+		
 		ClientRegistry.bindTileEntitySpecialRenderer(EggNestTileEntity.class, new EggNestTileEntityRender());
 		ClientRegistry.bindTileEntitySpecialRenderer(NestPenTileEntity.class, new NestingPenTileEntityRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(ShredderTileEntity.class, new ShredderTileEntityRenderer());		
 		ClientRegistry.bindTileEntitySpecialRenderer(EggMachineTileEntity.class, new EggMachineEntityRenderer());
 	}
-	
-    public void registerItemColorHandler(Item item)
-    {
 
-            //IItemColor iItemColor = (IItemColor)item;
-            FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler(new IItemColorHandler(),item);
-    }
 
 	@SideOnly(Side.CLIENT)
 	public static void registerBlockModel(Block block)

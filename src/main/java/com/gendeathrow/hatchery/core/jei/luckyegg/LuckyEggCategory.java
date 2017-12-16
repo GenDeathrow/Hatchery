@@ -1,4 +1,4 @@
-package com.gendeathrow.hatchery.core.jei.eggmachine;
+package com.gendeathrow.hatchery.core.jei.luckyegg;
 
 import com.gendeathrow.hatchery.Hatchery;
 
@@ -11,8 +11,9 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
+
 
 public class LuckyEggCategory extends BlankRecipeCategory<LuckyEggWrapper>
 {
@@ -22,28 +23,17 @@ public class LuckyEggCategory extends BlankRecipeCategory<LuckyEggWrapper>
     private final IDrawableStatic background;
     private final IDrawableAnimated arrow;
     private final IDrawableStatic icon;
-
+    ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/luckyeggs.png");
 
     public LuckyEggCategory(IGuiHelper guiHelper) 
     {
-        title = I18n.translateToLocal("jei.gui.luckyegg_drops");
-
-        ResourceLocation location = new ResourceLocation(Hatchery.MODID, "textures/gui/luckyeggs.png");
+        title = I18n.format("jei.gui.luckyegg_drops");
         background = guiHelper.createDrawable(location, 0, 0, 169, 119);
-
         IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 169, 0, 15, 17);
         arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.TOP, false);
-
-
         icon = guiHelper.createDrawable(location, 169, 17, 16, 16);	
     }
     
-	@Override
-	public void drawAnimations(Minecraft arg0) 
-	{
-
-	}
-
 	@Override
 	public void drawExtras(Minecraft minecraft) 
 	{
@@ -88,6 +78,9 @@ public class LuckyEggCategory extends BlankRecipeCategory<LuckyEggWrapper>
 		return icon;
 	}
 
-	
-	
+	@Override
+	public String getModName() {
+		return Hatchery.NAME;
+	}
+
 }

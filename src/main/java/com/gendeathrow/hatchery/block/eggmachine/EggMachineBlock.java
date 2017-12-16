@@ -51,11 +51,23 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
 		 this.setDefaultState(this.blockState.getBaseState().withProperty(PART, EggMachineBlock.EnumPartType.TOP));
 	}
 
-
+	@Override
     @Nullable
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return state.getValue(PART) == EggMachineBlock.EnumPartType.BASE ? null : ModItems.chickenmachine;
+    }
+	
+	@Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+    		TileEntity te = worldIn.getTileEntity(pos);
+    		if(te instanceof EggMachineTileEntity) {
+    			((EggMachineTileEntity) te).inputInventory.dropInventory(worldIn, pos);
+    			((EggMachineTileEntity) te).outputInventory.dropInventory(worldIn, pos);
+    			((EggMachineTileEntity) te).upgradeStorage.dropInventory(worldIn, pos);
+    		}
+    		super.breakBlock(worldIn, pos, state);
     }
 
     @Override
@@ -77,7 +89,7 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
     }
     
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {
         if (state.getValue(PART) == EggMachineBlock.EnumPartType.BASE)
         {
@@ -125,7 +137,7 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
     }
 
 	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
         {
@@ -177,12 +189,6 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
         return false;
     }
 	
-	@Override
-    public boolean isFullyOpaque(IBlockState state)
-    {
-    	return false;
-    }
-	
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
@@ -209,12 +215,6 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
     {
-//        if (state.getValue(PART) == Eggstractor.EnumPartType.TOP)
-//        {
-//            state = worldIn.getBlockState(pos.offset(EnumFacing.DOWN));
-//    
-//        }
-
         return state;
     }
     

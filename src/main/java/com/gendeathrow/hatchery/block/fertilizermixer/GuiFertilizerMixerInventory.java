@@ -38,10 +38,10 @@ public class GuiFertilizerMixerInventory extends GuiContainer
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
-		fontRendererObj.drawString(I18n.format(new TextComponentTranslation("container.fertilizermixer").getFormattedText()), xSize / 2 - fontRendererObj.getStringWidth(I18n.format(new TextComponentTranslation("container.fertilizermixerinventory").getFormattedText())) / 2, 5, 4210752);
-		fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), xSize - 170, ySize - 93, 4210752);
+		fontRenderer.drawString(I18n.format(new TextComponentTranslation("container.fertilizermixer").getFormattedText()), xSize / 2 - fontRenderer.getStringWidth(I18n.format(new TextComponentTranslation("container.fertilizermixerinventory").getFormattedText())) / 2, 5, 4210752);
+		fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), xSize - 170, ySize - 93, 4210752);
 		
-		fontRendererObj.drawString(new TextComponentTranslation("container.upgrades").getFormattedText(), xSize - 170, 40, 4210752);
+		fontRenderer.drawString(new TextComponentTranslation("container.upgrades").getFormattedText(), xSize - 170, 40, 4210752);
 
 	}
 	

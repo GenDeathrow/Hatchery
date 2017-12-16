@@ -41,6 +41,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -88,7 +89,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 
 	
 	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
 		
         if (worldIn.isRemote)
@@ -102,14 +103,14 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     		
     		if(te == null) return false;
     	
-    		
-    		if(heldItem != null)
+    		ItemStack heldItem = playerIn.getHeldItem(hand);
+    		if(!heldItem.isEmpty())
     		{
     			
     			if(heldItem.getItem() == Items.SPAWN_EGG)
     			{
     				
-    				   String entityID = ItemMonsterPlacer.getEntityIdFromItem(heldItem);
+    				   ResourceLocation entityID = ItemMonsterPlacer.getNamedIdFrom(heldItem);
 
     		           Entity entity = EntityList.createEntityByIDFromName(entityID, worldIn);
 
@@ -123,7 +124,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     		                    
    		    		       if (!playerIn.capabilities.isCreativeMode)
    		                   {
-   		                        --heldItem.stackSize;
+   		                        heldItem.shrink(1);;
    		                   }
    		    		       te.trySetEntity(entityliving);
    		    		       return true;
@@ -149,6 +150,8 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 //        worldIn.removeTileEntity(pos);
 //    }
 //	
+	
+	@Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
     {
         if (!keepInventory)
@@ -161,7 +164,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     		{
     			te.storedEntity().setPosition(te.getPos().getX() + .5, te.getPos().getY(), te.getPos().getZ() + .5);
     			te.storedEntity().captureDrops = false;
-    			worldIn.spawnEntityInWorld(te.storedEntity());
+    			worldIn.spawnEntity(te.storedEntity());
     			
     			te.storedEntity().setNoAI(false);
     		}
@@ -177,40 +180,28 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
         return Item.getItemFromBlock(ModBlocks.pen);
     }
     
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-    {
+    @Override
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand){
         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(HASCHICKEN, false);
     }
 
     /**
      * Called by ItemBlocks after a block is set in the world, to allow post-place logic
      */
+    @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(HASCHICKEN, false), 2);
     }
     
+    
     public static void setState(boolean hasChicken, World worldIn, BlockPos pos)
     {
     	 IBlockState iblockstate = worldIn.getBlockState(pos);
-//         TileEntity tileentity = worldIn.getTileEntity(pos);
-//         keepInventory = true;
          	worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(HASCHICKEN, hasChicken));
-//         keepInventory = false;
-//
-//         if (tileentity != null)
-//         {
-//             tileentity.validate();
-//             worldIn.setTileEntity(pos, tileentity);
              if(!worldIn.isRemote)
-            	 worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 2); 
-//         }
+            	 worldIn.markAndNotifyBlock(pos, worldIn.getChunkFromBlockCoords(pos), iblockstate, worldIn.getBlockState(pos), 2);
     }
-    
-//    public static boolean hasChicken(IBlockState state)
-//    {
-//		return state.getBlock() == ModBlocks.pen_chicken;
-//    }
     
     public static EntityAnimal getNearByMate(World world, IBlockState state, BlockPos pos)
     {
@@ -340,7 +331,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 	}
 	
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn)
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean something)
 	{
 		addCollisionBoxToList(pos, entityBox, collidingBoxes, AABB);
 	}
@@ -348,7 +339,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 	
 	@Override
     @Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
     {
         return NULL_AABB;
     }
@@ -364,13 +355,6 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
      */
     public IBlockState getStateFromMeta(int meta)
     {
-//        EnumFacing enumfacing = EnumFacing.getFront(meta);
-//
-//        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-//        {
-//            enumfacing = EnumFacing.NORTH;
-//        }
-
         return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(HASCHICKEN, (meta >> 2) == 1 ? true : false);
     }
 

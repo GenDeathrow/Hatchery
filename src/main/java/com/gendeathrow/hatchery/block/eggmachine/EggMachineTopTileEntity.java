@@ -1,55 +1,24 @@
 package com.gendeathrow.hatchery.block.eggmachine;
 
-import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class EggMachineTopTileEntity extends TileEntity implements IEnergyReceiver{
+public class EggMachineTopTileEntity extends TileEntity {
 
 	
 	public EggMachineTileEntity getBaseTE(){
-		EggMachineTileEntity te = (EggMachineTileEntity)this.worldObj.getTileEntity(this.pos.offset(EnumFacing.DOWN));
+		EggMachineTileEntity te = (EggMachineTileEntity)this.world.getTileEntity(this.pos.offset(EnumFacing.DOWN));
 		
 		return te;
 	}
 	
 	public boolean hasBaseTE(){
-		TileEntity te = this.worldObj.getTileEntity(this.pos.offset(EnumFacing.DOWN));
+		TileEntity te = this.world.getTileEntity(this.pos.offset(EnumFacing.DOWN));
 		if(te != null && te instanceof EggMachineTileEntity)
 			return true;
 		
 		return false;
-	}
-	
-	@Override
-	public int getEnergyStored(EnumFacing from) {
-		if(hasBaseTE())
-			return this.getBaseTE().getEnergyStored(from);
-		
-		return 0;
-	}
-
-	@Override
-	public int getMaxEnergyStored(EnumFacing from) {
-		if(hasBaseTE())
-			return this.getBaseTE().getMaxEnergyStored(from);
-		return 0;
-	}
-
-	@Override
-	public boolean canConnectEnergy(EnumFacing from) {
-		if(hasBaseTE())
-			return this.getBaseTE().canConnectEnergy(from);
-		return false;
-	}
-
-	@Override
-	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		if(hasBaseTE())
-			return this.getBaseTE().receiveEnergy(from, maxReceive, simulate);
-		
-		return 0;
 	}
 	
 	

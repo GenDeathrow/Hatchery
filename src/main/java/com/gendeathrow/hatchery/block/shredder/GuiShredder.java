@@ -23,7 +23,7 @@ public class GuiShredder extends GuiContainer
 	
 	public GuiShredder(InventoryPlayer inventory, ShredderTileEntity tile) 
 	{
-		super(new ContainerShredder(inventory, tile, Minecraft.getMinecraft().thePlayer));
+		super(new ContainerShredder(inventory, tile, Minecraft.getMinecraft().player));
 		xSize = 176;
 		ySize = 166;
 		this.SHREDDER = tile;
@@ -46,7 +46,7 @@ public class GuiShredder extends GuiContainer
 		rfEnergyLevels = (int) (((float)SHREDDER.energy.getEnergyStored() / SHREDDER.energy.getMaxEnergyStored()) * 58);
 		
 	
-		fontRendererObj.drawString(new TextComponentTranslation("container.upgrades").getFormattedText(), xSize - 60, 34, 4210752);
+		fontRenderer.drawString(new TextComponentTranslation("container.upgrades").getFormattedText(), xSize - 60, 34, 4210752);
 
 		
 		GlStateManager.pushMatrix();

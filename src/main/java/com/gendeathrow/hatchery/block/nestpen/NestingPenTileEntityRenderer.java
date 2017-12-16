@@ -24,7 +24,7 @@ public class NestingPenTileEntityRenderer extends TileEntitySpecialRenderer<Nest
 		try
 		{
 			boolean flag = te.getWorld() != null;
-			boolean flag1 = !flag || (te.getBlockType() == ModBlocks.pen || te.getBlockType() == ModBlocks.pen_chicken);
+			boolean flag1 = !flag || (te.getBlockType() == ModBlocks.pen);
 
 	        if (flag1)
 	        {
@@ -51,16 +51,9 @@ public class NestingPenTileEntityRenderer extends TileEntitySpecialRenderer<Nest
         GlStateManager.translate(x + .5, y + .1, z + .5);
         GlStateManager.rotate(facing.getHorizontalAngle(), 0, 1, 0);
         GlStateManager.enableLighting();
-        	renderManager.doRenderEntity(te.storedEntity(), 0, 0, 0, 0, partialTicks, true);
+        Minecraft.getMinecraft().getRenderManager().doRenderEntity(te.storedEntity(), 0, 0, 0, 0, partialTicks, true);
     	GlStateManager.disableLighting();
     	GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.popMatrix();
-    }
-    
-    
-    private float getCorrectYawAngle(NestPenTileEntity te)
-    {
-    	
-    	return 0;
     }
 }

@@ -28,7 +28,7 @@ public class AnimalStats implements IAnimalStats
 		
 		if(--timeToPoop <= 0)
 		{
-			if(!entity.worldObj.isRemote)
+			if(!entity.world.isRemote)
 				entity.dropItem(ModItems.manure, 1);
 			
 			timeToPoop = entity.getRNG().nextInt(6000) + 6000;

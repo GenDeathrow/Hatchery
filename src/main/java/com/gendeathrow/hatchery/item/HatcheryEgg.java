@@ -3,7 +3,7 @@ package com.gendeathrow.hatchery.item;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.init.ModItems;
@@ -43,24 +43,25 @@ public class HatcheryEgg extends ItemEgg
 		this.setCreativeTab(Hatchery.hatcheryTabs);
 	}
 	
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
-    {
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
+	{
         if (!playerIn.capabilities.isCreativeMode)
         {
-            --itemStackIn.stackSize;
+        	playerIn.getHeldItem(handIn).shrink(1);
         }
 
         worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_EGG_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
         if (!worldIn.isRemote)
         {
-        	HatcheryEggThrown entityegg = new HatcheryEggThrown(worldIn, playerIn, itemStackIn);
+        	HatcheryEggThrown entityegg = new HatcheryEggThrown(worldIn, playerIn, playerIn.getHeldItem(handIn));
             entityegg.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-            worldIn.spawnEntityInWorld(entityegg);
+            worldIn.spawnEntity(entityegg);
         }
 
         playerIn.addStat(StatList.getObjectUseStats(this));
-        return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
+        return new ActionResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
     }
     
     protected NBTTagList newDoubleNBTList(double[] dob)
@@ -92,13 +93,13 @@ public class HatcheryEgg extends ItemEgg
      * 
      * @param entity
      */
-    @Nullable
+    @Nonnull
     public static ItemStack createEggFromEntity(World worldIn, EntityAgeable entity)
     {
-		if(entity == null) return null;
+		if(entity == null) return ItemStack.EMPTY;
 
 		ItemStack egg = new ItemStack(ModItems.hatcheryEgg, 1, 0);
-		egg.setStackDisplayName(entity.getDisplayName().getFormattedText() +" Egg");
+		egg.setStackDisplayName(entity.getDisplayName().getFormattedText() +" egg");
 	  	HatcheryEgg.setColor(egg, entity);
     	ItemStackEntityNBTHelper.addEntitytoItemStack(egg, (EntityLiving)entity);
     	

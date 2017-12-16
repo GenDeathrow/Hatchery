@@ -34,7 +34,7 @@ public class ChickenBreeding extends EntityAIBase
     public ChickenBreeding(EntityAnimal animal, double speedIn)
     {
         this.theAnimal = animal;
-        this.theWorld = animal.worldObj;
+        this.theWorld = animal.world;
         this.moveSpeed = speedIn;
         this.setMutexBits(3);
     }
@@ -104,7 +104,7 @@ public class ChickenBreeding extends EntityAIBase
      */
     protected EntityAnimal getNearbyMate()
     {
-        List<EntityAnimal> list = this.theWorld.<EntityAnimal>getEntitiesWithinAABB(this.theAnimal.getClass(), this.theAnimal.getEntityBoundingBox().expandXyz(8.0D));
+        List<EntityAnimal> list = this.theWorld.<EntityAnimal>getEntitiesWithinAABB(this.theAnimal.getClass(), this.theAnimal.getEntityBoundingBox().expand(8.0D,8.0D,8.0D));
         double d0 = Double.MAX_VALUE;
         EntityAnimal entityanimal = null;
 
@@ -160,7 +160,7 @@ public class ChickenBreeding extends EntityAIBase
         	
             EntityItem entityItem = new EntityItem(this.theWorld, this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, egg);
             
-            this.theWorld.spawnEntityInWorld(entityItem);
+            this.theWorld.spawnEntity(entityItem);
             
             Random random = this.theAnimal.getRNG();
 
@@ -177,7 +177,7 @@ public class ChickenBreeding extends EntityAIBase
 
             if (this.theWorld.getGameRules().getBoolean("doMobLoot"))
             {
-                this.theWorld.spawnEntityInWorld(new EntityXPOrb(this.theWorld, this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, random.nextInt(7) + 1));
+                this.theWorld.spawnEntity(new EntityXPOrb(this.theWorld, this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, random.nextInt(7) + 1));
             }
         }
  

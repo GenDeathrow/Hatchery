@@ -52,9 +52,9 @@ item.hatchery.tank_upgrade_1.name=Tank Upgrade Tier 1
 item.hatchery.tank_upgrade_2.name=Tank Upgrade Tier 2
 item.hatchery.tank_upgrade_3.name=Tank Upgrade Tier 3
 
-item.hatchery.rf_capacity_1.name=RF Capacity Tier 1
-item.hatchery.rf_capacity_2.name=RF Capacity Tier 2
-item.hatchery.rf_capacity_3.name=RF Capacity Tier 3
+item.hatchery.rf_capacity_upgrade_1.name=RF Capacity Tier 1
+item.hatchery.rf_capacity_upgrade_2.name=RF Capacity Tier 2
+item.hatchery.rf_capacity_upgrade_3.name=RF Capacity Tier 3
 
 item.hatchery.prize_egg.name=Lucky Egg
 item.hatchery.fiber_pad.name=Fiber Pad
@@ -92,11 +92,7 @@ jei.item.hatchery.chickenmanure=Drops from nesting pens. Use manure to make fert
 jei.item.hatchery.sprayer=The fertilizer sprayer is used to turn dirt/farmland into fertilized dirt/farmland, and acts much like a watering can causing block updates. Spray Holds 3000mb. 
 jei.item.hatchery.circuit_board=Used for crafting in upgrades
 
-jei.item.hatchery.rf_upgrade_1=Upgrades RF power generation in generator 40rf/tick \n\nIn some machines it will reduce RF/tick
-jei.item.hatchery.rf_upgrade_2=Upgrades RF power generation in generator 60rf/tick \n\nIn some machines it will reduce RF/tick
-jei.item.hatchery.rf_upgrade_3=Upgrades RF power generation in generator 80rf/tick \n\nIn some machines it will reduce RF/tick
-
-
+jei.item.hatchery.rf_upgrade= Reduces RF/tick \n In the Generator it increases RF/Tick \n\n Tier 1 : Upgrades RF power generation in generator 40rf/tick \n\n Tier 2 : Upgrades RF power generation in generator 60rf/tick \n\n Tier 3: Upgrades RF power generation in generator 80rf/tick
 
 jei.item.hatchery.speed_upgrade=Upgrades the speed of machine to increase processing. Increasing speed will also increase the amount of RF/tick.  
 jei.item.hatchery.tank_upgrade=Upgrades the liquid tank storage of a machine.

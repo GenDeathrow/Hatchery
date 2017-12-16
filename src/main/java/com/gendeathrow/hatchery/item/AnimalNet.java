@@ -39,7 +39,7 @@ public class AnimalNet extends Item
     public String getItemStackDisplayName(ItemStack stack)
     {
 		
-		if(this.hasCapturedAnimal(stack))
+		if(AnimalNet.hasCapturedAnimal(stack))
 		{
 			if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("entityDisplayName"))
 			{
@@ -53,12 +53,12 @@ public class AnimalNet extends Item
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand)
     {
-        if (target.worldObj.isRemote)
+        if (target.world.isRemote)
         {
             return false;
         }
            	
-	    if (target.worldObj.isRemote || !(target instanceof EntityAnimal) || (target instanceof EntityMob) || (hand == EnumHand.OFF_HAND)) 
+	    if (target.world.isRemote || !(target instanceof EntityAnimal) || (target instanceof EntityMob) || (hand == EnumHand.OFF_HAND)) 
 	    {
 	        return false;
 	    }
@@ -73,7 +73,7 @@ public class AnimalNet extends Item
 
 	  		player.setActiveHand(hand);
 	  		
-	  		target.worldObj.removeEntity(target);
+	  		target.world.removeEntity(target);
 	  		return true;
 	    }
 	    
@@ -101,9 +101,9 @@ public class AnimalNet extends Item
     	ItemStack newstack = new ItemStack(ModItems.animalNet);
     	addEntityNBT(newstack, entity);        
 
-        if (--stack.stackSize <= 0 && !player.capabilities.isCreativeMode)
+        if (stack.getCount() - 1 <= 0 && !player.capabilities.isCreativeMode)
         {
-        	stack.stackSize = 1;
+        	stack.setCount(1);
        		return addEntityNBT(stack, entity);     
         }
         else
@@ -124,7 +124,7 @@ public class AnimalNet extends Item
 			NBTTagCompound eNBT = new NBTTagCompound();
 			entity.onGround = true;
 			eNBT = entity.writeToNBT(eNBT);
-			eNBT.setString("id", EntityList.getEntityString(entity));
+			eNBT.setString("id", EntityList.getKey(entity).toString());
 		stacknbt.setTag("storedEntity", eNBT);
 	
 		stacknbt.setString("entityDisplayName", entity.getDisplayName().getUnformattedText());
@@ -133,29 +133,32 @@ public class AnimalNet extends Item
 		return stack;
 	}
 	
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	@Override
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
         
 		if (!worldIn.isRemote)
         {
+			ItemStack animalNet = playerIn.getHeldItem(hand);
+			
     	    if (hand == EnumHand.OFF_HAND && playerIn.getHeldItemMainhand().getItem() == ModItems.animalNet) 
     	    {
     	    	return EnumActionResult.FAIL;
     	    }
     	    
-    	    if(playerIn.worldObj.getBlockState(pos).getBlock() == ModBlocks.pen || playerIn.worldObj.getBlockState(pos).getBlock() == ModBlocks.pen_chicken)
+    	    if(playerIn.world.getBlockState(pos).getBlock() == ModBlocks.pen)
     		{
-    			NestPenTileEntity pen = (NestPenTileEntity)playerIn.worldObj.getTileEntity(pos);
+    			NestPenTileEntity pen = (NestPenTileEntity)playerIn.world.getTileEntity(pos);
     			
-    			if(!hasCapturedAnimal(stack) && pen.storedEntity() != null)
+    			if(!hasCapturedAnimal(animalNet) && pen.storedEntity() != null)
     			{	
-    				stack = addEntitytoNet(playerIn, stack, pen.storedEntity());
+    				animalNet = addEntitytoNet(playerIn, animalNet, pen.storedEntity());
     				pen.tryGetRemoveEntity();
      			}
-    			else if(stack.getTagCompound() != null &&  pen.storedEntity() == null)
+    			else if(animalNet.getTagCompound() != null &&  pen.storedEntity() == null)
     			{
-            		NBTTagCompound entitynbt =  getEntityTag(stack);
+            		NBTTagCompound entitynbt =  getEntityTag(animalNet);
               		
              		if(entitynbt == null) 
              			return  EnumActionResult.FAIL; 
@@ -169,19 +172,15 @@ public class AnimalNet extends Item
          			
     	  	        playerIn.addStat(StatList.getObjectUseStats(this));
 
-    	  	        //stack.getTagCompound().setTag("storedEntity", new NBTTagCompound());
-    	  	        //stack.getTagCompound().removeTag("storedEntity");
-    	  	        stack.setTagCompound(null);
-    	  	        
-    	  	        //stack.setStackDisplayName(I18n.translateToLocal(stack.getUnlocalizedName()+".name"));
+    	  	        animalNet.setTagCompound(null);
     	  	        
     	  	      worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
     			}
 
     		}
-    		else if(stack.getTagCompound() != null)
+    		else if(animalNet.getTagCompound() != null)
         	{
-          		NBTTagCompound entitynbt = getEntityTag(stack);
+          		NBTTagCompound entitynbt = getEntityTag(animalNet);
           		
          		if(entitynbt == null) 
          			return  EnumActionResult.FAIL; 
@@ -194,27 +193,27 @@ public class AnimalNet extends Item
 
         		BlockPos pos2 = pos.offset(facing);
                 double d0 = 0.0D;
-                if (facing == EnumFacing.UP && playerIn.worldObj.getBlockState(pos2).getBlock() instanceof BlockFence) //Forge: Fix Vanilla bug comparing state instead of block
+                if (facing == EnumFacing.UP && playerIn.world.getBlockState(pos2).getBlock() instanceof BlockFence) //Forge: Fix Vanilla bug comparing state instead of block
                 {
                     d0 = 0.5D;
                 }
    
         		entity.setPositionAndRotation(pos2.getX() + 0.5D, pos2.getY() + d0, pos2.getZ() + 0.5D , Math.abs(playerIn.rotationYaw), 0);
 	  			
-       			worldIn.spawnEntityInWorld(entity);
+       			worldIn.spawnEntity(entity);
        			
        			if(entity instanceof EntityAnimal){
        				if(((EntityAnimal)entity).isAIDisabled())
        					((EntityAnimal)entity).setNoAI(false);
        			}
 	  	        playerIn.addStat(StatList.getObjectUseStats(this));
-	  	        stack.setTagCompound(null);
+	  	        animalNet.setTagCompound(null);
 	  	        
   	  	      worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 	  	      return EnumActionResult.PASS;
         	}
         }
-       return EnumActionResult.FAIL;
+       return EnumActionResult.PASS;
     }
 	
 	private static NBTTagCompound getEntityTag(ItemStack stack)
@@ -226,6 +225,8 @@ public class AnimalNet extends Item
 	{
 		try
 		{
+
+			
 			Entity entity = EntityList.createEntityFromNBT(entitynbt, worldIn);
 
 			return entity;

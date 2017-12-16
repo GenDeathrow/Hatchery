@@ -178,9 +178,10 @@ public class FertilizedFarmland extends Block
      * change. Cases may include when redstone power is updated, cactus blocks popping off due to a neighboring solid
      * block, etc.
      */
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
+    @Override
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos from)
     {
-        super.neighborChanged(state, worldIn, pos, blockIn);
+        super.neighborChanged(state, worldIn, pos, blockIn, from);
 
         if (worldIn.getBlockState(pos.up()).getMaterial().isSolid())
         {

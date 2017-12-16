@@ -1,9 +1,11 @@
 package com.gendeathrow.hatchery.core.init;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.client.IItemColorHandler;
 import com.gendeathrow.hatchery.item.AnimalNet;
 import com.gendeathrow.hatchery.item.ChickenManure;
 import com.gendeathrow.hatchery.item.HatcheryEgg;
@@ -11,53 +13,55 @@ import com.gendeathrow.hatchery.item.ItemChickenMachine;
 import com.gendeathrow.hatchery.item.PrizeEgg;
 import com.gendeathrow.hatchery.item.Sprayer;
 import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
-import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@Mod.EventBusSubscriber
 public class ModItems 
 {
 	
 	public static final List<Item> ITEMS = new ArrayList<>();
 	
 	//ITEMS
-	public static HatcheryEgg hatcheryEgg = new HatcheryEgg();
-	public static AnimalNet animalNet = new AnimalNet();
-	public static ChickenManure manure = new ChickenManure();
-	public static Sprayer sprayer = new Sprayer();
+	public static Item hatcheryEgg = setUpItem(new HatcheryEgg(), "hatcheryegg");
+			
+	public static Item animalNet = setUpItem(new AnimalNet() , "animalnet");
+	public static Item manure = setUpItem(new ChickenManure() , "chickenmanure"); 
+	public static Item sprayer = setUpItem(new Sprayer(), "sprayer");
 	
-	public static Item featherMeal = new Item().setUnlocalizedName("feather_meal");
-	public static Item plastic = new Item().setUnlocalizedName("plastic");
-	public static Item featherFiber = new Item().setUnlocalizedName("feather_fiber");
-	public static Item chickenFeed = new Item().setUnlocalizedName("chicken_feed");
-	public static Item circuitBoard = new Item().setUnlocalizedName("circuit_board");
+	public static Item featherMeal = setUpItem(new Item(), "feather_meal");
+	public static Item plastic = setUpItem( new Item() , "plastic");
+	public static Item featherFiber = setUpItem( new Item(), "feather_fiber");
+	public static Item chickenFeed = setUpItem( new Item(), "chicken_feed");
 	
-	public static Item fiberPad = new Item().setUnlocalizedName("fiber_pad");
+	public static Item circuitBoard = setUpItem( new Item(), "circuit_board");
 	
-	public static Item mealPulp = new Item().setUnlocalizedName("feather_pulp");
+	public static Item fiberPad = setUpItem(new Item(),"fiber_pad");
 	
-	public static Item prizeEgg = new PrizeEgg().setUnlocalizedName("prize_egg");
+	public static Item mealPulp = setUpItem(new Item(), "feather_pulp");
 	
-	public static Item chickenmachine = new ItemChickenMachine().setUnlocalizedName("chicken_machine");
+	public static Item prizeEgg = setUpItem( new PrizeEgg(), "prize_egg");
+	
+	public static Item chickenmachine = setUpItem(new ItemChickenMachine(), "chicken_machine");
 	
 	//Upgrades  
 	
-	public static RFEfficiencyUpgrade rfUpgradeTier1 = (RFEfficiencyUpgrade) new RFEfficiencyUpgrade(1);
-	public static RFEfficiencyUpgrade rfUpgradeTier2 = new RFEfficiencyUpgrade(2);
-	public static RFEfficiencyUpgrade rfUpgradeTier3 = new RFEfficiencyUpgrade(3);
-	
-	public static BaseUpgrade speedUpgradeTier = new BaseUpgrade(3, "speed_upgrade");
-
-	public static BaseUpgrade tankUpgradeTier1 = new BaseUpgrade(3, "tank_upgrade");
-	
-	public static BaseUpgrade rfCapacityUpgradeTier1 = new BaseUpgrade(3, "rf_capacity_upgrade");
-	
-
-	// RF Efficiency upgrade (decrease power usage)  1-0.75, 2-0.65, 3-0.5
-	//public static BaseUpgrade rfEfficiencyUpgradeTier1 = new BaseUpgrade(3, "rf_efficiency_upgrade");
-	//public static BaseUpgrade rfEfficiencyUpgradeTier2 = new BaseUpgrade(2, "rf_efficiency_upgrade");
-	//public static BaseUpgrade rfEfficiencyUpgradeTier3 = new BaseUpgrade(3, "rf_efficiency_upgrade");
+	public static Item rfUpgradeTier = setUpItem(new BaseUpgrade(3, "rf_upgrade"), "rf_upgrade");
+	public static Item speedUpgradeTier = setUpItem(new BaseUpgrade(3, "speed_upgrade"), "speed_upgrade");
+	public static Item tankUpgradeTier1 = setUpItem(new BaseUpgrade(3, "tank_upgrade"), "tank_upgrade");
+	public static Item rfCapacityUpgradeTier1 = setUpItem(new BaseUpgrade(3, "rf_capacity_upgrade"), "rf_capacity_upgrade");
 	
 	// insulation (decrease sound)
 	
@@ -66,61 +70,79 @@ public class ModItems
 	
 	
 	//public static FluidPump pump = new FluidPump();
+	public static IForgeRegistry<Item> itemRegistry;
+	
+	
+	public static Item setUpItem(Item item, String name) {
+		return item.setRegistryName(new ResourceLocation(Hatchery.MODID, name)).setUnlocalizedName(Hatchery.MODID+"."+ name).setCreativeTab(Hatchery.hatcheryTabs);
+	}
+	
+	@SubscribeEvent
+	public static void itemRegistry(RegistryEvent.Register<Item> event) {
+		itemRegistry = event.getRegistry();
+
+		registerAllItems(
+				ModItems.hatcheryEgg,
+				ModItems.animalNet, 
+				ModItems.manure,
+				ModItems.sprayer,
+				ModItems.featherMeal,
+				ModItems.plastic,
+				ModItems.featherFiber,
+				ModItems.chickenFeed,
+				ModItems.circuitBoard,
+				ModItems.fiberPad,
+				ModItems.mealPulp,
+				ModItems.prizeEgg,
+				ModItems.chickenmachine,
+				ModItems.rfUpgradeTier,
+				ModItems.speedUpgradeTier,
+				ModItems.tankUpgradeTier1,
+				ModItems.rfCapacityUpgradeTier1);
+		
+		ModBlocks.registerItems(event);
+	}
+	
+	public static void registerAllItems(Item... items){
+		for(Item item : items) {
+			itemRegistry.register(item);
+			ModItems.ITEMS.add(item);
+		}
+	}
 	
 
-	public static void RegisterItems()
-	{
-		registerItem(ModItems.hatcheryEgg, "hatcheryegg");
-		registerItem(ModItems.animalNet, "animalnet");
-		registerItem(ModItems.manure, "chickenmanure");
-		registerItem(ModItems.sprayer, "sprayer");
-		
-		registerItem(ModItems.featherMeal, "feather_meal");
-		registerItem(ModItems.plastic, "plastic");
-		registerItem(ModItems.featherFiber, "feather_fiber");
-		registerItem(ModItems.chickenFeed, "chicken_feed");		
-		
+	public static void registerRenderer() {
+		//Register Items
+		try {
+			for (Field field : ModItems.class.getDeclaredFields()) {
+				Object obj = field.get(null);
+				if (obj instanceof Item) {
+					Item item = (Item) obj;
+					
+					NonNullList<ItemStack> list = NonNullList.<ItemStack>create();
+			
+					item.getSubItems(item, Hatchery.hatcheryTabs, list);
+			
+					if(list.size() > 1)
+						for(ItemStack metaitem : list)
+							ModelLoader.setCustomModelResourceLocation(item, metaitem.getMetadata(), new ModelResourceLocation(item.getRegistryName()+"_"+metaitem.getMetadata(), "inventory"));
+					else
+						ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+					
+				}
+			}
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 
-		
-		
-		registerItem(ModItems.circuitBoard, "circuit_board");
-		registerItem(ModItems.fiberPad, "fiber_pad");
-		registerItem(ModItems.mealPulp, "feather_pulp");
-		
-		registerItem(ModItems.prizeEgg, "prize_egg");
-		
-		registerItem(ModItems.chickenmachine, "chicken_machine");
-		
-		
-		// Upgradess
-		
-		//TODO LEGACY 
-		registerItem(ModItems.rfUpgradeTier1, "rf_upgrade_1");
-		registerItem(ModItems.rfUpgradeTier2, "rf_upgrade_2");
-		registerItem(ModItems.rfUpgradeTier3, "rf_upgrade_3");
-		
-		
-		registerItem(ModItems.speedUpgradeTier, "speed_upgrade");
-		registerItem(ModItems.tankUpgradeTier1, "tank_upgrade");
-		registerItem(ModItems.rfCapacityUpgradeTier1, "rf_capacity");
-		//registerItem(ModItems.rfEfficiencyUpgradeTier1, "rf_efficiency_upgrade");
-		
-		//registerItem(ModItems.pump, "fluidpump");
-		
+
 	}
-	
-	
-	public static void RegisterModels()
-	{
-		
-	}
-	
-	private static void registerItem(Item item, String name)
-	{
-		item.setUnlocalizedName(Hatchery.MODID +"."+ name);
-		GameRegistry.register(item.setRegistryName(name));
-		ITEMS.add(item);
-	}
-	
+
+	@SideOnly(Side.CLIENT)
+    public static void registerItemColorHandler(Item item)
+    {
+            FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler(new IItemColorHandler(), ModItems.hatcheryEgg);
+    }
+
 
 }

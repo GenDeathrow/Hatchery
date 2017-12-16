@@ -13,6 +13,7 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -40,31 +41,58 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEntityProvider
 {
-	boolean isGenerating;
-	
-	public DigesterGeneratorBlock(boolean isGenerating) 
+    public static final PropertyBool ISGENERATING = PropertyBool.create("isgenerating");
+    
+    
+	public DigesterGeneratorBlock() 
 	{
 		super(Material.IRON);
 		this.setHardness(2);
 		this.setHarvestLevel("pickaxe", 0);
 		this.setUnlocalizedName("digester_generator");
 		this.isBlockContainer = true;
-		this.isGenerating = isGenerating;
+		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ISGENERATING, false));
 		
 	}
 
+	
+	/** Is the Generator turned on? */
+	public static boolean isGenerating(IBlockState blockStateContainer)
+	{
+		return blockStateContainer.getValue(ISGENERATING);
+	}
+	
+	/** Update Generator */
+	public static void setGenerating(World worldIn, BlockPos pos, IBlockState state, boolean isActiveIn)
+	{
+		worldIn.setBlockState(pos, state.withProperty(FACING, getFacing(state)).withProperty(ISGENERATING, isActiveIn), 3);
+	}
+	
+	
     @Nullable
+    @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Item.getItemFromBlock(ModBlocks.digesterGenerator);
     }
-    
+
+    @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
     {
         return new ItemStack(this.getItemDropped(state, world.rand, 0), 1, this.damageDropped(state));
     }
     
-    
+	@Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+    		TileEntity te = worldIn.getTileEntity(pos);
+    		if(te instanceof DigesterGeneratorTileEntity) {
+    			((DigesterGeneratorTileEntity) te).inputInventory.dropInventory(worldIn, pos);
+    			((DigesterGeneratorTileEntity) te).outputInventory.dropInventory(worldIn, pos);
+    			((DigesterGeneratorTileEntity) te).upgradeStorage.dropInventory(worldIn, pos);
+    		}
+    		super.breakBlock(worldIn, pos, state);
+    }
     
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) 
@@ -73,7 +101,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 	}
 	
 	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
         {
@@ -81,7 +109,9 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
         }
         else
         {
-        	if(heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side))
+        	ItemStack heldItem = playerIn.getHeldItem(hand);
+        	
+        	if(!heldItem.isEmpty() && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing))
         	{
         		DigesterGeneratorTileEntity tileentity = (DigesterGeneratorTileEntity) worldIn.getTileEntity(pos);
         		
@@ -89,7 +119,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 				
 				boolean hasFluid =FluidUtil.getFluidContained(heldItem) != null && FluidUtil.getFluidContained(heldItem).getFluid() == ModFluids.liquidfertilizer;
 	
-				if(tileentity != null && handler != null  && hasFluid && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side))
+				if(tileentity != null && handler != null  && hasFluid && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing))
 				{
 					FluidUtil.tryFluidTransfer(tileentity.getFertilizerTank(), handler, tileentity.getFertilizerTank().getCapacity(), true);
 				}
@@ -105,18 +135,17 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 		return true;
     }
 	
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-    {
-        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
-    }
-
     /**
      * Called by ItemBlocks after a block is set in the world, to allow post-place logic
      */
+    @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+        if(!worldIn.isRemote)
+          	 worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 2); 
     }
+    
     
     private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state)
     {
@@ -151,9 +180,10 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
     
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("incomplete-switch")
+    @Override
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
     {
-        if (this.isGenerating)
+        if (DigesterGeneratorBlock.isGenerating(stateIn))
         {
             EnumFacing enumfacing = (EnumFacing)stateIn.getValue(FACING);
             double d0 = (double)pos.getX() + 0.5D;
@@ -191,17 +221,8 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
         IBlockState iblockstate = worldIn.getBlockState(pos);
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
-        if (active)
-        {
-            worldIn.setBlockState(pos, ModBlocks.digesterGeneratorOn.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-            worldIn.setBlockState(pos, ModBlocks.digesterGeneratorOn.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-        }
-        else
-        {
-            worldIn.setBlockState(pos, ModBlocks.digesterGenerator.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-            worldIn.setBlockState(pos, ModBlocks.digesterGenerator.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-        }
-
+        setGenerating(worldIn, pos, iblockstate, active);
+   
         if (tileentity != null)
         {
             tileentity.validate();
@@ -209,6 +230,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
         }
     }
 	 
+    @Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
@@ -220,6 +242,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 		return false;
 	}
 	
+    @Override
     public boolean isFullCube(IBlockState state)
     {
         return false;
@@ -236,6 +259,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
         return BlockRenderLayer.CUTOUT_MIPPED;
     }
     
+    @Override
     public EnumBlockRenderType getRenderType(IBlockState state)
     {
         return EnumBlockRenderType.MODEL;
@@ -246,49 +270,51 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 		return (EnumFacing)blockStateContainer.getValue(FACING);
 	}
 	
-	 public IBlockState getStateFromMeta(int meta)
-	    {
-	        EnumFacing enumfacing = EnumFacing.getFront(meta);
-
-	        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-	        {
-	            enumfacing = EnumFacing.NORTH;
-	        }
-
-	        return this.getDefaultState().withProperty(FACING, enumfacing);
-	    }
+    @Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		 return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(ISGENERATING, (meta >> 2) == 1 ? true : false);
+	}
 
 	    /**
 	     * Convert the BlockState into the correct metadata value
 	     */
-	    public int getMetaFromState(IBlockState state)
-	    {
-	        return ((EnumFacing)state.getValue(FACING)).getIndex();
-	    }
+    @Override
+	public int getMetaFromState(IBlockState state)
+	{
+		int i = 0;
+		i |= ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
+		i |= (state.getValue(ISGENERATING) ? 1 : 0 ) << 2;
+	    	
+		return i  ;
+	}
 
 
 	    /**
 	     * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
 	     * blockstate.
 	     */
-	    public IBlockState withRotation(IBlockState state, Rotation rot)
-	    {
-	        return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
-	    }
+    @Override
+    public IBlockState withRotation(IBlockState state, Rotation rot)
+    {
+    	return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
+    }
 
-	    /**
-	     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-	     * blockstate.
-	     */
-	    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
-	    {
-	        return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
-	    }
+    /**
+     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
+     * blockstate.
+     */
+    @Override
+    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
+    {
+    	return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
+    }
 
-	    protected BlockStateContainer createBlockState()
-	    {
-	        return new BlockStateContainer(this, new IProperty[] {FACING});
-	    }
+    @Override
+    protected BlockStateContainer createBlockState()
+    {
+    	return new BlockStateContainer(this, new IProperty[] {FACING, ISGENERATING});
+    }
 	    
     
 }

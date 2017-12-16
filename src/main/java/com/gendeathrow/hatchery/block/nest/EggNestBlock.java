@@ -1,6 +1,5 @@
 package com.gendeathrow.hatchery.block.nest;
 
-import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Nullable;
@@ -20,7 +19,6 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -29,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
@@ -50,7 +49,6 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 		super(Material.LEAVES);
 		this.name = "nest";
 		this.setUnlocalizedName("nest"); 
-		//this.setRegistryName(Hatchery.MODID,"nest");
 		this.setCreativeTab(Hatchery.hatcheryTabs);	
 		this.setHardness(.2f);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(hasEgg, false));
@@ -61,11 +59,9 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 	{
 		 if(worldIn.getTileEntity(pos)  != null && worldIn.getTileEntity(pos) instanceof EggNestTileEntity)
 		 {
-			 ItemStack stack = ((EggNestTileEntity)worldIn.getTileEntity(pos)).eggSlot[0];
-			 if(stack != null)
-			 {
-				 this.spawnAsEntity(worldIn, pos, stack);
-			 }
+			 ItemStack stack = ((EggNestTileEntity)worldIn.getTileEntity(pos)).getEgg();
+			 if(!stack.isEmpty())
+				 Block.spawnAsEntity(worldIn, pos, stack);
 		 }
 		 super.breakBlock(worldIn, pos, state);
 	 }
@@ -77,13 +73,8 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     }
 	 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn)
-	{ }
-
-	
-	@Override
     @Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
     {
         return NULL_AABB;
     }
@@ -95,9 +86,9 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     }
     
 	@Override
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List list) 
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) 
 	{
-	    list.add(new ItemStack(itemIn, 1, 0)); //Meta 0
+	    list.add(new ItemStack(itemIn, 1, 0)); 
 	}
 	
 	@Override
@@ -107,61 +98,36 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     }
 	
 	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-			
-    	if(doesHaveEgg(state))
-    	{
-    			if(!worldIn.isRemote)
-    			{
-    				EggNestTileEntity te = ((EggNestTileEntity)worldIn.getTileEntity(pos));
-    				ItemStack egg = te.removeStackFromSlot(0);
-    				worldIn.spawnEntityInWorld(new EntityItem(worldIn, pos.getX(), pos.getY() + .5d, pos.getZ(), egg));
-    			}
-    			
-     			this.removeEgg(worldIn, state, pos);
-    		return true;
-    	}
-    	else if(heldItem != null && heldItem.getItem() instanceof ItemEgg)
-    	{
-    		this.addEgg(worldIn, state, pos);
-    		
-			if(!worldIn.isRemote)
+		ItemStack heldItem = playerIn.getHeldItem(hand);
+		EggNestTileEntity te = ((EggNestTileEntity)worldIn.getTileEntity(pos));
+		
+		if(!worldIn.isRemote)
+		{
+			if(doesHaveEgg(state))
 			{
-		        if (!playerIn.capabilities.isCreativeMode) 
-		        {
-		            --heldItem.stackSize;
+    				ItemStack egg = te.removeEgg();
+    				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + .5d, pos.getZ(), egg));
+         			EggNestBlock.removeEgg(worldIn, state, pos);
+         			return true;
+			}
+			else if(!heldItem.isEmpty() && heldItem.getItem() instanceof ItemEgg)
+			{
+				te.insertEgg(heldItem.copy());
+				EggNestBlock.addEgg(worldIn, state, pos);
+		        if (!playerIn.capabilities.isCreativeMode) {
+		            heldItem.shrink(1);
 		        }
-    			
-		        ItemStack itemstack = heldItem.copy();
-		        itemstack.stackSize = 1;
-				((EggNestTileEntity)worldIn.getTileEntity(pos)).setInventorySlotContents(0,itemstack);
-    		}
-    		
-    		return true;
-    	}
+		        return true;
+			}
+		}
 
-		return false;
+		return true;
     }
 	
-//	public boolean placeEgg(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem)
-//	{
-//    	
-////    	if(heldItem != null && heldItem.getItem() instanceof ItemEgg)
-////    	{
-////    		System.out.println("noegg");
-////    		
-////    		this.addEgg(worldIn, state, pos);
-////    		
-////    		return true;
-////    	}
-//    	
-//        return false;
-//	}
-    
 	@Override
-    public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
+    public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos) {
     	return false;
     }
     
@@ -170,6 +136,10 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     	if(state.getBlock() != ModBlocks.nest) return false;
     	
     	return state.getValue(hasEgg);
+    }
+    
+    public static void setEggState(World worldIn, IBlockState state, BlockPos pos, boolean egg) {
+    	worldIn.setBlockState(pos,state.withProperty(hasEgg, egg));
     }
     
     public static void addEgg(World worldIn, IBlockState state, BlockPos pos)
@@ -186,13 +156,6 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 	public TileEntity createNewTileEntity(World worldIn, int meta) 
 	{
 		return new EggNestTileEntity();
-	}
-	
-	
-	public static EggNestBlock create() 
-	{
-		EggNestBlock res = new EggNestBlock();
-		return res;
 	}
 	
 	public boolean isOpaqueCube(IBlockState state)
@@ -249,15 +212,16 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 		
 		
 		TileEntity te = world.getTileEntity(data.getPos());
+		
 		if(te instanceof EggNestTileEntity)
 		{
 			EggNestTileEntity hte = (EggNestTileEntity) te;
 			
-			if(hte.getStackInSlot(0) != null)
+			if(hte.getEgg() != null)
 			{
 				float percentage = hte.getPercentage();
 				probeInfo.text(TextFormatting.YELLOW + "Hatching: "+ TextFormatting.GREEN + percentage +"%");
-				probeInfo.text(TextFormatting.YELLOW + hte.eggSlot[0].getDisplayName());
+				probeInfo.text(TextFormatting.YELLOW + hte.getEgg().getDisplayName());
 			}
 			else 
 				probeInfo.text(TextFormatting.RED + "Not Hatching");

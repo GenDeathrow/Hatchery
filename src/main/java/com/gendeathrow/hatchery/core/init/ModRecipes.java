@@ -13,6 +13,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -121,13 +122,13 @@ public class ModRecipes
 	    	IRecipe bucketFert = new ShapelessRecipes(ModFluids.getFertilizerBucket(), bucketFertIngre)
 	    {
 	    	@Override
-	        public ItemStack[] getRemainingItems(InventoryCrafting inv)
+	        public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
 	        {
-				return new ItemStack[inv.getSizeInventory()];
+				return NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
 	    	}
 	    	
 	    };
-	    GameRegistry.addRecipe(bucketFert);
+	    //GameRegistry.addRecipe(bucketFert);
 	    
 	    
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.nest), "xxx", "AxA", "xAx",'A', Blocks.HAY_BLOCK);
@@ -135,7 +136,7 @@ public class ModRecipes
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.manureBlock), "XXX", "XXX", "XXX",'X', ModItems.manure);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.manure,9), ModBlocks.manureBlock);
 		
-		GameRegistry.addRecipe(new RefillSprayer());
+		//GameRegistry.addRecipe(new RefillSprayer());
 		
 		GameRegistry.addRecipe(
 				new ItemStack(ModBlocks.digesterGenerator),
@@ -160,7 +161,7 @@ public class ModRecipes
 		
 		// UPGRADES
 		
-		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier1), 
+		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier), 
 				"TRT",
 				"RGR",
 				"TRT",
@@ -168,23 +169,23 @@ public class ModRecipes
 				'R', Items.REDSTONE,
 				'G', ModItems.circuitBoard);
 		
-		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier2), 
+		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier, 1, 1), 
 				"SXS",
 				"RUR",
 				"GXG",
 				'S', Items.GLOWSTONE_DUST,
-				'U', ModItems.rfUpgradeTier1,
+				'U', ModItems.rfUpgradeTier,
 				'R', Items.REDSTONE,
 				'X', ModItems.circuitBoard,
 				'G', Items.GOLD_INGOT);
 				
-		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier3), 
+		GameRegistry.addRecipe(new ItemStack(ModItems.rfUpgradeTier, 1, 2), 
 				"EXD",
 				"XUX",
 				"GXG",
 				'E', Items.EMERALD,
 				'D', Items.DIAMOND,
-				'U', ModItems.rfUpgradeTier2,
+				'U', new ItemStack(ModItems.rfUpgradeTier,1,1),
 				'X', ModItems.circuitBoard,
 				'G', Blocks.GOLD_BLOCK);
 		
@@ -357,7 +358,7 @@ public class ModRecipes
 	public static class RefillSprayer implements IRecipe
 	{
 		
-		private ItemStack sprayerIn;
+		private ItemStack sprayerIn =  ItemStack.EMPTY;
 		
 		private ItemStack sprayerOut = new ItemStack(ModItems.sprayer);
 		
@@ -377,8 +378,8 @@ public class ModRecipes
 	    public boolean matches(InventoryCrafting inv, World worldIn)
 	    {
 			fertBuckets = new ArrayList<ItemStack>();
-			this.sprayerIn = null;
-			this.sprayerOut = null;
+			this.sprayerIn = ItemStack.EMPTY;
+			this.sprayerOut = ItemStack.EMPTY;
 			
 	 	    for (int i = 0; i < inv.getHeight(); ++i)
 	        {
@@ -386,7 +387,7 @@ public class ModRecipes
 	            {
 	                ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
 
-	                if (itemstack != null)
+	                if (!itemstack.isEmpty())
 	                {
 	                    boolean flag = false;
 
@@ -396,7 +397,7 @@ public class ModRecipes
 	                    		fertBuckets.add(itemstack);
 	                    		flag = true;
 	                    	}
-	                    	else if(itemstack.getItem() == ModItems.sprayer && this.sprayerIn == null)
+	                    	else if(itemstack.getItem() == ModItems.sprayer && this.sprayerIn.isEmpty())
 	                    	{
 	                    		this.sprayerIn = itemstack;
 	                    		this.sprayerOut = itemstack.copy();
@@ -420,7 +421,7 @@ public class ModRecipes
 	    @Nullable
 	    public ItemStack getRecipeOutput()
 	    {
-			if(sprayerOut != null)
+			if(!sprayerOut.isEmpty())
 			{
 				FluidStack fluid = FluidUtil.getFluidContained(this.sprayerOut);
 				
@@ -432,7 +433,8 @@ public class ModRecipes
 	        return this.sprayerOut;
 	    }
 		
-	    @Nullable
+
+	    @Override
 	    public ItemStack getCraftingResult(InventoryCrafting inv)
 	    {
 	    	ItemStack out = this.sprayerOut.copy();
@@ -456,14 +458,14 @@ public class ModRecipes
 
 
 		@Override
-	    public ItemStack[] getRemainingItems(InventoryCrafting inv)
+	    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
 	    {
-	        ItemStack[] aitemstack = new ItemStack[inv.getSizeInventory()];
+		    NonNullList<ItemStack> aitemstack = NonNullList.<ItemStack>withSize(inv.getSizeInventory(), ItemStack.EMPTY);
 
-	        for (int i = 0; i < aitemstack.length; ++i)
+	        for (int i = 0; i < aitemstack.size(); ++i)
 	        {
 	            ItemStack itemstack = inv.getStackInSlot(i);
-	            aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+	            aitemstack.add(net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack));
 	        }
 
 	        return aitemstack;

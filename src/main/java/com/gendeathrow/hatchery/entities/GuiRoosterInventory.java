@@ -8,7 +8,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,10 +16,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiRoosterInventory extends GuiContainer {
 
-	private static final ResourceLocation GUI_ROOSTER_INVENTORY = new ResourceLocation(Hatchery.MODID, "textures/gui/roosterGui.png");
+	private static final ResourceLocation GUI_ROOSTER_INVENTORY = new ResourceLocation(Hatchery.MODID, "textures/gui/roostergui.png");
 	EntityRooster ROOSTER;
 	public GuiRoosterInventory(InventoryPlayer inventory, Entity entityInventory) {
-		super(new ContainerRoosterInventory(inventory, (IInventory) entityInventory));
+		super(new ContainerRoosterInventory(inventory, (EntityRooster) entityInventory));
 		xSize = 174;
 		ySize = 164;
 		ROOSTER = (EntityRooster) entityInventory;
@@ -28,8 +27,8 @@ public class GuiRoosterInventory extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		fontRendererObj.drawString(I18n.format(new TextComponentTranslation("container.roosterInventory").getFormattedText()), xSize / 2 - fontRendererObj.getStringWidth(I18n.format(new TextComponentTranslation("container.roosterInventory").getFormattedText())) / 2, 6, 4210752);
-		fontRendererObj.drawString(I18n.format(new TextComponentTranslation("container.inventory").getFormattedText()), xSize - 170, ySize - 93, 4210752);
+		fontRenderer.drawString(I18n.format(new TextComponentTranslation("container.roosterInventory").getFormattedText()), xSize / 2 - fontRenderer.getStringWidth(I18n.format(new TextComponentTranslation("container.roosterInventory").getFormattedText())) / 2, 6, 4210752);
+		fontRenderer.drawString(I18n.format(new TextComponentTranslation("container.inventory").getFormattedText()), xSize - 170, ySize - 93, 4210752);
 	}
 
 	@Override

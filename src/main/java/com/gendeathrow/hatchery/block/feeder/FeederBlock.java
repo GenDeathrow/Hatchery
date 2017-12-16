@@ -66,18 +66,13 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
 
 	}
 	
-   public boolean getHasSubtypes()
-   {
-        return true;
-   }
-
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
     	if(!worldIn.isRemote)
     	{
     		FeederTileEntity te = (FeederTileEntity) worldIn.getTileEntity(pos);
-    		
+
     		if(te.getSeedsInv() > 0)
     		{
     			AxisAlignedBB RANGE_AABB = new AxisAlignedBB(pos.getX() - 4, pos.getY(), pos.getZ() - 4, pos.getX() + 4, pos.getY() + 1, pos.getZ() + 4);
@@ -97,7 +92,6 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
 								if(entity.isChild())
 								{
 									te.decrSeedsInv();
-    								
     	    						entity.ageUp((int)((float)(-entity.getGrowingAge() / 10) * 0.35F), true);
 								}
 								else
@@ -106,7 +100,7 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
 									entity.timeUntilNextEgg -= 5;
 								}
 
-								this.setFeederLevel(worldIn, pos, state);
+								FeederBlock.setFeederLevel(worldIn, pos, state);
 							}
 
 						}
@@ -115,17 +109,12 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     		}
     	}
 	}
-	
-    boolean keepInventory;
-    
+
+	@Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
     {
-		if (!keepInventory)
-        {
-			
-        }
+		ItemStack stack = this.getPickBlock(state, null, worldIn, pos, null);
 		
-		ItemStack stack = this.createStackedBlock(state);
 		if(stack != null)
 		{
     		if(worldIn.getTileEntity(pos)  != null && worldIn.getTileEntity(pos) instanceof FeederTileEntity)
@@ -134,14 +123,10 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     			{
     				stack.setTagCompound(new NBTTagCompound());
     			}
-    		 
     			stack.getTagCompound().setInteger("seedInv", ((FeederTileEntity)worldIn.getTileEntity(pos)).getSeedsInv());
-    			 
     		}
-    	
-    		this.spawnAsEntity(worldIn, pos, stack);
+    		spawnAsEntity(worldIn, pos, stack);
 		}
-		
 		super.breakBlock(worldIn, pos, state);
     }
     
@@ -152,23 +137,21 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     }
         
 	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
     	if(!worldIn.isRemote)
     	{
-    		
 			FeederTileEntity te = (FeederTileEntity) worldIn.getTileEntity(pos);
+			ItemStack heldItem = playerIn.getHeldItem(hand);
 			
-			if(heldItem != null && te != null && te.isItemValidForSlot(0, heldItem))
+			if(!heldItem.isEmpty() && te != null && te.isItemValidForSlot(0, heldItem))
 			{
 				
-				if (playerIn.isSneaking())
-				{
-                    	te.setSeeds(1, heldItem, playerIn.capabilities.isCreativeMode);
+				if (playerIn.isSneaking()){
+                    	te.addSeeds(1, heldItem, playerIn.capabilities.isCreativeMode);
 				}
-				else
-				{
-                    	te.setSeeds(heldItem.stackSize, heldItem, playerIn.capabilities.isCreativeMode);
+				else{
+                    	te.addSeeds(heldItem.getCount(), heldItem, playerIn.capabilities.isCreativeMode);
 				}
     			
     			return true;
@@ -176,8 +159,9 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     	}
     	return true;
     }
-	
-    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn)
+
+	@Override
+    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_)
     {
         addCollisionBoxToList(pos, entityBox, collidingBoxes, Base_AABB);
         addCollisionBoxToList(pos, entityBox, collidingBoxes, Container_AABB);
@@ -196,11 +180,13 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
 		return new FeederTileEntity();
 	}
 	
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	@Override
+   public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
     {
         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing()).withProperty(LEVEL, 0);    
     }
-    
+	
+	@Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
     	int lvl = 0;
@@ -216,35 +202,36 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     	
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing()).withProperty(LEVEL, state.getValue(LEVEL)), 2);
         
-    	this.setFeederLevel(worldIn, pos, state);
+    	setFeederLevel(worldIn, pos, state);
     }
     
+	@Override
     public EnumBlockRenderType getRenderType(IBlockState state)
     {
         return EnumBlockRenderType.MODEL;
     }
     
+	@Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.CUTOUT_MIPPED;
     }
     
+	@Override
     public boolean isFullCube(IBlockState state)
     {
         return false;
     }
     
+	@Override
     public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }
     
-    public boolean isFullyOpaque(IBlockState state)
-    {
-        return true;
-    }
-    
+   
+	@Override
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
     {
@@ -259,11 +246,13 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     /**
      * Convert the given metadata into a BlockState for this Block
      */
+	@Override
     public IBlockState getStateFromMeta(int meta)
     {
         return this.getDefaultState().withProperty(FACING, getFacing(meta)).withProperty(LEVEL, Integer.valueOf((meta) >> 2 ));
     }
     
+	@Override
     public int getMetaFromState(IBlockState state)
     {
         int i = 0;
@@ -271,7 +260,6 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
         i |= state.getValue(LEVEL).intValue() << 2;
         return i;
     }
-    
     
     public static void setFeederLevel(World worldIn, BlockPos pos, IBlockState state)
     {
@@ -283,12 +271,12 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
         {
         	FeederTileEntity te = (FeederTileEntity) tileentity;
         	float percentage = ((float)te.getSeedsInv()) / te.getMaxSeedInv();
-        	level = MathHelper.ceiling_float_int(percentage * 3);
+        	level = MathHelper.floor(percentage * 3);
         }
 		
         if(state.getValue(LEVEL).intValue() != level)
         {
-        	worldIn.setBlockState(pos, state.withProperty(FACING, state.getValue(FACING)).withProperty(LEVEL, Integer.valueOf(MathHelper.clamp_int(level, 0, 3))), 2);
+        	worldIn.setBlockState(pos, state.withProperty(FACING, state.getValue(FACING)).withProperty(LEVEL, Integer.valueOf(MathHelper.clamp(level, 0, 3))), 2);
         
         	if (tileentity != null)
         	{
@@ -298,6 +286,7 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
         }
     }
     
+	@Override
     public IBlockState withRotation(IBlockState state, Rotation rot)
     {
         return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
@@ -307,11 +296,13 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
      * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
      * blockstate.
      */
+	@Override
     public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
     {
         return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
     }
 
+	@Override
     protected BlockStateContainer createBlockState()
     {
         return new BlockStateContainer(this, new IProperty[] {FACING, LEVEL});

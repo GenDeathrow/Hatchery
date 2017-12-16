@@ -9,16 +9,20 @@ tile.hatchery.feeder.name=喂食器
 tile.hatchery.manure_block.name=鸡粪块
 tile.hatchery.nursery_block.name=鸡类繁殖分类器
 tile.hatchery.fertilizer_mixer.name=粪肥搅拌器
-tile.hatchery.digester_generator.name=沼气池（WIP）
+tile.hatchery.digester_generator.name=沼气池
+tile.hatchery.chicken_machine_block.name=幸运蛋生成机
 tile.hatchery.shredder.name=切割机
 
 container.generator.generating=产能：%1$drf/t
 container.generator.rfout=RF输出：%1$drf/t
 container.generator.fertin=粪肥量：%1$d mb
 container.hoveramt=%/%
-container.fertilizermixer=粪肥混合器（WIP）
+container.fertilizermixer=粪肥混合器
 container.upgrades=升级
 container.nestingpen=鸡舍物品栏
+container.eggstractor=幸运蛋生成机
+container.eggstractor.eggs=蛋: %1$d
+container.eggstractor.plastic=塑料: %1$d
 
 entity.Rooster.name=雄鸡
 container.roosterInventory=雄鸡性奋度（放置种子）
@@ -33,6 +37,30 @@ item.hatchery.sprayer.name=液化粪肥喷雾器
 item.hatchery.feather_fiber.name=羽毛纤维
 item.hatchery.feather_meal.name=羽毛粉
 item.hatchery.plastic.name=塑料
+item.hatchery.chicken_feed.name=鸡饲料
+item.hatchery.circuit_board.name=电路板
+
+item.hatchery.rf_upgrade_1.name=RF效率升级I
+item.hatchery.rf_upgrade_2.name=RF效率升级II
+item.hatchery.rf_upgrade_3.name=RF效率升级III
+
+item.hatchery.speed_upgrade_1.name=速度升级I
+item.hatchery.speed_upgrade_2.name=速度升级II
+item.hatchery.speed_upgrade_3.name=速度升级III
+
+item.hatchery.tank_upgrade_1.name=储液升级I
+item.hatchery.tank_upgrade_2.name=储液升级II
+item.hatchery.tank_upgrade_3.name=储液升级III
+
+item.hatchery.rf_capacity_1.name=RF电容升级I
+item.hatchery.rf_capacity_2.name=RF电容升级II
+item.hatchery.rf_capacity_3.name=RF电容升级III
+
+item.hatchery.prize_egg.name=幸运蛋
+item.hatchery.fiber_pad.name=纤维垫
+item.hatchery.feather_pulp.name=羽毛纸浆
+
+item.hatchery.chicken_machine.name=幸运蛋生成机
 
 #TOOLTIP
 tooltip.hatchery.sprayer.desc=%1$s 存量: %2$dmb / %3$dmb
@@ -62,5 +90,30 @@ jei.item.hatchery.animalnet=使用动物网兜套取任何被动型生物。使�
 jei.item.hatchery.hatcheryegg=自定义蛋是用于动态创建的蛋，将两种亲代鸡配对来创建一个子代自定义蛋。 主要用于用户自定义改良鸡。
 jei.item.hatchery.chickenmanure=由鸡舍收集。使用鸡粪制作肥沃的土壤、鸡粪块、液体粪肥，或者用它来代替骨粉。
 jei.item.hatchery.sprayer=液化粪肥喷雾器用于将土壤/农田变成肥沃的土壤/农田，由喷雾产生方块更新。喷雾器最多存储3000mb
+jei.item.hatchery.circuit_board=用于升级
+
+jei.item.hatchery.rf_upgrade_1=用于提升机械效率 40rf/tick \n\n在某些机械上会减少 RF/tick
+jei.item.hatchery.rf_upgrade_2=用于提升机械效率 60rf/tick \n\n在某些机械上会减少 RF/tick
+jei.item.hatchery.rf_upgrade_3=用于提升机械效率 80rf/tick \n\n在某些机械上会减少 RF/tick
+
+
+
+jei.item.hatchery.speed_upgrade=用于提升机械的速度。提升速度时也会增加 RF/tick损耗 。  
+jei.item.hatchery.tank_upgrade=用于提升机械的流体存储量。
+jei.item.hatchery.rf_capacity=用于升级机械的电容量。
+
+jei.item.hatchery.feather_fiber=羽毛纤维是通过羽毛在切割机中切割的产物，它们可以烧制成塑料。用于制作各种材料。
+jei.item.hatchery.feather_meal=羽毛粉是通过羽毛在切割机中切割的副产物，它可以用于制作鸡饲料。
+jei.item.hatchery.chicken_feed=添加鸡饲料作物鸡食物的来源。
+jei.item.hatchery.chicken_machine=给予幸运蛋生成机电能，使用鸡蛋和塑料进行生成获取。打开幸运蛋将会给予你意想不到的奖励。
 
 jei.gui.nesting_pen_drop=鸡舍的鸡的产出
+jei.gui.shredder_recipes=切割机合成
+jei.gui.luckyegg_drops=幸运蛋的掉落
+jei.gui.eggmachine_egg=幸运生成机
+jei.gui.generator_recipes=沼气池
+jei.gui.fertilizermixer_recipes=粪肥搅拌器
+
+jei.item.hatchery.prize_egg=幸运蛋是通过在幸运蛋生成机使用鸡蛋和塑料进行生成获取的。你可以打开它们，从而获取一些奖品。
+jei.item.hatchery.fiber_pad=纤维垫可以制作羊毛等材料。
+jei.item.hatchery.feather_pulp=羽毛纸浆可以烧制成纸。

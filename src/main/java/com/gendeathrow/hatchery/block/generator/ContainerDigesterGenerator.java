@@ -2,15 +2,14 @@ package com.gendeathrow.hatchery.block.generator;
 
 import javax.annotation.Nullable;
 
+import com.gendeathrow.hatchery.block.BasicHatcheryContainer;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.inventory.SlotFluidContainer;
-import com.gendeathrow.hatchery.inventory.SlotUpgrade;
 import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -19,14 +18,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerDigesterGenerator extends Container 
+public class ContainerDigesterGenerator extends BasicHatcheryContainer 
 {
 
 	private final DigesterGeneratorTileEntity tile;
 	private final InventoryStroageModifiable inputInventory;
 	private final InventoryStroageModifiable outputInventory;
 	
-	private final IInventory upgrades;
+	private final InventoryStroageModifiable upgrades;
 
 	public ContainerDigesterGenerator(InventoryPlayer playerInventory, DigesterGeneratorTileEntity tileEntity) 
 	{
@@ -38,8 +37,12 @@ public class ContainerDigesterGenerator extends Container
 		
 		int i;  
 
-//TODO
 		addSlotToContainer(new SlotFluidContainer(inputInventory, 0, 72, 16, ModFluids.liquidfertilizer));
+        
+		addSlotToContainer(new SlotItemHandler(upgrades, 0, 107, 59));
+		addSlotToContainer(new SlotItemHandler(upgrades, 1, 134, 59));
+		
+		addInventories(inputInventory, upgrades);  
 	
 		addSlotToContainer(new SlotItemHandler(outputInventory, 0, 72, 52)
 		{
@@ -48,9 +51,7 @@ public class ContainerDigesterGenerator extends Container
 				return false;
 		    }
 		});
-        
-		addSlotToContainer(new SlotUpgrade(tile, upgrades, 0, 107, 59));
-		addSlotToContainer(new SlotUpgrade(tile, upgrades, 1, 134, 59));
+
 
 	     for (i = 0; i < 3; ++i)
 	            for (int j = 0; j < 9; ++j)
@@ -67,48 +68,48 @@ public class ContainerDigesterGenerator extends Container
 		return true;
 	}
 
-	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) 
-	{
-        ItemStack itemstack = null;
-        Slot slot = (Slot)this.inventorySlots.get(slotIndex);
-
-        if (slot != null && slot.getHasStack())
-        {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-
-            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSizeInventory()))
-            {
-                if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(),  this.inventorySlots.size(), true))
-                {
-                    return null;
-                }
-            }
-            else if (!this.mergeItemStack(itemstack1, 0, this.inputInventory.getSlots(), false))
-            {
-                return null;
-            }
-            
-            if (itemstack1.stackSize == 0)
-            {
-                slot.putStack((ItemStack)null);
-            }
-            else
-            {
-                slot.onSlotChanged();
-            }
-
-            if (itemstack1.stackSize == itemstack.stackSize)
-            {
-                return null;
-            }
-
-            slot.onPickupFromSlot(player, itemstack1);
-        }
-        
-		return itemstack;
-	}
+//	@Override
+//	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) 
+//	{
+//        ItemStack itemstack = ItemStack.EMPTY;
+//        Slot slot = (Slot)this.inventorySlots.get(slotIndex);
+//
+//        if (slot != null && slot.getHasStack())
+//        {
+//            ItemStack itemstack1 = slot.getStack();
+//            itemstack = itemstack1.copy();
+//
+//            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSlots()))
+//            {
+//                if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(),  this.inventorySlots.size(), true))
+//                {
+//                    return ItemStack.EMPTY;
+//                }
+//            }
+//            else if (!this.mergeItemStack(itemstack1, 0, this.inputInventory.getSlots(), false))
+//            {
+//                return ItemStack.EMPTY;
+//            }
+//            
+//            if (itemstack1.getCount() == 0)
+//            {
+//                slot.putStack(ItemStack.EMPTY);
+//            }
+//            else
+//            {
+//                slot.onSlotChanged();
+//            }
+//
+//            if (itemstack1.getCount() == itemstack.getCount())
+//            {
+//                return ItemStack.EMPTY;
+//            }
+//
+//            slot.onTake(player, itemstack1);
+//        }
+//        
+//		return itemstack;
+//	}
 
 
 	@Override
@@ -117,7 +118,7 @@ public class ContainerDigesterGenerator extends Container
 			throw new IllegalArgumentException("Listener already listening");
 		} else {
 			this.listeners.add(listener);
-			listener.updateCraftingInventory(this, this.getInventory());
+			listener.sendAllContents(this, this.getInventory());
 			this.detectAndSendChanges();
 		}
 	}
@@ -141,10 +142,10 @@ public class ContainerDigesterGenerator extends Container
 		for (IContainerListener listener : this.listeners) 
 		 {
 					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
-					listener.sendProgressBarUpdate(this, 4, this.tile.getField(4));
-					listener.sendProgressBarUpdate(this, 1, this.tile.getField(1));
+					listener.sendWindowProperty(this, 4, this.tile.getField(4));
+					listener.sendWindowProperty(this, 1, this.tile.getField(1));
 					
-					listener.sendProgressBarUpdate(this, 2, this.tile.getField(2));
+					listener.sendWindowProperty(this, 2, this.tile.getField(2));
 					
 					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 3, this.tile.getField(3));
 					HatcheryWindowPacket.sendProgressBarUpdate(listener, this, 0, this.tile.getField(0));

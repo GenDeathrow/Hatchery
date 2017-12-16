@@ -1,7 +1,5 @@
 package com.gendeathrow.hatchery.block.shredder;
 
-import javax.annotation.Nullable;
-
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 
@@ -36,6 +34,7 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
 	public ShredderBlock() 
 	{
 		super(Material.IRON);
+		this.setHardness(2);
 		this.setCreativeTab(Hatchery.hatcheryTabs);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ISACTIVE, false));
 	}
@@ -47,11 +46,23 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
 	}
 
 	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
 		playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_DIGESTER_GEN, worldIn, pos.getX(), pos.getY(), pos.getZ());
 			
 		return true;
+    }
+	
+	@Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+    		TileEntity te = worldIn.getTileEntity(pos);
+    		if(te instanceof ShredderTileEntity) {
+    			((ShredderTileEntity) te).inputInventory.dropInventory(worldIn, pos);
+    			((ShredderTileEntity) te).outputInventory.dropInventory(worldIn, pos);
+    			((ShredderTileEntity) te).upgradeStorage.dropInventory(worldIn, pos);
+    		}
+    		super.breakBlock(worldIn, pos, state);
     }
 	
 

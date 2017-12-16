@@ -7,11 +7,9 @@ import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
-import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
-import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,13 +24,13 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerFluidMap;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class FertilizerMixerTileEntity extends TileUpgradable implements ITickable, IEnergyReceiver
+public class FertilizerMixerTileEntity extends TileUpgradable implements ITickable
 {
 	int baseTankSize = 12000;
 	int baseRFStorage = 20000;
@@ -66,19 +64,18 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 		public boolean canInsertSlot(int slot, ItemStack stack)	{
 			if(slot == 0 && (stack.getItem() == ModItems.manure || stack.getItem() == Item.getItemFromBlock(ModBlocks.manureBlock)))
 				return true;
-			else if(slot == 1 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN))
+			else if(slot == 1 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
 			{
 				if(FluidUtil.getFluidContained(stack) != null && FluidUtil.getFluidContained(stack).getFluid() == FluidRegistry.WATER){
 					return true;
 				}
 			}
-			else if(slot == 2 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN))
+			else if(slot == 2 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
 			{
 				if(FluidUtil.getFluidContained(stack) == null || FluidUtil.getFluidContained(stack).getFluid() == ModFluids.liquidfertilizer){
 					return true;
 				}
 			}
-
 			return false; 
 
 		}
@@ -134,7 +131,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
     
     public static int getItemMixTime(ItemStack stack)
     {
-    	if(stack == null)
+    	if(stack.isEmpty())
     	{
     		return 0;
     	}
@@ -193,7 +190,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 			this.fertlizerMixTime--;
 		}
 		
-		if(this.worldObj != null && !this.worldObj.isRemote)
+		if(this.world != null && !this.world.isRemote)
 		{
 			updateUpgrades();
 			
@@ -210,11 +207,11 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
                 		flag1 = true;
                 		 if(this.getManureInSlot() != null)
                 		 {
-                			 --this.getManureInSlot().stackSize;
+                			 this.getManureInSlot().shrink(1);
                     		 
-                             if (this.getManureInSlot().stackSize <= 0)
+                             if (this.getManureInSlot().getCount() <= 0)
                              {
-                                 this.inputInventory.setStackInSlot(0,null);
+                                 this.inputInventory.setStackInSlot(0,ItemStack.EMPTY);
                              }
                 		 }
 
@@ -249,29 +246,29 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 			}
 			else if(!this.isMixing() && this.mixTime > 0)
 			{
-				 this.mixTime = MathHelper.clamp_int(this.mixTime - 2, 0, this.totalMixTime);
+				 this.mixTime = MathHelper.clamp(this.mixTime - 2, 0, this.totalMixTime);
 			}
 			
 
-			if(this.getWaterInSlot() != null && this.waterTank.getFluidAmount() < this.waterTank.getCapacity())
+			if(!this.getWaterInSlot().isEmpty() && this.waterTank.getFluidAmount() < this.waterTank.getCapacity())
 			{
 				ItemStack stack = this.getWaterInSlot();
 				ItemStack newStack = this.getWaterInSlot().copy();
 
-				newStack.stackSize = 1;
+				newStack.setCount(1);
 				
-				IFluidHandler handler = FluidUtil.getFluidHandler(newStack);
+				IFluidHandlerItem handler = FluidUtil.getFluidHandler(newStack);
 
 				if(handler != null)
 				{
 					
-		            if (this.getBucketOutWaterSlot() == null)
+		            if (this.getBucketOutWaterSlot().isEmpty())
 		            {
 		            	
 		            	if(FluidUtil.tryFluidTransfer(this.waterTank, handler, this.waterTank.getCapacity(), true) != null)
 		            	{
-		            		if(newStack.stackSize > 0)
-		            			this.outputInventory.setStackInSlot(0, newStack);
+		            		if(newStack.getCount() > 0)
+		            			this.outputInventory.setStackInSlot(0, handler.getContainer());
 						
 		            		this.inputInventory.extractItem(1, 1, false);
 		            	}
@@ -279,27 +276,27 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 				}
 			}
 			
-			if(this.getBucketInFertilizerrSlot() != null && this.getBucketOutFertilizerSlot() == null && this.fertilizerTank.getFluidAmount() > 0)
+			if(!this.getBucketInFertilizerrSlot().isEmpty() && this.getBucketOutFertilizerSlot().isEmpty() && this.fertilizerTank.getFluidAmount() > 0)
 			{
 				ItemStack oldStack = this.getBucketInFertilizerrSlot();
 				ItemStack newStack = this.getBucketInFertilizerrSlot().copy();
 				
-				if(newStack.stackSize > 1)
-					newStack.stackSize = 1;
+				if(newStack.getCount() > 1)
+					newStack.setCount(1);
 				
-				IFluidHandler handler = FluidUtil.getFluidHandler(newStack);
+				IFluidHandlerItem handler = FluidUtil.getFluidHandler(newStack);
 				
 				if(handler != null)
 				{
 					
 					if(FluidUtil.tryFluidTransfer(handler, this.fertilizerTank, this.fertilizerTank.getCapacity(), true) != null)
 					{
-						this.outputInventory.setStackInSlot(1, newStack);
+						this.outputInventory.setStackInSlot(1, handler.getContainer());
 						
-						if(oldStack.stackSize > 1)
+						if(oldStack.getCount() > 1)
 							this.inputInventory.extractItem(2, 1, false);
 						else
-							this.inputInventory.setStackInSlot(2, null);
+							this.inputInventory.setStackInSlot(2, ItemStack.EMPTY);
 					}
 				}
 			}
@@ -326,7 +323,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 	@Override
 	public boolean canUseUpgrade(ItemStack item)
 	{
-		return item.getItem() instanceof RFEfficiencyUpgrade || item.getItem() == ModItems.speedUpgradeTier  || item.getItem() == ModItems.tankUpgradeTier1 || item.getItem() == ModItems.rfCapacityUpgradeTier1;
+		return item.getItem() == ModItems.rfUpgradeTier  || item.getItem() == ModItems.speedUpgradeTier  || item.getItem() == ModItems.tankUpgradeTier1 || item.getItem() == ModItems.rfCapacityUpgradeTier1;
 	}
 	
 	protected void updateUpgrades()
@@ -336,12 +333,12 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 		boolean tankcapacity = false;
 		boolean speedupgrade = false;
 		
-		for(ItemStack upgrade : this.getUpgrades())
+		for(ItemStack upgrade : this.getAllUpgrades())
 		{
-			if(upgrade == null) continue;
+			if(upgrade.isEmpty()) continue;
 		
 			
-			if(upgrade.getItem() instanceof RFEfficiencyUpgrade)
+			if(upgrade.getItem() == ModItems.rfUpgradeTier )
 			{
 				rfupgrade = true;
 				this.rfEffencyMultpyler = 1 - ((BaseUpgrade)upgrade.getItem()).getUpgradeTier(upgrade, "") * 0.10;
@@ -627,26 +624,6 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
         return super.getCapability(capability, facing);
     }
 
-    // ENERGY
-	@Override
-	public int getEnergyStored(EnumFacing from) {
-		return this.energy.getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored(EnumFacing from) {
-		return this.energy.getMaxEnergyStored();
-	}
-
-	@Override
-	public boolean canConnectEnergy(EnumFacing from) {
-		return true;
-	}
-
-	@Override
-	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		return this.energy.receiveEnergy(maxReceive, simulate);
-	}
 
 
     

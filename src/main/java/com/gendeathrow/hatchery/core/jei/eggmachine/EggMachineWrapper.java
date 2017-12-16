@@ -3,6 +3,7 @@ package com.gendeathrow.hatchery.core.jei.eggmachine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gendeathrow.hatchery.api.crafting.EggMachineRecipe;
 import com.gendeathrow.hatchery.core.init.ModItems;
 
 import mezz.jei.api.ingredients.IIngredients;
@@ -14,27 +15,21 @@ public class EggMachineWrapper extends BlankRecipeWrapper
 {
 	private final List<ItemStack> outputs;
 	private final List<ItemStack>  inputs;
+	private final List<ItemStack>  allEggs;
 	
 	
-	public EggMachineWrapper() 
+	public EggMachineWrapper(EggMachineRecipe recipe) 
 	{
 		this.outputs = new ArrayList<ItemStack>();
 		this.inputs = new ArrayList<ItemStack>();
+		this.allEggs = new ArrayList<ItemStack>(recipe.getAllEggs());
 		
-		this.inputs.add(new ItemStack(ModItems.hatcheryEgg, 24));
-		this.inputs.add(new ItemStack(ModItems.plastic, 2));
+		this.inputs.addAll(recipe.getInputItem());
 		this.inputs.add(new ItemStack(ModItems.chickenmachine));
 		
 		
 		this.outputs.add(new ItemStack(ModItems.prizeEgg));
 
-		
-	}
-	
-	@Override
-	public void drawAnimations(Minecraft arg0, int arg1, int arg2) 
-	{
-		
 	}
 
 	@Override
@@ -50,6 +45,10 @@ public class EggMachineWrapper extends BlankRecipeWrapper
         ingredients.setOutputs(ItemStack.class, outputs);
 	}
 
+	public List<ItemStack> getAllEggs(){
+		return allEggs;
+	}
+	
 	public List<ItemStack> getInput() {
 		return inputs;
 	}

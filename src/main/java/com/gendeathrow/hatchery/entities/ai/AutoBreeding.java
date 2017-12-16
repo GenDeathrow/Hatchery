@@ -35,7 +35,7 @@ public class AutoBreeding extends EntityAIBase
 	public AutoBreeding(EntityAnimal animal, double speedIn) 
 	{
 	    this.theAnimal = animal;
-        this.theWorld = animal.worldObj;
+        this.theWorld = animal.world;
         this.moveSpeed = speedIn;
         this.setMutexBits(3);
 	}
@@ -132,7 +132,7 @@ public class AutoBreeding extends EntityAIBase
             	entity = new EntityItem(this.theWorld, this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, egg);
             }
             
-            this.theWorld.spawnEntityInWorld(entity);
+            this.theWorld.spawnEntity(entity);
             
             Random random = this.theAnimal.getRNG();
 
@@ -149,7 +149,7 @@ public class AutoBreeding extends EntityAIBase
 
             if (this.theWorld.getGameRules().getBoolean("doMobLoot"))
             {
-                this.theWorld.spawnEntityInWorld(new EntityXPOrb(this.theWorld, this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, random.nextInt(7) + 1));
+                this.theWorld.spawnEntity(new EntityXPOrb(this.theWorld, this.theAnimal.posX, this.theAnimal.posY, this.theAnimal.posZ, random.nextInt(7) + 1));
             }
         }
  

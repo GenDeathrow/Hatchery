@@ -14,14 +14,10 @@ public class GuiNestingPen extends GuiContainer
 	 private static final ResourceLocation HOPPER_GUI_TEXTURE = new ResourceLocation("textures/gui/container/hopper.png");
 	    /** The player inventory currently bound to this GUI instance */
 	    private final IInventory playerInventory;
-	    /** The hopper inventory bound to this GUI instance */
-	    private final IInventory nestingInventory;
-
-	    public GuiNestingPen(InventoryPlayer playerInv, IInventory nestingPenIn)
+	    public GuiNestingPen(InventoryPlayer playerInv, NestPenTileEntity tile)
 	    {
-	        super(new ContainerNestingPen(playerInv, nestingPenIn, Minecraft.getMinecraft().thePlayer));
+	        super(new ContainerNestingPen(playerInv, tile, Minecraft.getMinecraft().player));
 	        this.playerInventory = playerInv;
-	        this.nestingInventory = nestingPenIn;
 	        this.allowUserInput = false;
 	        this.ySize = 133;
 	    }
@@ -31,8 +27,8 @@ public class GuiNestingPen extends GuiContainer
 	     */
 	    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	    {
-	        this.fontRendererObj.drawString(new TextComponentTranslation("container.nestingpen").getFormattedText(), 8, 6, 4210752);
-	        this.fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
+	        this.fontRenderer.drawString(new TextComponentTranslation("container.nestingpen").getFormattedText(), 8, 6, 4210752);
+	        this.fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
 	    }
 
 	    /**

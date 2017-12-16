@@ -105,7 +105,7 @@ public class HatcheryWindowPacket implements IMessage
 	                public void run() 
 	                {
 	        			
-	        	        EntityPlayer entityplayer = Minecraft.getMinecraft().thePlayer;
+	        	        EntityPlayer entityplayer = Minecraft.getMinecraft().player;
 	        	        
 	        	        if (entityplayer.openContainer != null && entityplayer.openContainer.windowId == message.getWindowId())
 	        	        {

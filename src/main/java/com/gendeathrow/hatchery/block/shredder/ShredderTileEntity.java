@@ -2,22 +2,22 @@ package com.gendeathrow.hatchery.block.shredder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import javax.annotation.Nullable;
-
+import com.gendeathrow.hatchery.api.crafting.ShredderRecipe;
 import com.gendeathrow.hatchery.api.tileentities.IContainerUpdate;
 import com.gendeathrow.hatchery.block.TileUpgradable;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
-import com.gendeathrow.hatchery.item.upgrades.RFEfficiencyUpgrade;
 import com.gendeathrow.hatchery.storage.EnergyStorageRF;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import cofh.api.energy.IEnergyReceiver;
+import net.minecraft.block.BlockDoublePlant;
+import net.minecraft.block.BlockFlower;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.EnumDyeColor;
@@ -37,6 +37,11 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 public class ShredderTileEntity extends TileUpgradable implements ITickable, IContainerUpdate, IEnergyReceiver
 {
+	
+	
+	public static ArrayList<ShredderRecipe> shredderRecipes = new ArrayList<ShredderRecipe>();
+	
+	
 	public EnergyStorageRF energy= new EnergyStorageRF(100000).setMaxReceive(100);
 	   
 	public int animationTicks;  
@@ -63,8 +68,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 			return false;
 		}
 	};
-	
-	public static ArrayList<ShredderRecipe> shredderRecipes = new ArrayList<ShredderRecipe>();
+
 	
     private int transferCooldown = -1;
 	int slotIn = 0;
@@ -77,9 +81,37 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	
 	
 	public static void registerShredderRecipes() {
-		shredderRecipes.add(new ShredderRecipe(new ItemStack(Items.FEATHER), new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal)));
-		shredderRecipes.add(new ShredderRecipe(new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal)));
-		shredderRecipes.add(new ShredderRecipe(new ItemStack(Items.BONE), new ItemStack(Items.DYE, 4, EnumDyeColor.WHITE.getDyeDamage())));
+		
+		addRecipe(new ItemStack(Items.FEATHER), new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal));
+		addRecipe(new ItemStack(ModItems.featherFiber), new ItemStack(ModItems.featherMeal));
+
+		//All the Dyes
+		addRecipe(new ItemStack(Items.BONE), new ItemStack(Items.DYE, 4, EnumDyeColor.WHITE.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.YELLOW_FLOWER, 1, BlockFlower.EnumFlowerType.DANDELION.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.YELLOW.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.POPPY.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.RED.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.BLUE_ORCHID.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.LIGHT_BLUE.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.ALLIUM.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.MAGENTA.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.HOUSTONIA.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.SILVER.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.RED_TULIP.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.RED.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.ORANGE_TULIP.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.ORANGE.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.WHITE_TULIP.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.SILVER.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.PINK_TULIP.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.PINK.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.OXEYE_DAISY.getMeta()), new ItemStack(Items.DYE, 2, EnumDyeColor.SILVER.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.SUNFLOWER.getMeta()), new ItemStack(Items.DYE, 3, EnumDyeColor.YELLOW.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.SYRINGA.getMeta()), new ItemStack(Items.DYE, 3, EnumDyeColor.MAGENTA.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.ROSE.getMeta()), new ItemStack(Items.DYE, 3, EnumDyeColor.RED.getDyeDamage()));
+		addRecipe(new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.PAEONIA.getMeta()), new ItemStack(Items.DYE, 3, EnumDyeColor.PINK.getDyeDamage()));
+		addRecipe(new ItemStack(Items.BEETROOT, 1), new ItemStack(Items.DYE, 2, EnumDyeColor.RED.getDyeDamage()));
+    
+	}
+	
+	
+	private static void addRecipe(ItemStack input, ItemStack output) {
+		addRecipe(input, output, ItemStack.EMPTY);
+	}
+	
+	private static void addRecipe(ItemStack input, ItemStack output, ItemStack extra) {
+		shredderRecipes.add(new ShredderRecipe(input, output, extra));
 	}
 
 	private int shreddingTime;
@@ -95,7 +127,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	public void update() 
 	{
 
-		if (worldObj.isRemote && ShredderBlock.isActive(this.worldObj.getBlockState(this.pos))) 
+		if (world.isRemote && ShredderBlock.isActive(this.world.getBlockState(this.pos))) 
 		{
 			prevAnimationTicks = animationTicks;
 			if (animationTicks < 360)
@@ -109,7 +141,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 
 		
 		
-        if (this.worldObj != null && !this.worldObj.isRemote)
+        if (this.world != null && !this.world.isRemote)
         {
         	updateUpgrades();
 
@@ -149,7 +181,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
    			
    			if(flag != (this.isShredding() && hasPower())){
    				flag1 = true;
-   				ShredderBlock.setActive(this.worldObj, this.pos, this.worldObj.getBlockState(this.pos), this.isShredding() && hasPower());			//  BlockFurnace.setState(this.isBurning(), this.worldObj, this.pos);
+   				ShredderBlock.setActive(this.world, this.pos, this.world.getBlockState(this.pos), this.isShredding() && hasPower());			//  BlockFurnace.setState(this.isBurning(), this.worldObj, this.pos);
    			}
    			
    	        if (flag1)
@@ -167,7 +199,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	@Override
 	public boolean canUseUpgrade(ItemStack item)
 	{
-		return item.getItem() == ModItems.rfCapacityUpgradeTier1 || item.getItem() == ModItems.speedUpgradeTier || item.getItem() instanceof RFEfficiencyUpgrade;
+		return item.getItem() == ModItems.rfCapacityUpgradeTier1 || item.getItem() == ModItems.speedUpgradeTier || item.getItem() == ModItems.rfUpgradeTier;
 	}
 	
 	protected void updateUpgrades()
@@ -176,12 +208,11 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 		boolean rfcapacity = false;
 		boolean speedupgrade = false;
 		
-		for(ItemStack upgrade : this.getUpgrades())
+		for(ItemStack upgrade : this.getAllUpgrades())
 		{
-			if(upgrade == null) continue;
+			if(upgrade.isEmpty()) continue;
 		
-			
-			if(upgrade.getItem() instanceof RFEfficiencyUpgrade)
+			if(upgrade.getItem() == ModItems.rfUpgradeTier)
 			{
 				rfupgrade = true;
 				this.rfEffencyMultpyler = 1 - ((BaseUpgrade)upgrade.getItem()).getUpgradeTier(upgrade, "") * 0.10;
@@ -263,9 +294,9 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 				{
 					this.outputInventory.insertItemInternal(0, recipe.getOutputItem(), false);
 					
-					if(recipe.hasExtraOutput())
+					if(!recipe.getExtraItemByChance().isEmpty())
 					{
-						ItemStack extra = recipe.getExtraItem();
+						ItemStack extra = recipe.getExtraItemByChance();
 						if(extra != null)
 							this.outputInventory.insertItemInternal(1, extra, false);
 					}
@@ -279,7 +310,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	
 	private boolean canShred()
 	{
-        if (this.inputInventory.getStackInSlot(0) == null)
+        if (this.inputInventory.getStackInSlot(0).isEmpty())
         {
             return false;
         }
@@ -290,10 +321,10 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
             if (recipe == null) return false;
             
             ItemStack itemstack = recipe.itemOut;
-            if( itemstack == null) return false;
-            if (this.outputInventory.getStackInSlot(0) == null) return true;
+            if( itemstack.isEmpty()) return false;
+            if (this.outputInventory.getStackInSlot(0).isEmpty()) return true;
             if (!this.outputInventory.getStackInSlot(0).isItemEqual(itemstack)) return false;
-            int result = outputInventory.getStackInSlot(0).stackSize + itemstack.stackSize;
+            int result = outputInventory.getStackInSlot(0).getCount() + itemstack.getCount();
             return result <= 64 && result <= this.outputInventory.getStackInSlot(0).getMaxStackSize(); //Forge BugFix: Make it respect stack sizes properly.
         }
 	}
@@ -329,7 +360,7 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 
 	public static boolean isShreddableItem(ItemStack stack)
 	{
-		if(stack == null) return false;
+		if(stack.isEmpty()) return false;
 		
 		for(ShredderRecipe recipe : shredderRecipes)
 		{
@@ -357,17 +388,17 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 
         boolean flag = false;
 
-        for (EntityItem entityitem : getCaptureItems(this.worldObj, this.getXPos(), this.getYPos(), this.getZPos()))
+        for (EntityItem entityitem : getCaptureItems(this.world, this.getXPos(), this.getYPos(), this.getZPos()))
         {
-        	if(isShreddableItem(entityitem.getEntityItem()))
+        	if(isShreddableItem(entityitem.getItem()))
         	{
-                ItemStack itemstack = entityitem.getEntityItem().copy();
+                ItemStack itemstack = entityitem.getItem().copy();
         		//ItemStack itemstack1 = insertStack(this, itemstack, 0, enumfacing);
                 ItemStack itemstack1 = this.inputInventory.insertItemInternal(0, itemstack, false);
                 
-                if (itemstack1 != null && itemstack1.stackSize != 0)
+                if (!itemstack1.isEmpty() && itemstack1.getCount() != 0)
                 {
-                	entityitem.setEntityItemStack(itemstack1);
+                	entityitem.getItem().setCount(itemstack1.getCount());
                 }
                 else
                 {
@@ -527,67 +558,67 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	}
 
 	    
-	public static class ShredderRecipe
-	{
-		private ItemStack itemIn;
-		private ItemStack itemOut;
-		private ItemStack itemExtra;
-		private int chance;
-		private int shredTime;
-		private Random rand = new Random();
-	    	
-		public ShredderRecipe(ItemStack itemIn, ItemStack itemOut)
-		{
-			this(itemIn, itemOut, (ItemStack)null);
-		}
-	    	
-		public ShredderRecipe(ItemStack itemIn, ItemStack itemOut, ItemStack itemExtra)
-		{
-			this(itemIn, itemOut, itemExtra, 3, 100);
-		}
-	    	
-		public ShredderRecipe(ItemStack itemIn, ItemStack itemOut, ItemStack itemExtra, int chance, int shredTime)
-		{
-			this.itemIn = itemIn;
-			this.itemOut = itemOut;
-			this.itemExtra = itemExtra;
-			this.chance = chance;
-			this.shredTime = shredTime;
-		}
-	    	
-		public boolean isInputItem(ItemStack stack)
-		{
-			return this.itemIn.isItemEqual(stack); 
-		}
-	    	
-		public ItemStack getInputItem()
-		{
-			return this.itemIn;
-		}
-		
-		public boolean hasOutput()
-		{
-			return itemOut != null;
-		}
-	    	
-		public boolean hasExtraOutput()
-		{
-			return itemExtra != null;
-		}
-		
-		public ItemStack getOutputItem()
-		{
-			return itemOut.copy();
-		}
-	    	
-		@Nullable
-		public ItemStack getExtraItem()
-		{
-			if(rand.nextInt(chance) == 1)
-				return itemExtra.copy();
-			else return null;
-		}
-	    	
-	}
+//	public static class ShredderRecipe
+//	{
+//		private ItemStack itemIn;
+//		private ItemStack itemOut;
+//		private ItemStack itemExtra;
+//		private int chance;
+//		private int shredTime;
+//		private Random rand = new Random();
+//	    	
+//		public ShredderRecipe(ItemStack itemIn, ItemStack itemOut)
+//		{
+//			this(itemIn, itemOut, (ItemStack)null);
+//		}
+//	    	
+//		public ShredderRecipe(ItemStack itemIn, ItemStack itemOut, ItemStack itemExtra)
+//		{
+//			this(itemIn, itemOut, itemExtra, 3, 100);
+//		}
+//	    	
+//		public ShredderRecipe(ItemStack itemIn, ItemStack itemOut, ItemStack itemExtra, int chance, int shredTime)
+//		{
+//			this.itemIn = itemIn;
+//			this.itemOut = itemOut;
+//			this.itemExtra = itemExtra;
+//			this.chance = chance;
+//			this.shredTime = shredTime;
+//		}
+//	    	
+//		public boolean isInputItem(ItemStack stack)
+//		{
+//			return this.itemIn.isItemEqual(stack); 
+//		}
+//	    	
+//		public ItemStack getInputItem()
+//		{
+//			return this.itemIn;
+//		}
+//		
+//		public boolean hasOutput()
+//		{
+//			return itemOut != null;
+//		}
+//	    	
+//		public boolean hasExtraOutput()
+//		{
+//			return itemExtra != null;
+//		}
+//		
+//		public ItemStack getOutputItem()
+//		{
+//			return itemOut.copy();
+//		}
+//	    	
+//		@Nullable
+//		public ItemStack getExtraItem()
+//		{
+//			if(rand.nextInt(chance) == 1)
+//				return itemExtra.copy();
+//			else return null;
+//		}
+//	    	
+//	}
 
 }
