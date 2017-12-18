@@ -32,7 +32,7 @@ public class BaseUpgrade extends Item implements IUpgradeItem
     {
     	for(int i=1; i <= this.upgradeTier; i++)
     	{
-    		//subItems.add(new ItemStack(, 1, i-1));
+    		subItems.add(new ItemStack(this, 1, i-1));
     	}
     }
     

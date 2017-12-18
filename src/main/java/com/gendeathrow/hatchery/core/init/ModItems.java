@@ -19,6 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -111,8 +112,13 @@ public class ModItems
 	}
 	
 
-	public static void registerRenderer() {
-		//Register Items
+	
+	
+	
+    @SubscribeEvent
+    public static void registerModels(ModelRegistryEvent event) {
+    	
+    	
 		try {
 			for (Field field : ModItems.class.getDeclaredFields()) {
 				Object obj = field.get(null);
@@ -135,9 +141,11 @@ public class ModItems
 			throw new RuntimeException(e);
 		}
 
-
-	}
-
+		
+		
+    }
+    
+    
 	@SideOnly(Side.CLIENT)
     public static void registerItemColorHandler(Item item)
     {

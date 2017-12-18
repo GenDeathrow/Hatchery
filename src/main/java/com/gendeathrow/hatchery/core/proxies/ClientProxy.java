@@ -108,10 +108,6 @@ public class ClientProxy extends CommonProxy
 		
 		//Register Blocks
 
-		ModItems.registerRenderer();
-		ModBlocks.registerRenderer();
-		
-		
 		ClientRegistry.bindTileEntitySpecialRenderer(EggNestTileEntity.class, new EggNestTileEntityRender());
 		ClientRegistry.bindTileEntitySpecialRenderer(NestPenTileEntity.class, new NestingPenTileEntityRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(ShredderTileEntity.class, new ShredderTileEntityRenderer());		
