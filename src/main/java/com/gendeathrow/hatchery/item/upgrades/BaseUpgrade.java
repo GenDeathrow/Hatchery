@@ -26,21 +26,24 @@ public class BaseUpgrade extends Item implements IUpgradeItem
 		
 	}
 
+	
 	@Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
     {
-    	for(int i=1; i <= this.upgradeTier; i++)
-    	{
-    		subItems.add(new ItemStack(this, 1, i-1));
-    	}
+        if (this.isInCreativeTab(tab))
+        {
+        	for(int i=1; i <= this.upgradeTier; i++)
+        	{
+        		subItems.add(new ItemStack(this, 1, i-1));
+        	}
+        }
     }
     
     
 	@Override
 	public int getUpgradeTier(ItemStack stack, String type) 
 	{
-		//return this.upgradeTier;
 		return this.getMetadata(stack) + 1;
 	}
 	

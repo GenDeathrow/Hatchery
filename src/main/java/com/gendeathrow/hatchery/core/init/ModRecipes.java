@@ -405,7 +405,6 @@ public class ModRecipes
 		ShredderTileEntity.registerShredderRecipes();
 
 		for(IRecipe recipe : RECIPELIST) {
-			System.out.println(recipe.getRegistryName().toString());
 			recipeRegistry.register(recipe);
 		}
 

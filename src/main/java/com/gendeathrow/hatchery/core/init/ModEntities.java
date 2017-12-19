@@ -6,6 +6,7 @@ import java.util.List;
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.entities.EntityRooster;
+import com.gendeathrow.hatchery.item.HatcheryEggThrown;
 
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.passive.EntityChicken;
@@ -20,8 +21,9 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 public class ModEntities {
 
 	public static void register() {
-		
+
 		EntityRegistry.registerModEntity(new ResourceLocation(Hatchery.MODID,"roosterentity"), EntityRooster.class, "Rooster", 1, Hatchery.INSTANCE, 120, 1, true, 0x592C00, 0xC10000);
+		EntityRegistry.registerModEntity(new ResourceLocation(Hatchery.MODID,"thrownegg"), HatcheryEggThrown.class, "HatcheryEgg", 2, Hatchery.INSTANCE, 65, 1, true);
 	}
 	
 	

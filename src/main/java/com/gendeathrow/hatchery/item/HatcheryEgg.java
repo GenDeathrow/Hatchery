@@ -77,7 +77,17 @@ public class HatcheryEgg extends ItemEgg
 
       return nbttaglist;
     }
-
+    
+    
+    
+    public static void setColor(ItemStack itemstackIn, int color)
+    {
+    	if(!itemstackIn.hasTagCompound()) itemstackIn.setTagCompound(new NBTTagCompound());
+    	
+    		itemstackIn.getTagCompound().setInteger("eggColor", color);
+    }
+    
+    
     public static void setColor(ItemStack itemstackIn, Entity entity)
     {
     	if(!itemstackIn.hasTagCompound()) itemstackIn.setTagCompound(new NBTTagCompound());
@@ -87,6 +97,13 @@ public class HatcheryEgg extends ItemEgg
     	itemstackIn.getTagCompound().setInteger("eggColor", RegisterEggsUtil.getEggColor(entitytag, EntityList.getEntityString(entity)));
     }
     
+    
+    public static int getColor(ItemStack itemstackIn)
+    {
+    	if(itemstackIn.getTagCompound() != null && itemstackIn.getTagCompound().hasKey("eggColor"))
+    		return itemstackIn.getTagCompound().getInteger("eggColor");
+    	return 0xdfce9b;
+    }
     
     /**
      * Use this to create an egg from an entity pass in it. 

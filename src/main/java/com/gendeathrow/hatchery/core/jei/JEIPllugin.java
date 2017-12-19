@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.gendeathrow.hatchery.api.crafting.EggMachineRecipe;
 import com.gendeathrow.hatchery.api.crafting.NestingPenDropRecipe;
 import com.gendeathrow.hatchery.api.crafting.ShredderRecipe;
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
@@ -95,8 +94,7 @@ public class JEIPllugin implements IModPlugin
         registry.addRecipes(getVanillaDropRecipe(), NestingPenCategory.UID);
         
         //Egg Machine
-        registry.handleRecipes(EggMachineRecipe.class, eggmachineCat, EggMachineCategory.UID);
-        registry.addRecipes(new ArrayList<IRecipeWrapper>(){{add(new EggMachineWrapper(new EggMachineRecipe()));}}, EggMachineCategory.UID);
+        registry.addRecipes(new ArrayList<IRecipeWrapper>(){{add(new EggMachineWrapper());}}, EggMachineCategory.UID);
         
         registry.addRecipes(getLuckyEggs(), LuckyEggCategory.UID);
         

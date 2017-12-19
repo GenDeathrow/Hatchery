@@ -11,10 +11,11 @@ import com.gendeathrow.hatchery.block.nestpen.NestingPenTileEntityRenderer;
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntityRenderer;
 import com.gendeathrow.hatchery.client.render.entity.RenderRooster;
-import com.gendeathrow.hatchery.core.init.ModBlocks;
+import com.gendeathrow.hatchery.client.render.entity.RenderThrownEgg.HatcheryEggThrownFactory;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.entities.EntityRooster;
+import com.gendeathrow.hatchery.item.HatcheryEggThrown;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -82,6 +83,8 @@ public class ClientProxy extends CommonProxy
 				return new RenderRooster(manager);
 			}
 		});
+		
+		RenderingRegistry.registerEntityRenderingHandler(HatcheryEggThrown.class, new HatcheryEggThrownFactory());
 	}
 	
 	
