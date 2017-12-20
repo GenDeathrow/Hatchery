@@ -1,5 +1,6 @@
 package com.gendeathrow.hatchery.util;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -8,35 +9,35 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
-import com.setycz.chickens.registry.ChickensRegistry;
+import com.gendeathrow.hatchery.modaddons.ChickensHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Optional;
 
-@Optional.Interface(iface = "com.setycz.chickens.ChickensRegistry", modid = "chickens")
 public class RegisterEggsUtil 
 {
 
 	public static HashMap<String, Integer> ENTITYIDTORGB = new HashMap<String, Integer>();
 	
+	@SuppressWarnings("rawtypes")
 	static Class renderClass;
 	
-	@Optional.Method(modid = "chickens")
 	public static int getChickensModColor(String type)
 	{
-		if(ChickensRegistry.getByRegistryName(type) == null) return 0xdfce9b;
-		if(ChickensRegistry.getByRegistryName(type).isDye())
-		{
-			return EnumDyeColor.byDyeDamage(ChickensRegistry.getByRegistryName(type).getDyeMetadata()).getColorValue();
-		}
-		else return ChickensRegistry.getByRegistryName(type).getBgColor();
+		return ChickensHelper.isLoaded() ? ChickensHelper.getChickensColor(type) : 0xdfce9b;
+	}
+	
+	//Helper Function to get around a Client only method for EnumColor Dye
+	public static int getRGB(float[] rbgcomponets){
+		float rIn = rbgcomponets[0];
+		float gIn = rbgcomponets[1];
+		float bIn = rbgcomponets[2];
+		return new Color(rIn,gIn,bIn).getRGB();
 	}
 	
 	public static int getEggColor(NBTTagCompound entitytag, String entityID)

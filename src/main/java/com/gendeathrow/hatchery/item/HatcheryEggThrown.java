@@ -2,7 +2,6 @@ package com.gendeathrow.hatchery.item;
 
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
-import com.setycz.chickens.entity.EntityColoredEgg;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;

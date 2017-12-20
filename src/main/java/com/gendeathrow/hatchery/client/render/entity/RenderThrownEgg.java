@@ -2,7 +2,6 @@ package com.gendeathrow.hatchery.client.render.entity;
 
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.item.HatcheryEggThrown;
-import com.setycz.chickens.ChickensMod;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderItem;

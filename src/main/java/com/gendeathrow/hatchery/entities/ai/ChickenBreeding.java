@@ -12,7 +12,6 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;

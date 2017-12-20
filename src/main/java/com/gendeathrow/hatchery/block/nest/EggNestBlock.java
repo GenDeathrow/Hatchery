@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
-import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
 
 import mcjty.theoneprobe.api.IProbeHitData;

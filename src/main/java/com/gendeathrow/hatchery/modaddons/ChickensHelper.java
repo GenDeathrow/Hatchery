@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.gendeathrow.hatchery.api.crafting.NestingPenDropRecipe;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenCategory;
+import com.gendeathrow.hatchery.util.RegisterEggsUtil;
 import com.setycz.chickens.ChickensMod;
 import com.setycz.chickens.entity.EntityChickensChicken;
 import com.setycz.chickens.item.ItemSpawnEgg;
@@ -16,12 +17,15 @@ import com.setycz.chickens.registry.ChickensRegistryItem;
 
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.Optional.Interface;
+import net.minecraftforge.fml.relauncher.Side;
 
 @Optional.InterfaceList(
 		value = 
@@ -92,7 +96,7 @@ public class ChickensHelper {
      	List<IRecipeWrapper> recipes = new ArrayList<IRecipeWrapper>();
         for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) 
         {
-         	List<ItemStack> output = new ArrayList();
+         	List<ItemStack> output = new ArrayList<ItemStack>();
         	output.add(chicken.createLayItem());
         	output.add(new ItemStack(ModItems.manure));
         	output.add(new ItemStack(Items.FEATHER));
@@ -110,5 +114,18 @@ public class ChickensHelper {
         
         return recipes;
     }
+	
+	@Optional.Method(modid = "chickens")
+	public static int getChickensColor(String type)
+	{
+		if(ChickensRegistry.getByRegistryName(type) == null || FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) 
+			return 0xdfce9b;
+		
+		if(ChickensRegistry.getByRegistryName(type).isDye())
+		{
+				return RegisterEggsUtil.getRGB(EnumDyeColor.byDyeDamage(ChickensRegistry.getByRegistryName(type).getDyeMetadata()).getColorComponentValues());
+		}
+		else return ChickensRegistry.getByRegistryName(type).getBgColor();
+	}
 
 }
