@@ -108,6 +108,10 @@ public class AnimalNet extends Item
         }
         else
         {
+        	if(!player.capabilities.isCreativeMode) {
+        		stack.shrink(1);
+        	}
+        	
         	if (!player.inventory.addItemStackToInventory(newstack))
             {
                 player.dropItem(newstack, false);

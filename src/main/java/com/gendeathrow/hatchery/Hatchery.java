@@ -31,9 +31,9 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod(modid = Hatchery.MODID, name=Hatchery.NAME, version = Hatchery.VERSION, dependencies=Hatchery.dependencies, guiFactory = "com.gendeathrow.hatchery.client.config.ConfigGuiFactory")
 public class Hatchery 
 {
-
+ 
 		public static final String MODID = "hatchery";
-	    public static final String VERSION = "2.0.0";
+	    public static final String VERSION = "@VERSION@";
 	    public static final String NAME = "Hatchery";
 	    private static final String PROXYLOC = "com.gendeathrow.hatchery.core.proxies";
 	    public static final String CHANNELNAME = "genhatchery";

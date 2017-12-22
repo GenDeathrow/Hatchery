@@ -31,6 +31,8 @@ minecraft {
     version = mcversion + "-" + forgeversion + forgeversion_suffix
     runDir = "run"
     mappings = mcpsnapshot
+    
+    replace '@VERSION@', project.version
 }
 
 repositories {
@@ -54,6 +56,9 @@ repositories {
         name = "CoFH Maven"
         url = "http://maven.covers1624.net"
     }
+    maven { // Craft Tweaker
+		url "http://maven.blamejared.com/" 
+	}
 }
 
 
@@ -67,6 +72,7 @@ dependencies {
 
     deobfCompile "cofh:RedstoneFlux:1.12-2.0.0.1:universal"
 
+	deobfCompile "CraftTweaker2:CraftTweaker2-API:${crafttweaker_version}"
 	
     // at runtime, use the full JEI jar
     runtime "mezz.jei:jei_${mcversion}:${jei_version}"
