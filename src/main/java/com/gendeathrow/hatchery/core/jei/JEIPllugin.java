@@ -111,7 +111,7 @@ public class JEIPllugin implements IModPlugin
           IIngredientBlacklist itemBlacklist = registry.getJeiHelpers().getIngredientBlacklist();
           
           
-          itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.chickenMachine));
+          //itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.chickenMachine));
      }
     
     

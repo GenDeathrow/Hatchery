@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.api.crafting.NestingPenDropRecipe;
 import com.gendeathrow.hatchery.core.init.ModItems;
+import com.gendeathrow.hatchery.core.jei.fertilizermixer.FertilizerMixerRecipeWrapper;
 import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenCategory;
 import com.setycz.chickens.ChickensMod;
 import com.setycz.chickens.entity.EntityChickensChicken;
@@ -37,15 +38,16 @@ public class ChickensHelper {
 
 	public static final String ChickensModID = "chickens";
 	
-	
+	/**
+	 * Is Chickens Mod Loadede
+	 * @return
+	 */
 	public static boolean isLoaded() {
 		return Loader.isModLoaded(ChickensModID);
 	}
 	
-	
-	
 	/**
-	 * Spawn a Chickens Chicken with a certain type. 
+	 * Spawn a Chickens Chicken with a certain type. qq
 	 * @param world
 	 * @param pos
 	 * @param registryName
@@ -75,24 +77,25 @@ public class ChickensHelper {
         return chicken.getRegistryName().toString();
     }
    
-    
-    
-    
+    /**
+     * Jei Helper, grabs all the Drop items for Chickens mod chickens.
+     * @param nestingCat
+     * @return
+     */
     public static List<IRecipeWrapper> getChickensModDropRecipes(NestingPenCategory nestingCat) {
     	if(ChickensHelper.isLoaded())
     		return getDropRecipes(nestingCat);
-    	
-    	return null;
+    	return  new ArrayList<IRecipeWrapper>();
     }
     
     
-	@Optional.Method(modid = "chickens")
+	@Optional.Method(modid = ChickensModID)
     private static List<IRecipeWrapper> getDropRecipes(NestingPenCategory nestingCat) 
     {
      	List<IRecipeWrapper> recipes = new ArrayList<IRecipeWrapper>();
         for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) 
         {
-         	List<ItemStack> output = new ArrayList();
+         	List<ItemStack> output = new ArrayList<ItemStack>();
         	output.add(chicken.createLayItem());
         	output.add(new ItemStack(ModItems.manure));
         	output.add(new ItemStack(Items.FEATHER));
@@ -103,7 +106,6 @@ public class ChickensHelper {
         	
         	ItemStack spawnEgg = new ItemStack(ChickensMod.spawnEgg, 1);
         	ItemSpawnEgg.applyEntityIdToItemStack(spawnEgg, chicken.getRegistryName());
-        	
         	
             recipes.add(nestingCat.getRecipeWrapper(new NestingPenDropRecipe(entity, spawnEgg, output)));
         }
