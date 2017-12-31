@@ -1,5 +1,6 @@
 package com.gendeathrow.hatchery.block;
 
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,7 +9,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import scala.actors.threadpool.Arrays;
+
 
 public class BasicHatcheryContainer extends Container{
 
