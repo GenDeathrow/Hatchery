@@ -61,7 +61,7 @@ public class InventoryStroageModifiable extends ItemStackHandler
     	if(canExtractSlot(slot))
     		return super.extractItem(slot, amount, simulate);
     	else
-    		return null;	
+    		return ItemStack.EMPTY;	
     }
     
     

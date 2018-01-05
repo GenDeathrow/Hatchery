@@ -114,7 +114,7 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 			}
 			else if(!heldItem.isEmpty() && heldItem.getItem() instanceof ItemEgg)
 			{
-				te.insertEgg(heldItem.copy());
+				te.insertEgg(heldItem);
 				EggNestBlock.addEgg(worldIn, state, pos);
 		        if (!playerIn.capabilities.isCreativeMode) {
 		            heldItem.shrink(1);

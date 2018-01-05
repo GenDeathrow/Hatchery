@@ -21,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -39,13 +40,14 @@ public class EggNestTileEntity extends TileEntity implements ITickable
 	boolean hasEgg;
 	
 	InventoryStroageModifiable inventory = new InventoryStroageModifiable("egg", 1) {
-	 @Override
+		@Override
 		protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
 	    	return 1;
 	    }
 	 
+		@Override
 		public boolean canInsertSlot(int slot, ItemStack stack){
-			return stack.getItem() == ModItems.hatcheryEgg || stack.getItem() == Items.EGG;
+			return stack.getItem() == ModItems.hatcheryEgg || stack.getItem() == Items.EGG || stack.getItem() instanceof ItemEgg;
 		}
 	};
 	
@@ -65,7 +67,7 @@ public class EggNestTileEntity extends TileEntity implements ITickable
 	
 	public void insertEgg(ItemStack eggIn){
 		if(!eggIn.isEmpty() && this.inventory.getStackInSlot(0).isEmpty())
-		this.inventory.setStackInSlot(0, eggIn.copy());
+		this.inventory.insertItem(0, eggIn.copy(), false);
 		this.markDirty();
 	}
 	

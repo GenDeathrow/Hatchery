@@ -71,39 +71,44 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
 	{
     	if(!worldIn.isRemote)
     	{
-    		FeederTileEntity te = (FeederTileEntity) worldIn.getTileEntity(pos);
+    		TileEntity tile = worldIn.getTileEntity(pos);
 
-    		if(te.getSeedsInv() > 0)
+    		if(tile != null && tile instanceof FeederTileEntity)
     		{
-    			AxisAlignedBB RANGE_AABB = new AxisAlignedBB(pos.getX() - 4, pos.getY(), pos.getZ() - 4, pos.getX() + 4, pos.getY() + 1, pos.getZ() + 4);
+    			FeederTileEntity feeder = (FeederTileEntity) tile;
     			
-    			List<EntityChicken> entitys = worldIn.getEntitiesWithinAABB(EntityChicken.class, RANGE_AABB);
-    			for(EntityChicken entity : entitys)
+    			if(feeder.getSeedsInv() > 0)
     			{
-    				if(te.getSeedsInv() > 0)
+    				AxisAlignedBB RANGE_AABB = new AxisAlignedBB(pos.getX() - 4, pos.getY(), pos.getZ() - 4, pos.getX() + 4, pos.getY() + 1, pos.getZ() + 4);
+    			
+    				List<EntityChicken> entitys = worldIn.getEntitiesWithinAABB(EntityChicken.class, RANGE_AABB);
+    				for(EntityChicken entity : entitys)
     				{
- 						if(entity.hasCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null))
-						{
+    					if(feeder.getSeedsInv() > 0)
+    					{
+    						if(entity.hasCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null))
+    						{
  		   					
- 							IAnimalStats cap = entity.getCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null);
+    							IAnimalStats cap = entity.getCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null);
  							
-							if(cap != null && cap.canEat())
-							{
-								if(entity.isChild())
-								{
-									te.decrSeedsInv();
-    	    						entity.ageUp((int)((float)(-entity.getGrowingAge() / 10) * 0.35F), true);
-								}
-								else
-								{
-									te.decrSeedsInv();
-									entity.timeUntilNextEgg -= 5;
-								}
+    							if(cap != null && cap.canEat())
+    							{
+    								if(entity.isChild())
+    								{
+    									feeder.decrSeedsInv();
+    									entity.ageUp((int)((float)(-entity.getGrowingAge() / 10) * 0.35F), true);
+    								}
+    								else
+    								{
+    									feeder.decrSeedsInv();
+    									entity.timeUntilNextEgg -= 5;
+    								}
 
-								FeederBlock.setFeederLevel(worldIn, pos, state);
-							}
+    								FeederBlock.setFeederLevel(worldIn, pos, state);
+    							}
 
-						}
+    						}
+    					}
     				}
     			}
     		}
