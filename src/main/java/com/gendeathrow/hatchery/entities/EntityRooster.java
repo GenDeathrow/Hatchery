@@ -1,8 +1,10 @@
 package com.gendeathrow.hatchery.entities;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 import com.gendeathrow.hatchery.entities.ai.EntityAIRoosterMating;
@@ -167,6 +169,29 @@ public class EntityRooster extends EntityChicken {
 		return flag;
 	}
 
+	
+	public static void loadTemptationItems() {
+		ArrayList<Item> itemlist = new ArrayList<Item>();
+		
+		for(String tempString : Settings.TEMPTATION_ITEMS) {
+			if(tempString != null) {
+				Item item = Item.getByNameOrId(tempString);
+				if(item != null)
+					itemlist.add(item);
+			}
+		}
+	
+		if(!itemlist.isEmpty())
+			addTemptationItems(itemlist);
+	}
+	
+	
+	protected static void addTemptationItems(ArrayList<Item> itemlist) {
+		for(Item item : itemlist)
+			if(!TEMPTATION_ITEMS.contains(item))
+				TEMPTATION_ITEMS.add(item);
+	}
+	
 	public void convertSeeds() 
 	{
 		if(getHasSeeds() && getSeeds() <= MAX_SEEDS -2) 

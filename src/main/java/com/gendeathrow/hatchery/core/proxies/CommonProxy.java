@@ -95,6 +95,7 @@ public class CommonProxy implements IGuiHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		ModRecipes.RegisterOreDic();
+		EntityRooster.loadTemptationItems();
 	}
 	
 	@Override

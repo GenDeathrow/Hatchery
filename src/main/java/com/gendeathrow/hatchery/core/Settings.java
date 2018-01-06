@@ -14,6 +14,7 @@ public class Settings
 	
 	//Clients
 	public static boolean SHOULD_RENDER_CHICKEN_FLAPS;
+	public static String[] TEMPTATION_ITEMS;
 
 	
 }

@@ -1,6 +1,7 @@
 package com.gendeathrow.hatchery.core.config;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import com.gendeathrow.hatchery.core.Settings;
 
@@ -42,6 +43,7 @@ public class ConfigHandler
 		Settings.SHOULD_RENDER_CHICKEN_FLAPS = CONFIG.getBoolean("Render Chicken Flaps", Configuration.CATEGORY_CLIENT, true, "If you feel the chickens may be dropping your FPS when in chicken pens, Cause of all that darn flapping try this.");
 
 		Settings.ROOSTER_BREED_ONLY = CONFIG.get("Rooster Spawn Settings", "Can only breed chickens with roosters", false, "Only set for Vanilla Chickens, Will likly break some modded chickens.\n Not compatable with Chickens mod. \n WIP may not work completly as inteded").getBoolean();
+		Settings.TEMPTATION_ITEMS = CONFIG.get("Rooster Spawn Settings", "Temptation items", new String[]{""}, "Add a list of seeds that the rooster can eat/store and to use for breeding with. (The Items will also have to be a instance of ItemSeeds)").getStringList();
 
 		Settings.ROOSTER_MIN_SPAWN_SIZE = CONFIG.get("Rooster Spawn Settings", "Rooster Spawn Group Minimum Size", 1).getInt(1);
 		Settings.ROOSTER_MAX_SPAWN_SIZE = CONFIG.get("Rooster Spawn Settings", "Rooster Spawn Group Maximum Size", 2).getInt(2);

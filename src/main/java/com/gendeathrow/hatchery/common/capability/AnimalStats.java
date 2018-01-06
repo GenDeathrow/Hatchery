@@ -16,7 +16,7 @@ public class AnimalStats implements IAnimalStats
 	
 	private int timeToDrink = 1000 + rand.nextInt(1000);
 	
-	private int timeToPoop = this.rand.nextInt(6000) + 6000;
+	private int timeToPoop = this.rand.nextInt(5000) + 2000;
 	
 	public AnimalStats(){}
 	
@@ -31,7 +31,7 @@ public class AnimalStats implements IAnimalStats
 			if(!entity.world.isRemote)
 				entity.dropItem(ModItems.manure, 1);
 			
-			timeToPoop = entity.getRNG().nextInt(6000) + 6000;
+			timeToPoop = entity.getRNG().nextInt(5000) + 2000;
 		}
 	}
 	
