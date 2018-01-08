@@ -84,11 +84,8 @@ public class Hatchery
 	    	
 	    	PROXY.init(event);
 	    	ConfigHandler.loadConfig();
-	    	
-	    	// waila integration
-	        FMLInterModComms.sendMessage("Waila", "register", "com.gendeathrow.hatchery.core.waila.HatcheryTileProvider.load");
-	        
-	        if (Loader.isModLoaded("theoneprobe")){
+	 
+	    	if (Loader.isModLoaded("theoneprobe")){
 	        	TheOneProbeSupport.register();
 	        }
 	    	

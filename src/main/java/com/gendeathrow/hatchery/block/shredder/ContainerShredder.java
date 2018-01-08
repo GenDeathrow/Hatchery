@@ -35,7 +35,7 @@ public class ContainerShredder extends BasicHatcheryContainer
 
 		upgrades = tile.getUpgradeStorage();
 
-		addInventories(inputInventory, upgrades);  
+		addInventories(inputInventory, upgrades, outputInventory);  
 		
 		shredder = tile;
 		
@@ -80,14 +80,7 @@ public class ContainerShredder extends BasicHatcheryContainer
 		    }
 		});
 		     
-
-
-	     for (i = 0; i < 3; ++i)
-	            for (int j = 0; j < 9; ++j)
-	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-
-        for (i = 0; i < 9; ++i)
-            addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 142));	          
+		bindPlayerInventory(playerInventory);          
 	}
 	
 

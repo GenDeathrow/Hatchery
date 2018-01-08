@@ -21,7 +21,7 @@ public class TheOneProbeSupport
     public static void register() {
         if (registered) {
             return;
-        }
+        } 
         registered = true;
         FMLInterModComms.sendFunctionMessage("theoneprobe", "getTheOneProbe", "com.gendeathrow.hatchery.core.theoneprobe.TheOneProbeSupport$GetTheOneProbe");
       }
@@ -29,7 +29,7 @@ public class TheOneProbeSupport
     
     public static class GetTheOneProbe implements com.google.common.base.Function<ITheOneProbe, Void> 
     {
-        public static ITheOneProbe probe;
+        public static ITheOneProbe probe; 
     	
     	@Override
     	public Void apply(ITheOneProbe theOneProbe)

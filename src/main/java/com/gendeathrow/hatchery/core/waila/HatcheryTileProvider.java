@@ -1,26 +1,33 @@
 package com.gendeathrow.hatchery.core.waila;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
 import com.gendeathrow.hatchery.block.nest.EggNestTileEntity;
 import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
+import com.gendeathrow.hatchery.modaddons.ChickensHelper;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.IWailaRegistrar;
+import mcp.mobius.waila.api.WailaPlugin;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
+@WailaPlugin
 public class HatcheryTileProvider implements IWailaDataProvider, IWailaPlugin
 {
 
@@ -83,29 +90,26 @@ public class HatcheryTileProvider implements IWailaDataProvider, IWailaPlugin
 				currenttip.add(I18n.format("text.hatchery.hatching", new Object[0]) +": "+ percentage +"%");
 				currenttip.add(accessor.getNBTData().getString("eggName"));
 			}
-			else currenttip.add(I18n.format("text.hatchery.nothatching", new Object[0]));
+			else currenttip.add(TextFormatting.RED + I18n.format("text.hatchery.nothatching", new Object[0]));
 		}
 		else if(tileEntity instanceof NestPenTileEntity)
 		{
-
 			if(accessor.getNBTData().getBoolean("hasChicken"))
 			{
-				currenttip.add(I18n.format("text.hatchery.chicken", new Object[0]) +": "+ accessor.getNBTData().getString("entityname"));
+				currenttip.add(TextFormatting.LIGHT_PURPLE + I18n.format("text.hatchery.chicken", new Object[0])+ TextFormatting.RESET +": " + TextFormatting.ITALIC +""+ TextFormatting.GREEN + accessor.getNBTData().getString("entityname"));
 
-	    		if(accessor.getNBTData().hasKey("Growth"))
-	    		{
-	    			currenttip.add("Growth: "+ accessor.getNBTData().getInteger("Growth"));
-	    		}
-	    		if(accessor.getNBTData().hasKey("Gain"))
-	    		{
-	    			currenttip.add("Gain: "+ accessor.getNBTData().getInteger("Gain"));
-	    		}
-	    		if(accessor.getNBTData().hasKey("Strength"))
-	    		{
-	    			currenttip.add("Strength: "+ accessor.getNBTData().getInteger("Strength"));
-	    		}
+				if(accessor.getNBTData().hasKey("stats")) {
 
-	    		
+					NBTTagList statList = accessor.getNBTData().getTagList("stats",10);
+					
+			        for (int i = 0; i < statList.tagCount(); ++i)
+			        {
+			            	NBTTagCompound statTag = statList.getCompoundTagAt(i);
+			            	String unformatted = statTag.getString("text");
+			            	int value = statTag.getInteger("value");
+							currenttip.add(I18n.format(unformatted, new Object[] {value}));
+			        }
+				}
 	    		
 				long uptime = accessor.getNBTData().getLong("nextDrop")/20;
 				long minutes = TimeUnit.SECONDS.toMinutes(uptime);
@@ -113,21 +117,27 @@ public class HatcheryTileProvider implements IWailaDataProvider, IWailaPlugin
 				long seconds = TimeUnit.SECONDS.toSeconds(uptime);
 				String output = minutes > 0 ? minutes+":"+ (seconds < 10 ? "0"+seconds : seconds)  +" mins" : (seconds < 10 ? "0"+seconds : seconds) + " secs";
 
-				currenttip.add(I18n.format("text.hatchery.nxdrop", new Object[0]) +": "+ output);
+				currenttip.add(TextFormatting.GREEN + I18n.format("text.hatchery.nxdrop", new Object[0]) +": "+ output);
 			}
-			else currenttip.add(I18n.format("text.hatchery.nochicken", new Object[0]));
+			else currenttip.add(TextFormatting.RED + I18n.format("text.hatchery.nochicken", new Object[0]));
 			
 			if(accessor.getNBTData().hasKey("inventory"))
 			{
 				NBTTagList inv = (NBTTagList) accessor.getNBTData().getTag("inventory");
+				
+				currenttip.add("");
+				currenttip.add(TextFormatting.GREEN +""+ TextFormatting.UNDERLINE +  I18n.format("text.hatchery.inventory")+ TextFormatting.RESET);
+				
 				if(inv != null) 
 				{
 					for(int i=0; i < inv.tagCount(); i++)
 					{
 						NBTTagCompound item = inv.getCompoundTagAt(i);
-						currenttip.add("Slot "+ item.getByte("Slot") +": "+ item.getString("id") +" x"+ item.getInteger("cnt") );
+						currenttip.add(TextFormatting.GOLD+ "  Slot "+ (item.getByte("Slot")+1)+ TextFormatting.RESET +": "+ item.getString("id") +" x"+ item.getInteger("cnt") );
 					}
 				}
+			}else {
+				currenttip.add(TextFormatting.YELLOW + I18n.format("text.hatchery.sneakshow"));
 			}
 		}	
 		else if(tileEntity instanceof FeederTileEntity)
@@ -169,26 +179,31 @@ public class HatcheryTileProvider implements IWailaDataProvider, IWailaPlugin
 			{
 				tag.setString("entityname",  hte.storedEntity().getDisplayName().getFormattedText());
 
-	    		NBTTagCompound entityNBT = hte.storedEntity().getEntityData();
-
-	    		if(entityNBT.hasKey("Gain"))
-	    		{
-	    			tag.setInteger("Gain", entityNBT.getInteger("Gain"));
-	    		}
-	    		if(entityNBT.hasKey("Strength"))
-	    		{
-	    			tag.setInteger("Strength", entityNBT.getInteger("Strength"));
-	    		}
-	    		if(entityNBT.hasKey("Growth"))
-	    		{
-	    			tag.setInteger("Growth", entityNBT.getInteger("Growth"));
-	    		}
-	    		
+				if(ChickensHelper.isLoaded()) {
+					HashMap<String, Integer> stats = ChickensHelper.getChickenStats(hte.storedEntity());
+					
+					if(stats != null) {
+					  NBTTagList statsTag = new NBTTagList();
+					  
+					  for(Entry<String, Integer> stat : stats.entrySet()) {
+						  NBTTagCompound statNbt = new NBTTagCompound();
+						  statNbt.setString("text", stat.getKey());
+						  statNbt.setInteger("value", stat.getValue());
+						  statsTag.appendTag(statNbt);
+					  }
+					  
+				        if (!statsTag.hasNoTags())
+						  tag.setTag("stats", statsTag);
+					}
+				}
 			}
 			
 			tag.setLong("nextDrop",  hte.getTimeToNextDrop());
-			NBTTagList list = hte.getInventoryContents(hte);
-			if(list != null) tag.setTag("inventory", list);
+
+			if(player.isSneaking()) {	
+				NBTTagList list = NestPenTileEntity.getInventoryContents(hte);
+				if(list != null) tag.setTag("inventory", list);
+			}
 		}
 		else if(te instanceof FeederTileEntity)
 		{

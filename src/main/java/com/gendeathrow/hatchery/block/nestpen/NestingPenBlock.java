@@ -1,6 +1,8 @@
 package com.gendeathrow.hatchery.block.nestpen;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -10,6 +12,7 @@ import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
+import com.gendeathrow.hatchery.modaddons.ChickensHelper;
 
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -54,11 +57,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class NestingPenBlock extends Block implements ITileEntityProvider, TOPInfoProvider
 {
-	public static final PropertyDirection FACING = BlockHorizontal.FACING;
+	public static final PropertyDirection FACING = BlockHorizontal.FACING; 
 	
     public static final PropertyBool HASCHICKEN = PropertyBool.create("haschicken");
     
-    
+     
 	//public static final PropertyBool hasChicken = PropertyBool.create("false");
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.00D, 0.0D, 0.00, 1.0D, 1.2D, 1.0D);
     
@@ -99,9 +102,11 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
         else
     	{
         	
-    		NestPenTileEntity te = (NestPenTileEntity)worldIn.getTileEntity(pos);
+    		TileEntity tile = worldIn.getTileEntity(pos);
     		
-    		if(te == null) return false;
+    		if(tile == null || !(tile instanceof NestPenTileEntity)) return false;
+    		
+    		NestPenTileEntity te = (NestPenTileEntity) tile;
     	
     		ItemStack heldItem = playerIn.getHeldItem(hand);
     		if(!heldItem.isEmpty())
@@ -109,7 +114,6 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     			
     			if(heldItem.getItem() == Items.SPAWN_EGG)
     			{
-    				
     				   ResourceLocation entityID = ItemMonsterPlacer.getNamedIdFrom(heldItem);
 
     		           Entity entity = EntityList.createEntityByIDFromName(entityID, worldIn);
@@ -130,6 +134,23 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
    		    		       return true;
     		           }
     			}
+    			else if(ChickensHelper.isLoaded() && heldItem.getItem() == ChickensHelper.chickenAnalyzer) {
+    				ChickensHelper.checkForAnalyzer(heldItem, te.storedEntity());
+    			}
+    			else if(ChickensHelper.isLoaded() && heldItem.getItem() == ChickensHelper.spawnEgg) {
+    				
+    				EntityLiving chicken = ChickensHelper.getChickenFromEgg(heldItem, worldIn, pos);
+    				if(chicken == null) return false;
+	    		    
+    				if (!playerIn.capabilities.isCreativeMode)
+		            {
+    					heldItem.shrink(1);;
+                    }
+    				te.trySetEntity(chicken);
+    				
+    				return true;
+    			}
+    			
     			
     		}
 
@@ -419,7 +440,25 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 				
 				probeInfo.text(TextFormatting.YELLOW + "Chicken: " + TextFormatting.GREEN + tileEntity.storedEntity().getName());
 
+				if(ChickensHelper.isLoaded()) {
+					HashMap<String, Integer> stats = ChickensHelper.getChickenStats(tileEntity.storedEntity());
+					
+					if(stats != null) {
+						for(Entry<String, Integer> stat : stats.entrySet()) {
+							if(stat.getKey() == "entity.ChickensChicken.growth")
+								probeInfo.text("Growth: "+ stat.getValue());
+							if(stat.getKey() == "entity.ChickensChicken.gain")
+								probeInfo.text("Gain: "+ stat.getValue());
+							if(stat.getKey() == "entity.ChickensChicken.strength")
+								probeInfo.text("Strength: "+ stat.getValue());
+						}
+					}
+				}
+					
+					
 				probeInfo.text(TextFormatting.YELLOW + "Next Drop: "+ TextFormatting.GREEN  + output);
+				
+
             }
             else
             {

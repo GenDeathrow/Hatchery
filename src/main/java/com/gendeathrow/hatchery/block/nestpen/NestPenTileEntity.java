@@ -85,7 +85,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 	public boolean trySetEntity(Entity entityin)
 	{
 		if(this.storedEntity() != null) return false;
-		
+		 
 		if(entityin instanceof EntityChicken)
 		{
 			this.chickenStored = (EntityChicken) entityin;
@@ -95,7 +95,8 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 			entityin.writeToNBT(entityNBT);
 			entityNBT.setString("id", EntityList.getKey(entityin).toString());
 			
-			entityin.setPosition(this.pos.getX(),this.pos.getY() , this.pos.getZ());
+			//entityin.setPosition(this.pos.getX(),this.pos.getY() , this.pos.getZ());
+			entityin.setPositionAndRotation(this.pos.getX(),this.pos.getY() , this.pos.getZ(), 0, 0);
 			entityin.motionY = 0;
 
 			if(!((EntityChicken) entityin).isChild()) ((EntityChicken) entityin).setGrowingAge(6000);
@@ -433,7 +434,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
     	
         for (int i = 0; i < te.inventory.getSlots(); ++i)
         {
-            if (te.inventory.getStackInSlot(i) != null)
+            if (!te.inventory.getStackInSlot(i).isEmpty())
             {
                 NBTTagCompound nbttagcompound = new NBTTagCompound();
                 nbttagcompound.setByte("Slot", (byte)i);

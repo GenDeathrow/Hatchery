@@ -68,50 +68,6 @@ public class ContainerDigesterGenerator extends BasicHatcheryContainer
 		return true;
 	}
 
-//	@Override
-//	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) 
-//	{
-//        ItemStack itemstack = ItemStack.EMPTY;
-//        Slot slot = (Slot)this.inventorySlots.get(slotIndex);
-//
-//        if (slot != null && slot.getHasStack())
-//        {
-//            ItemStack itemstack1 = slot.getStack();
-//            itemstack = itemstack1.copy();
-//
-//            if (slotIndex < (this.inputInventory.getSlots() + this.upgrades.getSlots()))
-//            {
-//                if (!this.mergeItemStack(itemstack1, this.inputInventory.getSlots(),  this.inventorySlots.size(), true))
-//                {
-//                    return ItemStack.EMPTY;
-//                }
-//            }
-//            else if (!this.mergeItemStack(itemstack1, 0, this.inputInventory.getSlots(), false))
-//            {
-//                return ItemStack.EMPTY;
-//            }
-//            
-//            if (itemstack1.getCount() == 0)
-//            {
-//                slot.putStack(ItemStack.EMPTY);
-//            }
-//            else
-//            {
-//                slot.onSlotChanged();
-//            }
-//
-//            if (itemstack1.getCount() == itemstack.getCount())
-//            {
-//                return ItemStack.EMPTY;
-//            }
-//
-//            slot.onTake(player, itemstack1);
-//        }
-//        
-//		return itemstack;
-//	}
-
-
 	@Override
 	public void addListener(IContainerListener listener) {
 		if (this.listeners.contains(listener)) {

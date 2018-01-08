@@ -105,11 +105,9 @@ public class JEIPllugin implements IModPlugin
         
         registry.addRecipes(new ArrayList<GeneratorRecipeWrapper>(){{add(new GeneratorRecipeWrapper()); }}, GeneratorCategory.UID);
 
+        IIngredientBlacklist itemBlacklist = registry.getJeiHelpers().getIngredientBlacklist();
 
-          IIngredientBlacklist itemBlacklist = registry.getJeiHelpers().getIngredientBlacklist();
-          
-          
-          itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.chickenMachine));
+        //itemBlacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.chickenMachine));
      }
     
     

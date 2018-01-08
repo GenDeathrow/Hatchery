@@ -93,7 +93,9 @@ public class BasicHatcheryContainer extends Container{
 				ItemStack itemstack = slot.getStack();
 				int maxLimit = Math.min(stack.getMaxStackSize(), slot.getSlotStackLimit());
 				
-				if (!itemstack.isEmpty() && areItemStacksEqual(stack, itemstack)){
+				boolean isValidItem = slot.isItemValid(stack);
+				
+				if (!itemstack.isEmpty() && areItemStacksEqual(stack, itemstack) && isValidItem){
 					int j = itemstack.getCount() + stack.getCount();
 					if (j <= maxLimit){
 						stack.setCount(0);
@@ -121,6 +123,7 @@ public class BasicHatcheryContainer extends Container{
 			while (!reverseDirection && i < endIndex || reverseDirection && i >= startIndex){
 				Slot slot1 = (Slot)this.inventorySlots.get(i);
 				ItemStack itemstack1 = slot1.getStack();
+
 
 				if (itemstack1.isEmpty() && slot1.isItemValid(stack)){ // Forge: Make sure to respect isItemValid in the slot.
 					if(stack.getCount() <= slot1.getSlotStackLimit()){
