@@ -63,7 +63,7 @@ public class ModItems
 	public static Item speedUpgradeTier = setUpItem(new BaseUpgrade(3, "speed_upgrade"), "speed_upgrade");
 	public static Item tankUpgradeTier1 = setUpItem(new BaseUpgrade(3, "tank_upgrade"), "tank_upgrade");
 	public static Item rfCapacityUpgradeTier1 = setUpItem(new BaseUpgrade(3, "rf_capacity_upgrade"), "rf_capacity_upgrade");
-	
+	 
 	// insulation (decrease sound)
 	
 	

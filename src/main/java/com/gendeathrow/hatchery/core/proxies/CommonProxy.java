@@ -47,7 +47,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 public class CommonProxy implements IGuiHandler 
 {
 	public static final int GUI_ID_ROOSTER = 1;
-	public static final int GUI_ID_FERTLIZERMIXER = 2;
+	public static final int GUI_ID_FERTLIZERMIXER = 2; 
 	public static final int GUI_ID_DIGESTER_GEN = 3;
 	public static final int GUI_ID_NESTINGPEN = 4;
 	public static final int GUI_ID_SHREDDER = 5;
@@ -79,9 +79,7 @@ public class CommonProxy implements IGuiHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		ModBlocks.preInit(event);
-		ModFluids.registerFluids();	
 		ModEntities.register();
-		
 		
 		if(Settings.CAN_THROW_EGG)
 			BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.hatcheryEgg, new DispenseHatcheryEgg());

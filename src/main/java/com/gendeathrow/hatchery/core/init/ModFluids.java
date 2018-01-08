@@ -24,19 +24,13 @@ public class ModFluids
 {
 
 	public static Fluid liquidfertilizer = new LiquidFertilizer();
-	public static Block blockLiquidFertilizer;
-		
 	
-	public static void registerFluids()
-	{
-
+	static {
 		FluidRegistry.addBucketForFluid(liquidfertilizer);
-		blockLiquidFertilizer = new BlockLiquidFertilizer(liquidfertilizer);
-		blockLiquidFertilizer.setCreativeTab(Hatchery.hatcheryTabs);
-		liquidfertilizer.setBlock(blockLiquidFertilizer);
 	}
 	
-	
+	public static Block blockLiquidFertilizer = new BlockLiquidFertilizer(liquidfertilizer);;
+		
 	public static ItemStack getFertilizerBucket()
 	{
 		return UniversalBucket.getFilledBucket(ForgeModContainer.getInstance().universalBucket, liquidfertilizer);
@@ -49,7 +43,7 @@ public class ModFluids
 	
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
-    	ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(blockLiquidFertilizer), 0, new ModelResourceLocation(blockLiquidFertilizer.getRegistryName(), null));
+    	//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(blockLiquidFertilizer), 0, new ModelResourceLocation(blockLiquidFertilizer.getRegistryName(), null));
     }
 	
 }

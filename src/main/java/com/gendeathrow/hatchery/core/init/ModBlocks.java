@@ -62,7 +62,7 @@ public class ModBlocks
 
 	public static IForgeRegistry<Block> blockRegistry;
 	
-	
+	 
 	@SubscribeEvent
 	public static void blockRegistry(RegistryEvent.Register<Block> event) {
 		blockRegistry = event.getRegistry();

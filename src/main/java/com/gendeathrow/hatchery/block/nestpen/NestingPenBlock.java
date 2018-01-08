@@ -150,8 +150,6 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     				
     				return true;
     			}
-    			
-    			
     		}
 
     		if(playerIn.isSneaking()) 

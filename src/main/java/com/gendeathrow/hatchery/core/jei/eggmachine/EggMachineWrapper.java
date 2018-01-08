@@ -40,21 +40,15 @@ public class EggMachineWrapper extends BlankRecipeWrapper
 			}
 		}
 		
-		System.out.println("OreEggs: "+ eggOre.size());
-		
 		for(ItemStack egg : eggOre)	{
 				NonNullList<ItemStack> extraEggs = NonNullList.create();
 				egg.getItem().getSubItems(CreativeTabs.SEARCH, extraEggs);
-				
-				System.out.println("extra Eggs: "+ extraEggs.size());
 				eggOreExtra.addAll(extraEggs);
 		}
 
 		eggOre = eggOreExtra;
 
 		for(ItemStack egg : eggOre)	{egg.setCount(24);}
-		
-		System.out.println("OreEggs Modified: "+ eggOre.size());
 		
 		this.allEggs.addAll(eggOre);
 		
