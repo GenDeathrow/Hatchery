@@ -42,7 +42,7 @@ public class ModRecipes
 		OreDictionary.registerOre("egg", ModItems.hatcheryEgg);
 		OreDictionary.registerOre("listAllegg", ModItems.hatcheryEgg);
 		OreDictionary.registerOre("plasticEgg", ModItems.prizeEgg);
-	}
+	} 
 	
 	
 	public static void initRecipes() {
@@ -339,7 +339,7 @@ public class ModRecipes
 		
 		
 		
-		addShapedRecipes("wool_recipe", "held",new ItemStack(Blocks.WOOL), new Object[] {
+		addShapedRecipes("wool_recipe", "held",new ItemStack(Blocks.WOOL, 8), new Object[] {
 				"fff",
 				"fff",
 				"fff", 
@@ -358,7 +358,7 @@ public class ModRecipes
 		
 		    	
 		
-		addShapelessRecipes("wool_recipe", "held", new ItemStack(ModItems.mealPulp, 4),  new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal),new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(Items.WATER_BUCKET));
+		addShapelessRecipes("mealpulp_recipe", "held", new ItemStack(ModItems.mealPulp, 4),  new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal),new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(Items.WATER_BUCKET));
 		
 		addShapelessRecipes("egg_null_recipe", "held",new ItemStack(Items.EGG), new ItemStack(ModItems.hatcheryEgg));
 
