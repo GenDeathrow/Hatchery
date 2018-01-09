@@ -10,7 +10,6 @@ import com.gendeathrow.hatchery.api.crafting.NestingPenDropRecipe;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.jei.nestingpen.NestingPenCategory;
 import com.gendeathrow.hatchery.util.RegisterEggsUtil;
-
 import com.setycz.chickens.ChickensMod;
 import com.setycz.chickens.entity.EntityChickensChicken;
 import com.setycz.chickens.item.ItemSpawnEgg;

@@ -1,7 +1,6 @@
 package com.gendeathrow.hatchery.core.config;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import com.gendeathrow.hatchery.core.Settings;
 
