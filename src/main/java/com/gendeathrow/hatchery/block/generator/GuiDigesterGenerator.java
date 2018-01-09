@@ -88,6 +88,14 @@ public class GuiDigesterGenerator extends GuiContainer
 	DecimalFormat formatter = new DecimalFormat("#,###");
 	
 	@Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+    }
+	
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTickTime, int x, int y) {
 		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

@@ -14,7 +14,7 @@ public class ContainerNestingPen extends Container
 	private final InventoryStroageModifiable nestingPenInventory;
 	
 	public ContainerNestingPen(InventoryPlayer playerInventory, NestPenTileEntity tile, EntityPlayer thePlayer) 
-	{
+	{ 
         this.nestingPenInventory = tile.inventory;
 
         for (int j = 0; j < nestingPenInventory.getSlots(); ++j)

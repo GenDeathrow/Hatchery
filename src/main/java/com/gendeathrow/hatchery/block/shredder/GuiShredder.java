@@ -38,7 +38,7 @@ public class GuiShredder extends GuiContainer
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) 
-	{
+	{ 
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;
 
@@ -67,6 +67,17 @@ public class GuiShredder extends GuiContainer
 		GlStateManager.popMatrix();
 	}  
 	
+    /**
+     * Draws the screen and all the components in it.
+     */
+	@Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+    }
+    
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks,int mouseX, int mouseY) 

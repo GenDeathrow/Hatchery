@@ -137,20 +137,12 @@ public class HatcheryEgg extends ItemEgg
     		if(tag.hasKey("storedEntity"))
     		{
     			NBTTagCompound entityNBT = tag.getCompoundTag("storedEntity");
-    			
     			if(entityNBT.hasKey("Growth"))
-    			{
     				tooltip.add("Growth: "+ entityNBT.getInteger("Growth"));
-    			}
     			if(entityNBT.hasKey("Gain"))
-    			{
     				tooltip.add("Gain: "+ entityNBT.getInteger("Gain"));
-    			}
     			if(entityNBT.hasKey("Strength"))
-    			{
     				tooltip.add("Strength: "+ entityNBT.getInteger("Strength"));
-    			}
-
     		}
     		
     	}

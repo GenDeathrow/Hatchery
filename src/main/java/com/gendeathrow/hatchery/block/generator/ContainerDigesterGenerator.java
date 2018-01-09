@@ -32,17 +32,33 @@ public class ContainerDigesterGenerator extends BasicHatcheryContainer
 		inputInventory = tileEntity.inputInventory;
 		outputInventory = tileEntity.outputInventory;
 		tile = tileEntity;
-
+ 
 		upgrades = tileEntity.getUpgradeStorage();
 		
 		int i;  
 
 		addSlotToContainer(new SlotFluidContainer(inputInventory, 0, 72, 16, ModFluids.liquidfertilizer));
         
-		addSlotToContainer(new SlotItemHandler(upgrades, 0, 107, 59));
-		addSlotToContainer(new SlotItemHandler(upgrades, 1, 134, 59));
+		addSlotToContainer(new SlotItemHandler(upgrades, 0, 107, 59){
+			public boolean isItemValid(@Nullable ItemStack stack)
+		    {
+				boolean value = super.isItemValid(stack);
+				if(value)
+					value = tile.canUseUpgrade(stack);
+				return value;
+		    }
+		});
+		addSlotToContainer(new SlotItemHandler(upgrades, 1, 134, 59){
+			public boolean isItemValid(@Nullable ItemStack stack)
+		    {
+				boolean value = super.isItemValid(stack);
+				if(value)
+					value = tile.canUseUpgrade(stack);
+				return value;
+		    }
+		});
 		
-		addInventories(inputInventory, upgrades);  
+		addInventories(inputInventory, upgrades, outputInventory);  
 	
 		addSlotToContainer(new SlotItemHandler(outputInventory, 0, 72, 52)
 		{
@@ -53,13 +69,7 @@ public class ContainerDigesterGenerator extends BasicHatcheryContainer
 		});
 
 
-	     for (i = 0; i < 3; ++i)
-	            for (int j = 0; j < 9; ++j)
-	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-
-        for (i = 0; i < 9; ++i)
-            addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 142));	    
-
+		this.bindPlayerInventory(playerInventory);
 	}
 
 	@Override

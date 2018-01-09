@@ -46,7 +46,7 @@ public class ContainerFertlizerMixer extends BasicHatcheryContainer
 		manure = null;
 		upgrades = fertilizerInventory.getUpgradeStorage();
 		
-		addInventories(inputInventory, upgrades);  
+		addInventories(inputInventory, upgrades, outputInventory);  
 		
 		waterTank = fertilizerInventory.getWaterTank().getFluidAmount();
 		fertilizerTank = fertilizerInventory.getFertilizerTank().getFluidAmount();
@@ -80,8 +80,25 @@ public class ContainerFertlizerMixer extends BasicHatcheryContainer
 		});
 		
 		
-		addSlotToContainer(new SlotItemHandler(upgrades, 0, 8, 52));
-		addSlotToContainer(new SlotItemHandler(upgrades, 1, 31, 52));
+		addSlotToContainer(new SlotItemHandler(upgrades, 0, 8, 52){
+			public boolean isItemValid(@Nullable ItemStack stack)
+		    {
+				boolean value = super.isItemValid(stack);
+				if(value)
+					value = tileEntity.canUseUpgrade(stack);
+				return value;
+		    }
+		});
+		addSlotToContainer(new SlotItemHandler(upgrades, 1, 31, 52){
+			public boolean isItemValid(@Nullable ItemStack stack)
+		    {
+				boolean value = super.isItemValid(stack);
+				if(value)
+					value = tileEntity.canUseUpgrade(stack);
+				return value;
+		    }
+		});
+		
 		
 		addSlotToContainer(new SlotItemHandler(outputInventory, 0, 72, 52)
 		{

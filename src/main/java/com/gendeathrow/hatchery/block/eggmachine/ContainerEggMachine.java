@@ -1,5 +1,7 @@
 package com.gendeathrow.hatchery.block.eggmachine;
 
+import javax.annotation.Nullable;
+
 import com.gendeathrow.hatchery.block.BasicHatcheryContainer;
 import com.gendeathrow.hatchery.network.HatcheryWindowPacket;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
@@ -8,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
@@ -21,7 +24,7 @@ public class ContainerEggMachine extends BasicHatcheryContainer
 	private final InventoryStroageModifiable upgrades;
 	private final EggMachineTileEntity te;
 
-	
+	 
 	public ContainerEggMachine(InventoryPlayer playerInventory, EggMachineTileEntity eggstractorInventory) 
 	{
 		inputInventory = eggstractorInventory.inputInventory;
@@ -31,26 +34,38 @@ public class ContainerEggMachine extends BasicHatcheryContainer
 		
 		int i;
 
-		addInventories(inputInventory, upgrades);  
+		addInventories(inputInventory, upgrades, outputInventory);  
 		
 		addSlotToContainer(new SlotItemHandler(eggstractorInventory.inputInventory, eggstractorInventory.EggInSlot, 38, 18));
 		addSlotToContainer(new SlotItemHandler(eggstractorInventory.inputInventory,  eggstractorInventory.PlasticInSlot, 63, 18));
 		
-		addSlotToContainer(new SlotItemHandler(upgrades, 0, 100, 53));
-		addSlotToContainer(new SlotItemHandler(upgrades, 1, 124, 53));
+		addSlotToContainer(new SlotItemHandler(upgrades, 0, 100, 53){
+			public boolean isItemValid(@Nullable ItemStack stack)
+		    {
+				boolean value = super.isItemValid(stack);
+				if(value)
+					value = te.canUseUpgrade(stack);
+				return value;
+		    }
+		});
+		addSlotToContainer(new SlotItemHandler(upgrades, 1, 124, 53){
+			public boolean isItemValid(@Nullable ItemStack stack)
+		    {
+				boolean value = super.isItemValid(stack);
+				if(value)
+					value = te.canUseUpgrade(stack);
+				return value;
+		    }
+		});
 		
-		addSlotToContainer(new SlotItemHandler(eggstractorInventory.outputInventory, eggstractorInventory.PrizeEggSlot, 51, 53));
+		addSlotToContainer(new SlotItemHandler(eggstractorInventory.outputInventory, eggstractorInventory.PrizeEggSlot, 51, 53){
+			@Override
+			public boolean isItemValid(@Nullable ItemStack stack){
+				return false;
+		    }
+		});
 		
-		
-
-
-	     for (i = 0; i < 3; ++i)
-	            for (int j = 0; j < 9; ++j)
-	                addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-
-	        for (i = 0; i < 9; ++i)
-	            addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 142));
-
+		bindPlayerInventory(playerInventory);   
 	}
 	
 	@Override
