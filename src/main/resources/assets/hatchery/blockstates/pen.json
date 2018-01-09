@@ -1,7 +1,7 @@
 {
     "forge_marker": 1,
     "defaults": {
-        "model": "hatchery:pen_mach3"
+        "model": "hatchery:pen"
     },
     "variants": 
     {

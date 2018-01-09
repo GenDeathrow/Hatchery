@@ -25,6 +25,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
@@ -33,6 +34,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoProvider
 {
@@ -53,7 +56,7 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 		this.setHardness(.2f);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(hasEgg, false));
 	}
-	
+	 
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
@@ -140,6 +143,13 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     
     public static void setEggState(World worldIn, IBlockState state, BlockPos pos, boolean egg) {
     	worldIn.setBlockState(pos,state.withProperty(hasEgg, egg));
+    }
+    
+	
+    @SideOnly(Side.CLIENT)
+    public BlockRenderLayer getBlockLayer()
+    {
+        return BlockRenderLayer.CUTOUT_MIPPED;
     }
     
     public static void addEgg(World worldIn, IBlockState state, BlockPos pos)

@@ -1,27 +1,40 @@
 {
     "parent": "hatchery:block/feeder_0",
-	"display": 
-	{        
+		"display": {
+		"thirdperson_righthand": {
+			"scale": [0.6, 0.6, 0.6],
+			"translation": [0, 4, 1],
+			"rotation": [57, 180, 0]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0.6, 0.6, 0.6],
+			"rotation": [57, 180, 0],
+			"translation": [0, 4, 1]
+		},
+		"firstperson_righthand": {
+			"scale": [0.6, 0.6, 0.6],
+			"translation": [1, 4, 0],
+			"rotation": [0, 180, 0]
+		},
+		"firstperson_lefthand": {
+			"scale": [0.6, 0.6, 0.6],
+			"rotation": [0, 180, 0],
+			"translation": [1, 4, 0]
+		},
 		"ground": {
-            "rotation": [ 0, 0, 0 ],
-            "translation": [ 0, 2, 0],
-            "scale":[ 0.375, 0.375, 0.375 ]
-        },
-        "thirdperson_righthand": {
-            "rotation": [ 0, 0, 0 ],
-            "translation": [ 0, 4, -2.75 ],
-            "scale": [ 0.5, 0.5, 0.5]
-        },
-        "firstperson_righthand": {
-            "rotation": [ 30, -90, 25 ],
-            "translation": [ 0, 4, 2 ],
-            "scale": [0.375, 0.375, 0.375 ]
-        },
+			"scale": [0.7, 0.7, 0.7],
+			"translation": [0, 2, 0]
+		},
+		"fixed": {
+			"scale": [1, 1, 1],
+			"rotation": [0, 180, 0],
+			"translation": [0, 2.5, -1.5]
+		},
 		"gui": {
-            "rotation": [ 15, 15 ,0 ],
-			"translation": [ 0, 4, 0],
-			"scale": [1.10, 1.10, 1.10 ]
-        }
-    }
+			"scale": [0.9, 0.9, 0.9],
+			"translation": [0, 3, 0],
+			"rotation": [18, 37, 0]
+		}
+	}
 
 }
