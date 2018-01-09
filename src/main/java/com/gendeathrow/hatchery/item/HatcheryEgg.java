@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.util.ItemStackEntityNBTHelper;
 import com.gendeathrow.hatchery.util.RegisterEggsUtil;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityList;
@@ -46,7 +48,7 @@ public class HatcheryEgg extends ItemEgg
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
 	{
-        if (!playerIn.capabilities.isCreativeMode)
+        if (!playerIn.capabilities.isCreativeMode) 
         {
         	playerIn.getHeldItem(handIn).shrink(1);
         }
@@ -61,7 +63,7 @@ public class HatcheryEgg extends ItemEgg
         }
 
         playerIn.addStat(StatList.getObjectUseStats(this));
-        return new ActionResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
     }
     
     protected NBTTagList newDoubleNBTList(double[] dob)
@@ -124,7 +126,8 @@ public class HatcheryEgg extends ItemEgg
     }
     
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
     	if(stack.hasTagCompound())
     	{

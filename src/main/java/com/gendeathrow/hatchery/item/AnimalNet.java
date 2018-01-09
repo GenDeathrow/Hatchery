@@ -49,7 +49,7 @@ public class AnimalNet extends Item
 		return super.getItemStackDisplayName(stack);
     	
     }
-	
+	 
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand)
     {
@@ -74,6 +74,9 @@ public class AnimalNet extends Item
 	  		player.setActiveHand(hand);
 	  		
 	  		target.world.removeEntity(target);
+	  		
+	  		player.world.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+	  		
 	  		return true;
 	    }
 	    

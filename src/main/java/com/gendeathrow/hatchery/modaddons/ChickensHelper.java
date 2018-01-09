@@ -96,9 +96,11 @@ public class ChickensHelper {
 		if(stack.getItem() == chickenAnalyzer) {	
 			if(entity instanceof EntityChickensChicken) {
 				EntityChickensChicken chicken = (EntityChickensChicken) entity;
+				if(chicken.getStatsAnalyzed()) return false;
+				
     	        chicken.setStatsAnalyzed(true);
     			return true;
-    		}
+    		} 
     	}
     	return false;
     }

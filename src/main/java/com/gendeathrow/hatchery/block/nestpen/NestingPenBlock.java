@@ -80,7 +80,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     
 	private static boolean keepInventory = false;
     
-	public NestingPenBlock() 
+	public NestingPenBlock()  
 	{
 		super(Material.WOOD);
 		this.name = "pen";
@@ -135,7 +135,8 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     		           }
     			}
     			else if(ChickensHelper.isLoaded() && heldItem.getItem() == ChickensHelper.chickenAnalyzer) {
-    				ChickensHelper.checkForAnalyzer(heldItem, te.storedEntity());
+    				if(ChickensHelper.checkForAnalyzer(heldItem, te.storedEntity()))
+    						return true;
     			}
     			else if(ChickensHelper.isLoaded() && heldItem.getItem() == ChickensHelper.spawnEgg) {
     				
@@ -144,7 +145,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 	    		    
     				if (!playerIn.capabilities.isCreativeMode)
 		            {
-    					heldItem.shrink(1);;
+    					heldItem.shrink(1);
                     }
     				te.trySetEntity(chicken);
     				
