@@ -5,11 +5,12 @@ tile.hatchery.pen.name=Nistgehege
 tile.hatchery.pen_chicken.name=Nistgehege
 tile.hatchery.fertilized_dirt.name=Gedüngte Erde
 tile.hatchery.fertilized_farmland.name=Gedüngter Ackerboden
-tile.hatchery.feeder.name=Hühnerfütterer
+tile.hatchery.feeder.name=Hühnerfutterhaus
 tile.hatchery.manure_block.name=Hühnermistblock
 tile.hatchery.nursery_block.name=Kükenüberwachung
 tile.hatchery.fertilizer_mixer.name=Düngermischer
-tile.hatchery.digester_generator=Methanfermenter-Generator
+tile.hatchery.digester_generator.name=Methanfermenter-Generator
+tile.hatchery.chicken_machine_block.name=Glücksei-Maschine
 tile.hatchery.shredder.name=Reißwolf
 
 container.generator.generating=Generiert: %1$drf/t
@@ -19,6 +20,9 @@ container.hoveramt=%/%
 container.fertlizermixer=Düngermischer
 container.upgrades=Verbesserungen
 container.nestingpen=Nistgehege-Inventar
+container.eggstractor=Glücksei-Maschine
+container.eggstractor.eggs=Eier: %1$d
+container.eggstractor.plastic=Plastik: %1$d
 
 entity.Rooster.name=Hahn
 container.roosterInventory=Hahn-Inventar
@@ -35,9 +39,28 @@ item.hatchery.feather_meal.name=Federmehl
 item.hatchery.plastic.name=Plastik
 item.hatchery.chicken_feed.name=Hühnerfutter
 item.hatchery.circuit_board.name=Leiterplatte
-item.hatchery.rf_upgrade_1.name=RF-Upgrade Stufe 1
-item.hatchery.rf_upgrade_2.name=RF-Upgrade Stufe 2
-item.hatchery.rf_upgrade_3.name=RF-Upgrade Stufe 3
+
+item.hatchery.rf_upgrade_1.name=RF-Effizienzupgrade Stufe 1
+item.hatchery.rf_upgrade_2.name=RF-Effizienzupgrade Stufe 2
+item.hatchery.rf_upgrade_3.name=RF-Effizienzupgrade Stufe 3
+
+item.hatchery.speed_upgrade_1.name=Geschwindigkeitsupgrade Stufe 1
+item.hatchery.speed_upgrade_2.name=Geschwindigkeitsupgrade Stufe 2
+item.hatchery.speed_upgrade_3.name=Geschwindigkeitsupgrade Stufe 3 
+
+item.hatchery.tank_upgrade_1.name=Tankupgrade Stufe 1
+item.hatchery.tank_upgrade_2.name=Tankupgrade Stufe 2
+item.hatchery.tank_upgrade_3.name=Tankupgrade Stufe 3
+
+item.hatchery.rf_capacity_upgrade_1.name=RF-Kapazität Stufe 1
+item.hatchery.rf_capacity_upgrade_2.name=RF-Kapazität Stufe 2
+item.hatchery.rf_capacity_upgrade_3.name=RF-Kapazität Stufe 3
+
+item.hatchery.prize_egg.name=Glücksei
+item.hatchery.fiber_pad.name=Faserauflage
+item.hatchery.feather_pulp.name=Federbrei
+
+item.hatchery.chicken_machine.name=Glücksei-Maschine
 
 #TOOLTIP
 tooltip.hatchery.sprayer.desc=%1$s Volumen: %2$dmb / %3$dmb
@@ -49,30 +72,45 @@ text.hatchery.chicken=Huhn
 text.hatchery.nxdrop=Nächster Drop
 text.hatchery.nochicken=Benutze das Tierfangnetz, um ein Huhn einzufangen
 text.hatchery.storedseed=Gelagerte Samen
-
+text.hatchery.sneakshow=<Schleichen für weitere Informationen>
+text.hatchery.inventory=Inventar
 
 #JEI
-jei.tile.hatchery.feeder=Du kannst bis zu 200 Samen im Fütterer lagern. Fütterer erkennen Hühner in einem 4x1x4-Bereich. Baby-Hühner werden in der Nähe eines Fütterers schneller wachsen und ausgewachsene Hühner werden Items schneller droppen. Du kannst Samen mit Röhren in den Fütterer einführen.
+jei.tile.hatchery.feeder=Du kannst bis zu 200 Samen im Hühnerfutterhaus lagern. Futterhäuser erkennen Hühner in einem 4x1x4-Bereich. Küken werden in der Nähe eines Hühnerfutterhauses schneller wachsen und ausgewachsene Hühner werden Items schneller droppen. Du kannst Samen mit Röhren in das Hühnerfutterhaus einlagern.
 jei.tile.hatchery.digester_generator=Der Methanfermenter-Generator erzeugt Energie aus Gülle in einem Fermenter. Anaerobe Düngerkocher (auch Methankocher genannt) sammeln Dünger und wandeln die in ihrer organischen Substanz gespeicherte Energie in Methan um, das zur Erzeugung von Energie (60 rf/t) für die landwirtschaftliche Nutzung verwendet wird.
-jei.tile.hatchery.fertilizer_mixer=Verwende diesen Mischer, um die Herstellung von flüssigem Dünger zu automatisieren. Füge einfach Wasser und Dünger hinzu. Die Bereitstellung von HF-Leistung ermöglicht es dem Mischer, schneller zu arbeiten, aber es wird zunächst keine Stromversorgung benötigt.
-jei.tile.hatchery.nest=Setze ein Ei in das Nest und es wird dein Huhn nach einer zufälligen Zeit automatisch Schlüpfen lassen. Mithilfe einer Redstonelampe (wird später mit einer Wärmelampe ersetzt) bis zu drei Blöcken über dem Nest kann die Geschwindigkeit erhöht werden. Auf dem Ei zu sitzen erhöht auch die Geschwindigkeit.
+jei.tile.hatchery.fertilizer_mixer=Verwende diesen Mischer, um die Herstellung von flüssigem Dünger zu automatisieren. Füge einfach Wasser und Dünger hinzu. Die zusätzliche Bereitstellung von RF-Leistung ermöglicht es dem Mischer, schneller zu arbeiten, aber es wird zunächst keine Stromversorgung benötigt.
+jei.tile.hatchery.nest=Setze ein Ei in das Nest und es wird dein Huhn nach einer zufälligen Zeit automatisch schlüpfen lassen. Mithilfe einer Redstone-Lampe (wird später durch eine Wärmelampe ersetzt) bis zu drei Blöcken über dem Nest kann die Geschwindigkeit erhöht werden. Auf dem Ei zu sitzen erhöht ebenfalls die Geschwindigkeit.
 jei.tile.hatchery.fertilized_dirt=Gibt Bäumen einen zufälligen Knochenmehl-Effekt.
 jei.tile.hatchery.fertilized_farmland=Gibt Pflanzen einen zufälligen Knochenmehl-Effekt. Erhalte Ackerboden, indem du eine Feldhacke auf gedüngte Erde anwendest.
-jei.tile.hatchery.pen=Nistgehege geben Platz für Hühner, um Ressourcen zu sammeln und Hühner Eier legen zu lassen. Benutze das Tierfangnetz, um Hühner in das Nistgehege zu setzen. Setze zwei Nistgehege, um Hühner automatisch paaren zu lassen. Dies funktioniert ebenso mit Mod-Hühnern, die spezielle Brutmechanismen zulassen. Nistgehege droppen Hühnermist, Federn und Hatchery-Eier.
-jei.tile.hatchery.pen_chicken=Nistgehege geben Platz für Hühner, um Ressourcen zu sammeln und Hühner Eier legen zu lassen. Benutze das Tierfangnetz, um Hühner in das Nistgehege zu setzen. Setze zwei Nistgehege, um Hühner automatisch paaren zu lassen. Dies funktioniert ebenso mit Mod-Hühnern, die spezielle Brutmechanismen zulassen. Nistgehege droppen Hühnermist, Federn und Hatchery-Eier.
-jei.tile.hatchery.manure_block=Ein Block Hühnermist. Viel Spaß!
+jei.tile.hatchery.pen=Nistgehege geben Platz für Hühner, um Ressourcen zu sammeln und Hühner Eier legen zu lassen. Benutze das Tierfangnetz, um Hühner in das Nistgehege zu setzen. Platziere zwei Nistgehege, um Hühner automatisch paaren zu lassen. Dies funktioniert ebenso mit Mod-Hühnern, die spezielle Brutmechanismen zulassen. Nistgehege droppen Hühnermist, Federn und Hatchery-Eier.
+jei.tile.hatchery.pen_chicken=Nistgehege geben Platz für Hühner, um Ressourcen zu sammeln und Hühner Eier legen zu lassen. Platziere zwei Nistgehege, um Hühner automatisch paaren zu lassen. Dies funktioniert ebenso mit Mod-Hühnern, die spezielle Brutmechanismen zulassen. Nistgehege droppen Hühnermist, Federn und Hatchery-Eier.
+jei.tile.hatchery.manure_block=Ein Block Hühnermist. Viel Spaß damit!
 jei.tile.hatchery.nursery_block=Dieser Block trennt ausgewachsene Hühner und Küken in einem 4x4-Bereich und transportiert sie zur gegenüberliegenden Seite des Blocks. Dies ist zum besseren Sortieren und Bewegen deiner Hühner geeignet.
 jei.tile.hatchery.shredder=Der Reißwolf wird verwendet, um Federn in Federmehl und Federfasern zu verwandeln;
 jei.item.hatchery.animalnet=Benutze das Tierfangnetz, um ein passives Tier einzufangen. Benutze das Tierfangnetz, um Hühner in Nistgehege zu setzen.
 jei.item.hatchery.hatcheryegg=Hatchery-Eier sind dynamisch generierte Eier, was zwei Eltern das Brüten ermöglicht, um ein benutzerdefiniertes Ei zu erstellen. Hauptsächlich für Mod-Hühner mit neuen Brutmechanismen.
 jei.item.hatchery.chickenmanure=Drops von Nistgehegen. Benutze Hühnermist, um gedüngte Erde oder flüssigen Dünger herzustellen oder ihn als Knochenmehl-Ersatz für Pflanzen zu verwenden.
 jei.item.hatchery.sprayer=Der Düngersprüher wird verwendet, um Erde/Ackerboden in Gedüngte Erde/Ackerboden zu verwandeln und funktioniert, ähnlich wie eine Gießkanne, mit Block-Updates. Enthält bis zu 3000mb.
-jei.item.hatchery.circuit_board.name=Wird bei der Herstellung von Upgrades verwendet
-jei.item.hatchery.rf_upgrade_1=Erhöht RF-Stromgenerierung um 40rf/tick
-jei.item.hatchery.rf_upgrade_2=Erhöht RF-Stromgenerierung um 60rf/tick
-jei.item.hatchery.rf_upgrade_3=Erhöht RF-Stromgenerierung um 80rf/tick
-jei.item.hatchery.feather_fiber=Federfasern sind zerkleinerte Federn, die in den Reißwolf gelegt wurden, die in einen Rohkunststoff geschmolzen werden können. Wird bei der Herstellung von verschiedenen Gegenständen verwendet.
+jei.item.hatchery.circuit_board=Wird bei der Herstellung von Upgrades verwendet
+
+jei.item.hatchery.rf_upgrade= Reduziert RF/tick \n Im Generator erhöht es RF/Tick \n\n Stufe 1 : Erhöht RF-Stromgenerierung im Generator um 40rf/tick \n\n Stufe 2 : Erhöht RF-Stromgenerierung im Generator um 60rf/tick \n\n Stufe 3: Erhöht RF-Stromgenerierung im Generator um 80rf/tick
+
+jei.item.hatchery.speed_upgrade=Erhöht die Geschwindigkeit der Maschine, um die Verarbeitung zu vergrößern. Steigende Geschwindigkeit erhöht auch die Menge an RF/tick.
+jei.item.hatchery.tank_upgrade=Erhöht den Flüssigkeitstankspeicher einer Maschine.
+jei.item.hatchery.rf_capacity=Erweitert die Energiekapazität einer Maschine.
+
+jei.item.hatchery.feather_fiber=Federfasern sind zerkleinerte Federn, die in den Reißwolf gelegt wurden und zu Rohkunststoff geschmolzen werden können. Wird bei der Herstellung von verschiedenen Gegenständen verwendet.
 jei.item.hatchery.feather_meal=Federmehl ist ein Nebenprodukt des Reißwolfs bei Federn. Es können Samen hinzugefügt werden, um mehr Nahrung für Hühner herzustellen.
-jei.item.hatchery.chicken_feed=Lege Hühnerfutter in den Hühnerfütterer als alternative Nahrungsquelle.
+jei.item.hatchery.chicken_feed=Lege Hühnerfutter in das Hühnerfutterhaus als alternative Nahrungsquelle.
+jei.item.hatchery.chicken_machine=Wenn der Glücksei-Maschine Strom, Eier und Plastik zugeführt werden, können Glückseier hergestellt werden. Glückseier beschaffen dir eine Reihe von Belohnungen.
 
 jei.gui.nesting_pen_drop=Nistgehege-Hühnerdrops
+jei.gui.shredder_recipes=Reißwolf-Rezepte
+jei.gui.luckyegg_drops=Glücksei-Drops
+jei.gui.eggmachine_egg=Glücksei-Maschine
+jei.gui.generator_recipes=Methanfermenter-Generator
+jei.gui.fertilizermixer_recipes=Düngermischer
+
+jei.item.hatchery.prize_egg=Glückseier werden hergestellt, indem viele Eier und Plastik der Glücksei-Maschine zugeführt werden. Glückseier enthalten eine Reihe von Belohnungen, wenn sie geöffnet werden.
+jei.item.hatchery.fiber_pad=Faserauflagen können zur Herstellung von Gegenständen wie Wolle verwendet werden.
+jei.item.hatchery.feather_pulp=Federbrei kann zu Papier gekocht werden.
