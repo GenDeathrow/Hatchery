@@ -92,7 +92,7 @@ public class ClientProxy extends CommonProxy
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		super.preInit(event);
-		registerFluidModel(ModFluids.blockLiquidFertilizer,  "fertilizer");
+
     	initRenderers();
 	}
 	
@@ -100,7 +100,7 @@ public class ClientProxy extends CommonProxy
 	public void init(FMLInitializationEvent event)
 	{
 		super.init(event);
-		
+
 		ModItems.registerItemColorHandler(null);
 	}
 	
@@ -140,10 +140,9 @@ public class ClientProxy extends CommonProxy
 	
 	
 
-	private void registerFluidModel(Block fluidBlock, String name) 
+	public static void registerFluidModel(Block fluidBlock, String name) 
 	{
 		Item item = Item.getItemFromBlock(fluidBlock);
-
 		ModelBakery.registerItemVariants(item);
 
 		final ModelResourceLocation modelResourceLocation = new ModelResourceLocation(Hatchery.MODID +":fluid", name);
@@ -189,6 +188,7 @@ public class ClientProxy extends CommonProxy
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		super.postInit(event);
+		//registerFluidModel(ModFluids.blockLiquidFertilizer,  "fertilizer");	
 	}
 
 }
