@@ -117,7 +117,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(EggMachineTileEntity.class, new EggMachineEntityRenderer());
 	}
 
-
+ 
 	@SideOnly(Side.CLIENT)
 	public static void registerBlockModel(Block block)
 	{

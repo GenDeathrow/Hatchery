@@ -35,7 +35,7 @@ public class ModItems
 	
 	public static final List<Item> ITEMS = new ArrayList<>();
 	
-	//ITEMS
+	//ITEMS 
 	public static Item hatcheryEgg = setUpItem(new HatcheryEgg(), "hatcheryegg");
 			
 	public static Item animalNet = setUpItem(new AnimalNet() , "animalnet");
