@@ -1,15 +1,11 @@
 package com.gendeathrow.hatchery.core.init;
 
 import com.gendeathrow.hatchery.fluid.BlockLiquidFertilizer;
-import com.gendeathrow.hatchery.fluid.FluidStateMapper;
 import com.gendeathrow.hatchery.fluid.LiquidFertilizer;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.Fluid;
@@ -26,11 +22,11 @@ public class ModFluids
 
 	public static Fluid liquidfertilizer = new LiquidFertilizer();
 	
-	static {
-		FluidRegistry.addBucketForFluid(liquidfertilizer);
-	}
+//	static {
+//		FluidRegistry.addBucketForFluid(liquidfertilizer);
+//	}
 	
-	public static Block blockLiquidFertilizer = new BlockLiquidFertilizer(liquidfertilizer);
+	public static Block blockLiquidFertilizer;
 		
 	public static ItemStack getFertilizerBucket()
 	{
@@ -51,30 +47,9 @@ public class ModFluids
 	
 	@SubscribeEvent(priority = EventPriority.NORMAL)
 	public static void blockRegistry(RegistryEvent.Register<Block> event) {
+		
+		blockLiquidFertilizer = new BlockLiquidFertilizer(liquidfertilizer);
 		event.getRegistry().register(blockLiquidFertilizer);
 	}
 	
-    @SubscribeEvent
-    public static void registerModels(ModelRegistryEvent event) {
-    	//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(blockLiquidFertilizer), 0, new ModelResourceLocation(blockLiquidFertilizer.getRegistryName(), null));
-    	
-        if (liquidfertilizer == null) {
-            return;
-          }
-          Block block = liquidfertilizer.getBlock();
-          if (block == null) {
-            return;
-          }
-          
-          FluidStateMapper mapper = new FluidStateMapper(liquidfertilizer);
-          
-          ModelLoader.setCustomStateMapper(blockLiquidFertilizer, mapper);
-          Item item = Item.getItemFromBlock(block);
-          
-          if (item != Items.AIR) {
-        	  ModelLoader.registerItemVariants(item);
-        	  ModelLoader.setCustomMeshDefinition(item, mapper);
-          }
-    }
-
 }
