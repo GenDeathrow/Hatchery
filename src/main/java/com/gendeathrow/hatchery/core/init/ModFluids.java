@@ -42,7 +42,6 @@ public class ModFluids
 	@SubscribeEvent
 	public static void itemRegistry(RegistryEvent.Register<Item> event) {
 	      if (!FluidRegistry.getBucketFluids().contains(liquidfertilizer)) {
-	          
 	        }
 	}
 	
@@ -53,9 +52,7 @@ public class ModFluids
 	
 	@SubscribeEvent(priority = EventPriority.NORMAL)
 	public static void blockRegistry(RegistryEvent.Register<Block> event) {
-		
 		blockLiquidFertilizer = new BlockLiquidFertilizer(liquidfertilizer);
-		
 		event.getRegistry().register(blockLiquidFertilizer);
 	}
 	

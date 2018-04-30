@@ -12,7 +12,6 @@ import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntityRenderer;
 import com.gendeathrow.hatchery.client.render.entity.RenderRooster;
 import com.gendeathrow.hatchery.client.render.entity.RenderThrownEgg.HatcheryEggThrownFactory;
-import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.entities.EntityRooster;
 import com.gendeathrow.hatchery.item.HatcheryEggThrown;
