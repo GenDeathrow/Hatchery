@@ -48,9 +48,11 @@ public class Hatchery
 	    public static org.apache.logging.log4j.Logger logger;
 		
 	    public static CreativeTabs hatcheryTabs = new CreativeTabs(MODID) {
-	        @Override public ItemStack getTabIconItem() {
-	            return new ItemStack(ModItems.hatcheryEgg);
-	        }
+	    	@Override
+			public ItemStack createIcon() {
+				// TODO Auto-generated method stub
+				return new ItemStack(ModItems.hatcheryEgg);
+			}
 	    };
 	    
 	    static{

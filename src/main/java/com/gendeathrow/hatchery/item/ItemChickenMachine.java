@@ -54,7 +54,7 @@ public class ItemChickenMachine extends Item{
             }
 
             int i = MathHelper.floor((double)(playerIn.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-            EnumFacing enumfacing = EnumFacing.getHorizontal(i);
+            EnumFacing enumfacing = EnumFacing.byHorizontalIndex(i);
             BlockPos blockpos = pos.offset(EnumFacing.UP);
 
             if (playerIn.canPlayerEdit(pos, facing, stack) && playerIn.canPlayerEdit(blockpos, facing, stack))

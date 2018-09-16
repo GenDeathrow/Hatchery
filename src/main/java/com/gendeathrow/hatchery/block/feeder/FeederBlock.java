@@ -89,22 +89,22 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     						if(entity.hasCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null))
     						{
  		   					
-    							IAnimalStats cap = entity.getCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null);
+    							IAnimalStats chickenStats = entity.getCapability(CapabilityAnimalStatsHandler.ANIMAL_HANDLER_CAPABILITY, null);
  							
-    							if(cap != null && cap.canEat())
+    							if(chickenStats != null && chickenStats.canEat())
     							{
+									feeder.decrSeedsInv();
+    								chickenStats.Eat();
+    								
+    								chickenStats.setPoopTime(chickenStats.getToPoopTime() + (int)((float)(-chickenStats.getToPoopTime() / 5)));
+    								
     								if(entity.isChild())
-    								{
-    									feeder.decrSeedsInv();
     									entity.ageUp((int)((float)(-entity.getGrowingAge() / 10) * 0.35F), true);
-    								}
     								else
-    								{
-    									feeder.decrSeedsInv();
     									entity.timeUntilNextEgg -= 5;
-    								}
 
-    								FeederBlock.setFeederLevel(worldIn, pos, state);
+    								FeederBlock.setFeederLevel(worldIn, pos, state);	
+    								
     							}
 
     						}
@@ -112,6 +112,8 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     				}
     			}
     		}
+    		
+			//worldIn.scheduleBlockUpdate(pos, worldIn.getBlockState(pos).getBlock(), 100, 1);
     	}
 	}
 
@@ -218,7 +220,7 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     
 	@Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT_MIPPED;
     }
@@ -245,7 +247,7 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     
     public static EnumFacing getFacing(int meta)
     {
-        return EnumFacing.getHorizontal(meta);
+        return EnumFacing.byHorizontalIndex(meta);
     }
     
     /**

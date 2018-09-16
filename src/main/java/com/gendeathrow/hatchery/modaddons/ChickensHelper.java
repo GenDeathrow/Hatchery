@@ -76,9 +76,9 @@ public class ChickensHelper {
     		if (chicken.getStatsAnalyzed() || ChickensMod.instance.getAlwaysShowStats()) {
     			HashMap<String, Integer> list = new HashMap<String, Integer>();
 
-    			list.put("entity.ChickensChicken.growth", chicken.getGrowth());              
+    			list.put("entity.ChickensChicken.growth", chicken.getGrowth());    
     			list.put("entity.ChickensChicken.gain", chicken.getGain());
-    			list.put("entity.ChickensChicken.strength", chicken.getStrength());
+    			list.put("entity.ChickensChicken.strength", chicken.getStrength());          
     		
     			return list;
     		}

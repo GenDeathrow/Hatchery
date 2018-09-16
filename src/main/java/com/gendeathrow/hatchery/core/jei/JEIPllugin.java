@@ -70,12 +70,12 @@ public class JEIPllugin implements IModPlugin
     	for (Block block : ModBlocks.BLOCKS) {
             //registry.addIngredientInfo(block, block.getClass(), "jei." + block.getUnlocalizedName());
         	ItemStack stack =  new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE);
-        	if(!stack.isEmpty()) registry.addDescription(stack, "jei." + block.getUnlocalizedName());
+        	if(!stack.isEmpty()) registry.addDescription(stack, "jei." + block.getTranslationKey());
         }
         
         for (Item item : ModItems.ITEMS) {
         	ItemStack stack = new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE);
-        	if(!stack.isEmpty()) registry.addDescription(stack, "jei." + item.getUnlocalizedName());
+        	if(!stack.isEmpty()) registry.addDescription(stack, "jei." + item.getTranslationKey());
         }
         
         registry.addRecipeCatalyst(new ItemStack(ModItems.chickenmachine), EggMachineCategory.UID);

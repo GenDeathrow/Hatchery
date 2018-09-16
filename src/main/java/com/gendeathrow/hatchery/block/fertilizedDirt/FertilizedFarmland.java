@@ -41,7 +41,7 @@ public class FertilizedFarmland extends Block
         this.setDefaultState(this.blockState.getBaseState().withProperty(MOISTURE, Integer.valueOf(0)));
         this.setHardness(1);
         this.setHarvestLevel("shovel", 0);
-        this.setUnlocalizedName("fertilized_farmland");
+        this.setTranslationKey("fertilized_farmland");
         this.setTickRandomly(true);
         this.setSoundType(SoundType.GROUND);
         this.setLightOpacity(255);

@@ -49,7 +49,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 		super(Material.IRON);
 		this.setHardness(2);
 		this.setHarvestLevel("pickaxe", 0);
-		this.setUnlocalizedName("digester_generator");
+		this.setTranslationKey("digester_generator");
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ISGENERATING, false));
 	}
 
@@ -271,7 +271,7 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
     @Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		 return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(ISGENERATING, (meta >> 2) == 1 ? true : false);
+		 return this.getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta)).withProperty(ISGENERATING, (meta >> 2) == 1 ? true : false);
 	}
 
 	    /**

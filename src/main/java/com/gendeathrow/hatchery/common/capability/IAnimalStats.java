@@ -18,8 +18,13 @@ public interface IAnimalStats
 	int setEattenTime(int i);
 	
 	boolean canEat();
+	
+	void Eat();
 
+	boolean canPoop();
 	
-	
+	int getToPoopTime();
+
+	int setPoopTime(int value);
 	
 }

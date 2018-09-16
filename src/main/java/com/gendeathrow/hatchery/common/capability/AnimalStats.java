@@ -5,7 +5,9 @@ import java.util.Random;
 import com.gendeathrow.hatchery.core.init.ModItems;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class AnimalStats implements IAnimalStats
@@ -16,7 +18,7 @@ public class AnimalStats implements IAnimalStats
 	
 	private int timeToDrink = 1000 + rand.nextInt(1000);
 	
-	private int timeToPoop = this.rand.nextInt(5000) + 2000;
+	private int timeToPoop = this.rand.nextInt(2000) + 5000;
 	
 	public AnimalStats(){}
 	
@@ -26,38 +28,30 @@ public class AnimalStats implements IAnimalStats
 	{
 		if(timeToEat >= 0) timeToEat--;
 		
-		if(--timeToPoop <= 0)
-		{
-			if(!entity.world.isRemote)
-				entity.dropItem(ModItems.manure, 1);
-			
-			timeToPoop = entity.getRNG().nextInt(5000) + 2000;
+		if(canPoop())  {
+			if(!entity.world.isRemote) {
+				entity.dropItem(ModItems.manure, rand.nextInt(2)+1);
+			}
+			timeToPoop = entity.getRNG().nextInt(2000) + 6000;
 		}
 	}
 	
-	public boolean needsToPoop(Entity entity)
-	{
-		return false;
-	}
     public AnimalStats readFromNBT(NBTTagCompound nbt)
     {
         if (nbt.hasKey("timeToEat"))
-        {
         	this.setEattenTime(nbt.getInteger("timeToEat"));
-        }
         else
-        {
-            this.setEattenTime(2000);
-        }
+            this.setEattenTime(400);
+        if (nbt.hasKey("timeToPoop")) 
+        	this.timeToPoop = nbt.getInteger("timeToPoop");
         
         return this;
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
     {
-
     	nbt.setInteger("timeToEat", timeToEat);
-    	
+    	nbt.setInteger("timeToPoop", timeToPoop);
         return nbt;
     }
     
@@ -88,16 +82,29 @@ public class AnimalStats implements IAnimalStats
 	@Override
 	public boolean canEat() 
 	{
-		if(timeToEat <= 0)
-		{
-			timeToEat = 200 + rand.nextInt(200);
-			return true;
-		}
-		
-		return false;
+		return timeToEat <= 0;
+	}
+	
+	@Override
+	public void Eat() {
+		timeToEat = rand.nextInt(200) + 200;
+	}
+	
+	@Override
+	public boolean canPoop() {
+		return (--timeToPoop <= 0);
+	}
+	 
+	@Override
+	public int getToPoopTime() {
+		return this.timeToPoop;
 	}
 
 
+	@Override
+	public int setPoopTime(int value) {
+		return this.timeToPoop = value;
+	}
 
     /////////////////////////////////////
     // Animal Drinking

@@ -17,7 +17,7 @@ public class ChickenManure extends Item
 	{
 		super();
 		
-		this.setUnlocalizedName("chickenmanure");
+		this.setTranslationKey("chickenmanure");
 		//this.setRegistryName("chickenmanure");
 		this.setCreativeTab(Hatchery.hatcheryTabs);
 	}

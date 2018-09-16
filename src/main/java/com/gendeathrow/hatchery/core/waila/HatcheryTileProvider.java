@@ -184,14 +184,33 @@ public class HatcheryTileProvider implements IWailaDataProvider, IWailaPlugin
 					if(stats != null) {
 					  NBTTagList statsTag = new NBTTagList();
 					  
-					  for(Entry<String, Integer> stat : stats.entrySet()) {
-						  NBTTagCompound statNbt = new NBTTagCompound();
-						  statNbt.setString("text", stat.getKey());
-						  statNbt.setInteger("value", stat.getValue());
-						  statsTag.appendTag(statNbt);
-					  }
+					
+					  NBTTagCompound growth = new NBTTagCompound();
+						growth.setString("text", "entity.ChickensChicken.growth");
+						growth.setInteger("value", stats.get("entity.ChickensChicken.growth"));
+					
+					  NBTTagCompound gain = new NBTTagCompound();
+						gain.setString("text", "entity.ChickensChicken.gain");
+						gain.setInteger("value", stats.get("entity.ChickensChicken.gain"));
+						
+				      NBTTagCompound str = new NBTTagCompound();
+						str.setString("text", "entity.ChickensChicken.strength");
+						str.setInteger("value", stats.get("entity.ChickensChicken.strength"));
+
+						statsTag.appendTag(growth);
+						statsTag.appendTag(gain);
+						statsTag.appendTag(str);
+						
+//					  for(Entry<String, Integer> stat : stats.entrySet()) {
+//						  NBTTagCompound statNbt = new NBTTagCompound();
+//						  statNbt.setString("text", stat.getKey());
+//						  statNbt.setInteger("value", stat.getValue());
+//						  statsTag.appendTag(statNbt);
+//					  }
+//					  
 					  
-				        if (!statsTag.hasNoTags())
+					  
+				        if (!statsTag.isEmpty())
 						  tag.setTag("stats", statsTag);
 					}
 				}

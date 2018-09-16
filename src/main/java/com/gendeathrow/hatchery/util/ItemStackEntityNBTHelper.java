@@ -31,11 +31,10 @@ public class ItemStackEntityNBTHelper
 	
 	public static NBTTagCompound getEntityTagFromStack(ItemStack stackIn)
 	{
-		if(stackIn.hasTagCompound() && stackIn.getTagCompound().hasKey("storedEntity"))
+		if(!stackIn.getTagCompound().isEmpty() && stackIn.getTagCompound().hasKey("storedEntity"))
 		{
 			return (NBTTagCompound) stackIn.getTagCompound().getTag("storedEntity");
 		}
-		
 		return null;
 	}
 	

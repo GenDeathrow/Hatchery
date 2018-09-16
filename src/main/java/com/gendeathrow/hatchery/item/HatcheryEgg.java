@@ -41,19 +41,13 @@ public class HatcheryEgg extends ItemEgg
 	{
 		super();
 		
-		this.setUnlocalizedName("hatcheryegg");
+		this.setTranslationKey("hatcheryegg");
 		this.setCreativeTab(Hatchery.hatcheryTabs);
 	}
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
 	{
-        if (!playerIn.capabilities.isCreativeMode) 
-        {
-        	playerIn.getHeldItem(handIn).shrink(1);
-        }
-
-        worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_EGG_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
         if (!worldIn.isRemote)
         {
@@ -62,6 +56,14 @@ public class HatcheryEgg extends ItemEgg
             worldIn.spawnEntity(entityegg);
         }
 
+        if (!playerIn.capabilities.isCreativeMode) 
+        {
+        	playerIn.getHeldItem(handIn).shrink(1);
+        }
+
+        worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_EGG_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+
+        
         playerIn.addStat(StatList.getObjectUseStats(this));
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
     }

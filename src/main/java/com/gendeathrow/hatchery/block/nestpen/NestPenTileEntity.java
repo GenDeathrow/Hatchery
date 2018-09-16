@@ -61,7 +61,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 	{
 		super();
 		entityNBT = new NBTTagCompound();
-		this.TimetoNextEgg = this.rand.nextInt(5000) + 2000;
+		this.TimetoNextEgg = this.rand.nextInt(3000) + 3000;
 	}
 	
 	public int getTimeToNextDrop()
@@ -151,7 +151,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 	 */
 	private void createEntity()
 	{
-		if (this.entityNBT.hasNoTags()) {
+		if (this.entityNBT.isEmpty()) {
 			chickenStored = null;
 		} else {
 			try {
@@ -216,7 +216,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 	@Override
 	public void update() 
 	{
-		if((!this.entityNBT.hasNoTags() && chickenStored == null) || this.updateEntity)
+		if((!this.entityNBT.isEmpty() && chickenStored == null) || this.updateEntity)
 		{
 			this.createEntity();
 			this.updateEntity = false;
@@ -299,7 +299,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 					inventory.insertItemFirstAvaliableSlot(new ItemStack(Items.FEATHER, 1), false);
 				
 				inventory.insertItemFirstAvaliableSlot(new ItemStack(ModItems.manure, rand.nextInt(2)+1), false);
-				this.TimetoNextEgg = this.rand.nextInt(5000) + 2000;
+				this.TimetoNextEgg = this.rand.nextInt(2000) + 6000;
 			}
 			
 			if(this.chickenStored.capturedDrops != null && this.chickenStored.capturedDrops.size() > 0)
@@ -362,7 +362,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 			storedEntity.setString("id", EntityList.getKey(chickenStored).toString());
 			chickenStored.writeToNBT(storedEntity);
 		}
-		else if(!this.entityNBT.hasNoTags())
+		else if(!this.entityNBT.isEmpty())
 		{
 			storedEntity = this.entityNBT;
 		}

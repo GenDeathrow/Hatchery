@@ -164,7 +164,7 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
 	
 	public IBlockState getStateFromMeta(int meta)
 	{
-		 return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(ISACTIVE, (meta >> 2) == 1 ? true : false);
+		 return this.getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta)).withProperty(ISACTIVE, (meta >> 2) == 1 ? true : false);
 	}
 
 	/**

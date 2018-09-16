@@ -51,7 +51,7 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 	{
 		super(Material.LEAVES);
 		this.name = "nest";
-		this.setUnlocalizedName("nest"); 
+		this.setTranslationKey("nest"); 
 		this.setCreativeTab(Hatchery.hatcheryTabs);	
 		this.setHardness(.2f);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(hasEgg, false));
@@ -145,9 +145,9 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     	worldIn.setBlockState(pos,state.withProperty(hasEgg, egg));
     }
     
-	
+	@Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT_MIPPED;
     }
@@ -168,6 +168,7 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 		return new EggNestTileEntity();
 	}
 	
+	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
@@ -180,21 +181,19 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
 		return false;
 	}
 	
+	@Override
     public boolean isFullCube(IBlockState state)
     {
         return false;
     }
 	
-    public boolean isFullyOpaque(IBlockState state)
-    {
-    	return false;
-    }
-	
+	@Override
     protected BlockStateContainer createBlockState()
     {
         return new BlockStateContainer(this, new IProperty[] {hasEgg});
     }
     
+	@Override
     public IBlockState getStateFromMeta(int meta)
     {
     	if(meta == 1)
@@ -207,6 +206,7 @@ public class EggNestBlock extends Block implements ITileEntityProvider, TOPInfoP
     /**
      * Convert the BlockState into the correct metadata value
      */
+	@Override
     public int getMetaFromState(IBlockState state)
     {
     	if (((boolean)state.getValue(hasEgg)))

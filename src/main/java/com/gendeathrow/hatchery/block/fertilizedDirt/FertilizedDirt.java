@@ -19,7 +19,7 @@ public class FertilizedDirt extends Block
 	public FertilizedDirt() 
 	{
 		super(Material.GROUND);
-		this.setUnlocalizedName("fertilized_dirt");
+		this.setTranslationKey("fertilized_dirt");
 		this.setHardness(1);
 		this.setHarvestLevel("shovel", 0);
 		this.setTickRandomly(true);

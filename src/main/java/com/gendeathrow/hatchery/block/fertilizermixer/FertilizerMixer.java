@@ -33,7 +33,7 @@ public class FertilizerMixer extends BlockContainer implements ITileEntityProvid
 		super(Material.IRON);
 		this.setHardness(2);
 		this.setHarvestLevel("pickaxe", 0);
-		this.setUnlocalizedName("fertilizer_mixer");
+		this.setTranslationKey("fertilizer_mixer");
 	}
 
 

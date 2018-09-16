@@ -11,7 +11,7 @@ public class BlockLiquidFertilizer extends BlockFluidClassic {
 	public BlockLiquidFertilizer(Fluid fluid) 
 	{
 		super(fluid, Material.WATER); 
-		this.setUnlocalizedName(fluid.getUnlocalizedName());
+		this.setTranslationKey(fluid.getUnlocalizedName());
 		this.setRegistryName(fluid.getName());
 		fluid.setBlock(this);
 		this.setCreativeTab(Hatchery.hatcheryTabs);

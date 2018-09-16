@@ -55,9 +55,7 @@ public class HatcheryEggThrown extends EntityThrowable
 	public HatcheryEggThrown(World worldIn, EntityLivingBase throwerIn, ItemStack stack) 
 	{
 		super(worldIn, throwerIn);
-		
 		spawnEntity = ItemStackEntityNBTHelper.getEntityTagFromStack(stack);
-		
 		this.setEggColore(HatcheryEgg.getColor(stack));
 	}
 
@@ -65,56 +63,51 @@ public class HatcheryEggThrown extends EntityThrowable
 	public HatcheryEggThrown(World worldIn, ItemStack stackIn, double x, double y, double z) 
 	{
 		super(worldIn, x, y, z);
-		
 		spawnEntity = ItemStackEntityNBTHelper.getEntityTagFromStack(stackIn);
-		
 		this.itemstack = stackIn;
-		
 		this.setEggColore(HatcheryEgg.getColor(stackIn));
 	}
 
 
 	@Override
 	protected void onImpact(RayTraceResult result)
-	    {
-	        if (result.entityHit != null)
-	        {
-	            result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 0.0F);
-	        }
-	        
-	        if (!this.world.isRemote)
-	        {
-	            if (this.rand.nextInt(8) == 0)
-	            {
-	            	Entity entitychicken = null; 
+	{
+		if (result.entityHit != null)
+		{
+			result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 0.0F);
+		}
+		
+		if (!this.world.isRemote)
+		{
+			if (this.rand.nextInt(8) == 0)
+			{
+				Entity entitychicken = null; 
 	        	
-	            	if(spawnEntity == null) 
-	            	{
-	            		entitychicken = new EntityChicken(this.world);
-	            		if(entitychicken instanceof EntityAgeable) ((EntityAgeable)entitychicken).setGrowingAge(-24000);
-	            	}
-	            	else 
-	            	{
-	            		entitychicken = EntityList.createEntityFromNBT(spawnEntity, this.world);
-	            	}
+				if(spawnEntity == null) {
+					entitychicken = new EntityChicken(this.world);
+				}
+				else {
+					entitychicken = EntityList.createEntityFromNBT(spawnEntity, this.world);
+				}
     	        
-	            	if(entitychicken != null)
-	            	{
-	            		entitychicken.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, 0.0F);
-	            		this.world.spawnEntity(entitychicken);
-	            	}
-	            }
-
-	            this.world.setEntityState(this, (byte)3);
-	            this.setDead();
-	        }
-	        
-	    }
-
+				if(entitychicken != null)
+				{
+					entitychicken.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, 0.0F);
+					if(entitychicken instanceof EntityAgeable) 
+						((EntityAgeable)entitychicken).setGrowingAge(-24000);
+					this.world.spawnEntity(entitychicken);
+				}
+			}
+			
+			this.world.setEntityState(this, (byte)3);
+			this.setDead();
+		}
+	}
 
     /**
      * Handler for {@link World#setEntityState}
      */
+	@Override
     @SideOnly(Side.CLIENT)
     public void handleStatusUpdate(byte id)
     {
@@ -129,6 +122,7 @@ public class HatcheryEggThrown extends EntityThrowable
         }
     }
     
+
 	public ItemStack getItemStacktoRender() {
 		ItemStack stack = new ItemStack(ModItems.hatcheryEgg, 1);
 		HatcheryEgg.setColor(stack, getEggColor());

@@ -84,7 +84,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 	{
 		super(Material.WOOD);
 		this.name = "pen";
-		this.setUnlocalizedName("pen");
+		this.setTranslationKey("pen");
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(HASCHICKEN, false));
 		this.setHardness(2);
 		this.setHarvestLevel("axe", 0);
@@ -220,7 +220,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     	 IBlockState iblockstate = worldIn.getBlockState(pos);
          	worldIn.setBlockState(pos, ModBlocks.pen.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(HASCHICKEN, hasChicken));
              if(!worldIn.isRemote)
-            	 worldIn.markAndNotifyBlock(pos, worldIn.getChunkFromBlockCoords(pos), iblockstate, worldIn.getBlockState(pos), 2);
+            	 worldIn.markAndNotifyBlock(pos, worldIn.getChunk(pos), iblockstate, worldIn.getBlockState(pos), 2);
     }
     
     public static EntityAnimal getNearByMate(World world, IBlockState state, BlockPos pos)
@@ -375,7 +375,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(HASCHICKEN, (meta >> 2) == 1 ? true : false);
+        return this.getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta)).withProperty(HASCHICKEN, (meta >> 2) == 1 ? true : false);
     }
 
     /**
@@ -443,16 +443,27 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
 					HashMap<String, Integer> stats = ChickensHelper.getChickenStats(tileEntity.storedEntity());
 					
 					if(stats != null) {
+						
+						String growth = "~";
+						String gain = "~";
+						String str = "~";
+						
 						for(Entry<String, Integer> stat : stats.entrySet()) {
 							if(stat.getKey() == "entity.ChickensChicken.growth")
-								probeInfo.text("Growth: "+ stat.getValue());
+								growth ="Growth: "+ stat.getValue();
 							if(stat.getKey() == "entity.ChickensChicken.gain")
-								probeInfo.text("Gain: "+ stat.getValue());
+								gain = "Gain: "+ stat.getValue();
 							if(stat.getKey() == "entity.ChickensChicken.strength")
-								probeInfo.text("Strength: "+ stat.getValue());
+								str = "Strength: "+ stat.getValue();
 						}
+						
+						
+						probeInfo.text(growth);
+						probeInfo.text(gain);
+						probeInfo.text(str);
 					}
 				}
+
 					
 					
 				probeInfo.text(TextFormatting.YELLOW + "Next Drop: "+ TextFormatting.GREEN  + output);

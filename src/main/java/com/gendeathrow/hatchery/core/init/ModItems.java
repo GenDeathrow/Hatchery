@@ -75,7 +75,7 @@ public class ModItems
 	
 	
 	public static Item setUpItem(Item item, String name) {
-		return item.setRegistryName(new ResourceLocation(Hatchery.MODID, name)).setUnlocalizedName(Hatchery.MODID+"."+ name).setCreativeTab(Hatchery.hatcheryTabs);
+		return item.setRegistryName(new ResourceLocation(Hatchery.MODID, name)).setTranslationKey(Hatchery.MODID+"."+ name).setCreativeTab(Hatchery.hatcheryTabs);
 	}
 	
 	@SubscribeEvent

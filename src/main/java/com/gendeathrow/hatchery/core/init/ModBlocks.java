@@ -47,18 +47,18 @@ public class ModBlocks
 	
 	public static final List<Block> BLOCKS = new ArrayList<>();
 
-	public static Block nest = new EggNestBlock().setRegistryName(new ResourceLocation(Hatchery.MODID, "nest")).setUnlocalizedName(Hatchery.MODID + ".nest" ).setCreativeTab(Hatchery.hatcheryTabs);
-	public static Block pen = new NestingPenBlock().setCreativeTab(Hatchery.hatcheryTabs).setRegistryName(new ResourceLocation(Hatchery.MODID, "pen")).setUnlocalizedName(Hatchery.MODID + ".pen" ).setCreativeTab(Hatchery.hatcheryTabs);
-	public static Block feeder = new FeederBlock().setRegistryName(new ResourceLocation(Hatchery.MODID, "feeder")).setUnlocalizedName(Hatchery.MODID + ".feeder" ).setCreativeTab(Hatchery.hatcheryTabs);
-	public static Block fertlizedDirt = new FertilizedDirt().setCreativeTab(Hatchery.hatcheryTabs).setRegistryName(new ResourceLocation(Hatchery.MODID, "fertilized_dirt")).setUnlocalizedName(Hatchery.MODID + ".fertilized_dirt" ).setCreativeTab(Hatchery.hatcheryTabs);
-	public static Block fertilzedFarmland = new FertilizedFarmland().setRegistryName(new ResourceLocation(Hatchery.MODID, "fertilized_farmland")).setUnlocalizedName(Hatchery.MODID + ".fertilized_farmland" ).setCreativeTab(Hatchery.hatcheryTabs);
-	public static Block manureBlock = new ManureBlock().setRegistryName(new ResourceLocation(Hatchery.MODID, "manure_block")).setUnlocalizedName(Hatchery.MODID + ".manure_block" ).setCreativeTab(Hatchery.hatcheryTabs);
-	public static Block nuseryBlock = new BlockMobNursery().setRegistryName(new ResourceLocation(Hatchery.MODID, "nursery_block")).setUnlocalizedName(Hatchery.MODID + ".nursery_block" ).setCreativeTab(Hatchery.hatcheryTabs);
-	public static Block fertilizerMixer = new FertilizerMixer().setCreativeTab(Hatchery.hatcheryTabs).setRegistryName(new ResourceLocation(Hatchery.MODID, "fertilizer_mixer")).setUnlocalizedName(Hatchery.MODID + ".fertilizer_mixer" ).setCreativeTab(Hatchery.hatcheryTabs);
-	public static Block digesterGenerator = new DigesterGeneratorBlock().setCreativeTab(Hatchery.hatcheryTabs).setRegistryName(new ResourceLocation(Hatchery.MODID, "digester_generator")).setUnlocalizedName(Hatchery.MODID + ".digester_generator" ).setCreativeTab(Hatchery.hatcheryTabs);
+	public static Block nest = new EggNestBlock().setRegistryName(new ResourceLocation(Hatchery.MODID, "nest")).setTranslationKey(Hatchery.MODID + ".nest" ).setCreativeTab(Hatchery.hatcheryTabs);
+	public static Block pen = new NestingPenBlock().setCreativeTab(Hatchery.hatcheryTabs).setRegistryName(new ResourceLocation(Hatchery.MODID, "pen")).setTranslationKey(Hatchery.MODID + ".pen" ).setCreativeTab(Hatchery.hatcheryTabs);
+	public static Block feeder = new FeederBlock().setRegistryName(new ResourceLocation(Hatchery.MODID, "feeder")).setTranslationKey(Hatchery.MODID + ".feeder" ).setCreativeTab(Hatchery.hatcheryTabs);
+	public static Block fertlizedDirt = new FertilizedDirt().setCreativeTab(Hatchery.hatcheryTabs).setRegistryName(new ResourceLocation(Hatchery.MODID, "fertilized_dirt")).setTranslationKey(Hatchery.MODID + ".fertilized_dirt" ).setCreativeTab(Hatchery.hatcheryTabs);
+	public static Block fertilzedFarmland = new FertilizedFarmland().setRegistryName(new ResourceLocation(Hatchery.MODID, "fertilized_farmland")).setTranslationKey(Hatchery.MODID + ".fertilized_farmland" ).setCreativeTab(Hatchery.hatcheryTabs);
+	public static Block manureBlock = new ManureBlock().setRegistryName(new ResourceLocation(Hatchery.MODID, "manure_block")).setTranslationKey(Hatchery.MODID + ".manure_block" ).setCreativeTab(Hatchery.hatcheryTabs);
+	public static Block nuseryBlock = new BlockMobNursery().setRegistryName(new ResourceLocation(Hatchery.MODID, "nursery_block")).setTranslationKey(Hatchery.MODID + ".nursery_block" ).setCreativeTab(Hatchery.hatcheryTabs);
+	public static Block fertilizerMixer = new FertilizerMixer().setCreativeTab(Hatchery.hatcheryTabs).setRegistryName(new ResourceLocation(Hatchery.MODID, "fertilizer_mixer")).setTranslationKey(Hatchery.MODID + ".fertilizer_mixer" ).setCreativeTab(Hatchery.hatcheryTabs);
+	public static Block digesterGenerator = new DigesterGeneratorBlock().setCreativeTab(Hatchery.hatcheryTabs).setRegistryName(new ResourceLocation(Hatchery.MODID, "digester_generator")).setTranslationKey(Hatchery.MODID + ".digester_generator" ).setCreativeTab(Hatchery.hatcheryTabs);
 	//public static Block digesterGeneratorOn = new DigesterGeneratorBlock(true).setTickRandomly(true).setRegistryName(new ResourceLocation(Hatchery.MODID, "digester_generator_on")).setUnlocalizedName(Hatchery.MODID + ".digester_generator_on" ).setCreativeTab(Hatchery.hatcheryTabs);
-	public static Block shredder = new ShredderBlock().setRegistryName(new ResourceLocation(Hatchery.MODID, "shredder")).setUnlocalizedName(Hatchery.MODID + ".shredder" ).setCreativeTab(Hatchery.hatcheryTabs);
-	public static Block chickenMachine = new EggMachineBlock(Material.GLASS).setRegistryName(new ResourceLocation(Hatchery.MODID, "chicken_machine_block")).setUnlocalizedName(Hatchery.MODID + ".chicken_machine_block" ).setCreativeTab(Hatchery.hatcheryTabs);
+	public static Block shredder = new ShredderBlock().setRegistryName(new ResourceLocation(Hatchery.MODID, "shredder")).setTranslationKey(Hatchery.MODID + ".shredder" ).setCreativeTab(Hatchery.hatcheryTabs);
+	public static Block chickenMachine = new EggMachineBlock(Material.GLASS).setRegistryName(new ResourceLocation(Hatchery.MODID, "chicken_machine_block")).setTranslationKey(Hatchery.MODID + ".chicken_machine_block" ).setCreativeTab(Hatchery.hatcheryTabs);
 
 	public static IForgeRegistry<Block> blockRegistry;
 	

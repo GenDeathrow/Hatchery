@@ -77,7 +77,7 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
     }
     
     @Override
-    public EnumPushReaction getMobilityFlag(IBlockState state)
+    public EnumPushReaction getPushReaction(IBlockState state)
     {
         return EnumPushReaction.DESTROY;
     }
@@ -260,7 +260,7 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        EnumFacing enumfacing = EnumFacing.getHorizontal(meta);
+        EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta);
         return (meta & 8) > 0 ? this.getDefaultState().withProperty(PART, EggMachineBlock.EnumPartType.BASE).withProperty(FACING, enumfacing) : this.getDefaultState().withProperty(PART, EggMachineBlock.EnumPartType.TOP).withProperty(FACING, enumfacing);
     }
 

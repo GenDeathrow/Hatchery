@@ -43,7 +43,7 @@ public class AnimalNet extends Item
 		{
 			if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("entityDisplayName"))
 			{
-				return I18n.translateToLocal(stack.getUnlocalizedName()+".name")+ " ("+ stack.getTagCompound().getString("entityDisplayName") +")";
+				return I18n.translateToLocal(stack.getTranslationKey()+".name")+ " ("+ stack.getTagCompound().getString("entityDisplayName") +")";
 			}
 		}
 		return super.getItemStackDisplayName(stack);
@@ -63,7 +63,7 @@ public class AnimalNet extends Item
 	        return false;
 	    }
 
-	    if(stack.hasTagCompound() && stack.getTagCompound().hasKey("storedEntity") && !stack.getTagCompound().getTag("storedEntity").hasNoTags())
+	    if(stack.hasTagCompound() && stack.getTagCompound().hasKey("storedEntity") && !stack.getTagCompound().getTag("storedEntity").isEmpty())
     	{
 	    	return false;
     	}
@@ -89,7 +89,7 @@ public class AnimalNet extends Item
 		
 		if(stack.getTagCompound().getTag("storedEntity") == null) return false;
 		
-		if(stack.getTagCompound().getTag("storedEntity").hasNoTags()) return false;
+		if(stack.getTagCompound().getTag("storedEntity").isEmpty()) return false;
 
 		return true;
 	}

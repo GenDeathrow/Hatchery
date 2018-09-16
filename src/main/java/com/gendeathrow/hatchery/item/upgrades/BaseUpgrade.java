@@ -48,9 +48,9 @@ public class BaseUpgrade extends Item implements IUpgradeItem
 	}
 	
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
+	public String getTranslationKey(ItemStack stack)
 	{
-	    return super.getUnlocalizedName() + "_" + this.getUpgradeTier(stack, this.upgradeType);
+	    return super.getTranslationKey() + "_" + this.getUpgradeTier(stack, this.upgradeType);
 	}
 
 	@Override
