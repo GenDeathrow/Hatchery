@@ -9,15 +9,18 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemStack; 
 
 public class EggNestTileEntityRender extends TileEntitySpecialRenderer<EggNestTileEntity>
 {
-	EntityItem renderitem = new EntityItem(Minecraft.getMinecraft().world, 0D, 0D, 0D, new ItemStack(Items.EGG));
+	EntityItem renderitem = null;
 	
 	@Override
 	public void render(EggNestTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
+		if(renderitem == null)
+			renderitem = new EntityItem(te.getWorld(), 0D, 0D, 0D, new ItemStack(Items.EGG));
+		
 		try
 		{
 	        boolean flag = te.getWorld() != null;
