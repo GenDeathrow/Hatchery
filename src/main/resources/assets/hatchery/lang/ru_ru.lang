@@ -1,0 +1,118 @@
+Translated by Byteg
+itemGroup.hatchery=Hatchery
+
+tile.hatchery.nest.name=Инкубационное гнездо
+tile.hatchery.pen.name=Комбинированный курятник
+tile.hatchery.pen_chicken.name=Комбинированный курятник
+tile.hatchery.fertilized_dirt.name=Удобренная земля
+tile.hatchery.fertilized_farmland.name=Удобренная пашня
+tile.hatchery.feeder.name=Кормушка для куриц
+tile.hatchery.manure_block.name=Блок куриного навоза
+tile.hatchery.nursery_block.name=Куриный селекционный классификатор
+tile.hatchery.fertilizer_mixer.name=Смешиватель удобрений
+tile.hatchery.digester_generator.name=Биогазовый генератор
+tile.hatchery.chicken_machine_block.name=Автомат со счастливыми яйцами
+tile.hatchery.shredder.name=Режущая машина
+
+container.generator.generating=Генерирование: %1$drf/t
+container.generator.rfout=Выход RF: %1$drf/t
+container.generator.fertin=Кол-во удобрения: %1$d mb
+container.hoveramt=%/%
+container.fertilizermixer=Смешиватель удобрений
+container.upgrades=Апгрейды
+container.nestingpen=Инвентарь курятника
+container.eggstractor=Автомат со счастливыми яйцами
+container.eggstractor.eggs=Яйца: %1$d
+container.eggstractor.plastic=Пластик: %1$d
+
+entity.Rooster.name=Петух
+container.roosterInventory=Породистый петух
+
+tile.fluid.liquid_fertilizer.name=Жидкое удобрение
+fluid.liquid_fertilizer=Жидкое удобрение
+
+item.hatchery.hatcheryegg.name=Яйцо
+item.hatchery.animalnet.name=Сеть для животных
+item.hatchery.chickenmanure.name=Куриный навоз
+item.hatchery.sprayer.name=Распылитель удобрений
+item.hatchery.feather_fiber.name=Перьевые волокна
+item.hatchery.feather_meal.name=Перьевая мука
+item.hatchery.plastic.name=Пластик
+item.hatchery.chicken_feed.name=Куриный корм
+item.hatchery.circuit_board.name=Монтажная плата
+
+item.hatchery.rf_upgrade_1.name=Апгрейд эффективности RF: уровень 1
+item.hatchery.rf_upgrade_2.name=Апгрейд эффективности RF: уровень 2
+item.hatchery.rf_upgrade_3.name=Апгрейд эффективности RF: уровень 3
+
+item.hatchery.speed_upgrade_1.name=Апгрейд скорости: уровень 1
+item.hatchery.speed_upgrade_2.name=Апгрейд скорости: уровень 2
+item.hatchery.speed_upgrade_3.name=Апгрейд скорости: уровень 3
+
+item.hatchery.tank_upgrade_1.name=Апгрейд ёмкости: уровень 1
+item.hatchery.tank_upgrade_2.name=Апгрейд ёмкости: уровень 2
+item.hatchery.tank_upgrade_3.name=Апгрейд ёмкости: уровень 3
+
+item.hatchery.rf_capacity_upgrade_1.name=Апгрейд вместимости RF: уровень 1
+item.hatchery.rf_capacity_upgrade_2.name=Апгрейд вместимости RF: уровень 2
+item.hatchery.rf_capacity_upgrade_3.name=Апгрейд вместимости RF: уровень 3
+
+item.hatchery.prize_egg.name=Счастливое яйцо
+item.hatchery.fiber_pad.name=Набивка из волокна
+item.hatchery.feather_pulp.name=Перьевая масса
+
+item.hatchery.chicken_machine.name=Автомат со счастливыми яйцами
+
+#TOOLTIP
+tooltip.hatchery.sprayer.desc=%1$s Ёмкость: %2$dmb / %3$dmb
+
+#TEXT
+text.hatchery.hatching=Вылупление
+text.hatchery.nothatching=Нечему вылупляться
+text.hatchery.chicken=Курица
+text.hatchery.nxdrop=След. дроп
+text.hatchery.nochicken=Используйте «Сеть для животных», чтобы поймать курицу
+text.hatchery.storedseed=Запас семян
+text.hatchery.sneakshow=<Присядьте, чтобы увидеть больше информации>
+text.hatchery.inventory=Инвентарь
+
+#JEI
+jei.tile.hatchery.feeder=Вы можете хранить до 200 семян в одной кормушке. Когда есть семена, кормушка будет искать кур в области 4x1x4, чтобы покормить их. Цыплята будут расти быстрее вокруг кормушки, а взрослые особи будут производить соответствующий продукт быстрее. Вы можете использовать трубы, чтобы подавать семена в кормушку.
+jei.tile.hatchery.digester_generator=Биогазовые генераторы могут генерировать энергию из жидкого навоза. Анаэробный сбраживатель навоза (широко известный как "Биогазовая Установка") способен собирать навоз и растворять органическое вещество в метан, который, в свою очередь, производит энергию (20 rf/t). Можно добавить апгрейд мощности, чтобы увеличить выход rf/t
+jei.tile.hatchery.fertilizer_mixer=Используйте этот смешиватель для автоматизации приготовления жидких удобрений. Нужно только добавить воды и навоза. Подача RF энергии может ускорить этот процесс.
+jei.tile.hatchery.nest=Поместите яйцо в гнездо, и оно автоматически выведет цыплёнка в случайное время. Размещение редстоунового фонаря (который в дальнейшем планируется заменить лампой обогрева) на высоте 3-ёх блоков над гнездом, увеличит скорость инкубации. Высиживание яйца также увеличивает скорость вылупления. 
+jei.tile.hatchery.fertilized_dirt=Случайным образом дает дереву эффект костной муки
+jei.tile.hatchery.fertilized_farmland=Случайным образом даёт растениям эффект костной муки. Получить пашню можно с помощью мотыги - вспахав блок удобренной земли
+jei.tile.hatchery.pen=Курятник может содержать курицу и собирать предметы и яйца. Используйте сетку для животных, чтобы поместить курицу в курятник. Размещение двух курятников друг с другом позволит двум курицам размножаться. Он также работает с Модифицированными Курицами из других модов, использующих специальную механику размножения. Курятник позволяет хранить Куриный навоз, Перья и Яйца. 
+jei.tile.hatchery.pen_chicken=Курятник может содержать курицу и собирать предметы и яйца. Используйте сетку для животных, чтобы поместить курицу в курятник. Размещение двух курятников друг с другом позволит двум курицам размножаться. Он также работает с Модифицированными Курицами из других модов, использующих специальную механику размножения. Курятник позволяет хранить Куриный навоз, Перья и Яйца. 
+jei.tile.hatchery.manure_block=Блок куриного навоза. Наслаждайтесь!
+
+jei.tile.hatchery.nursery_block=Этот блок разделяет взрослых особей и цыплят по площади 4x4 и перемещает их по противоположным сторонам. Он нужен для лучшей сортировки и перемещения куриц.
+jei.tile.hatchery.shredder=Режущая машина используется для превращения перьев в перьевую муку и волокна;
+jei.item.hatchery.animalnet=Используйте сеть для животных, чтобы поймать мирных существ, а также чтобы поместить курицу в Комбинированный Курятник.
+jei.item.hatchery.hatcheryegg=Hatchery Eggs are dynamically created eggs, Used to be able to breed two parents and create a custom egg. Mainly for Modded Chickens with new breeding mechanics.
+jei.item.hatchery.chickenmanure=Собирается курятником. Используйте навоз для создания удобренной земли, Блоков Навоза, жидкого удобрения или используйте его в качестве костной муки для выращивания растений.
+jei.item.hatchery.sprayer=Распылитель удобрений используется для удобрения земли и пашни и действует также как и лейка. Ёмкость рыспылителя: 3000mb. 
+jei.item.hatchery.circuit_board=Используется для создания апгрейдов
+
+jei.item.hatchery.rf_upgrade= Понижает потребление RF/tick машинами \n А в генераторе увеличивает RF/Tick \n\n Уровень 1 : Увеличивает выработку RF-энергии в генераторе на 40 rf/tick \n\n Уровень 2 : Увеличивает выработку RF-энергии в генераторе на 60 rf/tick \n\n Уровень 3: Увеличивает выработку RF-энергии в генераторе на 80 rf/tick
+
+jei.item.hatchery.speed_upgrade=Используется для увеличения скорости машины. Увеличение скорости также увеличивает потребление RF/tick.  
+jei.item.hatchery.tank_upgrade=Используется для увеличения ёмкости жидкости, хранящейся в машине.
+jei.item.hatchery.rf_capacity=Используется для увеличения энергетической ёмкости.
+ 
+jei.item.hatchery.feather_fiber=Перьевые волокна - это перья измельчённые с помощью режущей машины, которые затем можно расплавить в сырой пластик. Используется при изготовлении различных предметов.
+jei.item.hatchery.feather_meal=Перьевая мука является побочным продуктом резки перьев в режущей машине и может использоваться для приготовления куриного корма.
+jei.item.hatchery.chicken_feed=Добавьте куриный корм в кормушки в качестве альтернативного источника пищи.
+jei.item.hatchery.chicken_machine=Предоставляя Автомату со счастливыми яйцами энергию, яйца и пластик, вы можете создавать счастливые яйца. Открытие счастливого яйца даст вам неожиданную награду. 
+
+jei.gui.nesting_pen_drop=Производство кур в курятнике
+jei.gui.shredder_recipes=Рецепты режущей машины
+jei.gui.luckyegg_drops=Шанс выпадения предметов
+jei.gui.eggmachine_egg=Автомат со счастливыми яйцами
+jei.gui.generator_recipes=Биогазовый генератор
+jei.gui.fertilizermixer_recipes=Смешиватель удобрений
+
+jei.item.hatchery.prize_egg=Счастливые яйца создаются путем добавления большого количества яиц и пластика в Автомат со счастливыми яйцами. Вы можете открыть их и получить призы.
+jei.item.hatchery.fiber_pad=Набивку из волокна можно использовать для изготовления таких предметов, как шерсть. 
+jei.item.hatchery.feather_pulp=Перьевую массу можно пережарить в бумагу.
