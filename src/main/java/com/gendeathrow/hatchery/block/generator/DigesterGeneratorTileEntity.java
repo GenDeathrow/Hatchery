@@ -32,7 +32,11 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements ITick
 	protected int baseEnergyStorage = 200000;
 	protected int baseTankStorage = 5000;
 	
-	protected EnergyStorageRF energy = new EnergyStorageRF(200000);
+	protected EnergyStorageRF energy = new EnergyStorageRF(200000) 
+	{ 	@Override
+		public boolean canReceive() 
+		{return false;}
+	};
 	
 	protected InventoryStroageModifiable inputInventory =  new InventoryStroageModifiable("inputItems", 2) {
 		@Override
@@ -120,19 +124,21 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements ITick
 				fuelRF -= getRFPerTick();
 			}
 			
-			if ((energy.getEnergyStored() > 0)) 
+			for (EnumFacing facing : EnumFacing.VALUES) 
 			{
-				for (EnumFacing facing : EnumFacing.VALUES) 
-				{
-						TileEntity tile = world.getTileEntity(pos.offset(facing));
+					if(energy.getEnergyStored() <= 0) break;
+					
+					TileEntity tile = world.getTileEntity(pos.offset(facing));
+		
+					if (tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) 
+					{
+						IEnergyStorage tileEnergy = tile.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite());
 						
-						if (tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing)) 
-						{
-							IEnergyStorage tileEnergy = tile.getCapability(CapabilityEnergy.ENERGY, facing);
+						if(tileEnergy.canReceive()) {
 							int received = tileEnergy.receiveEnergy(energy.getEnergyStored(), false);
 							energy.extractEnergy(received, false);
 						}
-				}
+					}
 			}
 			
 			if(!this.inputInventory.getStackInSlot(0).isEmpty() && this.outputInventory.getStackInSlot(0).isEmpty() && this.fertlizerTank.getFluidAmount() < this.fertlizerTank.getCapacity())
