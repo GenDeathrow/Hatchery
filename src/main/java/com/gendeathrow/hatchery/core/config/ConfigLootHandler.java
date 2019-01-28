@@ -50,7 +50,6 @@ public class ConfigLootHandler {
 			
 		if(config.hasChanged()) {
 			config.Save();
-			System.out.println("Has changed");
 		}
 	}
 	  
