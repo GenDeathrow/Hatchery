@@ -6,9 +6,11 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
 import com.gendeathrow.hatchery.common.capability.IAnimalStats;
 import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -142,6 +144,30 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     {
     	return new java.util.ArrayList<ItemStack>();
     }
+    
+    
+    @Override
+    public boolean hasComparatorInputOverride(IBlockState state)
+    {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)
+    {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+
+        if (!(tileentity instanceof FeederTileEntity))
+        {
+            return 0;
+        }
+        else
+        {
+        	FeederTileEntity tile = (FeederTileEntity) tileentity;
+        	return (int)Math.round(((double)tile.getSeedsInv() / tile.getMaxSeedInv()) * 15);
+        }
+        
+    }
         
 	@Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
@@ -161,6 +187,7 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
                     	te.addSeeds(heldItem.getCount(), heldItem, playerIn.capabilities.isCreativeMode);
 				}
     			
+				worldIn.updateComparatorOutputLevel(pos, this);
     			return true;
 			}
     	}

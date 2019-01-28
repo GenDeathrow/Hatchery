@@ -1,7 +1,11 @@
 package com.gendeathrow.hatchery.block.shredder;
 
+import javax.annotation.Nullable;
+
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
@@ -21,6 +25,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -112,7 +117,37 @@ public class ShredderBlock extends BlockHorizontal implements ITileEntityProvide
             worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
         }
     }
-	 
+    
+	@Override
+    public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side)
+    {
+        return true;
+    }
+    
+    @Override
+    public boolean hasComparatorInputOverride(IBlockState state)
+    {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)
+    {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+
+        if (!(tileentity instanceof ShredderTileEntity))
+        {
+            return 0;
+        }
+        else
+        {
+        	ShredderTileEntity tile = (ShredderTileEntity) tileentity;
+        	return (int)(((double)tile.outputInventory.getStackInSlot(0).getCount() / tile.outputInventory.getStackInSlot(0).getMaxStackSize()) * 15);
+        }
+        
+    }
+    
+    
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;

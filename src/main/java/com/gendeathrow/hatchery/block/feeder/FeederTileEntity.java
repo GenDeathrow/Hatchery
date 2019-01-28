@@ -82,6 +82,8 @@ public class FeederTileEntity extends TileEntity
 		if(this.seedInventory-- < 0)
 			this.seedInventory = 0;
 		FeederBlock.setFeederLevel(this.world, pos, world.getBlockState(pos));
+		
+		this.markDirty();
 	}
 	
 	public int getMaxSeedInv()
@@ -138,7 +140,7 @@ public class FeederTileEntity extends TileEntity
 			}
 		}
         
-		this.markDirty();	
+		this.markDirty();
 	}
 	
 

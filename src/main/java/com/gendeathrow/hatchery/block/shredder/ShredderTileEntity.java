@@ -330,13 +330,12 @@ public class ShredderTileEntity extends TileUpgradable implements ITickable, ICo
 	
     public boolean isShredding()
     {
-
         return this.shreddingTime > 0;
     }
     
     public boolean hasPower()
     {
-    	return energy.getEnergyStored() >= (rfTick * this.upgradeSpeedMulipyler) * this.rfEffencyMultpyler;
+    	return !world.isBlockPowered(pos) && energy.getEnergyStored() >= (rfTick * this.upgradeSpeedMulipyler) * this.rfEffencyMultpyler;
     }
     
     @SideOnly(Side.CLIENT)

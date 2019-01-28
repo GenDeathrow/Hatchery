@@ -13,6 +13,7 @@ import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
 import com.gendeathrow.hatchery.modaddons.ChickensHelper;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -35,6 +36,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
@@ -157,6 +159,8 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     			te.grabItems(playerIn);
     		else 
    				playerIn.openGui(Hatchery.INSTANCE, CommonProxy.GUI_ID_NESTINGPEN, worldIn, pos.getX(), pos.getY(), pos.getZ());
+    		
+    		te.markDirty();
     	}
     	
 
@@ -263,6 +267,29 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     	return null;
     }
     
+    
+    @Override
+    public boolean hasComparatorInputOverride(IBlockState state)
+    {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)
+    {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+
+        if (!(tileentity instanceof NestPenTileEntity))
+        {
+            return 0;
+        }
+        else
+        {
+        	NestPenTileEntity pen = (NestPenTileEntity) tileentity;
+        	return InventoryStroageModifiable.calcRedstoneFromInventory(pen.inventory);
+        }
+        
+    }
     
     
     private boolean isFeederNear()

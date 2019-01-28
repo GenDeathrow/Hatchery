@@ -115,7 +115,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 
     public boolean isMixing()
     {
-        return this.fertlizerMixTime > 0;
+        return this.fertlizerMixTime > 0 && !world.isBlockPowered(getPos());
     }
     
     @SideOnly(Side.CLIENT)
@@ -126,6 +126,9 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
     
     public boolean canMix()
     {
+    	if(world.isBlockPowered(pos))
+    		return false;
+    	
    	  	return waterTank.getFluidAmount() > 0 && this.fertilizerTank.getFluidAmount() < this.fertilizerTank.getCapacity();
     }
     

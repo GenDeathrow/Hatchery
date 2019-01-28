@@ -1,5 +1,7 @@
 package com.gendeathrow.hatchery.block.fertilizermixer;
 
+import javax.annotation.Nullable;
+
 import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
@@ -93,6 +95,14 @@ public class FertilizerMixer extends BlockContainer implements ITileEntityProvid
     		super.breakBlock(worldIn, pos, state);
     }
 	
+	
+	@Override
+    public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side)
+    {
+        return true;
+    }
+	
+	
     @Override
     public boolean hasComparatorInputOverride(IBlockState state)
     {
@@ -111,7 +121,7 @@ public class FertilizerMixer extends BlockContainer implements ITileEntityProvid
         else
         {
         	FertilizerMixerTileEntity tile = (FertilizerMixerTileEntity) tileentity;
-        	return  Math.round(tile.inputInventory.getStackInSlot(0).getCount() / tile.inputInventory.getSlotLimit(0) * 15);
+        	return  (int)Math.round(((double)tile.getFertilizerTank().getFluidAmount() / tile.getFertilizerTank().getCapacity()) * 15);
         }
         
     }

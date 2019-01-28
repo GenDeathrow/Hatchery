@@ -90,11 +90,17 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements ITick
     }
 
 	protected boolean canGenerate() {
+		if(world.isBlockPowered(getPos()))
+			return false;
+		
 		return fuelRF > 0 ? true : getTank().getFluidAmount() >= 50;
 	}
 	
     public boolean isGenerating()
     {
+		if(world.isBlockPowered(getPos()))
+			return false;
+		
         return this.fuelRF > 0;
     }
 	
@@ -157,14 +163,16 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements ITick
 				}
 			}
 			
-			
-			if (flag != isGenerating())
+			if (flag != isGenerating() || updateState)
 			{
 				DigesterGeneratorBlock.setState(this.isGenerating(), this.world, this.pos);
+				updateState = false;
+				System.out.println("test 2");
+				this.markDirty();
 			}
 		}
 	}
-	
+	public boolean updateState = false; 
 
 	public FluidTank getTank()
 	{

@@ -101,8 +101,8 @@ public class Sprayer extends Item
             			if(worldIn.getBlockState(blockpos).getBlock() == ModFluids.liquidfertilizer.getBlock())
             			{
             				FluidActionResult newStack = FluidUtil.tryFillContainer(itemStackIn ,FluidUtil.getFluidHandler(worldIn, blockpos, raytraceresult.sideHit), 1000, playerIn, true);
-            				
-            				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, newStack.result);
+            				if(!newStack.result.isEmpty())
+            					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, newStack.result);
             			}
             			else if(worldIn.getTileEntity(blockpos) != null)
             			{
@@ -110,8 +110,8 @@ public class Sprayer extends Item
             				if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, raytraceresult.sideHit))
             				{
                 				FluidActionResult newStack = FluidUtil.tryFillContainer(itemStackIn ,FluidUtil.getFluidHandler(worldIn, blockpos, raytraceresult.sideHit), 1000, playerIn, true);
-                				
-                				return new ActionResult<ItemStack>(EnumActionResult.FAIL, newStack.result);
+                				if(!newStack.result.isEmpty())
+                					return new ActionResult<ItemStack>(EnumActionResult.FAIL, newStack.result);
             				}
             			}
             		
@@ -134,7 +134,7 @@ public class Sprayer extends Item
 	    }
 	    
 	    if(getAmount(stack) < 5) return EnumActionResult.FAIL;
-	    
+
 		if(worldIn.isRemote)
 		{
 			for(int x = -1; x <= 1; x++)
@@ -152,10 +152,10 @@ public class Sprayer extends Item
 					{	
 						d1 += 1.0D;
 					}
-		        
 					worldIn.spawnParticle(EnumParticleTypes.WATER_DROP, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[5]);
 		        
 				}
+				
 			}
 		}
 		else

@@ -5,9 +5,12 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
+import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -111,6 +114,29 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
     
     
     @Override
+    public boolean hasComparatorInputOverride(IBlockState state)
+    {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)
+    {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+
+        if (!(tileentity instanceof EggMachineTileEntity))
+        {
+            return 0;
+        }
+        else
+        {
+        	EggMachineTileEntity tile = (EggMachineTileEntity) tileentity;
+        	return InventoryStroageModifiable.calcRedstoneFromInventory(tile.outputInventory);
+        }
+        
+    }
+        
+    @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
     {
         if (player.capabilities.isCreativeMode && state.getValue(PART) == EggMachineBlock.EnumPartType.BASE)
@@ -171,6 +197,7 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
 	}
 	
 	
+	
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
@@ -189,8 +216,9 @@ public class EggMachineBlock extends BlockHorizontal implements ITileEntityProvi
         return false;
     }
 	
+	@Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT_MIPPED;
     }

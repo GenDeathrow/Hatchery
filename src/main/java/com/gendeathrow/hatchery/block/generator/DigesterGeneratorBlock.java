@@ -9,6 +9,7 @@ import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.init.ModFluids;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -32,6 +33,7 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -53,6 +55,11 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ISGENERATING, false));
 	}
 
+	@Override
+    public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side)
+    {
+        return true;
+    }
 	
 	/** Is the Generator turned on? */
 	public static boolean isGenerating(IBlockState blockStateContainer)
@@ -66,6 +73,19 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
 		worldIn.setBlockState(pos, state.withProperty(FACING, getFacing(state)).withProperty(ISGENERATING, isActiveIn), 3);
 	}
 	
+	@Override
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
+    {
+        if (!worldIn.isRemote)
+        {
+        	TileEntity te = worldIn.getTileEntity(pos);
+        	if(te instanceof DigesterGeneratorTileEntity) {
+        		((DigesterGeneratorTileEntity) te).updateState = true;
+        		System.out.println("test");
+        	}
+		}
+	}
+	   
 	
     @Nullable
     @Override

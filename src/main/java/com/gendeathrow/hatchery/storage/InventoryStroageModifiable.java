@@ -1,9 +1,12 @@
 package com.gendeathrow.hatchery.storage;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -106,5 +109,32 @@ public class InventoryStroageModifiable extends ItemStackHandler
 		NBTTagCompound tags = serializeNBT();
 			nbt.setTag(this.ID, tags);
 		return nbt;
+	}
+	
+	public static int calcRedstoneFromInventory(@Nullable InventoryStroageModifiable inv)
+	{
+		if (inv == null)
+		{
+			return 0;
+		}
+		else
+		{
+			int i = 0;
+			float f = 0.0F;
+			
+			for (int j = 0; j < inv.getSlots(); ++j)
+			{
+				ItemStack itemstack = inv.getStackInSlot(j);
+
+				if (!itemstack.isEmpty())
+				{
+					f += (float)itemstack.getCount() / (float)Math.min(inv.getSlotLimit(j), itemstack.getMaxStackSize());
+					++i;
+				}
+			}
+
+			f = f / (float)inv.getSlots();
+			return MathHelper.floor(f * 14.0F) + (i > 0 ? 1 : 0);
+		}
 	}
 }

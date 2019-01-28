@@ -292,7 +292,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 			{
 				inventory.insertItemFirstAvaliableSlot(createEgg(), false);
 			}
-
+			boolean marked = false;
 			if(--TimetoNextEgg <= 0)
 			{
 				if(this.rand.nextInt(1) == 0)
@@ -300,6 +300,7 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 				
 				inventory.insertItemFirstAvaliableSlot(new ItemStack(ModItems.manure, rand.nextInt(2)+1), false);
 				this.TimetoNextEgg = this.rand.nextInt(2000) + 6000;
+				marked = true;
 			}
 			
 			if(this.chickenStored.capturedDrops != null && this.chickenStored.capturedDrops.size() > 0)
@@ -308,7 +309,11 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 					inventory.insertItemFirstAvaliableSlot(entity.getItem(), false);
 
 				this.chickenStored.capturedDrops.clear();
+				marked = true;
 			}
+			
+			if(marked)
+				this.markDirty();
 		}
 		
 	}
