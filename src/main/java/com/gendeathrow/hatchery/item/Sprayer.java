@@ -19,6 +19,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -31,6 +32,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -73,11 +75,11 @@ public class Sprayer extends Item
 
         if (raytraceresult == null)
         {
-            return new ActionResult(EnumActionResult.PASS, itemStackIn);
+            return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStackIn);
         }
         else if (raytraceresult.typeOfHit != RayTraceResult.Type.BLOCK)
         {
-            return new ActionResult(EnumActionResult.PASS, itemStackIn);
+            return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStackIn);
         }
         else
         {
@@ -85,12 +87,12 @@ public class Sprayer extends Item
 
             if (!worldIn.isBlockModifiable(playerIn, blockpos))
             {
-                return new ActionResult(EnumActionResult.FAIL, itemStackIn);
+                return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStackIn);
             }
  
                 if (!playerIn.canPlayerEdit(blockpos.offset(raytraceresult.sideHit), raytraceresult.sideHit, itemStackIn))
                 {
-                    return new ActionResult(EnumActionResult.FAIL, itemStackIn);
+                    return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStackIn);
                 }
                 else
                 {
@@ -100,26 +102,24 @@ public class Sprayer extends Item
             			{
             				FluidActionResult newStack = FluidUtil.tryFillContainer(itemStackIn ,FluidUtil.getFluidHandler(worldIn, blockpos, raytraceresult.sideHit), 1000, playerIn, true);
             				
-            				if(newStack == null) return new ActionResult(EnumActionResult.FAIL, itemStackIn);
-            				else return new ActionResult(EnumActionResult.SUCCESS, newStack);
+            				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, newStack.result);
             			}
-//            			else if(worldIn.getTileEntity(blockpos) != null)
-//            			{
-//            				TileEntity te = worldIn.getTileEntity(blockpos);
-//            				if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, raytraceresult.sideHit))
-//            				{
-//                				ItemStack newStack = FluidUtil.tryFillContainer(itemStackIn ,FluidUtil.getFluidHandler(worldIn, blockpos, raytraceresult.sideHit), 1000, playerIn, true);
-//                				
-//                				if(newStack == null) return new ActionResult(EnumActionResult.FAIL, itemStackIn);
-//                				else return new ActionResult(EnumActionResult.SUCCESS, newStack);
-//            				}
-//            			}
+            			else if(worldIn.getTileEntity(blockpos) != null)
+            			{
+            				TileEntity te = worldIn.getTileEntity(blockpos);
+            				if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, raytraceresult.sideHit))
+            				{
+                				FluidActionResult newStack = FluidUtil.tryFillContainer(itemStackIn ,FluidUtil.getFluidHandler(worldIn, blockpos, raytraceresult.sideHit), 1000, playerIn, true);
+                				
+                				return new ActionResult<ItemStack>(EnumActionResult.FAIL, newStack.result);
+            				}
+            			}
             		
                         
                     }
                 }
            }
-		return new ActionResult(EnumActionResult.FAIL, itemStackIn);
+		return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStackIn);
     }
 	
 	@Override
