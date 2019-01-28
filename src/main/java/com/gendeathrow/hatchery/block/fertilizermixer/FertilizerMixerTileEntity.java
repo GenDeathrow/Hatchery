@@ -177,7 +177,9 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
     {
     	return this.outputInventory.getStackInSlot(1);
     }
-
+    
+    
+private int calcMixTick = 1;
 	@Override
 	public void update() 
 	{
@@ -185,9 +187,9 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
 		boolean flag = this.isMixing();
 		boolean flag1 = false;
 			
-		if(this.isMixing())
+		if(this.isMixing() && canMix())
 		{
-			this.fertlizerMixTime--;
+			if((this.fertlizerMixTime -= calcMixTick) < 0) this.fertlizerMixTime = 0;
 		}
 		
 		if(this.world != null && !this.world.isRemote)
@@ -222,7 +224,8 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
     			
     			if(this.isMixing() && this.canMix() && fertlizerMixTime >= 5 && this.energy.getEnergyStored() >= rfNeeded)
     			{
-    					this.fertlizerMixTime -= 5 * this.upgradeSpeedMulipyler;
+    					//this.fertlizerMixTime -= 5 * this.upgradeSpeedMulipyler;
+    					this.calcMixTick = (int) (5 * this.upgradeSpeedMulipyler);
     					this.energy.extractEnergy(rfNeeded, false);
     				
     					this.fertilizerTank.fillInternal(new FluidStack(ModFluids.liquidfertilizer,(int)(5 * this.upgradeSpeedMulipyler)), true);
@@ -232,7 +235,7 @@ public class FertilizerMixerTileEntity extends TileUpgradable implements ITickab
     			}
     			else if(this.isMixing() && this.canMix() && fertlizerMixTime >= 1)
     			{
-					this.fertlizerMixTime -= 1;
+    				calcMixTick = 1;
     				
 					this.fertilizerTank.fillInternal(new FluidStack(ModFluids.liquidfertilizer, 1), true);
 					this.waterTank.drainInternal(1, true);

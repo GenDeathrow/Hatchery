@@ -1,7 +1,9 @@
 package com.gendeathrow.hatchery.block.fertilizermixer;
 
 import com.gendeathrow.hatchery.Hatchery;
+import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
+import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.ITileEntityProvider;
@@ -89,6 +91,29 @@ public class FertilizerMixer extends BlockContainer implements ITileEntityProvid
     			((FertilizerMixerTileEntity) te).upgradeStorage.dropInventory(worldIn, pos);
     		}
     		super.breakBlock(worldIn, pos, state);
+    }
+	
+    @Override
+    public boolean hasComparatorInputOverride(IBlockState state)
+    {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)
+    {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+
+        if (!(tileentity instanceof FertilizerMixerTileEntity))
+        {
+            return 0;
+        }
+        else
+        {
+        	FertilizerMixerTileEntity tile = (FertilizerMixerTileEntity) tileentity;
+        	return  Math.round(tile.inputInventory.getStackInSlot(0).getCount() / tile.inputInventory.getSlotLimit(0) * 15);
+        }
+        
     }
     
 	
