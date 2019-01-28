@@ -1,5 +1,6 @@
 package com.gendeathrow.hatchery.block.feeder;
 
+import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.init.ModItems;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
@@ -115,7 +116,7 @@ public class FeederTileEntity extends TileEntity
 
 	boolean isItemValidForSlot(int index, ItemStack stack) 
 	{
-		return this.seedInventory < this.maxSeedInventory ? (stack.getItem() instanceof ItemSeeds || stack.getItem() == ModItems.chickenFeed) : false;
+		return this.seedInventory < this.maxSeedInventory ? (!Settings.USE_ONLY_CHICKEN_FEED && stack.getItem() instanceof ItemSeeds || stack.getItem() == ModItems.chickenFeed) : false;
 	}
 	
 	public void addSeeds(int qty, ItemStack stack, boolean creative)

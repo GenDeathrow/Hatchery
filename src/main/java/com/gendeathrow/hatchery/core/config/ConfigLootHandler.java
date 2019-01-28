@@ -48,8 +48,10 @@ public class ConfigLootHandler {
 			if(array != null)
 				drops = ItemDrop.getArrayItemDrops(array);
 			
-		if(config.hasChanged())
+		if(config.hasChanged()) {
 			config.Save();
+			System.out.println("Has changed");
+		}
 	}
 	  
 	

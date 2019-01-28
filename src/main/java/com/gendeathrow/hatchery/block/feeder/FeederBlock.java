@@ -9,6 +9,7 @@ import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
 import com.gendeathrow.hatchery.common.capability.IAnimalStats;
+import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
@@ -28,6 +29,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -40,6 +42,8 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -176,6 +180,12 @@ public class FeederBlock extends Block implements ITileEntityProvider, TOPInfoPr
     	{
 			FeederTileEntity te = (FeederTileEntity) worldIn.getTileEntity(pos);
 			ItemStack heldItem = playerIn.getHeldItem(hand);
+			
+			if(Settings.USE_ONLY_CHICKEN_FEED && heldItem.getItem() instanceof ItemSeeds)
+			{
+		    	if(playerIn != null)
+		    		playerIn.sendMessage(new TextComponentTranslation("text.hatchery.feedonly"));
+			}
 			
 			if(!heldItem.isEmpty() && te != null && te.isItemValidForSlot(0, heldItem))
 			{

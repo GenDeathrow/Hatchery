@@ -47,7 +47,10 @@ public class ConfigHandler
 		Settings.ROOSTER_MIN_SPAWN_SIZE = CONFIG.get("Rooster Spawn Settings", "Rooster Spawn Group Minimum Size", 1).getInt(1);
 		Settings.ROOSTER_MAX_SPAWN_SIZE = CONFIG.get("Rooster Spawn Settings", "Rooster Spawn Group Maximum Size", 2).getInt(2);
 		Settings.ROOSTER_SPAWN_PROBABILITY = CONFIG.get("Rooster Spawn Settings", "Rooster Spawn Chance Probability", 10).getInt(10);
-
+		
+		Settings.USE_ONLY_CHICKEN_FEED = CONFIG.getBoolean("Only Chicken feed", "mechanics", false, "Use only chicken feed in your feeders. No more Seeds allowed");
+		Settings.NETS_GET_ONLY_CHICKENS = CONFIG.getBoolean("Nets get only chickens", "mechanics", false, "Nets will not grab anything but chickens!");
+		
 		if (CONFIG.hasChanged())
 			CONFIG.save();
 	}

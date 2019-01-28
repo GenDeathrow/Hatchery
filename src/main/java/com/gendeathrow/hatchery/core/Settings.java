@@ -15,6 +15,8 @@ public class Settings
 	//Clients
 	public static boolean SHOULD_RENDER_CHICKEN_FLAPS;
 	public static String[] TEMPTATION_ITEMS;
+	public static boolean USE_ONLY_CHICKEN_FEED;
+	public static boolean NETS_GET_ONLY_CHICKENS;
 
 	
 }
