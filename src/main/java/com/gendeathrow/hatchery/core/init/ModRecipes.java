@@ -360,7 +360,7 @@ public class ModRecipes
 		
 		addShapelessRecipes("mealpulp_recipe", "held", new ItemStack(ModItems.mealPulp, 4),  new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal),new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(ModItems.featherMeal), new ItemStack(Items.WATER_BUCKET));
 		
-		addShapelessRecipes("egg_null_recipe", "held",new ItemStack(Items.EGG), new ItemStack(ModItems.hatcheryEgg));
+		addShapelessRecipes("egg_null_recipe", "held",new ItemStack(Items.EGG), ModItems.hatcheryEgg);
 
 		GameRegistry.addSmelting(ModItems.featherFiber, new ItemStack(ModItems.plastic), 0);
 		GameRegistry.addSmelting(ModItems.mealPulp, new ItemStack(Items.PAPER), 0);
@@ -376,12 +376,12 @@ public class ModRecipes
 	}
     
 	
-	protected static void addShapelessRecipes(String registryname, String group, ItemStack result, Item... ingredints) {
-		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
-		for(Item input: ingredints)
-			list.add(new ItemStack(input));
+	protected static void addShapelessRecipes(String registryname, String group, ItemStack result, Item input) {
+		NonNullList<Ingredient> ingrediate = NonNullList.create();
+		
+		ingrediate.add(IgnoreNBTIngredient.fromStacks(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE)));
 			
-	    addShapelessRecipes(registryname, group, result, (ItemStack[]) list.toArray());
+		addToList(new ShapelessRecipes(group.toString(), result, ingrediate).setRegistryName(new ResourceLocation(Hatchery.MODID, registryname)));
 	}
 	
 	public static void addShapelessRecipes(String registryname, String group, ItemStack result, ItemStack... ingredints) {
