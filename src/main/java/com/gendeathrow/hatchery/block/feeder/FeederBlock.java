@@ -6,12 +6,10 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.shredder.ShredderTileEntity;
 import com.gendeathrow.hatchery.common.capability.CapabilityAnimalStatsHandler;
 import com.gendeathrow.hatchery.common.capability.IAnimalStats;
 import com.gendeathrow.hatchery.core.Settings;
 import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
-import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -43,7 +41,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;

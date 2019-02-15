@@ -167,7 +167,7 @@ public class DigesterGeneratorTileEntity extends TileUpgradable implements ITick
 			{
 				DigesterGeneratorBlock.setState(this.isGenerating(), this.world, this.pos);
 				updateState = false;
-				System.out.println("test 2");
+				//System.out.println("test 2");
 				this.markDirty();
 			}
 		}

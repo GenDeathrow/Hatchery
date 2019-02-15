@@ -77,6 +77,7 @@ public class Hatchery
 	    	
 			PROXY.registerRenderers();
 	    	PROXY.preInit(event);
+	    	
 	    }
 	    
 	    @EventHandler

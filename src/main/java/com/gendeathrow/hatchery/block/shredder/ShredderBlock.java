@@ -3,9 +3,7 @@ package com.gendeathrow.hatchery.block.shredder;
 import javax.annotation.Nullable;
 
 import com.gendeathrow.hatchery.Hatchery;
-import com.gendeathrow.hatchery.block.nestpen.NestPenTileEntity;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
-import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;

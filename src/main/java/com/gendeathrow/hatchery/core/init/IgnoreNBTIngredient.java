@@ -1,6 +1,9 @@
 package com.gendeathrow.hatchery.core.init;
 
+import javax.annotation.Nullable;
+
 import com.google.gson.JsonObject;
+
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntComparators;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -12,8 +15,6 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientFactory;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.oredict.OreDictionary;
-
-import javax.annotation.Nullable;
 
 /**
  * An {@link Ingredient} that matches NBT and capabilities in addition to the {@link Item} and metadata.

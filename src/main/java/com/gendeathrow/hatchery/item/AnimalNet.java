@@ -16,7 +16,6 @@ import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
@@ -185,8 +184,9 @@ public class AnimalNet extends Item
             		if(entity == null) 
             			return  EnumActionResult.FAIL; 
             		
-         			pen.trySetEntity(entity);
-         			
+         			if(!pen.trySetEntity(entity))
+         				return  EnumActionResult.FAIL;
+         				
     	  	        playerIn.addStat(StatList.getObjectUseStats(this));
 
     	  	        animalNet.setTagCompound(null);

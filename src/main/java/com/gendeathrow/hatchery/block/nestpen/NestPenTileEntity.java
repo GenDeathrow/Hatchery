@@ -225,6 +225,13 @@ public class NestPenTileEntity extends TileEntity  implements ITickable
 		if(this.chickenStored == null) return;
 		
 		if(this.chickenStored.isChild()) wasChild = true;
+		
+		if(this.chickenStored.isDead) {
+			this.chickenStored = null;
+			this.markDirty();
+			this.updateClient();
+			return;
+		}
 	
 		this.chickenStored.noClip = true;
 		this.chickenStored.onGround = true;

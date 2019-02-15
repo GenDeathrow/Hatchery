@@ -4,10 +4,7 @@ import java.util.Random;
 
 import com.gendeathrow.hatchery.core.init.ModItems;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class AnimalStats implements IAnimalStats

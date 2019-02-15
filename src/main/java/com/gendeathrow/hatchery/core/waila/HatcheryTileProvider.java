@@ -2,7 +2,6 @@ package com.gendeathrow.hatchery.core.waila;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import com.gendeathrow.hatchery.block.feeder.FeederTileEntity;
