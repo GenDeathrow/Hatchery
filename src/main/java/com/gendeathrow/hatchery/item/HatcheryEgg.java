@@ -131,6 +131,7 @@ public class HatcheryEgg extends ItemEgg
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
+
     	if(stack.hasTagCompound())
     	{
     		//Support for DNA on Chickens Mod

@@ -1,6 +1,7 @@
 package com.gendeathrow.hatchery.storage;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.energy.IEnergyStorage;
 
 /**
@@ -10,6 +11,7 @@ import net.minecraftforge.energy.IEnergyStorage;
  */
 public class EnergyStorageRF implements IEnergyStorage {
 
+	protected TileEntity tile;
 	protected int energy;
 	protected int capacity;
 	protected int maxReceive;
@@ -30,6 +32,11 @@ public class EnergyStorageRF implements IEnergyStorage {
 		this.capacity = capacity;
 		this.maxReceive = maxReceive;
 		this.maxExtract = maxExtract;
+	}
+	
+	public EnergyStorageRF setTile(TileEntity tileIn) {
+		tile = tileIn;
+		return this;
 	}
 
 	public EnergyStorageRF readFromNBT(NBTTagCompound nbt) {
@@ -126,18 +133,37 @@ public class EnergyStorageRF implements IEnergyStorage {
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
 
+		
+		if(!canReceive())
+			return 0;
+		
 		int energyReceived = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
 
 		if (!simulate) {
 			energy += energyReceived;
 		}
+		
 		return energyReceived;
 	}
+	
+	
 
+	public boolean hasInterface() {
+		if(tile != null && tile instanceof ISidedInterface) 
+			return true;
+		else 
+			return false;
+	}
+	
+
+	
 	@Override
 	public int extractEnergy(int maxExtract, boolean simulate) {
 
 		int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
+		
+		if(!canExtract())
+			return 0;
 
 		if (!simulate) {
 			energy -= energyExtracted;

@@ -9,13 +9,17 @@ import com.gendeathrow.hatchery.client.IItemColorHandler;
 import com.gendeathrow.hatchery.item.AnimalNet;
 import com.gendeathrow.hatchery.item.ChickenManure;
 import com.gendeathrow.hatchery.item.HatcheryEgg;
+import com.gendeathrow.hatchery.item.IVariantsItems;
 import com.gendeathrow.hatchery.item.ItemChickenMachine;
 import com.gendeathrow.hatchery.item.PrizeEgg;
 import com.gendeathrow.hatchery.item.Sprayer;
+import com.gendeathrow.hatchery.item.Wrench;
 import com.gendeathrow.hatchery.item.upgrades.BaseUpgrade;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -57,6 +61,9 @@ public class ModItems
 	
 	public static Item chickenmachine = setUpItem(new ItemChickenMachine(), "chicken_machine");
 	
+	public static Item wrench = setUpItem(new Wrench(), "wrench");;
+	
+	
 	//Upgrades  
 	
 	public static Item rfUpgradeTier = setUpItem(new BaseUpgrade(3, "rf_upgrade"), "rf_upgrade");
@@ -72,8 +79,7 @@ public class ModItems
 	
 	//public static FluidPump pump = new FluidPump();
 	public static IForgeRegistry<Item> itemRegistry;
-	
-	
+
 	public static Item setUpItem(Item item, String name) {
 		return item.setRegistryName(new ResourceLocation(Hatchery.MODID, name)).setTranslationKey(Hatchery.MODID+"."+ name).setCreativeTab(Hatchery.hatcheryTabs);
 	}
@@ -99,14 +105,15 @@ public class ModItems
 				ModItems.rfUpgradeTier,
 				ModItems.speedUpgradeTier,
 				ModItems.tankUpgradeTier1,
-				ModItems.rfCapacityUpgradeTier1);
+				ModItems.rfCapacityUpgradeTier1,
+				ModItems.wrench);
 		
 		ModBlocks.registerItems(event);
 	}
 	
 	public static void registerAllItems(Item... items){
 		for(Item item : items) {
-			itemRegistry.register(item);
+				itemRegistry.register(item);
 			ModItems.ITEMS.add(item);
 		}
 	}
@@ -128,7 +135,7 @@ public class ModItems
 					NonNullList<ItemStack> list = NonNullList.<ItemStack>create();
 			
 					item.getSubItems(Hatchery.hatcheryTabs, list);
-			
+
 					if(list.size() > 1)
 						for(ItemStack metaitem : list)
 							ModelLoader.setCustomModelResourceLocation(item, metaitem.getMetadata(), new ModelResourceLocation(item.getRegistryName()+"_"+metaitem.getMetadata(), "inventory"));

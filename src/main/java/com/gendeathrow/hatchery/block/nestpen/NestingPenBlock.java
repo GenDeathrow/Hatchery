@@ -12,6 +12,7 @@ import com.gendeathrow.hatchery.Hatchery;
 import com.gendeathrow.hatchery.core.init.ModBlocks;
 import com.gendeathrow.hatchery.core.proxies.CommonProxy;
 import com.gendeathrow.hatchery.core.theoneprobe.TOPInfoProvider;
+import com.gendeathrow.hatchery.item.IVariantsItems;
 import com.gendeathrow.hatchery.modaddons.ChickensHelper;
 import com.gendeathrow.hatchery.storage.InventoryStroageModifiable;
 
@@ -25,8 +26,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -37,6 +40,7 @@ import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -45,6 +49,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -59,10 +64,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class NestingPenBlock extends Block implements ITileEntityProvider, TOPInfoProvider
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING; 
-	
-    public static final PropertyBool HASCHICKEN = PropertyBool.create("haschicken");
+	public static final PropertyBool HASCHICKEN = PropertyBool.create("haschicken");
     
-     
+    /**
+    	0 = oak
+    	1 = spruce
+    	2 = birch
+    	3 = jungle
+    	4 = acacia
+    	5 = dark oak
+    */
+
+	
 	//public static final PropertyBool hasChicken = PropertyBool.create("false");
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.00D, 0.0D, 0.00, 1.0D, 1.2D, 1.0D);
     
@@ -396,6 +409,7 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
         return BOUNDING_BOXES[0];
     }
 
+	/*
     /**
      * Convert the given metadata into a BlockState for this Block
      */
@@ -412,7 +426,6 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
     	int i = 0;
     	i |= ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
     	i |= (state.getValue(HASCHICKEN) ? 1 : 0 ) << 2;
-    	
         return i;
     }
 
@@ -504,7 +517,8 @@ public class NestingPenBlock extends Block implements ITileEntityProvider, TOPIn
             
         }	
 	}
-	
+
+
     
 
 	

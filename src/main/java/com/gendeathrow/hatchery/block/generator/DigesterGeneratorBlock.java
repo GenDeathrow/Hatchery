@@ -22,6 +22,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -81,7 +82,6 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
         	TileEntity te = worldIn.getTileEntity(pos);
         	if(te instanceof DigesterGeneratorTileEntity) {
         		((DigesterGeneratorTileEntity) te).updateState = true;
-        		System.out.println("test");
         	}
 		}
 	}
@@ -94,10 +94,16 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
         return Item.getItemFromBlock(ModBlocks.digesterGenerator);
     }
 
+    
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
     {
         return new ItemStack(this.getItemDropped(state, world.rand, 0), 1, this.damageDropped(state));
+    }
+    
+    @Override
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
+    {
     }
     
 	@Override
@@ -108,7 +114,18 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
     			((DigesterGeneratorTileEntity) te).inputInventory.dropInventory(worldIn, pos);
     			((DigesterGeneratorTileEntity) te).outputInventory.dropInventory(worldIn, pos);
     			((DigesterGeneratorTileEntity) te).upgradeStorage.dropInventory(worldIn, pos);
+    		
+    		
+       			ItemStack stack = new ItemStack(Item.getItemFromBlock(this));
+           		if(te instanceof DigesterGeneratorTileEntity) {
+           			NBTTagCompound cmp = new NBTTagCompound();
+           			cmp.setLong("power", ((DigesterGeneratorTileEntity)te).energy.getEnergyStored());
+           			stack.setTagCompound(cmp);
+           		}    		
+    		
+           		spawnAsEntity(worldIn, pos, stack);
     		}
+
     		super.breakBlock(worldIn, pos, state);
     }
     
@@ -161,7 +178,19 @@ public class DigesterGeneratorBlock extends BlockHorizontal implements ITileEnti
     {
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
         if(!worldIn.isRemote)
-          	 worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 2); 
+          	 worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 2);
+        
+        if(stack.hasTagCompound())
+        {
+        	if(stack.getTagCompound().hasKey("power"))
+        	{
+        		TileEntity te = worldIn.getTileEntity(pos);
+        		if(te instanceof DigesterGeneratorTileEntity) {
+        		
+        			((DigesterGeneratorTileEntity) te).energy.setEnergyStored(stack.getTagCompound().getInteger("power"));
+        		}
+        	}
+        }
     }
     
     
