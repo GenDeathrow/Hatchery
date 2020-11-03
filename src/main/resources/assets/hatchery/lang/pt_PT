@@ -1,0 +1,118 @@
+itemGroup.hatchery=Hatchery
+
+tile.hatchery.nest.name=Ninho
+tile.hatchery.pen.name=Galinheiro
+tile.hatchery.pen_chicken.name=Galinheiro
+tile.hatchery.fertilized_dirt.name=Terra Fertilizada
+tile.hatchery.fertilized_farmland.name=Terra Fertilizada Arada
+tile.hatchery.feeder.name=Alimentador para Galinhas
+tile.hatchery.manure_block.name=Bloco de Estrume de Galinha
+tile.hatchery.nursery_block.name=Monitorizador de Berçário
+tile.hatchery.fertilizer_mixer.name=Misturador de Fertilizante
+tile.hatchery.digester_generator.name=Gerador Digestor de Metano
+tile.hatchery.chicken_machine_block.name=Máquina dos Ovos da Sorte
+tile.hatchery.shredder.name=Triturador
+
+container.generator.generating=A gerar: %1$drf/t
+container.generator.rfout=Saída de RF: %1$drf/t
+container.generator.fertin=Fertilizante Inserido: %1$d mb
+container.hoveramt=%/%
+container.fertilizermixer=Misturador de Fertilizante
+container.upgrades=Melhorias
+container.nestingpen=Inventário do Galinheiro
+container.eggstractor=Máquina dos Ovos da Sorte
+container.eggstractor.eggs=Ovos: %1$d
+container.eggstractor.plastic=Plástico: %1$d
+
+entity.Rooster.name=Galo
+container.roosterInventory=Galo Garanhão
+
+tile.fluid.liquid_fertilizer.name=Fertilizante Líquido
+fluid.liquid_fertilizer=Fertilizante Líquido
+
+item.hatchery.hatcheryegg.name=Ovo
+item.hatchery.animalnet.name=Rede para Animais
+item.hatchery.chickenmanure.name=Estrume de Galinha
+item.hatchery.sprayer.name=Pulverizador de Fertilizante
+item.hatchery.feather_fiber.name=Fibras de Pena
+item.hatchery.feather_meal.name=Ração de Penas
+item.hatchery.plastic.name=Plástico
+item.hatchery.chicken_feed.name=Ração para Galinhas
+item.hatchery.circuit_board.name=Circuitos
+
+item.hatchery.rf_upgrade_1.name=Melhoria de Efficiência de RF Tier 1
+item.hatchery.rf_upgrade_2.name=Melhoria de Efficiência de RF Tier 2
+item.hatchery.rf_upgrade_3.name=Melhoria de Efficiência de RF Tier 3
+
+item.hatchery.speed_upgrade_1.name=Melhoria de Velocidade Tier 1
+item.hatchery.speed_upgrade_2.name=Melhoria de Velocidade Tier 2
+item.hatchery.speed_upgrade_3.name=Melhoria de Velocidade Tier 3 
+
+item.hatchery.tank_upgrade_1.name=Melhoria de Tanque Tier 1
+item.hatchery.tank_upgrade_2.name=Melhoria de Tanque Tier 2
+item.hatchery.tank_upgrade_3.name=Melhoria de Tanque Tier 3
+
+item.hatchery.rf_capacity_upgrade_1.name=Capacidade de RF Tier 1
+item.hatchery.rf_capacity_upgrade_2.name=Capacidade de RF Tier 2
+item.hatchery.rf_capacity_upgrade_3.name=Capacidade de RF Tier 3
+
+item.hatchery.prize_egg.name=Ovo da Sorte
+item.hatchery.fiber_pad.name=Fibra de Enchimento
+item.hatchery.feather_pulp.name=Polpa de Penas
+
+item.hatchery.chicken_machine.name=Máquina dos Ovos da Sorte
+
+#TOOLTIP
+tooltip.hatchery.sprayer.desc=%1$s Volume: %2$dmb / %3$dmb
+
+#TEXT
+text.hatchery.hatching=A Chocar
+text.hatchery.nothatching=Não está a Chocar
+text.hatchery.chicken=Galinha
+text.hatchery.nxdrop=Próximo Saque
+text.hatchery.nochicken=Usa a 'Rede para Animais' para capturar galinhas
+text.hatchery.storedseed=Sementes Guardadas
+text.hatchery.sneakshow=<Agacha-te para mostrar mais informação>
+text.hatchery.inventory=Inventário
+text.hatchery.feedonly=Configuração para apenas permitir 'Ração para Galinhas'.
+text.hatchery.chickennetonly=Configuração para apenas permitir que 'Galinhas' sejam capturadas.
+
+#JEI
+jei.tile.hatchery.feeder=Podes guardar até 200 sementes por alimentador. Os alimentadores procuram galinhas numa área de 4x1x4. Os pintos crescem mais rápido ao pé de um alimentador, e os adultos deixam cair saque mais rápido. Podes inserir sementes por tubos nos alimentadores.
+jei.tile.hatchery.digester_generator=Gerador a Metano produz energia a partir de estrume líquido num digestor. Digestores de estrume anaeróbics (também chamados digestores de metano) recolhem estrume e convertem a energia guardada na matéria orgânica em metano, que é usado para produzir energia (20 rf/t) para uso na quinta ou fora da quinta. Pode adicionar melhorias de poder para aumentar o rf/t.
+jei.tile.hatchery.fertilizer_mixer=Usa este misturador para automatizar a criação de fertilizante líquido. Adiciona água e estrume. Proporcionar poder RF permite o misturador trabalhar mais rapidamente, mas não é necessário ao início. 
+jei.tile.hatchery.nest=Coloca um ovo no ninho e este irá chocar a galinha automáticamente ao longo de um período aleatório. Colocar uma lampada de redstone (lâmpada de aquecimento, irei trocar mais tarde) até 3 blocos acima do ninho irá aumentar a velocidade. Sentar-se em cima do ovo também aumenta a velocidade a que choca. 
+jei.tile.hatchery.fertilized_dirt=Proporciona um efeito aleatório de pó de osso ás árvores.
+jei.tile.hatchery.fertilized_farmland=Proporciona um efeito aleatório de pó de osso ás plantas. Adquire terra arada usando uma enxada em terra fertilizada.
+jei.tile.hatchery.pen=Os galinheiros guardam galinhas para recolher os recursos e ovos. Usa uma Rede para Animais para colocar galinhas no galinheiro. Colocar 2 galinheiros irá procriar automáticamente as duas galinhas. Isto funciona com galinhas de Mods para permitir mecânicas de procriação especiais. Galinheiros produzem Estrume de Galinha, Penas e Ovos do Hatchery. 
+jei.tile.hatchery.pen_chicken=Os galinheiros guardam galinhas para recolher os recursos e ovos. Usa uma Rede para Animais para colocar galinhas no galinheiro. Colocar 2 galinheiros irá procriar automáticamente as duas galinhas. Isto funciona com galinhas de Mods para permitir mecânicas de procriação especiais. Galinheiros produzem Estrume de Galinha, Penas e Ovos do Hatchery.
+jei.tile.hatchery.manure_block=Um bloco de estrume de Galinha. Aproveita!
+jei.tile.hatchery.nursery_block=Este bloco separa adultos e pintos numa área de 4x4 e move-os para lados opostos do bloco. Isto é para mais facilmente filtrar e mover as galinhas de sítio.
+jei.tile.hatchery.shredder=O triturador é usado para transformar as penas em ração de penas e fibras de pena;
+jei.item.hatchery.animalnet=Usa uma Rede para Animais para apanhar qualquer animal passivo. Usa a Rede para Animais para colocar as galinhas no Galinheiro.
+jei.item.hatchery.hatcheryegg=Os Ovos Hatchery são ovos criados dinamicamente, usados para procirar dois pais e criar um ovo customizado. Principalmente para Galinhas de Mods com novas mecânicas de procriação.
+jei.item.hatchery.chickenmanure=Produzido em Galinheiros. Usa o estrume para criar terra fertilizada, Blocos de Estrume, fertilizante líquido, ou usa-o como pó de osso para plantas.
+jei.item.hatchery.sprayer=O pulverizador de fertilizante é usado para transformar terra/terra arada em terra fertilizada/terra arada fertilizada, e funciona como um regador que criar updates a blocos. O Pulverizador guarda 3000mb. 
+jei.item.hatchery.circuit_board=Usado para fabricar melhorias.
+
+jei.item.hatchery.rf_upgrade= Reduz os RF/tick \n No gerador ele aumenta os RF/Tick \n\n Tier 1 : Melhora a geração de poder RF no gerador 40rf/tick \n\n Tier 2 : Melhora a geração de poder RF no gerador 60rf/tick \n\n Tier 3: Melhora a geração de poder RF no gerador 80rf/tick
+
+jei.item.hatchery.speed_upgrade=Melhora a velocidade da máquina para aumentar o processamento. Aumentar a velocidade também aumenta a quantidade de RF/tick.  
+jei.item.hatchery.tank_upgrade=Melhora o tamanho do tanque de uma máquina.
+jei.item.hatchery.rf_capacity=Melhora a capacidade de energia de uma máquina. 
+ 
+jei.item.hatchery.feather_fiber=Fibras de Pena são penas trituradas num triturador, que podem depois ser derretidas para criar plástico. Usado no fabrico de vários itens. 
+jei.item.hatchery.feather_meal=Ração de Penas é um sub-produto de usar penas num triturador. Pode ser adicionado a sementes para criar mais comida para galinhas. 
+jei.item.hatchery.chicken_feed=Coloca Ração para Galinhas num alimentador como um subestituto ás sementes.
+jei.item.hatchery.chicken_machine=Proporcionar energia, ovos e plástico à Máquina dos Ovos da Sorte, permite-te criar ovos da sorte. Os ovos da sorte dão prémios. 
+
+jei.gui.nesting_pen_drop=Produtos do Galinheiro
+jei.gui.shredder_recipes=Receitas do Triturador
+jei.gui.luckyegg_drops=Produtos dos Ovos da Sorte
+jei.gui.eggmachine_egg=Máquina dos Ovos da Sorte
+jei.gui.generator_recipes=Gerador Digestor de Metano
+jei.gui.fertilizermixer_recipes=Misturador de Fertilizante
+
+jei.item.hatchery.prize_egg=Ovos da Sorte são criados ao adicionar muitos ovos e plástico à máquina dos ovos da sorte operada a moedas. Os ovos da sorte dão prémios quando abertos. 
+jei.item.hatchery.fiber_pad=A Fibra de Enchimento para fabricar itens de lã. 
+jei.item.hatchery.feather_pulp=A Polpa de Penas pode ser cozinhada para fazer papel.
